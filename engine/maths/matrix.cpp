@@ -35,6 +35,10 @@ namespace regina {
 
 // MARK: - Template instantiations
 
+template size_t Matrix<Integer>::makeRowEchelon();
+template size_t Matrix<Integer>::makeColumnEchelon();
+template void Matrix<Integer>::makeRowBasis();
+template Matrix<Integer> Matrix<Integer>::inverse() &&;
 template void Matrix<Integer>::makeSmith();
 template std::array<Matrix<Integer>, 4>
     Matrix<Integer>::makeSmithHafnerMcCurley();

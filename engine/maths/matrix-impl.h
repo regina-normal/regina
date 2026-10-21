@@ -52,6 +52,278 @@ namespace regina {
 
 template <typename T>
 requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
+size_t Matrix<T>::makeRowEchelon() requires ReginaInteger<T> {
+    size_t i;
+    T* pos;
+
+    // The current working row and column:
+    // The entries to the left of currCol will not change, and
+    // above currRow all that can happen is some reduction.
+    size_t currRow = 0;
+    size_t currCol = 0;
+
+    // The algorithm works from left to right.
+    while (currRow < rows_ && currCol < cols_) {
+        // Identify the first non-zero entry in currCol.
+        for (i = currRow, pos = data_ + currRow * cols_ + currCol;
+                i < rows_; ++i, pos += cols_)
+            if (*pos != 0)
+                break;
+
+        if (i == rows_) {
+            // We found no non-zero entry.  Nothing to do.
+            ++currCol;
+            continue;
+        }
+
+        if (i > currRow) {
+            // Swap rows so this first non-zero entry is currRow.
+            swapRows(currRow, i);
+        }
+
+        // Now our first non-zero entry is in currRow.
+        T* currPos = data_ + currRow * cols_ + currCol;
+
+        // Zero out all entries in currCol that appear *below* currRow.
+        for (i = currRow + 1, pos = currPos + cols_; i < rows_;
+                ++i, pos += cols_) {
+            // Now pos points to entry (i, currCol).
+            if (*pos != 0) {
+                auto [gcd, u, v] = currPos->gcdWithCoeffs(*pos);
+                T a = currPos->divExact(gcd);
+                T b = -(pos->divExact(gcd));
+                combRows(currRow, i, u, v, b, a);
+            }
+        }
+
+        // Ensure that our leading coefficient (currRow, currCol) is
+        // positive, and reduce the entries in currCol *above* currRow.
+        if (*currPos < 0)
+            negateRow(currRow);
+        for (i = 0, pos = data_ + currCol; pos != currPos; ++i, pos += cols_) {
+            auto [d, r] = pos->divisionAlg(*currPos);
+            if (d != 0)
+                addRow(currRow /* source */, i /* dest */, -d);
+        }
+
+        ++currRow;
+        ++currCol;
+    }
+
+    return currRow;
+}
+
+template <typename T>
+requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
+size_t Matrix<T>::makeColumnEchelon() requires ReginaInteger<T> {
+    size_t i;
+    T* pos;
+
+    // The current working row and column:
+    // The entries above currRow will not change, and to the left of
+    // currCol all that can happen is some reduction.
+    size_t currRow = 0;
+    size_t currCol = 0;
+
+    // The algorithm works from top to bottom.
+    while (currRow < rows_ && currCol < cols_) {
+        // Identify the first non-zero entry in currRow.
+        for (i = currCol, pos = data_ + currRow * cols_ + currCol;
+                i < cols_; ++i, ++pos)
+            if (*pos != 0)
+                break;
+
+        if (i == cols_) {
+            // We found no non-zero entry.  Nothing to do.
+            ++currRow;
+            continue;
+        }
+
+        if (i > currCol) {
+            // Swap columns so this first non-zero entry is currCol.
+            swapCols(currCol, i);
+        }
+
+        // Now our first non-zero entry is in currCol.
+        T* currPos = data_ + currRow * cols_ + currCol;
+
+        // Zero out all entries in currRow that appear right of currCol.
+        for (i = currCol + 1, pos = currPos + 1; i < cols_; ++i, ++pos) {
+            // Now pos points to entry (currRow, i).
+            if (*pos != 0) {
+                auto [gcd, u, v] = currPos->gcdWithCoeffs(*pos);
+                T a = currPos->divExact(gcd);
+                T b = -(pos->divExact(gcd));
+                combCols(currCol, i, u, v, b, a);
+            }
+        }
+
+        // Ensure that our leading coefficient (currRow, currCol) is
+        // positive, and reduce the entries in currRow left of currCol.
+        if (*currPos < 0)
+            negateCol(currCol);
+        for (i = 0, pos = data_ + currRow * cols_; pos != currPos; ++i, ++pos) {
+            auto [d, r] = pos->divisionAlg(*currPos);
+            if (d != 0)
+                addCol(currCol /* source */, i /* dest */, -d);
+        }
+
+        ++currRow;
+        ++currCol;
+    }
+
+    return currCol;
+}
+
+template <typename T>
+requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
+void Matrix<T>::makeRowBasis() requires ReginaInteger<T> {
+    // Make a copy of this matrix to reduce to row echelon form.
+    Matrix echelon(*this);
+
+    // Here our row echelon form is not with respect to columns 0,1,...;
+    // rather it is with respect to columns lead[0],lead[1],... .
+    FixedArray<size_t> lead(cols_);
+    size_t c;
+    for (c = 0; c < cols_; ++c)
+        lead[c] = c;
+
+    // We will truncate redundant rows from the bottom of this matrix
+    // as we go.  We do this by reducing rows_ (which leaves spare
+    // capacity in the data_ array, but this is harmless).
+    // We will treat echelon as though it were likewise truncated,
+    // though we do not bother to adjust echelon.rows_ as well.
+
+    size_t currRow = 0;
+    while (currRow < rows_) {
+        // INV: For all i < currRow:
+        // - echelon[i, lead[i]] != 0;
+        // - all entries in the column below echelon[i, lead[i]] are 0.
+
+        // Determine a good value for lead[currRow].
+        // The candidates are lead[currRow,...,(cols_-1)].
+        for (c = currRow; c < cols_; ++c)
+            if (echelon.entry(currRow, lead[c]) != 0)
+                break;
+
+        if (c == cols_) {
+            // We have a zero row.  We need to truncate.
+            --rows_;
+            if (currRow == rows_) {
+                // That zero row was the last remaining row.
+                return;
+            } else {
+                // The current row is redundant.  Move the lowest
+                // surviving row (which is now beyond the end of our
+                // recently-truncated matrix) into its place.
+                std::move(
+                    data_ + rows_ * cols_,
+                    data_ + (rows_ + 1) * cols_,
+                    data_ + currRow * cols_);
+                std::move(
+                    echelon.data_ + rows_ * cols_,
+                    echelon.data_ + (rows_ + 1) * cols_,
+                    echelon.data_ + currRow * cols_);
+            }
+        } else {
+            // This row is independent from the others.
+            // Save the column in which we found our non-zero entry.
+            std::swap(lead[currRow], lead[c]);
+
+            // Zero out all lower entries in column lead[currRow], using
+            // only integer arithmetic.
+            const T& coeff1 = echelon.entry(currRow, lead[currRow]);
+            for (size_t r = currRow + 1; r < rows_; ++r) {
+                // Make coeff2 a copy, because row r is about to change.
+                T coeff2 = echelon.entry(r, lead[currRow]);
+                if (coeff2 != 0) {
+                    echelon.multRow(r, coeff1);
+                    echelon.addRow(currRow, r, -coeff2);
+                    echelon.reduceRow(r);
+                }
+            }
+            ++currRow;
+        }
+    }
+}
+
+template <typename T>
+requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
+Matrix<T> Matrix<T>::inverse() && requires ReginaInteger<T> {
+    if (rows_ != cols_)
+        throw FailedPrecondition("Inverses can only be "
+            "computed for square matrices");
+    if (rows_ == 0)
+        return {};
+
+    // We reduce this matrix to row echelon form, and keep track of
+    // the row operations that were performed.  What follows is a
+    // variant of the code in makeRowEchelon().
+    Matrix inv = identity(rows_);
+
+    size_t i;
+    T* pos;
+
+    // The algorithm works its way down the main diagonal.
+    for (size_t curr = 0; curr < rows_; ++curr) {
+        // Attempt to fix the diagonal element (curr, curr).
+        // The entries to the left of column #curr will not change, and
+        // above row #curr all that can happen is some reduction.
+
+        // Identify the first non-zero entry in column #curr, starting
+        // the search on the diagonal.
+        T* diagPos = data_ + curr * (rows_ + 1);
+        for (i = curr, pos = diagPos; i < rows_; ++i, pos += rows_)
+            if (*pos != 0)
+                break;
+
+        if (i == rows_)
+            throw NoSolution(); // column is entirely zero
+
+        // Ensure that this first non-zero entry appears on the diagonal
+        // (i.e., at position diagPos).
+        if (i > curr) {
+            swapRows(curr, i);
+            inv.swapRows(curr, i);
+        }
+
+        // Zero out all entries in column #curr below the diagonal.
+        for (i = curr + 1, pos = diagPos + rows_; i < rows_;
+                ++i, pos += rows_) {
+            // Now pos points to entry (i, curr).
+            if (*pos != 0) {
+                auto [gcd, u, v] = diagPos->gcdWithCoeffs(*pos);
+                T a = diagPos->divExact(gcd);
+                T b = -(pos->divExact(gcd));
+                combRows(curr, i, u, v, b, a);
+                inv.combRows(curr, i, u, v, b, a);
+            }
+        }
+
+        // Ensure that our entry on the diagonal is exactly 1.
+        if (*diagPos != 1) {
+            if (*diagPos == -1) {
+                negateRow(curr);
+                inv.negateRow(curr);
+            } else
+                throw NoSolution(); // the inverse is non-integer.
+        }
+
+        // Zero out all entries in column #curr above the diagonal.
+        for (i = 0, pos = data_ + curr; pos != diagPos; ++i, pos += rows_)
+            if (*pos != 0) {
+                // Handle inv first, because when we adjust this matrix
+                // we will modify *pos.
+                inv.addRow(curr, i, -*pos);
+                addRow(curr, i, -*pos);
+            }
+    }
+
+    return inv;
+}
+
+template <typename T>
+requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
 void Matrix<T>::makeSmith() requires ReginaInteger<T> {
     size_t currStage = 0;
     size_t nonEmptyRows = rows();
