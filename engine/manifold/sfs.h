@@ -2312,7 +2312,7 @@ inline SFSpace::Class SFSpace::baseClass() const {
         case BundleType::n4:
             return b ? Class::bn3 : Class::n4;
         default:
-            throw regina::InvalidArgument(
+            throw regina::ImpossibleScenario(
                     "SFSpace::baseClass() encountered an unknown BundleType");
     }
 }
