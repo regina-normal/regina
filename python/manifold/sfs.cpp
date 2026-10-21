@@ -45,6 +45,7 @@ using namespace pybind11::literals;
 
 using pybind11::overload_cast;
 using regina::SFSFibre;
+using regina::SFSPartialReflector;
 using regina::SFSpace;
 
 void addSFSpace(pybind11::module_& m, pybind11::module_& internal) {
@@ -61,21 +62,57 @@ void addSFSpace(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_eq_operators(f, rdoc::__eq);
     regina::python::add_cmp_operators(f, rdoc::__cmp);
 
+    RDOC_SCOPE_SWITCH(SFSPartialReflector)
+
+    auto p = pybind11::class_<SFSPartialReflector>(
+            m, "SFSPartialReflector", rdoc::__class)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<bool, size_t>(), rdoc::__init)
+        .def(pybind11::init<const SFSPartialReflector&>(), rdoc::__copy)
+        .def_readwrite("twisted", &SFSPartialReflector::twisted)
+        .def_readwrite("reflectorArcs", &SFSPartialReflector::reflectorArcs)
+    ;
+    regina::python::add_output_ostream(p);
+    regina::python::add_eq_operators(p, rdoc::__eq);
+    regina::python::add_cmp_operators(p, rdoc::__cmp);
+
     RDOC_SCOPE_SWITCH(SFSpace)
 
     auto s = pybind11::class_<SFSpace, regina::Manifold<3>>(m, "SFSpace",
             rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
-        .def(pybind11::init<SFSpace::Class, unsigned long,
-            unsigned long, unsigned long,
-            unsigned long, unsigned long>(),
-            "baseClass"_a, "genus"_a,
+        .def(pybind11::init<SFSpace::BundleType,
+                size_t, size_t, size_t, size_t, size_t>(),
+            "bundleType"_a, "genus"_a,
             "punctures"_a = 0, "puncturesTwisted"_a = 0,
             "reflectors"_a = 0, "reflectorsTwisted"_a = 0,
             rdoc::__init)
+        .def(pybind11::init([](SFSpace::BundleType b,
+                        size_t g, size_t p, size_t pt, size_t r, size_t rt,
+                        const std::vector<SFSPartialReflector>& pr) {
+            return new SFSpace(b, g, p, pt, r, rt, pr.begin(), pr.end());
+        }), "bundleType"_a, "genus"_a, "punctures"_a, "puncturesTwisted"_a,
+                "reflectors"_a, "reflectorsTwisted"_a, "partialReflectors"_a,
+                rdoc::__init_2)
+        .def(pybind11::init([](SFSpace::BundleType b,
+                        size_t g, size_t p, size_t pt, size_t r, size_t rt,
+                        const std::vector<SFSPartialReflector>& pr,
+                        const std::vector<SFSFibre>& f) {
+            return new SFSpace(b, g, p, pt, r, rt,
+                    pr.begin(), pr.end(), f.begin(), f.end());
+        }), "bundleType"_a, "genus"_a, "punctures"_a, "puncturesTwisted"_a,
+                "reflectors"_a, "reflectorsTwisted"_a, "partialReflectors"_a,
+                "fibres"_a, rdoc::__init_3)
+        .def(pybind11::init<SFSpace::Class,
+                size_t, size_t, size_t, size_t, size_t>(),
+            "baseClass"_a, "genus"_a,
+            "punctures"_a = 0, "puncturesTwisted"_a = 0,
+            "reflectors"_a = 0, "reflectorsTwisted"_a = 0,
+            rdoc::__init_4) // deprecated constructor
         .def(pybind11::init<const SFSpace&>(), rdoc::__copy)
         .def("swap", &SFSpace::swap, rdoc::swap)
-        .def("baseClass", &SFSpace::baseClass, rdoc::baseClass)
+        .def("bundleType", &SFSpace::bundleType, rdoc::bundleType)
+        .def("baseClass", &SFSpace::baseClass, rdoc::baseClass) // deprecated
         .def("baseGenus", &SFSpace::baseGenus, rdoc::baseGenus)
         .def("baseOrientable", &SFSpace::baseOrientable, rdoc::baseOrientable)
         .def("fibreReversing", &SFSpace::fibreReversing, rdoc::fibreReversing)
@@ -92,6 +129,15 @@ void addSFSpace(pybind11::module_& m, pybind11::module_& internal) {
         .def("reflectors",
             overload_cast<bool>(&SFSpace::reflectors, pybind11::const_),
             rdoc::reflectors_2)
+        .def("partialReflectorCount",
+            overload_cast<>(&SFSpace::partialReflectorCount, pybind11::const_),
+            rdoc::partialReflectorCount)
+        .def("partialReflectorCount",
+            overload_cast<bool>(&SFSpace::partialReflectorCount, pybind11::const_),
+            rdoc::partialReflectorCount_2)
+        .def("partialReflector", &SFSpace::partialReflector, rdoc::partialReflector)
+        .def("partialReflectors", &SFSpace::partialReflectors,
+            pybind11::keep_alive<0, 1>(), rdoc::partialReflectors)
         .def("fibreCount", &SFSpace::fibreCount, rdoc::fibreCount)
         .def("fibre", &SFSpace::fibre, rdoc::fibre)
         .def("fibres", &SFSpace::fibres,
@@ -105,12 +151,42 @@ void addSFSpace(pybind11::module_& m, pybind11::module_& internal) {
             "twisted"_a = false, "nPunctures"_a = 1, rdoc::addPuncture)
         .def("addReflector", &SFSpace::addReflector,
             "twisted"_a = false, "nReflectors"_a = 1, rdoc::addReflector)
+        // For some reason overload_cast fails here.
+        .def("addOrbifoldBoundary",
+            static_cast<void (SFSpace::*)(bool, size_t, size_t)>(
+                &SFSpace::addOrbifoldBoundary),
+            "twisted"_a = false, "nPunctures"_a = 1, "nReflectors"_a = 0,
+            rdoc::addOrbifoldBoundary)
+        .def("addOrbifoldBoundary",
+                [](SFSpace& sfs,
+                    bool twisted, size_t nPunctures, size_t nReflectors,
+                    std::vector<SFSPartialReflector> parRefs) {
+                    sfs.addOrbifoldBoundary(
+                            twisted, nPunctures, nReflectors,
+                            parRefs.begin(), parRefs.end() );
+                },
+                "twisted"_a, "nPunctures"_a, "nReflectors"_a,
+                "partialReflectors"_a, rdoc::addOrbifoldBoundary_2)
+        .def("addOrbifoldBoundary",
+                [](SFSpace& sfs,
+                    bool twisted, size_t nPunctures, size_t nReflectors,
+                    std::vector<unsigned> refArcCounts) {
+                    sfs.addOrbifoldBoundary(
+                            twisted, nPunctures, nReflectors,
+                            refArcCounts.begin(), refArcCounts.end() );
+                },
+                "twisted"_a, "nPunctures"_a, "nReflectors"_a,
+                "reflectorArcCounts"_a, rdoc::addOrbifoldBoundary_3)
         .def("insertFibre",
             overload_cast<const SFSFibre&>(&SFSpace::insertFibre),
             rdoc::insertFibre)
         .def("insertFibre",
             overload_cast<long, long>(&SFSpace::insertFibre),
             rdoc::insertFibre_2)
+        .def("insertFibres",
+                [](SFSpace& sfs, std::vector<SFSFibre> f) {
+                    sfs.insertFibres( f.begin(), f.end() );
+                }, "fibres"_a, rdoc::insertFibres)
         .def("reflect", &SFSpace::reflect, rdoc::reflect)
         .def("complementAllFibres", &SFSpace::complementAllFibres,
             rdoc::complementAllFibres)
@@ -124,6 +200,28 @@ void addSFSpace(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_output_rich(s);
     regina::python::add_global_swap<SFSpace, rdoc>(m);
 
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::native_enum<SFSpace::BundleType>(s, "BundleType", "enum.Enum",
+            rdoc::BundleType::__class)
+#elif REGINA_PYBIND11_VERSION == 2
+    pybind11::enum_<SFSpace::BundleType>(s, "BundleType", rdoc::BundleType::__class)
+#else
+    #error "Unsupported pybind11 version"
+#endif
+        .value("o", SFSpace::BundleType::o, rdoc::BundleType::o)
+        .value("o1", SFSpace::BundleType::o1, rdoc::BundleType::o1)
+        .value("o2", SFSpace::BundleType::o2, rdoc::BundleType::o2)
+        .value("n", SFSpace::BundleType::n, rdoc::BundleType::n)
+        .value("n1", SFSpace::BundleType::n1, rdoc::BundleType::n1)
+        .value("n2", SFSpace::BundleType::n2, rdoc::BundleType::n2)
+        .value("n3", SFSpace::BundleType::n3, rdoc::BundleType::n3)
+        .value("n4", SFSpace::BundleType::n4, rdoc::BundleType::n4)
+#if REGINA_PYBIND11_VERSION == 3
+        .finalize()
+#endif
+        ;
+
+    // Deprecated:
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<SFSpace::Class>(s, "Class", "enum.Enum",
             rdoc::Class::__class)

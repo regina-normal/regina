@@ -66,6 +66,9 @@ void testRecognitionSig(const char* isoSig,
 }
 
 TEST(StandardSubcomplex3Test, recognition) {
+    // Some manifold names have changed as a consequence of updates to
+    // SFSpace::reduce(). The old manifold names are kept but commented out.
+
     // Closed orientable triangulations:
     testRecognition("baaaawr", "C(1)", "S3");
     testRecognition("baaaawf", "L(1,0)", "S3");
@@ -83,7 +86,8 @@ TEST(StandardSubcomplex3Test, recognition) {
         "B(T7:1 | -1,0 | -3,-1)", "T x I / [ -4,-3 | -1,-1 ]");
     testRecognition("knncgaabcgifjhhjijmgtnnasgana",
         "Plugged Torus Bundle [T7:1 | Tri, Mob(v)]",
-        "SFS [A: (2,1)] / [ -1,-2 | 0,1 ]");
+        //"SFS [A: (2,1)] / [ -1,-2 | 0,1 ]");
+        "SFS [A: (2,1)] / [ 1,-2 | 0,-1 ]");
     testRecognition("jlkijaaabdefghhiifanavrumvb",
         "Blocked SFS [Tri, Tri, LST(1, 2, 3), LST(1, 3, 4)]",
         "SFS [RP2/n2: (3,1) (4,3)]");
@@ -92,19 +96,25 @@ TEST(StandardSubcomplex3Test, recognition) {
     testRecognition("jfkinaaabdeehghiifhgtqitrtn",
         "Blocked SFS Pair [Tri, LST(2, 3, 5), Mob(v) | "
             "Tri, LST(1, 2, 3), Mob(v)]",
-        "SFS [D: (2,1) (2,1)] U/m SFS [D: (2,1) (5,2)], "
-            "m = [ 1,1 | 0,1 ]");
+        //"SFS [D: (2,1) (2,1)] U/m SFS [D: (2,1) (5,2)], "
+        //    "m = [ 1,1 | 0,1 ]");
+        "SFS [D: (2,1) (2,1)] U/m SFS [D: (2,1) (5,3)], "
+            "m = [ 1,1 | 1,0 ]");
     testRecognition("jofdiaabcceffhiiiedkgiilpsw",
         "Blocked SFS Triple [Tri, Mob(v), Mob(v) | Tri, Mob(v) | "
             "Tri, Mob(v), Mob(v)]",
+        //"SFS [D: (2,1) (2,1)] U/m SFS [A: (2,1)] U/n "
+        //    "SFS [D: (2,1) (2,1)], m = [ 0,1 | 1,0 ], "
+        //    "n = [ 1,1 | 1,0 ]");
         "SFS [D: (2,1) (2,1)] U/m SFS [A: (2,1)] U/n "
-            "SFS [D: (2,1) (2,1)], m = [ 0,1 | 1,0 ], "
+            "SFS [D: (2,1) (2,1)], m = [ 0,1 | 1,-1 ], "
             "n = [ 1,1 | 1,0 ]");
 
     // Bounded orientable triangulations:
     testRecognitionSig("pfLPILKfLAPidedffhikmlnoorawhwnxlkcahr",
         "Blocked SFS [Tri, Tri, Tri, Tri, Tri]",
-        "SFS [Or, g=0 + 3 punctures: (1,2)]");
+        //"SFS [Or, g=0 + 3 punctures: (1,2)]");
+        "Or, g=0 + 3 punctures x S1");
 
     // Closed non-orientable triangulations:
     testRecognition("dafbcccxbqg", "N(3,2)", "RP2 x S1");
@@ -122,8 +132,10 @@ TEST(StandardSubcomplex3Test, recognition) {
     testRecognition("kjgmlaaacddfhhijjjffthmvooloh",
         "Blocked SFS Pair [Tri, LST(1, 2, 3), Mob(v) | "
             "Tri, Ref(1), Mob(v)]",
+        //"SFS [D: (2,1) (3,1)] U/m SFS [A_: (2,1)], "
+        //    "m = [ 0,1 | 1,0 ]");
         "SFS [D: (2,1) (3,1)] U/m SFS [A_: (2,1)], "
-            "m = [ 0,1 | 1,0 ]");
+            "m = [ 1,1 | 1,0 ]");
 
     // Ideal triangulations:
     testRecognition("cabbbbteh",

@@ -45,7 +45,7 @@ def throwInvalidArgumentV2():
 def throwNotImplemented():
     s = SFSpace()
     print(s.construct().homology()) # should print
-    s.addPuncture(True)
+    s.addPuncture(True, 2)
     print(s.construct()) # should throw
 
 def throwFileError():

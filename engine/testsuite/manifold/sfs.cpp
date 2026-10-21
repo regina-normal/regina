@@ -34,21 +34,624 @@
 
 #include "gtest/gtest.h"
 
+using regina::FailedPrecondition;
+using regina::InvalidArgument;
 using regina::SFSFibre;
+using regina::SFSPartialReflector;
 using regina::SFSpace;
 using regina::BlockedSFS;
 
-SFSpace buildSFS( SFSpace::Class c, size_t genus,
+TEST(SFSTest, deprecated) {
+    // Some temporary tests to make sure that deprecated routines have been
+    // refactored correctly.
+    SFSpace withUntwistedParRef( SFSpace::BundleType::o1, 0, 0, 0, 0, 0,
+            { SFSPartialReflector(false, 1) } );
+    EXPECT_THROW( withUntwistedParRef.baseClass(), regina::NotImplemented );
+    SFSpace withTwistedParRef( SFSpace::BundleType::o, 0, 0, 1, 0, 0,
+            { SFSPartialReflector(true, 1) } );
+    EXPECT_THROW( withTwistedParRef.baseClass(), regina::NotImplemented );
+    SFSpace withMixedParRefs( SFSpace::BundleType::o, 0, 0, 1, 0, 0,
+            { SFSPartialReflector(false, 2), SFSPartialReflector(true, 1) } );
+    EXPECT_THROW( withMixedParRefs.baseClass(), regina::NotImplemented );
+}
+
+void verifyBaseOrbifold( const SFSpace& sfs, SFSpace::BundleType bundleType,
+        size_t baseGenus, size_t punctures, size_t puncturesTwisted,
+        size_t reflectors, size_t reflectorsTwisted,
+        std::initializer_list<SFSPartialReflector> sortedParRefs,
+        std::initializer_list<SFSPartialReflector> sortedParRefsTwisted ) {
+    EXPECT_EQ( sfs.bundleType(), bundleType );
+    EXPECT_EQ( sfs.baseGenus(), baseGenus );
+    EXPECT_EQ( sfs.punctures(), punctures + puncturesTwisted );
+    EXPECT_EQ( sfs.punctures(false), punctures );
+    EXPECT_EQ( sfs.punctures(true), puncturesTwisted );
+    EXPECT_EQ( sfs.reflectors(), reflectors + reflectorsTwisted );
+    EXPECT_EQ( sfs.reflectors(false), reflectors );
+    EXPECT_EQ( sfs.reflectors(true), reflectorsTwisted );
+    EXPECT_EQ( sfs.partialReflectorCount(),
+            sortedParRefs.size() + sortedParRefsTwisted.size() );
+    EXPECT_EQ( sfs.partialReflectorCount(false), sortedParRefs.size() );
+    EXPECT_EQ( sfs.partialReflectorCount(true),
+            sortedParRefsTwisted.size() );
+    EXPECT_TRUE( std::ranges::equal(
+                sfs.partialReflectors(false), sortedParRefs ) );
+    EXPECT_TRUE( std::ranges::equal(
+                sfs.partialReflectors(true), sortedParRefsTwisted ) );
+}
+
+void verifyReducedStructure( const SFSpace& sfs, bool expectReflectionEqual,
+        SFSpace::BundleType bundleType, size_t baseGenus,
         size_t punctures, size_t puncturesTwisted,
         size_t reflectors, size_t reflectorsTwisted,
-        std::initializer_list<SFSFibre> fibres ) {
-    SFSpace sfs( c, genus,
-            punctures, puncturesTwisted,
-            reflectors, reflectorsTwisted );
-    for (const auto& f : fibres) {
-        sfs.insertFibre(f);
+        long obstruction,
+        std::initializer_list<SFSPartialReflector> sortedParRefs,
+        std::initializer_list<SFSPartialReflector> sortedParRefsTwisted,
+        std::initializer_list<SFSFibre> sortedFibres) {
+    SFSpace reduced(sfs);
+    reduced.reduce();
+    verifyBaseOrbifold( reduced, bundleType, baseGenus,
+            punctures, puncturesTwisted, reflectors, reflectorsTwisted,
+            sortedParRefs, sortedParRefsTwisted );
+    EXPECT_EQ( reduced.fibreCount(), sortedFibres.size() );
+    EXPECT_TRUE( std::ranges::equal(
+                reduced.fibres(), sortedFibres ) );
+    EXPECT_EQ( reduced.obstruction(), obstruction );
+
+    // Verify reflection.
+    SFSpace mirror(reduced);
+    mirror.reflect();
+    mirror.reduce(false); // Reduce without undoing the reflection.
+    if (expectReflectionEqual) {
+        EXPECT_EQ( reduced, mirror );
+    } else {
+        EXPECT_NE( reduced, mirror );
     }
-    return sfs;
+}
+
+TEST(SFSTest, structure) {
+    // We include some tests which ensure that the constructors correctly
+    // convert degenerate parameters, such as:
+    // - Removing (1,b) fibres by adjusting the obstruction constant.
+    // - Reassigning partial reflectors with zero reflector arcs as punctures.
+
+    {
+        SCOPED_TRACE("Basic circle bundles");
+
+        verifyReducedStructure(
+                SFSpace(), true /* expectReflectionEqual */,
+                SFSpace::BundleType::o1, 0, 0, 0, 0, 0,
+                0 /* obstruction */, {}, {}, {} );
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o1, 1 ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::o1, 1, 0, 0, 0, 0,
+                0 /* obstruction */, {}, {}, {} );
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o1, 0, 1 ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::o1, 0, 1, 0, 0, 0,
+                0 /* obstruction */, {}, {}, {} );
+    }
+
+    {
+        SCOPED_TRACE("With twisted punctures and/or reflector circles");
+
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o, 0, 1, 2 ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::o, 0, 1, 2, 0, 0,
+                0 /* obstruction */, {}, {}, {} );
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o, 0, 1, 2, 3 ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::o, 0, 1, 2, 3, 0,
+                0 /* obstruction */, {}, {}, {} );
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o, 0, 1, 2, 3, 4 ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::o, 0, 1, 2, 3, 4,
+                0 /* obstruction */, {}, {}, {} );
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::n, 1, 0, 1, 0, 1 ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::n, 1, 0, 1, 0, 1,
+                0 /* obstruction */, {}, {}, {} );
+    }
+
+    {
+        SCOPED_TRACE("With reflector arcs");
+
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o1, 0, 0, 0, 0, 0,
+                    { SFSPartialReflector( false, 0 ) } ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::o1, 0, 1 /* punctures */, 0, 0, 0,
+                0 /* obstruction */, {}, {}, {} );
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o1, 0, 0, 0, 0, 0,
+                    { SFSPartialReflector( false, 1 ) } ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::o1, 0, 0 /* punctures */, 0, 0, 0,
+                0 /* obstruction */,
+                { SFSPartialReflector( false, 1 ) }, {}, {} );
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o,
+                    0, 0, 1 /* puncturesTwisted */, 0, 0,
+                    { SFSPartialReflector( true, 0 ) } ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::o, 0, 0, 2 /* puncturesTwisted */, 0, 0,
+                0 /* obstruction */, {}, {}, {} );
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o,
+                    0, 0, 1 /* puncturesTwisted */, 0, 0,
+                    { SFSPartialReflector( true, 1 ) } ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::o, 0, 0, 1 /* puncturesTwisted */, 0, 0,
+                0 /* obstruction */,
+                {}, { SFSPartialReflector( true, 1 ) }, {} );
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::n,
+                    1, 0, 0, 0, 2 /* reflectorsTwisted */,
+                    { SFSPartialReflector( false, 2 ),
+                    SFSPartialReflector( false, 1 ) } ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::n, 1, 0, 0, 0, 2 /* reflectorsTwisted */,
+                0 /* obstruction */, { SFSPartialReflector( false, 1 ),
+                SFSPartialReflector( false, 2 ) }, {}, {} );
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::n,
+                    1, 0, 0, 0, 0 /* reflectorsTwisted */,
+                    { SFSPartialReflector( true, 2 ),
+                    SFSPartialReflector( true, 1 ) } ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::n, 1, 0, 0, 0, 0 /* reflectorsTwisted */,
+                0 /* obstruction */, {}, { SFSPartialReflector( true, 1 ),
+                SFSPartialReflector( true, 2 ) }, {} );
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::n,
+                    1, 0, 0, 0, 1 /* reflectorsTwisted */,
+                    { SFSPartialReflector( true, 2 ),
+                    SFSPartialReflector( false, 1 ) } ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::n, 1, 0, 0, 0, 1 /* reflectorsTwisted */,
+                0 /* obstruction */, { SFSPartialReflector( false, 1 ) },
+                { SFSPartialReflector( true, 2 ) }, {} );
+    }
+
+    {
+        SCOPED_TRACE("Closed with exceptional fibres");
+
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o1, 1, 0 /* punctures */,
+                    0, 0, 0, {}, { SFSFibre(1, -2) } ),
+                false /* expectReflectionEqual */,
+                SFSpace::BundleType::o1, 1, 0 /* punctures */,
+                0, 0, 0, 2 /* obstruction */, {}, {}, {} );
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o1, 1, 0 /* punctures */,
+                    0, 0, 0, {}, { SFSFibre(3, 5) } ),
+                false /* expectReflectionEqual */,
+                SFSpace::BundleType::o1, 1, 0 /* punctures */,
+                0, 0, 0, 1 /* obstruction */, {}, {}, { SFSFibre(3, 2) } );
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o1, 1, 0 /* punctures */,
+                    0, 0, 0, {}, { SFSFibre(4, 1), SFSFibre(3, 5) } ),
+                false /* expectReflectionEqual */,
+                SFSpace::BundleType::o1, 1, 0 /* punctures */,
+                0, 0, 0, 1 /* obstruction */, {}, {},
+                { SFSFibre(3, 2), SFSFibre(4, 1) } );
+    }
+
+    {
+        SCOPED_TRACE("Bounded with exceptional fibres");
+
+        // With non-empty boundary, SFSpace::reduce() now always reduces the
+        // obstruction constant to zero.
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o1, 1, 1 /* punctures */,
+                    0, 0, 0, {}, { SFSFibre(1, -2) } ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::o1, 1, 1 /* punctures */,
+                0, 0, 0, 0 /* obstruction */, {}, {}, {} );
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o1, 1, 1 /* punctures */,
+                    0, 0, 0, {}, { SFSFibre(3, 5) } ),
+                false /* expectReflectionEqual */,
+                SFSpace::BundleType::o1, 1, 1 /* punctures */,
+                0, 0, 0, 0 /* obstruction */, {}, {}, { SFSFibre(3, 1) } );
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o1, 1, 1 /* punctures */,
+                    0, 0, 0, {}, { SFSFibre(4, 1), SFSFibre(3, 5) } ),
+                false /* expectReflectionEqual */,
+                SFSpace::BundleType::o1, 1, 1 /* punctures */,
+                0, 0, 0, 0 /* obstruction */, {}, {},
+                { SFSFibre(3, 1), SFSFibre(4, 3) } );
+    }
+
+    {
+        SCOPED_TRACE("Mismatched bundle type and base genus");
+
+        EXPECT_THROW( SFSpace( SFSpace::BundleType::o2, 0 ),
+                FailedPrecondition );
+        EXPECT_THROW( SFSpace( SFSpace::BundleType::n, 0 ),
+                FailedPrecondition );
+        EXPECT_THROW( SFSpace( SFSpace::BundleType::n1, 0 ),
+                FailedPrecondition );
+        EXPECT_THROW( SFSpace( SFSpace::BundleType::n2, 0 ),
+                FailedPrecondition );
+        EXPECT_THROW( SFSpace( SFSpace::BundleType::n3, 0 ),
+                FailedPrecondition );
+        EXPECT_THROW( SFSpace( SFSpace::BundleType::n3, 1 ),
+                FailedPrecondition );
+        EXPECT_THROW( SFSpace( SFSpace::BundleType::n4, 0 ),
+                FailedPrecondition );
+        EXPECT_THROW( SFSpace( SFSpace::BundleType::n4, 1 ),
+                FailedPrecondition );
+        EXPECT_THROW( SFSpace( SFSpace::BundleType::n4, 2 ),
+                FailedPrecondition );
+    }
+
+    {
+        SCOPED_TRACE("Twisted boundary exceptions");
+
+        // Bundle types which should not have twisted boundaries.
+        std::initializer_list<SFSpace::BundleType>
+            bundleTypesNoTwistedBdry = {
+                SFSpace::BundleType::o1,
+                SFSpace::BundleType::o2,
+                SFSpace::BundleType::n1,
+                SFSpace::BundleType::n2,
+                SFSpace::BundleType::n3,
+                SFSpace::BundleType::n4
+            };
+        for (auto bundleType : bundleTypesNoTwistedBdry) {
+            EXPECT_THROW(
+                    SFSpace(bundleType, 3, 0, 2 /* puncturesTwisted */),
+                    FailedPrecondition );
+            EXPECT_THROW(
+                    SFSpace(bundleType, 3, 0, 1 /* puncturesTwisted */,
+                        0, 1 /* reflectorsTwisted */),
+                    FailedPrecondition );
+            EXPECT_THROW(
+                    SFSpace(bundleType, 3, 0, 0 /* puncturesTwisted */,
+                        0, 2 /* reflectorsTwisted */),
+                    FailedPrecondition );
+            EXPECT_THROW(
+                    SFSpace(bundleType, 3, 0, 0 /* puncturesTwisted */,
+                        0, 0 /* reflectorsTwisted */,
+                        { SFSPartialReflector(true, 1),
+                        SFSPartialReflector(true, 2) }),
+                    FailedPrecondition );
+            EXPECT_THROW(
+                    SFSpace(bundleType, 3, 0, 1 /* puncturesTwisted */,
+                        0, 0 /* reflectorsTwisted */,
+                        { SFSPartialReflector(true, 1) }),
+                    FailedPrecondition );
+            EXPECT_THROW(
+                    SFSpace(bundleType, 3, 0, 0 /* puncturesTwisted */,
+                        0, 1 /* reflectorsTwisted */,
+                        { SFSPartialReflector(true, 1) }),
+                    FailedPrecondition );
+        }
+
+        // Bundle types which should have a positive even number of twisted
+        // boundaries.
+        std::initializer_list<SFSpace::BundleType>
+            bundleTypesWithTwistedBdry = {
+                SFSpace::BundleType::o,
+                SFSpace::BundleType::n
+            };
+        for (auto bundleType : bundleTypesWithTwistedBdry) {
+            EXPECT_THROW( SFSpace(bundleType, 3), FailedPrecondition );
+            EXPECT_THROW(
+                    SFSpace(bundleType, 3, 0, 1 /* puncturesTwisted */),
+                    FailedPrecondition );
+            EXPECT_THROW(
+                    SFSpace(bundleType, 3, 0, 0 /* puncturesTwisted */,
+                        0, 1 /* reflectorsTwisted */),
+                    FailedPrecondition );
+            EXPECT_THROW(
+                    SFSpace(bundleType, 3, 0, 0 /* puncturesTwisted */,
+                        0, 0 /* reflectorsTwisted */,
+                        { SFSPartialReflector(true, 1) }),
+                    FailedPrecondition );
+            EXPECT_THROW(
+                    SFSpace(bundleType, 3, 0, 1 /* puncturesTwisted */,
+                        0, 1 /* reflectorsTwisted */,
+                        { SFSPartialReflector(true, 1) }),
+                    FailedPrecondition );
+        }
+    }
+}
+
+TEST(SFSTest, addGenus) {
+    SFSpace sfs{};
+
+    // Add handles/crosscaps which preserve orientability of the SFS.
+    sfs.addHandle();
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o1 );
+    EXPECT_EQ( sfs.baseGenus(), 1 );
+    sfs.addCrosscap(true);
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::n2 );
+    EXPECT_EQ( sfs.baseGenus(), 3 );
+    sfs.addCrosscap(true);
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::n2 );
+    EXPECT_EQ( sfs.baseGenus(), 4 );
+    sfs.addHandle();
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::n2 );
+    EXPECT_EQ( sfs.baseGenus(), 6 );
+
+    // Now add handles/crosscaps which don't preserve orientability.
+    sfs.addCrosscap();
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::n3 );
+    EXPECT_EQ( sfs.baseGenus(), 7 );
+    sfs.addHandle(true);
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::n3 );
+    EXPECT_EQ( sfs.baseGenus(), 9 );
+
+    // To be safe, check that adding handles and crosscaps didn't change any
+    // of the other properties.
+    EXPECT_EQ( sfs.punctures(), 0 );
+    EXPECT_EQ( sfs.reflectors(), 0 );
+    EXPECT_EQ( sfs.partialReflectorCount(), 0 );
+    EXPECT_EQ( sfs.fibreCount(), 0 );
+    EXPECT_EQ( sfs.obstruction(), 0 );
+}
+
+TEST(SFSTest, addBoundary) {
+    SFSpace sfs{};
+
+    // Make sure we throw InvalidArgument (and leave sfs untouched) if we try
+    // to add an odd number of twisted boundaries to the base orbifold, or if
+    // we try to add a negative number of reflector arcs.
+    EXPECT_THROW( sfs.addPuncture(true), InvalidArgument );
+    EXPECT_THROW( sfs.addPuncture(true, 3), InvalidArgument );
+    EXPECT_THROW( sfs.addReflector(true), InvalidArgument );
+    EXPECT_THROW( sfs.addReflector(true, 3), InvalidArgument );
+    EXPECT_THROW( sfs.addOrbifoldBoundary(true), InvalidArgument );
+    EXPECT_THROW( sfs.addOrbifoldBoundary(true, 3), InvalidArgument );
+    EXPECT_THROW( sfs.addOrbifoldBoundary(true, 0, 1), InvalidArgument );
+    EXPECT_THROW(
+            sfs.addOrbifoldBoundary(true, 0, 0, {1}), InvalidArgument );
+    EXPECT_THROW(
+            sfs.addOrbifoldBoundary(true, 1, 0, {1, 2}), InvalidArgument );
+    EXPECT_THROW(
+            sfs.addOrbifoldBoundary(true, 0, 1, {1, 2}), InvalidArgument );
+    EXPECT_THROW(
+            sfs.addOrbifoldBoundary(true, 1, 1, {1}), InvalidArgument );
+    EXPECT_THROW(
+            sfs.addOrbifoldBoundary(false, 0, 0, {-1}), InvalidArgument );
+    EXPECT_THROW(
+            sfs.addOrbifoldBoundary(true, 1, 0, {-1}), InvalidArgument );
+    EXPECT_THROW(
+            sfs.addOrbifoldBoundary(false, 0, 0, {1, -2}), InvalidArgument );
+    EXPECT_THROW(
+            sfs.addOrbifoldBoundary(true, 0, 0, {1, -2}), InvalidArgument );
+    EXPECT_THROW(
+            sfs.addOrbifoldBoundary(false, 1, 0,
+                { SFSPartialReflector(true, 1) }), InvalidArgument );
+    EXPECT_THROW(
+            sfs.addOrbifoldBoundary(true, 1, 0,
+                { SFSPartialReflector(false, 1) }), InvalidArgument );
+    EXPECT_THROW(
+            sfs.addOrbifoldBoundary(true, 1, 1,
+                { SFSPartialReflector(true, 1) }), InvalidArgument );
+    EXPECT_EQ( sfs, SFSpace() );
+
+    // Now add a bunch of punctures, reflector circles and partial reflectors,
+    // and check that things are updated correctly.
+
+    sfs.addPuncture();
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o1, 0,
+            1 /* punctures */, 0 /* puncturesTwisted */,
+            0 /* reflectors */, 0 /* reflectorsTwisted */,
+            {}, {} );
+    sfs.addPuncture(false);
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o1, 0,
+            2 /* punctures */, 0 /* puncturesTwisted */,
+            0 /* reflectors */, 0 /* reflectorsTwisted */,
+            {}, {} );
+    sfs.addPuncture(false, 2);
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o1, 0,
+            4 /* punctures */, 0 /* puncturesTwisted */,
+            0 /* reflectors */, 0 /* reflectorsTwisted */,
+            {}, {} );
+    sfs.addPuncture(true, 2);
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            4 /* punctures */, 2 /* puncturesTwisted */,
+            0 /* reflectors */, 0 /* reflectorsTwisted */,
+            {}, {} );
+
+    sfs.addReflector();
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            4 /* punctures */, 2 /* puncturesTwisted */,
+            1 /* reflectors */, 0 /* reflectorsTwisted */,
+            {}, {} );
+    sfs.addReflector(false);
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            4 /* punctures */, 2 /* puncturesTwisted */,
+            2 /* reflectors */, 0 /* reflectorsTwisted */,
+            {}, {} );
+    sfs.addReflector(false, 2);
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            4 /* punctures */, 2 /* puncturesTwisted */,
+            4 /* reflectors */, 0 /* reflectorsTwisted */,
+            {}, {} );
+    sfs.addReflector(true, 2);
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            4 /* punctures */, 2 /* puncturesTwisted */,
+            4 /* reflectors */, 2 /* reflectorsTwisted */,
+            {}, {} );
+
+    sfs.addOrbifoldBoundary();
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            5 /* punctures */, 2 /* puncturesTwisted */,
+            4 /* reflectors */, 2 /* reflectorsTwisted */,
+            {}, {} );
+    sfs.addOrbifoldBoundary(false);
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            6 /* punctures */, 2 /* puncturesTwisted */,
+            4 /* reflectors */, 2 /* reflectorsTwisted */,
+            {}, {} );
+    sfs.addOrbifoldBoundary(false, 2);
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            8 /* punctures */, 2 /* puncturesTwisted */,
+            4 /* reflectors */, 2 /* reflectorsTwisted */,
+            {}, {} );
+    sfs.addOrbifoldBoundary(false, 0, 1);
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            8 /* punctures */, 2 /* puncturesTwisted */,
+            5 /* reflectors */, 2 /* reflectorsTwisted */,
+            {}, {} );
+
+    sfs.addOrbifoldBoundary(true, 2);
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            8 /* punctures */, 4 /* puncturesTwisted */,
+            5 /* reflectors */, 2 /* reflectorsTwisted */,
+            {}, {} );
+    sfs.addOrbifoldBoundary(true, 0, 2);
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            8 /* punctures */, 4 /* puncturesTwisted */,
+            5 /* reflectors */, 4 /* reflectorsTwisted */,
+            {}, {} );
+
+    sfs.addOrbifoldBoundary(false, 1, 1);
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            9 /* punctures */, 4 /* puncturesTwisted */,
+            6 /* reflectors */, 4 /* reflectorsTwisted */,
+            {}, {} );
+    sfs.addOrbifoldBoundary(true, 1, 1);
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            9 /* punctures */, 5 /* puncturesTwisted */,
+            6 /* reflectors */, 5 /* reflectorsTwisted */,
+            {}, {} );
+
+    sfs.addOrbifoldBoundary(false, 0, 0, {2});
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            9 /* punctures */, 5 /* puncturesTwisted */,
+            6 /* reflectors */, 5 /* reflectorsTwisted */,
+            { SFSPartialReflector(false, 2) }, {} );
+    sfs.addOrbifoldBoundary(true, 1, 0, {2});
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            9 /* punctures */, 6 /* puncturesTwisted */,
+            6 /* reflectors */, 5 /* reflectorsTwisted */,
+            { SFSPartialReflector(false, 2) },
+            { SFSPartialReflector(true, 2) } );
+    sfs.addOrbifoldBoundary(false, 0, 0, {3, 1});
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            9 /* punctures */, 6 /* puncturesTwisted */,
+            6 /* reflectors */, 5 /* reflectorsTwisted */,
+            { SFSPartialReflector(false, 1), SFSPartialReflector(false, 2),
+            SFSPartialReflector(false, 3) },
+            { SFSPartialReflector(true, 2) } );
+    sfs.addOrbifoldBoundary(true, 0, 0, {3, 1});
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            9 /* punctures */, 6 /* puncturesTwisted */,
+            6 /* reflectors */, 5 /* reflectorsTwisted */,
+            { SFSPartialReflector(false, 1), SFSPartialReflector(false, 2),
+            SFSPartialReflector(false, 3) },
+            { SFSPartialReflector(true, 1), SFSPartialReflector(true, 2),
+            SFSPartialReflector(true, 3) } );
+    sfs.addOrbifoldBoundary(true, 1, 0,
+            { SFSPartialReflector(true, 1), SFSPartialReflector(false, 2) });
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            9 /* punctures */, 7 /* puncturesTwisted */,
+            6 /* reflectors */, 5 /* reflectorsTwisted */,
+            { SFSPartialReflector(false, 1), SFSPartialReflector(false, 2),
+            SFSPartialReflector(false, 2), SFSPartialReflector(false, 3) },
+            { SFSPartialReflector(true, 1), SFSPartialReflector(true, 1),
+            SFSPartialReflector(true, 2), SFSPartialReflector(true, 3) } );
+
+    // To be safe, check that we didn't change the fibres and obstruction.
+    EXPECT_EQ( sfs.fibreCount(), 0 );
+    EXPECT_EQ( sfs.obstruction(), 0 );
+}
+
+void verifyName(const SFSpace& sfs, const char* expected) {
+    EXPECT_EQ( sfs.name(), expected );
+}
+
+void verifyStructureString(const SFSpace& sfs, const char* expected) {
+    EXPECT_EQ( sfs.structure(), expected );
+}
+
+TEST(SFSTest, structureString) {
+    {
+        SCOPED_TRACE("Circle bundles");
+
+        verifyName( SFSpace(), "S2 x S1" );
+        verifyName( SFSpace( SFSpace::BundleType::o1, 1 ), "T x S1" );
+        verifyName( SFSpace( SFSpace::BundleType::o1, 0, 1 ), "D x S1" );
+
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::o1, 3 ),
+                "Or, g=3 x S1" );
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::o2, 3 ),
+                "Or, g=3/o2 x~ S1" );
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::n1, 3 ),
+                "Non-or, g=3 x S1" );
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::n2, 3 ),
+                "Non-or, g=3/n2 x~ S1" );
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::n3, 3 ),
+                "Non-or, g=3/n3 x~ S1" );
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::n4, 3 ),
+                "Non-or, g=3/n4 x~ S1" );
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::o, 3, 0, 2 ),
+                "Or, g=3 + 2 twisted punctures/o x~ S1" );
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::n, 3, 0, 1, 0, 1 ),
+                "Non-or, g=3 + 1 twisted puncture + "
+                "1 twisted reflector/n x~ S1" );
+    }
+
+    {
+        SCOPED_TRACE("Without reflector arcs");
+
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::o1, 3, 0, 0, 0, 0, {},
+                    { SFSFibre(1, 4) } ),
+                "SFS [Or, g=3: (1,4)]" );
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::o1, 3, 0, 0, 0, 0, {},
+                    { SFSFibre(3, 1), SFSFibre(2, 3) } ),
+                "SFS [Or, g=3: (2,1) (3,4)]" );
+    }
+
+    {
+        SCOPED_TRACE("With reflector arcs");
+
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::o1, 3, 0, 0, 0, 0,
+                    { SFSPartialReflector(false, 1) } ),
+                "Or, g=3 + partial reflector (+,1) x S1" );
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::o1, 3, 0, 0, 0, 0,
+                    { SFSPartialReflector(false, 2),
+                    SFSPartialReflector(false, 1) } ),
+                "Or, g=3 + partial reflectors (+,1) (+,2) x S1" );
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::o, 3, 0, 1, 0, 0,
+                    { SFSPartialReflector(true, 1) } ),
+                "Or, g=3 + 1 twisted puncture + "
+                "partial reflector (-,1)/o x~ S1" );
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::o, 3, 0, 0, 0, 0,
+                    { SFSPartialReflector(true, 2),
+                    SFSPartialReflector(true, 1) } ),
+                "Or, g=3 + partial reflectors (-,1) (-,2)/o x~ S1" );
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::o, 3, 0, 1, 0, 0,
+                    { SFSPartialReflector(true, 1),
+                    SFSPartialReflector(false, 2) } ),
+                "Or, g=3 + 1 twisted puncture + "
+                "partial reflectors (+,2) (-,1)/o x~ S1" );
+    }
 }
 
 void verifyLens( const SFSpace& sfs, bool expectedHasValue ) {
@@ -56,9 +659,9 @@ void verifyLens( const SFSpace& sfs, bool expectedHasValue ) {
 }
 
 TEST(SFSTest, lens) {
-    // Lens spaces usually have class o1 over the 2-sphere (genus 0), with at
-    // most two exceptional fibres.
-    SFSpace sfsOverS2 = buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0, {} );
+    // Lens spaces usually have bundle type o1 over the 2-sphere (genus 0,
+    // and no punctures or reflectors), with at most two exceptional fibres.
+    SFSpace sfsOverS2{};
     verifyLens( sfsOverS2, true );
     sfsOverS2.insertFibre(5, 2);
     verifyLens( sfsOverS2, true );
@@ -69,60 +672,26 @@ TEST(SFSTest, lens) {
 
     // Verify some cases which are obviously not lens spaces.
     verifyLens(
-            buildSFS( SFSpace::Class::o1, 1, 0, 0, 0, 0, {} ),
+            SFSpace(SFSpace::BundleType::o1, 1),
             false );
     verifyLens(
-            buildSFS( SFSpace::Class::bo1, 0, 1, 0, 0, 0, {} ),
+            SFSpace(SFSpace::BundleType::o1, 0, 1),
             false );
     verifyLens(
-            buildSFS( SFSpace::Class::bo1, 0, 0, 1, 0, 0, {} ),
+            SFSpace(SFSpace::BundleType::o1, 0, 0, 0, 1),
             false );
     verifyLens(
-            buildSFS( SFSpace::Class::bo1, 0, 0, 0, 1, 0, {} ),
+            SFSpace(SFSpace::BundleType::o2, 1),
             false );
     verifyLens(
-            buildSFS( SFSpace::Class::bo1, 0, 0, 0, 0, 1, {} ),
-            false );
-    verifyLens(
-            buildSFS( SFSpace::Class::o2, 1, 0, 0, 0, 0, {} ),
-            false );
-    verifyLens(
-            buildSFS( SFSpace::Class::n2, 2, 0, 0, 0, 0, {} ),
+            SFSpace(SFSpace::BundleType::n2, 2),
             false );
 }
 
-void verifyName(const SFSpace& sfs, const char* expected) {
-    EXPECT_EQ(sfs.name(), expected);
-}
-
-bool hasSameFibres( const SFSpace& reference, const SFSpace& compare,
-        bool allowReflect=true){
-    if ( reference.fibreCount() != compare.fibreCount() ) {
-        return false;
-    }
-    if (allowReflect) {
-        if ( hasSameFibres( reference, compare, false ) ) {
-            return true;
-        }
-
-        // Try the reflection instead.
-        SFSpace reflected(compare);
-        reflected.reflect();
-        return hasSameFibres( reference, reflected, false );
-    }
-    size_t iFibre;
-    for ( iFibre = 0; iFibre < reference.fibreCount(); ++iFibre ) {
-        if ( reference.fibre(iFibre) != compare.fibre(iFibre) ) {
-            return false;
-        }
-    }
-    return true;
-}
-
-void verifyStructureOrientable(const SFSpace& sfs) {
+void verifyConstructOrientable(const SFSpace& sfs) {
     // This test is designed for orientable SFS only. We therefore assume the
     // following:
-    //  (1) sfs.baseClass() is one of o1, n2, bo1 or bn2.
+    //  (1) sfs.bundleType() is either o1 or n2.
     //  (2) There are no twisted punctures.
     //  (3) There are no reflectors at all (whether twisted or untwisted).
     //
@@ -139,7 +708,7 @@ void verifyStructureOrientable(const SFSpace& sfs) {
     // The upshot is that it should be safe to use this test as long as the
     // given sfs is sufficiently generic.
     SFSpace reduced(sfs);
-    reduced.reduce();
+    reduced.reduce(false);
     SCOPED_TRACE( reduced.name() );
 
     ASSERT_NO_THROW( sfs.construct() );
@@ -148,68 +717,39 @@ void verifyStructureOrientable(const SFSpace& sfs) {
     auto blockedManifold = blockedSFS->manifold();
     ASSERT_TRUE(blockedManifold);
     SFSpace compare = dynamic_cast<SFSpace&>(*blockedManifold);
-    compare.reduce();
-    if ( reduced.baseClass() == SFSpace::Class::o1 or
-            reduced.baseClass() == SFSpace::Class::n2 ) {
-        // Closed orientable SFS, so the isomorphism class is determined not
-        // only by the base surface and the (reduced) fibres, but also by the
-        // obstruction constant.
-        EXPECT_EQ( reduced, compare );
-    } else {
-        // Following the above, we assume sfs.baseClass() is either bo1 or bn2.
-        //
-        // The obstruction constant has no bearing on the isomorphism type, so
-        // we just compare the base surface and the (reduced) fibres.
-        EXPECT_EQ( reduced.baseClass(), compare.baseClass() );
-        EXPECT_EQ( reduced.baseGenus(), compare.baseGenus() );
-        EXPECT_EQ( reduced.punctures(), compare.punctures() );
 
-        // For comparing the fibres, we need to allow reflections, because the
-        // current implementation of SFSpace::reduce() doesn't fully reduce b_
-        // for orientable SFS with non-empty boundary.
-        //
-        //TODO Improve SFSpace::reduce() to address this. The obstacle to
-        //      making such an improvement is that there are tests for
-        //      StandardTriangulation (and possibly also other parts of the
-        //      codebase) which rely on the current implementation.
-        EXPECT_TRUE( hasSameFibres( reduced, compare ) );
-    }
+    // Now that SFSpace::reduce() promises to reduce the obstruction constant
+    // to zero whenever we have punctures, we can check for
+    // (orientation-preserving) isomorphism by simply checking whether the
+    // reduced parameters are equal.
+    compare.reduce(false);
+    EXPECT_EQ( reduced, compare );
 }
 
 TEST(SFSTest, construct) {
-    verifyName(
-            buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0, {} ),
-            "S2 x S1" );
-    verifyName(
-            buildSFS( SFSpace::Class::o1, 1, 0, 0, 0, 0, {} ),
-            "T x S1" );
-    verifyName(
-            buildSFS( SFSpace::Class::bo1, 0, 1, 0, 0, 0, {} ),
-            "D x S1" );
-
     {
         SCOPED_TRACE("Orientable SFS over S^2 with >= 3 exceptional fibres");
 
-        verifyStructureOrientable(
-                buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0,
+        verifyConstructOrientable(
+                SFSpace( SFSpace::BundleType::o1, 0, 0, 0, 0, 0, {},
                     { SFSFibre(2, 1), SFSFibre(5, 1), SFSFibre(5, -2) } ) );
-        verifyStructureOrientable(
-                buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0,
+        verifyConstructOrientable(
+                SFSpace( SFSpace::BundleType::o1, 0, 0, 0, 0, 0, {},
                     { SFSFibre(3, 1), SFSFibre(7, -2), SFSFibre(7, 2) } ) );
-        verifyStructureOrientable(
-                buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0,
+        verifyConstructOrientable(
+                SFSpace( SFSpace::BundleType::o1, 0, 0, 0, 0, 0, {},
                     { SFSFibre(2, 1), SFSFibre(5, 1), SFSFibre(5, -2),
                     SFSFibre(2, 3) } ) );
-        verifyStructureOrientable(
-                buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0,
+        verifyConstructOrientable(
+                SFSpace( SFSpace::BundleType::o1, 0, 0, 0, 0, 0, {},
                     { SFSFibre(3, 1), SFSFibre(7, -2), SFSFibre(7, 2),
                     SFSFibre(7, -3) } ) );
-        verifyStructureOrientable(
-                buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0,
+        verifyConstructOrientable(
+                SFSpace( SFSpace::BundleType::o1, 0, 0, 0, 0, 0, {},
                     { SFSFibre(2, 1), SFSFibre(5, 1), SFSFibre(5, -2),
                     SFSFibre(2, 3), SFSFibre(8, 3) } ) );
-        verifyStructureOrientable(
-                buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0,
+        verifyConstructOrientable(
+                SFSpace( SFSpace::BundleType::o1, 0, 0, 0, 0, 0, {},
                     { SFSFibre(3, 1), SFSFibre(7, -2), SFSFibre(7, 2),
                     SFSFibre(7, -3), SFSFibre(5, -2), SFSFibre(5, 8) } ) );
     }
@@ -217,42 +757,42 @@ TEST(SFSTest, construct) {
     {
         SCOPED_TRACE("Orientable circle bundles with Euler number 0");
 
-        verifyStructureOrientable(
-                buildSFS( SFSpace::Class::o1, 2, 0, 0, 0, 0, {} ) );
-        verifyStructureOrientable(
-                buildSFS( SFSpace::Class::bo1, 0, 2, 0, 0, 0, {} ) );
-        verifyStructureOrientable(
-                buildSFS( SFSpace::Class::bo1, 1, 1, 0, 0, 0, {} ) );
-        verifyStructureOrientable(
-                buildSFS( SFSpace::Class::n2, 2, 0, 0, 0, 0, {} ) );
-        verifyStructureOrientable(
-                buildSFS( SFSpace::Class::bn2, 1, 2, 0, 0, 0, {} ) );
-        verifyStructureOrientable(
-                buildSFS( SFSpace::Class::bn2, 2, 1, 0, 0, 0, {} ) );
+        verifyConstructOrientable(
+                SFSpace( SFSpace::BundleType::o1, 2 ) );
+        verifyConstructOrientable(
+                SFSpace( SFSpace::BundleType::o1, 0, 2 ) );
+        verifyConstructOrientable(
+                SFSpace( SFSpace::BundleType::o1, 1, 1 ) );
+        verifyConstructOrientable(
+                SFSpace( SFSpace::BundleType::n2, 2 ) );
+        verifyConstructOrientable(
+                SFSpace( SFSpace::BundleType::n2, 1, 2 ) );
+        verifyConstructOrientable(
+                SFSpace( SFSpace::BundleType::n2, 2, 1 ) );
     }
 
     {
         SCOPED_TRACE("Orientable SFS over D^2 with >= 2 exceptional fibres");
 
-        verifyStructureOrientable(
-                buildSFS( SFSpace::Class::bo1, 0, 1, 0, 0, 0,
+        verifyConstructOrientable(
+                SFSpace( SFSpace::BundleType::o1, 0, 1, 0, 0, 0, {},
                     { SFSFibre(5, 1), SFSFibre(5, -2) } ) );
-        verifyStructureOrientable(
-                buildSFS( SFSpace::Class::bo1, 0, 1, 0, 0, 0,
+        verifyConstructOrientable(
+                SFSpace( SFSpace::BundleType::o1, 0, 1, 0, 0, 0, {},
                     { SFSFibre(3, 1), SFSFibre(7, -2), SFSFibre(7, 2) } ) );
-        verifyStructureOrientable(
-                buildSFS( SFSpace::Class::bo1, 0, 1, 0, 0, 0,
+        verifyConstructOrientable(
+                SFSpace( SFSpace::BundleType::o1, 0, 1, 0, 0, 0, {},
                     { SFSFibre(5, 1), SFSFibre(5, -2), SFSFibre(2, 3) } ) );
-        verifyStructureOrientable(
-                buildSFS( SFSpace::Class::bo1, 0, 1, 0, 0, 0,
+        verifyConstructOrientable(
+                SFSpace( SFSpace::BundleType::o1, 0, 1, 0, 0, 0, {},
                     { SFSFibre(3, 1), SFSFibre(7, -2), SFSFibre(7, 2),
                     SFSFibre(7, -3) } ) );
-        verifyStructureOrientable(
-                buildSFS( SFSpace::Class::bo1, 0, 1, 0, 0, 0,
+        verifyConstructOrientable(
+                SFSpace( SFSpace::BundleType::o1, 0, 1, 0, 0, 0, {},
                     { SFSFibre(2, 1), SFSFibre(5, 1), SFSFibre(5, -2),
                     SFSFibre(2, 3), SFSFibre(8, 3) } ) );
-        verifyStructureOrientable(
-                buildSFS( SFSpace::Class::bo1, 0, 1, 0, 0, 0,
+        verifyConstructOrientable(
+                SFSpace( SFSpace::BundleType::o1, 0, 1, 0, 0, 0, {},
                     { SFSFibre(3, 1), SFSFibre(7, -2), SFSFibre(7, 2),
                     SFSFibre(7, -3), SFSFibre(5, -2), SFSFibre(5, 8) } ) );
     }
@@ -262,58 +802,50 @@ TEST(SFSTest, construct) {
 
         long signedGenus;
         size_t genus, punctures;
-        SFSpace::Class useClass;
+        SFSpace::BundleType bundleType;
         for (signedGenus = -2; signedGenus <= 2; ++signedGenus) {
             for (punctures = 0; punctures <= 2; ++punctures) {
-                // Calculate genus and useClass for the base.
+                // Calculate genus and bundleType for the base.
                 if (signedGenus == 0) {
                     if (punctures < 2) {
                         continue;
                     }
                     genus = 0;
-                    useClass = SFSpace::Class::bo1;
+                    bundleType = SFSpace::BundleType::o1;
                 } else if (signedGenus > 0) {
                     genus = signedGenus;
-                    if (punctures == 0) {
-                        useClass = SFSpace::Class::o1;
-                    } else {
-                        useClass = SFSpace::Class::bo1;
-                    }
+                    bundleType = SFSpace::BundleType::o1;
                 } else {
                     genus = -signedGenus;
-                    if (punctures == 0) {
-                        useClass = SFSpace::Class::n2;
-                    } else {
-                        useClass = SFSpace::Class::bn2;
-                    }
+                    bundleType = SFSpace::BundleType::n2;
                 }
 
                 // Test with various sets of exceptional fibres.
                 if ( signedGenus != -1 or punctures != 0 ) {
                     // To avoid lens spaces, only do this test when the base
                     // isn't a projective plane.
-                    verifyStructureOrientable(
-                            buildSFS( useClass, genus, punctures, 0, 0, 0,
-                                { SFSFibre(3, 1) } ) );
+                    verifyConstructOrientable(
+                            SFSpace( bundleType, genus, punctures, 0, 0, 0,
+                                {}, { SFSFibre(3, 1) } ) );
                 }
-                verifyStructureOrientable(
-                        buildSFS( useClass, genus, punctures, 0, 0, 0,
+                verifyConstructOrientable(
+                        SFSpace( bundleType, genus, punctures, 0, 0, 0, {},
                             { SFSFibre(5, 1), SFSFibre(5, -2) } ) );
-                verifyStructureOrientable(
-                        buildSFS( useClass, genus, punctures, 0, 0, 0,
+                verifyConstructOrientable(
+                        SFSpace( bundleType, genus, punctures, 0, 0, 0, {},
                             { SFSFibre(3, 1), SFSFibre(7, -2),
                             SFSFibre(7, 2) } ) );
-                verifyStructureOrientable(
-                        buildSFS( useClass, genus, punctures, 0, 0, 0,
+                verifyConstructOrientable(
+                        SFSpace( bundleType, genus, punctures, 0, 0, 0, {},
                             { SFSFibre(3, 1), SFSFibre(7, -2),
                             SFSFibre(7, 2), SFSFibre(7, -3) } ) );
-                verifyStructureOrientable(
-                        buildSFS( useClass, genus, punctures, 0, 0, 0,
+                verifyConstructOrientable(
+                        SFSpace( bundleType, genus, punctures, 0, 0, 0, {},
                             { SFSFibre(2, 1), SFSFibre(5, 1),
                             SFSFibre(5, -2), SFSFibre(2, 3),
                             SFSFibre(8, 3) } ) );
-                verifyStructureOrientable(
-                        buildSFS( useClass, genus, punctures, 0, 0, 0,
+                verifyConstructOrientable(
+                        SFSpace( bundleType, genus, punctures, 0, 0, 0, {},
                             { SFSFibre(3, 1), SFSFibre(7, -2),
                             SFSFibre(7, 2), SFSFibre(7, -3),
                             SFSFibre(5, -2), SFSFibre(5, 8) } ) );
