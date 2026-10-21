@@ -28,7 +28,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "maths/matrixops.h"
+#include "maths/matrix.h"
 #include "maths/primes.h"
 #include "triangulation/dim3/homologicaldata.h"
 #include <list>
@@ -1274,17 +1274,15 @@ void HomologicalData::computeTorsionLinkingForm() {
     for (i=0; i<standardBasis.rows(); i++)
         for (j=0; j<standardBasis.columns(); j++)
             for (k=0; k<dualtostandard.columns(); k++)
-                standardBasis.entry(i,j) +=
-                    dualtostandard.entry(i,k)*pvList[j][k];
+                standardBasis.entry(i,j).addProduct(
+                    dualtostandard.entry(i,k), pvList[j][k]);
 
     // step 3: construct bounding classes
     //           the j-th column of standardBasis, when multiplied by
     //           ppList[j] bounds, so find a chain with that boundary and
     //           put its info in a matrix.
 
-    MatrixInt ON(mHomology1_->n());
-    MatrixInt R, Ri, C, Ci;
-    smithNormalForm(ON, R, Ri, C, Ci);
+    auto [ON, R, Ri, C, Ci] = mHomology1_->n().smithCoB();
     // boundingMat=R*(divide by ON diag, rescale(C*areboundariesM))
     //                                             ---- stepa -----
     //                  ---------------- stepb ---

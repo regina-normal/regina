@@ -35,9 +35,9 @@
 void add3D(pybind11::module_& m);
 void addArrow(pybind11::module_& m);
 void addBinom(pybind11::module_& m);
-void addMatrixOps(pybind11::module_& m);
 void addCyclotomic(pybind11::module_& m);
 void addInteger(pybind11::module_& m);
+void addKaratsuba(pybind11::module_& m);
 void addLaurent(pybind11::module_& m);
 void addLaurent2(pybind11::module_& m);
 void addVector(pybind11::module_& m);
@@ -68,7 +68,6 @@ void addMathsClasses(pybind11::module_& m) {
 
     add3D(m);
     addBinom(m);
-    addMatrixOps(m);
     addPrimes(m);
     addNumberTheory(m);
     addPerm2(m);
@@ -85,6 +84,7 @@ void addMathsClasses(pybind11::module_& m) {
     addLaurent(m);
     addLaurent2(m);
     addArrow(m);
+    addKaratsuba(m);
 
     RDOC_SCOPE_BEGIN(Perm)
 

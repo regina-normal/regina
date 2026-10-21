@@ -96,6 +96,36 @@ concept SameModCVRef =
     std::same_as<std::remove_cvref_t<T>, std::remove_cvref_t<U>>;
 
 /**
+ * A mathematical type that has an inherent in-place negation function.
+ * This function must follow Regina's usual signature of `void negate()`.
+ *
+ * Such functions are typically provided when in-place negation is more
+ * efficient than the usual `x = -x` (which makes a temporary deep copy).
+ *
+ * \nopython
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept Negatable =
+    requires(T t) { { t.negate() } -> std::same_as<void>; };
+
+/**
+ * A mathematical type that has an inherent addProduct() function.
+ *
+ * Such functions are typically provided when `x.addProduct(y, z)` can be made
+ * more efficient than the usual sequence of operators `x += y * z` (which
+ * requires the creation of a temporary object).
+ *
+ * \nopython
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept HasAddProduct =
+    requires(T t, const T x, const T y) { { t.addProduct(x, y) }; };
+
+/**
  * A type that has the necessary operations to behave like a mathematical ring.
  *
  * \ingroup concepts
@@ -131,6 +161,16 @@ concept Ring =
     };
 
 /**
+ * A commutative ring.
+ *
+ * Commutativity is self-identified through the specialisation `RingTraits<T>`.
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept CommutativeRing = Ring<T> && RingTraits<T>::commutative;
+
+/**
  * A ring with no zero divisors.
  *
  * The property of having no zero divisors is self-identified through the
@@ -139,7 +179,15 @@ concept Ring =
  * \ingroup concepts
  */
 template <typename T>
-concept Domain = Ring<T> && ! RingTraits<T>::zeroDivisors;
+concept Domain =
+    Ring<T> &&
+    (! RingTraits<T>::zeroDivisors) &&
+    requires(const T a, T x, const long s, const unsigned long u) {
+        { a / s } -> std::convertible_to<T>;
+        { a / u } -> std::convertible_to<T>;
+        { x /= s } -> std::same_as<T&>;
+        { x /= u } -> std::same_as<T&>;
+    };
 
 /**
  * A commutative ring with no zero divisors.
@@ -176,7 +224,10 @@ concept Field = IntegralDomain<T> && RingTraits<T>::inverses;
  */
 template <typename T>
 concept CoefficientDomain =
-    Domain<T> && IntegerComparable<T> && RingTraits<T>::zeroInitialised;
+    Domain<T> &&
+    IntegerComparable<T> &&
+    Negatable<T> &&
+    RingTraits<T>::zeroInitialised;
 
 /**
  * One of Regina's own bitmask types.

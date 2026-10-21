@@ -49,6 +49,8 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
+template <CoefficientDomain T> class Laurent;
+
 /**
  * Represents a Laurent polynomial in the two variables \e x, \e y with
  * coefficients of type \a T.  A Laurent polynomial differs from an ordinary
@@ -78,9 +80,33 @@ template <CoefficientDomain T>
 class Laurent2 :
         public ShortOutput<Laurent2<T>, true>,
         public TightEncodable<Laurent2<T>> {
+    private:
+        /**
+         * A pair of exponents that appear in a single term of a two-variable
+         * Laurent polynomial.  The first and second elements of the pair are
+         * the exponents of \a x and \a y respectively.
+         */
+        using Exponents = std::pair<long, long>;
+
     public:
+        /**
+         * The type of each coefficient of the polynomial.
+         */
         using Coefficient = T;
-            /**< The type of each coefficient of the polynomial. */
+
+        /**
+         * A read-only iterator type for iterating over non-zero polynomial
+         * coefficients and their corresponding exponent pairs.  This is
+         * identical to \a const_iterator, since iterators over coefficients
+         * are always read-only.
+         */
+        using iterator = std::map<Exponents, T>::const_iterator;
+
+        /**
+         * A read-only iterator type for iterating over non-zero polynomial
+         * coefficients and their corresponding exponent pairs.
+         */
+        using const_iterator = std::map<Exponents, T>::const_iterator;
 
         // Make sure the compiler can see the zero-argument string output
         // routines, since we declare alternative versions of these below.
@@ -88,11 +114,9 @@ class Laurent2 :
         using ShortOutput<Laurent2<T>, true>::utf8;
 
     private:
-        using Exponents = std::pair<long, long>;
-
         std::map<Exponents, T> coeff_;
             /**< Stores all non-zero coefficients of the polynomial.
-                 Specifically, coeff_[(i,j)] stores the coefficient of
+                 Specifically, `coeff_[(i,j)]` stores the coefficient of
                  `x^i y^j`. */
 
         static const T zero_;
@@ -116,7 +140,7 @@ class Laurent2 :
          *
          * \param value the polynomial to clone.
          */
-        Laurent2(const Laurent2<T>& value);
+        Laurent2(const Laurent2<T>& value) = default;
 
         /**
          * Moves the contents of the given polynomial to this new polynomial.
@@ -129,10 +153,11 @@ class Laurent2 :
         Laurent2(Laurent2<T>&& value) noexcept = default;
 
         /**
-         * Creates a copy of the given polynomial with all terms
-         * multiplied by `x^d y^e` for some integers \a d and \a e.
+         * Deprecated constructor that creates a copy of the given polynomial
+         * with all terms multiplied by `x^d y^e` for some given integers
+         * \a d and \a e.
          *
-         * This constructor induces a deep (and modified) copy of \a value.
+         * \deprecated Use `toShift.shifted(xShift, yShift)` instead.
          *
          * \param toShift the polynomial to clone and shift.
          * \param xShift the integer \a d, which will be added to all
@@ -140,7 +165,13 @@ class Laurent2 :
          * \param yShift the integer \a e, which will be added to all
          * exponents for \a y.
          */
-        Laurent2(const Laurent2<T>& toShift, long xShift, long yShift);
+        [[deprecated]] Laurent2(const Laurent2<T>& toShift,
+                long xShift, long yShift) {
+            for (const auto& entry : toShift.coeff_)
+                coeff_.emplace_hint(coeff_.end(),
+                    std::make_pair(entry.first.first + xShift,
+                        entry.first.second + yShift), entry.second);
+        }
 
         /**
          * Creates a new copy of the given polynomial.
@@ -155,7 +186,8 @@ class Laurent2 :
          */
         template <CoefficientDomain U>
         requires std::assignable_from<T&, U>
-        Laurent2(const Laurent2<U>& value);
+        Laurent2(const Laurent2<U>& value) : coeff_(value.coeff_) {
+        }
 
         /**
          * Creates a new polynomial from the given collection of coefficients.
@@ -186,7 +218,21 @@ class Laurent2 :
             { std::get<1>(*it) } -> std::convertible_to<long>;
             { std::get<2>(*it) } -> std::convertible_to<T>;
         }
-        Laurent2(Iterator begin, Iterator end);
+        Laurent2(Iterator begin, Iterator end) {
+            for (auto it = begin; it != end; ++it) {
+                if (std::get<2>(*it) == 0)
+                    continue;
+
+                auto res = coeff_.emplace(Exponents(
+                    std::get<0>(*it), std::get<1>(*it)), std::get<2>(*it));
+                if (! res.second) {
+                    // This pair of exponents is already present.
+                    // Accumulate, and erase if the coefficient becomes zero.
+                    if ((res.first->second += std::get<2>(*it)) == 0)
+                        coeff_.erase(res.first);
+                }
+            }
+        }
 
         /**
          * Creates a new polynomial from a hard-coded collection of
@@ -219,12 +265,180 @@ class Laurent2 :
          * \param coefficients the set of all non-zero coefficients, as
          * outlined above.
          */
-        Laurent2(std::initializer_list<std::tuple<long, long, T>> coefficients);
+        Laurent2(std::initializer_list<std::tuple<long, long, T>>
+                coefficients) {
+            for (const auto& c : coefficients) {
+                if (std::get<2>(c) == 0)
+                    throw InvalidArgument("One of the given tuples has a "
+                        "value of zero");
+                if (! coeff_.emplace(Exponents(std::get<0>(c), std::get<1>(c)),
+                        std::get<2>(c)).second)
+                    throw InvalidArgument("Two of the given tuples share the "
+                        "same pair of exponents");
+            }
+        }
+
+        /**
+         * Creates a new polynomial with a single constant term, equal to the
+         * given value.
+         *
+         * There is no problem if the given value is zero.
+         *
+         * \param constant the value of this new constant polynomial.
+         */
+        Laurent2(const T& constant) {
+            if (constant != 0)
+                coeff_.emplace(Exponents(0, 0), constant);
+        }
+
+        /**
+         * Creates a new polynomial with a single constant term, whose
+         * contents will be moved out of the given value.
+         *
+         * The value that was passed (\a constant) will no longer be usable.
+         *
+         * There is no problem if the given value is zero.
+         *
+         * \param constant the value of this new constant polynomial.
+         */
+        Laurent2(T&& constant) {
+            if (constant != 0)
+                coeff_.emplace(Exponents(0, 0), std::move(constant));
+        }
+
+        /**
+         * Creates a new polynomial with a single integer constant term.
+         *
+         * There is no problem if the given constant is zero (though you can
+         * also construct the zero polynomial by passing no arguments at all).
+         *
+         * The extent to which this constructor can handle large native
+         * integer types without overflow will depend on how well such integer
+         * types are supported by the coefficient type \a T.
+         *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \param constant the value of this new polynomial.
+         */
+        template <CppInteger IntType>
+        Laurent2(IntType constant) {
+            if (constant)
+                coeff_.emplace(Exponents(0, 0), constant);
+        }
+
+        /**
+         * Creates a new two-variable Laurent polynomial from a one-variable
+         * Laurent polynomial.
+         *
+         * Specifically, this will become the two-variable polynomial
+         * `poly(x^xExp y^yExp)`.
+         *
+         * \param poly the one-variable polynomial into which we substitute
+         * `x^xExp y^yExp`.
+         * \param xExp the power of \a x to substitute into \a poly.
+         * \param yExp the power of \a y to substitute into \a poly.
+         */
+        Laurent2(const Laurent<T>& poly, long xExp, long yExp) {
+            if (xExp == 0 && yExp == 0) {
+                // Create a single constant that sums all coefficients of poly.
+                T sum; // zero-initialised
+                for (long e = poly.minExp(); e <= poly.maxExp(); ++e)
+                    sum += poly[e];
+                if (sum != 0)
+                    coeff_.emplace(Exponents(0, 0), std::move(sum));
+            } else {
+                if (xExp > 0 || (xExp == 0 && yExp > 0)) {
+                    for (long e = poly.minExp(); e <= poly.maxExp(); ++e) {
+                        const T& coeff = poly[e];
+                        if (coeff != 0)
+                            coeff_.emplace_hint(coeff_.end(),
+                                Exponents(xExp * e, yExp * e), coeff);
+                    }
+                } else {
+                    for (long e = poly.minExp(); e <= poly.maxExp(); ++e) {
+                        const T& coeff = poly[e];
+                        if (coeff != 0)
+                            coeff_.emplace_hint(coeff_.begin(),
+                                Exponents(xExp * e, yExp * e), coeff);
+                    }
+                }
+            }
+        }
+
+        /**
+         * Creates a new two-variable Laurent polynomial as a product of two
+         * one-variable Laurent polynomials.
+         *
+         * Specifically, this will become the two-variable polynomial
+         * `xPoly(x) * yPoly(y)`.
+         *
+         * \param xPoly the factor that is a polynomial in `x`.
+         * \param yPoly the factor that is a polynomial in `y`.
+         */
+        Laurent2(const Laurent<T>& xPoly, const Laurent<T>& yPoly) {
+            if (xPoly.isZero() || yPoly.isZero())
+                return;
+            for (long x = xPoly.minExp(); x <= xPoly.maxExp(); ++x) {
+                const T& xCoeff = xPoly[x];
+                if (xCoeff != 0)
+                    for (long y = yPoly.minExp(); y <= yPoly.maxExp(); ++y) {
+                        const T& yCoeff = yPoly[y];
+                        if (yCoeff != 0)
+                            coeff_.emplace_hint(coeff_.end(),
+                                Exponents(x, y), xCoeff * yCoeff);
+                    }
+            }
+        }
+
+        /**
+         * Creates a new two-variable Laurent polynomial from a "nested"
+         * one-variable Laurent polynomial type.  The input will be treated as
+         * a Laurent polynomial over \a x, whose coefficients are Laurent
+         * polynomials over \a y.
+         *
+         * \nopython
+         *
+         * \param poly the "nested" one-variable polynomial to convert.
+         */
+        template <CanConstruct<T> U>
+        Laurent2(const Laurent<Laurent<U>>& poly) {
+            for (long i = poly.minExp(); i <= poly.maxExp(); ++i) {
+                const auto& coeff = poly[i];
+                for (long j = coeff.minExp(); j <= coeff.maxExp(); ++j)
+                    coeff_.emplace_hint(coeff_.end(),
+                        Exponents(i, j), coeff[j]);
+            }
+        }
+
+        /**
+         * Creates a new two-variable Laurent polynomial by moving the data
+         * from a "nested" one-variable Laurent polynomial type.  The input
+         * will be treated as a Laurent polynomial over \a x, whose
+         * coefficients are Laurent polynomials over \a y.
+         *
+         * After calling this constructor, the input polynomial will be
+         * unusable.
+         *
+         * \nopython
+         *
+         * \param poly the "nested" one-variable polynomial to convert.
+         */
+        template <CanConstruct<T> U>
+        Laurent2(Laurent<Laurent<U>>&& poly) {
+            std::move(poly).extract([this](Laurent<U>&& yPoly, long xExp) {
+                std::move(yPoly).extract([this, xExp](U&& coeff, long yExp) {
+                    coeff_.emplace_hint(coeff_.end(),
+                        Exponents(xExp, yExp), std::move(coeff));
+                });
+            });
+        }
 
         /**
          * Sets this to become the zero polynomial.
          */
-        void init();
+        void init() {
+            coeff_.clear();
+        }
 
         /**
          * Sets this to become the polynomial `x^d y^e` for the
@@ -233,14 +447,19 @@ class Laurent2 :
          * \param xExp the new exponent \a d, which is attached to \a x.
          * \param yExp the new exponent \a e, which is attached to \a y.
          */
-        void initExp(long xExp, long yExp);
+        void initExp(long xExp, long yExp) {
+            coeff_.clear();
+            coeff_.emplace(Exponents(xExp, yExp), 1);
+        }
 
         /**
          * Returns whether this is the zero polynomial.
          *
          * \return \c true if and only if this is the zero polynomial.
          */
-        bool isZero() const;
+        bool isZero() const {
+            return coeff_.empty();
+        }
 
         /**
          * Returns the given coefficient of this polynomial.
@@ -262,7 +481,13 @@ class Laurent2 :
          * \param yExp the exponent attached to \a y.
          * \return the coefficient of the term with the given exponents.
          */
-        const T& operator () (long xExp, long yExp) const;
+        const T& operator () (long xExp, long yExp) const {
+            auto it = coeff_.find(Exponents(xExp, yExp));
+            if (it == coeff_.end())
+                return zero_;
+            else
+                return it->second;
+        }
 
         /**
          * Changes the given coefficient of this polynomial.
@@ -281,7 +506,120 @@ class Laurent2 :
          * \param yExp the exponent attached to \a y.
          * \param value the new value of the corresponding coefficient.
          */
-        void set(long xExp, long yExp, const T& value);
+        void set(long xExp, long yExp, const T& value) {
+            if (value == 0) {
+                coeff_.erase(Exponents(xExp, yExp));
+            } else {
+                auto result = coeff_.emplace(Exponents(xExp, yExp), value);
+                if (! result.second) {
+                    // A coefficient was already present.  Change it.
+                    result.first->second = value;
+                }
+            }
+        }
+
+        /**
+         * Returns a C++ iterator pointing to the beginning of the list of
+         * all non-zero coefficients and their corresponding exponent pairs.
+         * Such iterators provide read-only access to the coefficients:
+         * to modify coefficients you will need to call different routines,
+         * such as set().
+         *
+         * Iterators in Laurent2 work differently from single-variable
+         * polynomial classes such as Polynomial and Laurent:
+         *
+         * - they run through only the _non-zero_ coefficients of the
+         *   polynomial, ignoring any zero coefficients;
+         *
+         * - dereferencing an iterator gives access to not only a coefficent,
+         *   but also its corresponding exponent pair.
+         *
+         * Specifically, dereferencing an iterator will give a result of the
+         * form `((s, t), c)`, where round brackets indicate pairs (stored via
+         * `std::pair`).  This result describes a single term in the polynomial
+         * of the form `c x^s y^t`.
+         *
+         * The order of iteration will be lexicographic in the pair `(s, t)`
+         * above; that is, by increasing \a x exponent and then (in the case
+         * of ties) by increasing \a y exponent.
+         *
+         * If this is the zero polynomial then the iterator range from
+         * begin() to end() will be empty.
+         *
+         * \nopython For Python users, Laurent2 implements the Python iterable
+         * interface.  You can iterate through coefficients in the same way
+         * that you would iterate over any native Python container.
+         *
+         * \return an iterator pointing to the first non-zero coefficient and
+         * corresponding exponent pair.
+         */
+        iterator begin() const {
+            return coeff_.begin();
+        }
+
+        /**
+         * Returns a C++ iterator pointing beyond the end of the list of
+         * all non-zero coefficients and their corresponding exponent pairs.
+         * Such iterators provide read-only access to the coefficients:
+         * to modify coefficients you will need to call different routines,
+         * such as set().
+         *
+         * See begin() for full details on how these iterators work.
+         * In particular, they work differently from single-variable polynomial
+         * classes such as Polynomial and Laurent: for instance, they only run
+         * through _non-zero_ coefficients, and they also give access to the
+         * corresponding exponent pairs.
+         *
+         * \nopython For Python users, Laurent2 implements the Python iterable
+         * interface.  You can iterate through coefficients in the same way
+         * that you would iterate over any native Python container.
+         *
+         * \return an iterator pointing beyond the last non-zero coefficient and
+         * corresponding exponent pair.
+         */
+        iterator end() const {
+            return coeff_.end();
+        }
+
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterator that provides read-only access to all
+         * non-zero coefficients and their corresponding exponent pairs.
+         * If this is the zero polynomial then this iterator range will be
+         * empty.
+         *
+         * To enforce read-only access, Python iterators will return
+         * coefficients and exponents by value, not by reference.  If you wish
+         * to modify coefficients or exponents then you will need to call
+         * different routines, such as set().
+         *
+         * Iterators in Laurent2 work differently from single-variable
+         * polynomial classes such as Polynomial and Laurent:
+         *
+         * - they run through only the _non-zero_ coefficients of the
+         *   polynomial, ignoring any zero coefficients;
+         *
+         * - each value returned by an iterator includes not only a coefficent,
+         *   but also its corresponding exponent pair.
+         *
+         * Specifically, each value returned by an iterator will be of the
+         * form `((s, t), c)`, where round brackets indicate pairs (stored via
+         * Python tuples).  This value describes a single term in the polynomial
+         * of the form `c x^s y^t`.
+         *
+         * The order of iteration will be lexicographic in the pair `(s, t)`
+         * above; that is, by increasing \a x exponent and then (in the case
+         * of ties) by increasing \a y exponent.
+         *
+         * \nocpp For C++ users, Laurent2 provides the usual begin() and end()
+         * functions instead.  In particular, you can iterate over coefficients
+         * and exponent pairs in the usual way using a range-based `for` loop.
+         *
+         * \return an iterator over all coefficients and their corresponding
+         * exponent pairs.
+         */
+        auto __iter__() const;
+#endif
 
         /**
          * Tests whether this and the given polynomial are equal.
@@ -290,7 +628,54 @@ class Laurent2 :
          * \return \c true if and only if this and the given polynomial
          * are equal.
          */
-        bool operator == (const Laurent2<T>& rhs) const;
+        bool operator == (const Laurent2<T>& rhs) const {
+            return coeff_ == rhs.coeff_;
+        }
+
+        /**
+         * Tests whether this polynomial is equal to the given constant.
+         *
+         * \param constant the value to compare this polynomial against.
+         * \return \c true if and only if this polynomial is equal to the
+         * given constant.
+         */
+        bool operator == (const T& constant) const {
+            if (constant == 0)
+                return coeff_.empty();
+            else {
+                if (coeff_.size() != 1)
+                    return false;
+                const auto& term = *coeff_.begin();
+                return (term.first.first == 0 && term.first.second == 0 &&
+                    term.second == constant);
+            }
+        }
+
+        /**
+         * Tests whether this polynomial is equal to the given integer constant.
+         *
+         * The extent to which this operator can handle large native
+         * integer types without overflow will depend on how well such integer
+         * types are supported by the coefficient type \a T.
+         *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \param constant the integer to compare this polynomial against.
+         * \return \c true if and only if this polynomial is equal to the
+         * given integer constant.
+         */
+        template <CppInteger IntType>
+        bool operator == (IntType constant) const {
+            if (constant == 0)
+                return coeff_.empty();
+            else {
+                if (coeff_.size() != 1)
+                    return false;
+                const auto& term = *coeff_.begin();
+                return (term.first.first == 0 && term.first.second == 0 &&
+                    term.second == constant);
+            }
+        }
 
         /**
          * Compares this against the given polynomial under a total
@@ -312,7 +697,9 @@ class Laurent2 :
          * \return the result of the comparison between this
          * and the given polynomial.
          */
-        std::strong_ordering operator <=> (const Laurent2<T>& rhs) const;
+        std::strong_ordering operator <=> (const Laurent2<T>& rhs) const {
+            return coeff_ <=> rhs.coeff_;
+        }
 
         /**
          * Sets this to be a copy of the given polynomial.
@@ -329,7 +716,7 @@ class Laurent2 :
          * \param value the polynomial to copy.
          * \return a reference to this polynomial.
          */
-        Laurent2& operator = (const Laurent2<T>& value);
+        Laurent2& operator = (const Laurent2<T>& value) = default;
 
         /**
          * Sets this to be a copy of the given polynomial.
@@ -344,7 +731,10 @@ class Laurent2 :
          */
         template <CoefficientDomain U>
         requires std::assignable_from<T&, U>
-        Laurent2& operator = (const Laurent2<U>& value);
+        Laurent2& operator = (const Laurent2<U>& value) {
+            coeff_ = value.coeff_;
+            return *this;
+        }
 
         /**
          * Moves the contents of the given polynomial to this polynomial.
@@ -361,6 +751,61 @@ class Laurent2 :
         Laurent2& operator = (Laurent2<T>&& value) noexcept = default;
 
         /**
+         * Sets this to the polynomial with a single constant term, equal to
+         * the given value.
+         *
+         * There is no problem if the given value is zero.
+         *
+         * \param constant the value to assign to this constant polynomial.
+         * \return a reference to this polynomial.
+         */
+        Laurent2& operator = (const T& constant) {
+            coeff_.clear();
+            if (constant != 0)
+                coeff_.emplace(Exponents(0, 0), constant);
+            return *this;
+        }
+
+        /**
+         * Sets this to the polynomial with a single constant term, whose
+         * contents will be moved out of the given value.
+         *
+         * The value that was passed (\a constant) will no longer be usable.
+         *
+         * There is no problem if the given value is zero.
+         *
+         * \param constant the value to assign to this constant polynomial.
+         * \return a reference to this polynomial.
+         */
+        Laurent2& operator = (T&& constant) {
+            coeff_.clear();
+            if (constant != 0)
+                coeff_.emplace(Exponents(0, 0), std::move(constant));
+            return *this;
+        }
+
+        /**
+         * Sets this to the polynomial with a single integer constant term,
+         * equal to the given value.
+         *
+         * There is no problem if the given constant is zero.
+         *
+         * The extent to which this operator can handle large native
+         * integer types without overflow will depend on how well such integer
+         * types are supported by the coefficient type \a T.
+         *
+         * \param constant the value to assign to this constant polynomial.
+         * \return a reference to this polynomial.
+         */
+        template <CppInteger IntType>
+        Laurent2& operator = (IntType constant) {
+            coeff_.clear();
+            if (constant)
+                coeff_.emplace(Exponents(0, 0), constant);
+            return *this;
+        }
+
+        /**
          * Swaps the contents of this and the given polynomial.
          * This is a fast (constant time) operation.
          *
@@ -370,25 +815,89 @@ class Laurent2 :
          * \param other the polynomial whose contents should be swapped
          * with this.
          */
-        void swap(Laurent2<T>& other) noexcept;
+        void swap(Laurent2<T>& other) noexcept {
+            coeff_.swap(other.coeff_);
+        }
+
+        /**
+         * Multiplies this polynomial by `x^s y^t` for some integers \a s and
+         * \a t.  This polynomial will be changed directly.
+         *
+         * \param s the power of \a x to multiply by.
+         * \param t the power of \a y to multiply by.
+         */
+        void shift(long s, long t) {
+            // It is difficult to change all the keys in a map without just
+            // building a complete new map.
+            Laurent2 ans = shifted(s, t);
+            coeff_.swap(ans.coeff_);
+        }
+
+        /**
+         * Returns the product of this polynomial with `x^s y^t` for some
+         * integers \a s and \a t.  This polynomial will not be changed.
+         *
+         * \param s the power of \a x to multiply by.
+         * \param t the power of \a y to multiply by.
+         * \return the product of this with `x^s y^t`.
+         */
+        Laurent2 shifted(long s, long t) const& {
+            Laurent2 ans;
+            for (auto& c : coeff_)
+                ans.coeff_.emplace_hint(ans.coeff_.end(),
+                    Exponents(c.first.first + s, c.first.second + t), c.second);
+            return ans;
+        }
+
+        /**
+         * Returns the product of this polynomial with `x^s y^t` for some
+         * integers \a s and \a t.
+         *
+         * \param s the power of \a x to multiply by.
+         * \param t the power of \a y to multiply by.
+         * \return the product of this with `x^s y^t`.
+         */
+        Laurent2 shifted(long s, long t) && {
+            Laurent2 ans;
+            for (auto& c : coeff_)
+                ans.coeff_.emplace_hint(ans.coeff_.end(),
+                    Exponents(c.first.first + s, c.first.second + t),
+                    std::move(c.second));
+            return ans;
+        }
 
         /**
          * Negates this polynomial.
          * This polynomial is changed directly.
          */
-        void negate();
+        void negate() {
+            for (auto& c : coeff_)
+                c.second.negate();
+        }
 
         /**
          * Replaces `x` with `x^-1` in this polynomial.
          * This polynomial is changed directly.
          */
-        void invertX();
+        void invertX() {
+            std::map<Exponents, T> newCoeff;
+            for (const auto& c : coeff_)
+                newCoeff.insert(std::make_pair(
+                    std::make_pair(- c.first.first, c.first.second), c.second));
+            coeff_ = std::move(newCoeff);
+        }
 
         /**
          * Replaces `y` with `y^-1` in this polynomial.
          * This polynomial is changed directly.
          */
-        void invertY();
+        void invertY() {
+            std::map<Exponents, T> newCoeff;
+            for (const auto& c : coeff_)
+                newCoeff.insert(std::make_pair(
+                    std::make_pair(c.first.first, - c.first.second), c.second));
+            coeff_ = std::move(newCoeff);
+        }
 
         /**
          * Multiplies this polynomial by the given constant.
@@ -396,19 +905,87 @@ class Laurent2 :
          * \param scalar the scalar factor to multiply by.
          * \return a reference to this polynomial.
          */
-        Laurent2& operator *= (const T& scalar);
+        Laurent2& operator *= (const T& scalar) {
+            if (scalar == 0) {
+                // All coefficients become zero.
+                coeff_.clear();
+            } else {
+                // No coefficients become zero that were not zero already.
+                for (auto& c : coeff_)
+                    c.second *= scalar;
+            }
+            return *this;
+        }
+
+        /**
+         * Multiplies this polynomial by the given integer constant.
+         *
+         * The extent to which this operator can handle large native
+         * integer types without overflow will depend on how well such integer
+         * types are supported by the coefficient type \a T.
+         *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \param scalar the scalar factor to multiply by.
+         * \return a reference to this polynomial.
+         */
+        template <CppInteger IntType>
+        Laurent2& operator *= (IntType scalar) {
+            if (scalar == 0) {
+                // All coefficients become zero.
+                coeff_.clear();
+            } else {
+                // No coefficients become zero that were not zero already.
+                for (auto& c : coeff_)
+                    c.second *= scalar;
+            }
+            return *this;
+        }
 
         /**
          * Divides this polynomial by the given constant.
          *
-         * This uses the division operator /= for the coefficient type \a T.
+         * This uses the division operator `/=` for the coefficient type \a T.
          *
          * \pre The argument \a scalar is non-zero.
          *
          * \param scalar the scalar factor to divide by.
          * \return a reference to this polynomial.
          */
-        Laurent2& operator /= (const T& scalar);
+        Laurent2& operator /= (const T& scalar) {
+            for (auto& c : coeff_)
+                c.second /= scalar;
+
+            // For integer division, we could have zeroed out some coefficients.
+            removeZeroes();
+            return *this;
+        }
+
+        /**
+         * Divides this polynomial by the given integer constant.
+         *
+         * This uses the division operator `/=` for the coefficient type \a T.
+         *
+         * The extent to which this operator can handle large native
+         * integer types without overflow will depend on how well such integer
+         * types are supported by the coefficient type \a T.
+         *
+         * \pre The argument \a scalar is non-zero.
+         *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \param scalar the scalar factor to divide by.
+         * \return a reference to this polynomial.
+         */
+        template <CppInteger IntType>
+        Laurent2& operator /= (IntType scalar) {
+            for (auto& c : coeff_)
+                c.second /= scalar;
+
+            // For integer division, we could have zeroed out some coefficients.
+            removeZeroes();
+            return *this;
+        }
 
         /**
          * Adds the given polynomial to this.
@@ -419,7 +996,43 @@ class Laurent2 :
          * \param other the polynomial to add to this.
          * \return a reference to this polynomial.
          */
-        Laurent2& operator += (const Laurent2<T>& other);
+        Laurent2& operator += (const Laurent2<T>& other) {
+            // TODO: the following statement is wrong over Z_2
+            // This works even if &other == this, since in this case there are
+            // no insertions or deletions.
+            // TODO: do things in a good order
+            for (const auto& entry : other.coeff_) {
+                auto result = coeff_.emplace(entry);
+                if (! result.second)
+                    if ((result.first->second += entry.second) == 0)
+                        coeff_.erase(result.first);
+            }
+            return *this;
+        }
+
+        /**
+         * Adds the given polynomial to this.
+         *
+         * This and the given polynomial need not have the same range of
+         * non-zero coefficients.
+         *
+         * \param other the polynomial to add to this.
+         * \return a reference to this polynomial.
+         */
+        Laurent2& operator += (Laurent2<T>&& other) {
+            // TODO: the following statement is wrong over Z_2
+            // This works even if &other == this, since in this case there are
+            // no insertions or deletions.
+            // TODO: do things in a good order
+            for (auto&& entry : other.coeff_) {
+                auto result = coeff_.try_emplace(entry.first,
+                    std::move(entry.second));
+                if (! result.second)
+                    if ((result.first->second += std::move(entry.second)) == 0)
+                        coeff_.erase(result.first);
+            }
+            return *this;
+        }
 
         /**
          * Subtracts the given polynomial from this.
@@ -430,7 +1043,52 @@ class Laurent2 :
          * \param other the polynomial to subtract from this.
          * \return a reference to this polynomial.
          */
-        Laurent2& operator -= (const Laurent2<T>& other);
+        Laurent2& operator -= (const Laurent2<T>& other) {
+            if (std::addressof(other) == this)
+                coeff_.clear();
+            else {
+                // TODO: do things in a good order
+                for (auto entry : other.coeff_) {
+                    auto result = coeff_.emplace(entry.first, T());
+                    if (result.second) {
+                        result.first->second = -entry.second;
+                    } else {
+                        if ((result.first->second -= entry.second) == 0)
+                            coeff_.erase(result.first);
+                    }
+                }
+            }
+            return *this;
+        }
+
+        /**
+         * Subtracts the given polynomial from this.
+         *
+         * This and the given polynomial need not have the same range of
+         * non-zero coefficients.
+         *
+         * \param other the polynomial to subtract from this.
+         * \return a reference to this polynomial.
+         */
+        Laurent2& operator -= (Laurent2<T>&& other) {
+            if (std::addressof(other) == this)
+                coeff_.clear();
+            else {
+                // TODO: do things in a good order
+                for (auto entry : other.coeff_) {
+                    auto result = coeff_.try_emplace(entry.first,
+                        std::move(entry.second));
+                    if (result.second) {
+                        result.first->second.negate();
+                    } else {
+                        if ((result.first->second -= std::move(entry.second))
+                                == 0)
+                            coeff_.erase(result.first);
+                    }
+                }
+            }
+            return *this;
+        }
 
         /**
          * Multiplies this by the given polynomial.
@@ -441,7 +1099,80 @@ class Laurent2 :
          * \param other the polynomial to multiply this by.
          * \return a reference to this polynomial.
          */
-        Laurent2& operator *= (const Laurent2<T>& other);
+        Laurent2& operator *= (const Laurent2<T>& other) {
+            if (isZero())
+                return *this;
+            if (other.isZero()) {
+                init();
+                return *this;
+            }
+
+            // The following code works even if &other == this, since we build
+            // the coefficients of the product in a separate section of memory.
+            std::map<Exponents, T> ans;
+
+            for (const auto& left : coeff_)
+                for (const auto& right : other.coeff_) {
+                    Exponents e(left.first.first + right.first.first,
+                        left.first.second + right.first.second);
+                    // TODO: hint
+                    auto result = ans.emplace(e, T());
+                    if (result.second) {
+                        result.first->second = left.second * right.second;
+                    } else {
+                        if constexpr (HasAddProduct<T>)
+                            result.first->second.addProduct(
+                                left.second, right.second);
+                        else
+                            result.first->second += left.second * right.second;
+                    }
+                }
+
+            coeff_.clear();
+            ans.swap(coeff_);
+
+            // We might have zeroed out some coefficients.
+            removeZeroes(); // TODO: move this up?
+            return *this;
+        }
+
+        /**
+         * Adds the product of the two given polynomials to this.
+         * This is a common operation in (for example) inner products
+         * and matrix multiplication.
+         *
+         * Calling `z.addProduct(x, y)` is equivalent to, but often faster
+         * than, calling `z += x * y`.
+         *
+         * \param x the first polynomial in the product to add to this.
+         * \param y the second polynomial in the product to add to this.
+         */
+        void addProduct(const Laurent2<T>& x, const Laurent2<T>& y) {
+            if (std::addressof(x) == this || std::addressof(y) == this) {
+                // TODO: *this *= (y + 1), or *this *= (x + 1)
+                *this += x * y; // here we _need_ the temporary to hold x * y
+            } else {
+                // TODO: do this in the right order, use hint
+                for (const auto& cx : x.coeff_)
+                    for (const auto& cy : y.coeff_) {
+                        Exponents e(cx.first.first + cy.first.first,
+                            cx.first.second + cy.first.second);
+                        auto result = coeff_.emplace(e, T());
+                        if (result.second) {
+                            result.first->second = cx.second * cy.second;
+                        } else {
+                            if constexpr (HasAddProduct<T>)
+                                result.first->second.addProduct(
+                                    cx.second, cy.second);
+                            else
+                                result.first->second += cx.second * cy.second;
+                        }
+                    }
+
+                // We might have zeroed out some coefficients.
+                removeZeroes(); // TODO: move this up?
+            }
+        }
 
         /**
          * Writes this polynomial to the given output stream, using the
@@ -462,7 +1193,70 @@ class Laurent2 :
          * \c null, in which case the default symbol `y` will be used.
          */
         void writeTextShort(std::ostream& out, bool utf8 = false,
-            const char* varX = nullptr, const char* varY = nullptr) const;
+                const char* varX = nullptr, const char* varY = nullptr) const {
+            if (isZero()) {
+                out << '0';
+                return;
+            }
+
+            for (auto it = coeff_.rbegin(); it != coeff_.rend(); ++it) {
+                T writeCoeff = it->second;
+
+                if (it == coeff_.rbegin()) {
+                    // This is the first term being output.
+                    if (writeCoeff < 0) {
+                        if (utf8)
+                            out << "\u2212";
+                        else
+                            out << '-';
+                        writeCoeff = -writeCoeff;
+                    }
+                } else {
+                    if (writeCoeff < 0) {
+                        if (utf8)
+                            out << " \u2212 ";
+                        else
+                            out << " - ";
+                        writeCoeff = -writeCoeff;
+                    } else
+                        out << " + ";
+                }
+
+                // From here, it is guaranteed that writeCoeff > 0.
+                if (it->first.first == 0 && it->first.second == 0) {
+                    out << writeCoeff;
+                    continue;
+                }
+                if (writeCoeff != 1)
+                    out << writeCoeff << ' ';
+                if (it->first.first != 0) {
+                    if (varX)
+                        out << varX;
+                    else
+                        out << 'x';
+                    if (it->first.first != 1) {
+                        if (utf8)
+                            out << regina::superscript(it->first.first);
+                        else
+                            out << '^' << it->first.first;
+                    }
+                    if (it->first.second != 0)
+                        out << ' ';
+                }
+                if (it->first.second != 0) {
+                    if (varY)
+                        out << varY;
+                    else
+                        out << 'y';
+                    if (it->first.second != 1) {
+                        if (utf8)
+                            out << regina::superscript(it->first.second);
+                        else
+                            out << '^' << it->first.second;
+                    }
+                }
+            }
+        }
 
         /**
          * Returns this polynomial as a human-readable string, using the
@@ -477,7 +1271,11 @@ class Laurent2 :
          * \c null, in which case the default symbol `y` will be used.
          * \return this polynomial as a human-readable string.
          */
-        std::string str(const char* varX, const char* varY = nullptr) const;
+        std::string str(const char* varX, const char* varY = nullptr) const {
+            std::ostringstream out;
+            writeTextShort(out, false, varX, varY);
+            return std::move(out).str();
+        }
 
         /**
          * Returns this polynomial as a human-readable string using unicode
@@ -499,7 +1297,11 @@ class Laurent2 :
          * \c null, in which case the default symbol `y` will be used.
          * \return this polynomial as a unicode-enabled human-readable string.
          */
-        std::string utf8(const char* varX, const char* varY = nullptr) const;
+        std::string utf8(const char* varX, const char* varY = nullptr) const {
+            std::ostringstream out;
+            writeTextShort(out, true, varX, varY);
+            return std::move(out).str();
+        }
 
         /**
          * Writes the tight encoding of this polynomial to the given output
@@ -511,7 +1313,17 @@ class Laurent2 :
          * be written.
          */
         void tightEncode(std::ostream& out) const
-            requires InherentlyTightEncodable<T>;
+                requires InherentlyTightEncodable<T> {
+            for (const auto& c : coeff_) {
+                // Write the (non-zero) coefficient before the exponents.
+                // This way we can use tightEncode(0) as an unambiguous
+                // terminator.
+                c.second.tightEncode(out);
+                regina::tightEncode(out, c.first.first);
+                regina::tightEncode(out, c.first.second);
+            }
+            T().tightEncode(out); // The zero terminator
+        }
 
         /**
          * Reconstructs a polynomial from its given tight encoding.
@@ -536,14 +1348,45 @@ class Laurent2 :
          * \return the polynomial represented by the given tight encoding.
          */
         static Laurent2 tightDecode(std::istream& input)
-            requires InherentlyTightEncodable<T>;
+                requires InherentlyTightEncodable<T> {
+            Laurent2 ans;
+
+            while (true) {
+                T coeff = T::tightDecode(input);
+                if (coeff == 0)
+                    return ans;
+
+                long x = regina::tightDecode<long>(input);
+                long y = regina::tightDecode<long>(input);
+                // TODO: use insertion hints??
+                if (! ans.coeff_.emplace(Exponents(x, y),
+                        std::move(coeff)).second)
+                    throw InvalidInput("The tight encoding has a repeated "
+                        "pair of exponents");
+            }
+        }
 
     private:
         /**
          * Removes all entries from coeff_ whose coefficients are zero.
          */
-        void removeZeroes();
+        void removeZeroes() {
+            auto it = coeff_.begin();
+            while (it != coeff_.end())
+                if (it->second == 0)
+                    it = coeff_.erase(it); // C++11: returns next element.
+                else
+                    ++it;
+        }
 
+    template <CoefficientDomain U>
+    friend Laurent2<U> operator + (const Laurent2<U>&, const Laurent2<U>&);
+    template <CoefficientDomain U>
+    friend Laurent2<U> operator + (Laurent2<U>&&, Laurent2<U>&&);
+    template <CoefficientDomain U>
+    friend Laurent2<U> operator - (const Laurent2<U>&, const Laurent2<U>&);
+    template <CoefficientDomain U>
+    friend Laurent2<U> operator - (Laurent2<U>&&, Laurent2<U>&&);
     template <CoefficientDomain U>
     friend Laurent2<U> operator * (const Laurent2<U>&, const Laurent2<U>&);
 
@@ -564,7 +1407,9 @@ class Laurent2 :
  * \ingroup maths
  */
 template <CoefficientDomain T>
-void swap(Laurent2<T>& a, Laurent2<T>& b) noexcept;
+void swap(Laurent2<T>& a, Laurent2<T>& b) noexcept {
+    a.swap(b);
+}
 
 /**
  * Multiplies the given polynomial by the given scalar constant.
@@ -580,7 +1425,37 @@ void swap(Laurent2<T>& a, Laurent2<T>& b) noexcept;
  */
 template <CoefficientDomain T>
 Laurent2<T> operator * (Laurent2<T> poly,
-    const typename Laurent2<T>::Coefficient& scalar);
+        const typename Laurent2<T>::Coefficient& scalar) {
+    // When the argument poly is an lvalue reference, we perform a deep copy
+    // due to pass-by-value.  If scalar == 0 then we don't need this deep copy,
+    // since the argument can be ignored.  This special-case optimisation
+    // would require two different lvalue/rvalue implementations of *, and
+    // so we leave it for now.
+    poly *= scalar;
+    return poly;
+}
+
+/**
+ * Multiplies the given polynomial by the given scalar constant.
+ *
+ * The extent to which this operator can handle large native
+ * integer types without overflow will depend on how well such integer
+ * types are supported by the coefficient type \a T.
+ *
+ * \python It is assumed that the type \a IntType is \c long.
+ *
+ * \param poly the polynomial to multiply by.
+ * \param scalar the scalar to multiply by.
+ * \return the product of the given polynomial and scalar.
+ *
+ * \ingroup maths
+ */
+template <CoefficientDomain T, CppInteger IntType>
+Laurent2<T> operator * (Laurent2<T> poly, IntType scalar) {
+    // See the notes above on a possible optimisation for scalar == 0.
+    poly *= scalar;
+    return poly;
+}
 
 /**
  * Multiplies the given polynomial by the given scalar constant.
@@ -596,12 +1471,38 @@ Laurent2<T> operator * (Laurent2<T> poly,
  */
 template <CoefficientDomain T>
 Laurent2<T> operator * (const typename Laurent2<T>::Coefficient& scalar,
-    Laurent2<T> poly);
+        Laurent2<T> poly) {
+    // See the notes above on a possible optimisation for scalar == 0.
+    poly *= scalar;
+    return poly;
+}
+
+/**
+ * Multiplies the given polynomial by the given scalar constant.
+ *
+ * The extent to which this operator can handle large native
+ * integer types without overflow will depend on how well such integer
+ * types are supported by the coefficient type \a T.
+ *
+ * \python It is assumed that the type \a IntType is \c long.
+ *
+ * \param scalar the scalar to multiply by.
+ * \param poly the polynomial to multiply by.
+ * \return the product of the given polynomial and scalar.
+ *
+ * \ingroup maths
+ */
+template <CoefficientDomain T, CppInteger IntType>
+Laurent2<T> operator * (IntType scalar, Laurent2<T> poly) {
+    // See the notes above on a possible optimisation for scalar == 0.
+    poly *= scalar;
+    return poly;
+}
 
 /**
  * Divides the given polynomial by the given scalar constant.
  *
- * This uses the division operator /= for the coefficient type \a T.
+ * This uses the division operator `/=` for the coefficient type \a T.
  *
  * The scalar is simply of type \a T; we use the identical type
  * Laurent2<T>::Coefficient here to assist with C++ template type matching.
@@ -616,7 +1517,35 @@ Laurent2<T> operator * (const typename Laurent2<T>::Coefficient& scalar,
  */
 template <CoefficientDomain T>
 Laurent2<T> operator / (Laurent2<T> poly,
-    const typename Laurent2<T>::Coefficient& scalar);
+        const typename Laurent2<T>::Coefficient& scalar) {
+    poly /= scalar;
+    return poly;
+}
+
+/**
+ * Divides the given polynomial by the given scalar constant.
+ *
+ * This uses the division operator `/=` for the coefficient type \a T.
+ *
+ * The extent to which this operator can handle large native
+ * integer types without overflow will depend on how well such integer
+ * types are supported by the coefficient type \a T.
+ *
+ * \pre The argument \a scalar is non-zero.
+ *
+ * \python It is assumed that the type \a IntType is \c long.
+ *
+ * \param poly the polynomial to divide by the given scalar.
+ * \param scalar the scalar factor to divide by.
+ * \return the quotient of the given polynomial by the given scalar.
+ *
+ * \ingroup maths
+ */
+template <CoefficientDomain T, CppInteger IntType>
+Laurent2<T> operator / (Laurent2<T> poly, IntType scalar) {
+    poly /= scalar;
+    return poly;
+}
 
 /**
  * Adds the two given polynomials.
@@ -630,7 +1559,41 @@ Laurent2<T> operator / (Laurent2<T> poly,
  * \ingroup maths
  */
 template <CoefficientDomain T>
-Laurent2<T> operator + (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
+Laurent2<T> operator + (const Laurent2<T>& lhs, const Laurent2<T>& rhs) {
+    Laurent2<T> ans;
+    auto x = lhs.begin();
+    auto y = rhs.begin();
+    while (true) {
+        if (x == lhs.end()) {
+            if (y == rhs.end()) {
+                break;
+            } else {
+                ans.coeff_.emplace_hint(ans.coeff_.end(), y->first, y->second);
+                ++y;
+            }
+        } else if (y == rhs.end()) {
+            ans.coeff_.emplace_hint(ans.coeff_.end(), x->first, x->second);
+            ++x;
+        } else {
+            auto cmp = x->first <=> y->first;
+            if (cmp < 0) {
+                ans.coeff_.emplace_hint(ans.coeff_.end(), x->first, x->second);
+                ++x;
+            } else if (cmp > 0) {
+                ans.coeff_.emplace_hint(ans.coeff_.end(), y->first, y->second);
+                ++y;
+            } else {
+                auto c = x->second + y->second;
+                if (c != 0)
+                    ans.coeff_.emplace_hint(ans.coeff_.end(), x->first,
+                        std::move(c));
+                ++x;
+                ++y;
+            }
+        }
+    }
+    return ans;
+}
 
 /**
  * Adds the two given polynomials.
@@ -644,7 +1607,9 @@ Laurent2<T> operator + (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
  * \ingroup maths
  */
 template <CoefficientDomain T>
-Laurent2<T> operator + (Laurent2<T>&& lhs, const Laurent2<T>& rhs);
+Laurent2<T> operator + (Laurent2<T>&& lhs, const Laurent2<T>& rhs) {
+    return std::move(lhs += rhs);
+}
 
 /**
  * Adds the two given polynomials.
@@ -658,7 +1623,9 @@ Laurent2<T> operator + (Laurent2<T>&& lhs, const Laurent2<T>& rhs);
  * \ingroup maths
  */
 template <CoefficientDomain T>
-Laurent2<T> operator + (const Laurent2<T>& lhs, Laurent2<T>&& rhs);
+Laurent2<T> operator + (const Laurent2<T>& lhs, Laurent2<T>&& rhs) {
+    return std::move(rhs += lhs);
+}
 
 /**
  * Adds the two given polynomials.
@@ -672,7 +1639,12 @@ Laurent2<T> operator + (const Laurent2<T>& lhs, Laurent2<T>&& rhs);
  * \ingroup maths
  */
 template <CoefficientDomain T>
-Laurent2<T> operator + (Laurent2<T>&& lhs, Laurent2<T>&& rhs);
+Laurent2<T> operator + (Laurent2<T>&& lhs, Laurent2<T>&& rhs) {
+    if (lhs.coeff_.size() >= rhs.coeff_.size())
+        return std::move(lhs += std::move(rhs));
+    else
+        return std::move(rhs += std::move(lhs));
+}
 
 /**
  * Returns the negative of the given polynomial.
@@ -683,7 +1655,10 @@ Laurent2<T> operator + (Laurent2<T>&& lhs, Laurent2<T>&& rhs);
  * \ingroup maths
  */
 template <CoefficientDomain T>
-Laurent2<T> operator - (Laurent2<T> arg);
+Laurent2<T> operator - (Laurent2<T> arg) {
+    arg.negate();
+    return arg;
+}
 
 /**
  * Subtracts the two given polynomials.
@@ -697,7 +1672,41 @@ Laurent2<T> operator - (Laurent2<T> arg);
  * \ingroup maths
  */
 template <CoefficientDomain T>
-Laurent2<T> operator - (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
+Laurent2<T> operator - (const Laurent2<T>& lhs, const Laurent2<T>& rhs) {
+    Laurent2<T> ans;
+    auto x = lhs.begin();
+    auto y = rhs.begin();
+    while (true) {
+        if (x == lhs.end()) {
+            if (y == rhs.end()) {
+                break;
+            } else {
+                ans.coeff_.emplace_hint(ans.coeff_.end(), y->first, -y->second);
+                ++y;
+            }
+        } else if (y == rhs.end()) {
+            ans.coeff_.emplace_hint(ans.coeff_.end(), x->first, x->second);
+            ++x;
+        } else {
+            auto cmp = x->first <=> y->first;
+            if (cmp < 0) {
+                ans.coeff_.emplace_hint(ans.coeff_.end(), x->first, x->second);
+                ++x;
+            } else if (cmp > 0) {
+                ans.coeff_.emplace_hint(ans.coeff_.end(), y->first, -y->second);
+                ++y;
+            } else {
+                auto c = x->second - y->second;
+                if (c != 0)
+                    ans.coeff_.emplace_hint(ans.coeff_.end(), x->first,
+                        std::move(c));
+                ++x;
+                ++y;
+            }
+        }
+    }
+    return ans;
+}
 
 /**
  * Subtracts the two given polynomials.
@@ -711,7 +1720,9 @@ Laurent2<T> operator - (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
  * \ingroup maths
  */
 template <CoefficientDomain T>
-Laurent2<T> operator - (Laurent2<T>&& lhs, const Laurent2<T>& rhs);
+Laurent2<T> operator - (Laurent2<T>&& lhs, const Laurent2<T>& rhs) {
+    return std::move(lhs -= rhs);
+}
 
 /**
  * Subtracts the two given polynomials.
@@ -725,7 +1736,10 @@ Laurent2<T> operator - (Laurent2<T>&& lhs, const Laurent2<T>& rhs);
  * \ingroup maths
  */
 template <CoefficientDomain T>
-Laurent2<T> operator - (const Laurent2<T>& lhs, Laurent2<T>&& rhs);
+Laurent2<T> operator - (const Laurent2<T>& lhs, Laurent2<T>&& rhs) {
+    rhs.negate();
+    return std::move(rhs += lhs);
+}
 
 /**
  * Subtracts the two given polynomials.
@@ -739,7 +1753,10 @@ Laurent2<T> operator - (const Laurent2<T>& lhs, Laurent2<T>&& rhs);
  * \ingroup maths
  */
 template <CoefficientDomain T>
-Laurent2<T> operator - (Laurent2<T>&& lhs, Laurent2<T>&& rhs);
+Laurent2<T> operator - (Laurent2<T>&& lhs, Laurent2<T>&& rhs) {
+    // TODO: choose between lhs,rhs
+    return std::move(lhs -= std::move(rhs));
+}
 
 /**
  * Multiplies the two given polynomials.
@@ -753,7 +1770,34 @@ Laurent2<T> operator - (Laurent2<T>&& lhs, Laurent2<T>&& rhs);
  * \ingroup maths
  */
 template <CoefficientDomain T>
-Laurent2<T> operator * (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
+Laurent2<T> operator * (const Laurent2<T>& lhs, const Laurent2<T>& rhs) {
+    if (lhs.isZero() || rhs.isZero())
+        return Laurent2<T>(); // zero
+
+    Laurent2<T> ans;
+
+    for (const auto& left : lhs.coeff_)
+        for (const auto& right : rhs.coeff_) {
+            typename Laurent2<T>::Exponents e(
+                left.first.first + right.first.first,
+                left.first.second + right.first.second);
+            // TODO: hint
+            auto result = ans.coeff_.emplace(e, T());
+            if (result.second) {
+                result.first->second = left.second * right.second;
+            } else {
+                if constexpr (HasAddProduct<T>)
+                    result.first->second.addProduct(
+                        left.second, right.second);
+                else
+                    result.first->second += left.second * right.second;
+            }
+        }
+
+    // We might have zeroed out some coefficients.
+    ans.removeZeroes(); // TODO: move this up?
+    return ans;
+}
 
 #ifndef __DOXYGEN
 // Don't confuse doxygen with specialisations.
@@ -768,482 +1812,10 @@ struct RingTraits<Laurent2<T>> {
 };
 #endif // __DOXYGEN
 
-// Inline functions and constants for Laurent2:
+// Inline constants for Laurent2:
 
 template <CoefficientDomain T>
 const T Laurent2<T>::zero_(0);
-
-template <CoefficientDomain T>
-inline Laurent2<T>::Laurent2(const Laurent2<T>& value) :
-        coeff_(value.coeff_) {
-    // TODO: Use default implementation.
-    // std::cerr << "Laurent2: deep copy (init)" << std::endl;
-}
-
-template <CoefficientDomain T>
-Laurent2<T>::Laurent2(const Laurent2<T>& toShift, long xShift, long yShift) {
-    for (const auto& entry : toShift.coeff_)
-        coeff_.emplace_hint(coeff_.end(),
-            std::make_pair(entry.first.first + xShift,
-                entry.first.second + yShift), entry.second);
-}
-
-template <CoefficientDomain T>
-template <CoefficientDomain U>
-requires std::assignable_from<T&, U>
-inline Laurent2<T>::Laurent2(const Laurent2<U>& value) :
-        coeff_(value.coeff_) {
-    // std::cerr << "Laurent2: deep copy (init)" << std::endl;
-}
-
-template <CoefficientDomain T>
-template <std::input_iterator Iterator>
-requires requires(Iterator it) {
-    { std::get<0>(*it) } -> std::convertible_to<long>;
-    { std::get<1>(*it) } -> std::convertible_to<long>;
-    { std::get<2>(*it) } -> std::convertible_to<T>;
-}
-inline Laurent2<T>::Laurent2(Iterator begin, Iterator end) {
-    for (auto it = begin; it != end; ++it) {
-        if (std::get<2>(*it) == 0)
-            continue;
-
-        auto res = coeff_.emplace(Exponents(std::get<0>(*it), std::get<1>(*it)),
-            std::get<2>(*it));
-        if (! res.second) {
-            // This pair of exponents is already present.
-            // Accumulate, and erase if the resulting coefficient is zero.
-            if ((res.first->second += std::get<2>(*it)) == 0)
-                coeff_.erase(res.first);
-        }
-    }
-}
-
-template <CoefficientDomain T>
-inline Laurent2<T>::Laurent2(
-        std::initializer_list<std::tuple<long, long, T>> coefficients) {
-    for (const auto& c : coefficients) {
-        if (std::get<2>(c) == 0)
-            throw InvalidArgument("One of the given tuples has a value of "
-                "zero");
-        if (! coeff_.emplace(Exponents(std::get<0>(c), std::get<1>(c)),
-                std::get<2>(c)).second)
-            throw InvalidArgument("Two of the given tuples share the "
-                "same pair of exponents");
-    }
-}
-
-template <CoefficientDomain T>
-inline void Laurent2<T>::init() {
-    coeff_.clear();
-}
-
-template <CoefficientDomain T>
-inline void Laurent2<T>::initExp(long xExp, long yExp) {
-    coeff_.clear();
-    coeff_.emplace(Exponents(xExp, yExp), 1);
-}
-
-template <CoefficientDomain T>
-inline bool Laurent2<T>::isZero() const {
-    return coeff_.empty();
-}
-
-template <CoefficientDomain T>
-inline const T& Laurent2<T>::operator () (long xExp, long yExp) const {
-    auto it = coeff_.find(Exponents(xExp, yExp));
-    if (it == coeff_.end())
-        return zero_;
-    else
-        return it->second;
-}
-
-template <CoefficientDomain T>
-void Laurent2<T>::set(long xExp, long yExp, const T& value) {
-    if (value == 0) {
-        coeff_.erase(Exponents(xExp, yExp));
-    } else {
-        auto result = coeff_.emplace(Exponents(xExp, yExp), value);
-        if (! result.second) {
-            // A coefficient was already present.  Change it.
-            result.first->second = value;
-        }
-    }
-}
-
-template <CoefficientDomain T>
-inline bool Laurent2<T>::operator == (const Laurent2<T>& rhs) const {
-    return coeff_ == rhs.coeff_;
-}
-
-template <CoefficientDomain T>
-inline std::strong_ordering Laurent2<T>::operator <=> (const Laurent2<T>& rhs)
-        const {
-    return coeff_ <=> rhs.coeff_;
-}
-
-template <CoefficientDomain T>
-inline Laurent2<T>& Laurent2<T>::operator = (const Laurent2<T>& other) {
-    // TODO: Use default implementation.
-    // std::cerr << "Laurent2: deep copy (=)" << std::endl;
-    coeff_ = other.coeff_;
-    return *this;
-}
-
-#ifndef __DOXYGEN
-// Doxygen does not match this to the documented declaration.  I think the
-// issue is that the return type "looks" different due to the explicit <T>.
-template <CoefficientDomain T>
-template <CoefficientDomain U>
-requires std::assignable_from<T&, U>
-inline Laurent2<T>& Laurent2<T>::operator = (const Laurent2<U>& other) {
-    // std::cerr << "Laurent2: deep copy (=)" << std::endl;
-    coeff_ = other.coeff_;
-    return *this;
-}
-#endif // __DOXYGEN
-
-template <CoefficientDomain T>
-inline void Laurent2<T>::swap(Laurent2<T>& other) noexcept {
-    std::swap(coeff_, other.coeff_);
-}
-
-template <CoefficientDomain T>
-inline void Laurent2<T>::negate() {
-    for (auto& c : coeff_)
-        c.second = -c.second;
-}
-
-template <CoefficientDomain T>
-inline void Laurent2<T>::invertX() {
-    std::map<Exponents, T> newCoeff;
-    for (const auto& c : coeff_)
-        newCoeff.insert(std::make_pair(
-            std::make_pair(- c.first.first, c.first.second), c.second));
-    coeff_ = std::move(newCoeff);
-}
-
-template <CoefficientDomain T>
-inline void Laurent2<T>::invertY() {
-    std::map<Exponents, T> newCoeff;
-    for (const auto& c : coeff_)
-        newCoeff.insert(std::make_pair(
-            std::make_pair(c.first.first, - c.first.second), c.second));
-    coeff_ = std::move(newCoeff);
-}
-
-template <CoefficientDomain T>
-inline Laurent2<T>& Laurent2<T>::operator *= (const T& scalar) {
-    if (scalar == 0) {
-        // All coefficients become zero.
-        coeff_.clear();
-    } else {
-        // No coefficients become zero that were not zero already.
-        for (auto& c : coeff_)
-            c.second *= scalar;
-    }
-    return *this;
-}
-
-template <CoefficientDomain T>
-inline Laurent2<T>& Laurent2<T>::operator /= (const T& scalar) {
-    for (auto& c : coeff_)
-        c.second /= scalar;
-
-    // For integer division, we could have zeroed out some coefficients.
-    removeZeroes();
-    return *this;
-}
-
-template <CoefficientDomain T>
-Laurent2<T>& Laurent2<T>::operator += (const Laurent2<T>& other) {
-    // This works even if &other == this, since in this case there are
-    // no insertions or deletions.
-    for (const auto& entry : other.coeff_) {
-        auto result = coeff_.emplace(entry);
-        if (! result.second)
-            result.first->second += entry.second;
-    }
-
-    // We might have zeroed out some coefficients.
-    removeZeroes();
-    return *this;
-}
-
-template <CoefficientDomain T>
-Laurent2<T>& Laurent2<T>::operator -= (const Laurent2<T>& other) {
-    // This works even if &other == this, since in this case there are
-    // no insertions or deletions.
-    for (auto entry : other.coeff_) {
-        entry.second = - entry.second;
-        auto result = coeff_.emplace(entry);
-        if (! result.second)
-            result.first->second += entry.second;
-    }
-
-    // We might have zeroed out some coefficients.
-    removeZeroes();
-    return *this;
-}
-
-template <CoefficientDomain T>
-Laurent2<T>& Laurent2<T>::operator *= (const Laurent2<T>& other) {
-    if (isZero())
-        return *this;
-    if (other.isZero()) {
-        init();
-        return *this;
-    }
-
-    // The following code works even if &other == this, since we construct the
-    // coefficients of the product in a separate section of memory.
-    std::map<Exponents, T> ans;
-
-    for (const auto& left : coeff_)
-        for (const auto& right : other.coeff_) {
-            Exponents e(left.first.first + right.first.first,
-                left.first.second + right.first.second);
-            T term = left.second * right.second;
-            auto result = ans.emplace(e, term);
-            if (! result.second)
-                result.first->second += term;
-        }
-
-    coeff_.clear();
-    std::swap(ans, coeff_);
-
-    // We might have zeroed out some coefficients.
-    removeZeroes();
-    return *this;
-}
-
-template <CoefficientDomain T>
-void Laurent2<T>::writeTextShort(std::ostream& out, bool utf8,
-        const char* varX, const char* varY) const {
-    if (isZero()) {
-        out << '0';
-        return;
-    }
-
-    for (auto it = coeff_.rbegin(); it != coeff_.rend(); ++it) {
-        T writeCoeff = it->second;
-
-        if (it == coeff_.rbegin()) {
-            // This is the first term being output.
-            if (writeCoeff < 0) {
-                if (utf8)
-                    out << "\u2212";
-                else
-                    out << '-';
-                writeCoeff = -writeCoeff;
-            }
-        } else {
-            if (writeCoeff < 0) {
-                if (utf8)
-                    out << " \u2212 ";
-                else
-                    out << " - ";
-                writeCoeff = -writeCoeff;
-            } else
-                out << " + ";
-        }
-
-        // From here, it is guaranteed that writeCoeff > 0.
-        if (it->first.first == 0 && it->first.second == 0) {
-            out << writeCoeff;
-            continue;
-        }
-        if (writeCoeff != 1)
-            out << writeCoeff << ' ';
-        if (it->first.first != 0) {
-            if (varX)
-                out << varX;
-            else
-                out << 'x';
-            if (it->first.first != 1) {
-                if (utf8)
-                    out << regina::superscript(it->first.first);
-                else
-                    out << '^' << it->first.first;
-            }
-            if (it->first.second != 0)
-                out << ' ';
-        }
-        if (it->first.second != 0) {
-            if (varY)
-                out << varY;
-            else
-                out << 'y';
-            if (it->first.second != 1) {
-                if (utf8)
-                    out << regina::superscript(it->first.second);
-                else
-                    out << '^' << it->first.second;
-            }
-        }
-    }
-}
-
-template <CoefficientDomain T>
-inline std::string Laurent2<T>::str(const char* varX, const char* varY)
-        const {
-    std::ostringstream out;
-    writeTextShort(out, false, varX, varY);
-    return std::move(out).str();
-}
-
-template <CoefficientDomain T>
-inline std::string Laurent2<T>::utf8(const char* varX, const char* varY)
-        const {
-    std::ostringstream out;
-    writeTextShort(out, true, varX, varY);
-    return std::move(out).str();
-}
-
-template <CoefficientDomain T>
-void Laurent2<T>::removeZeroes() {
-    auto it = coeff_.begin();
-    while (it != coeff_.end())
-        if (it->second == 0)
-            it = coeff_.erase(it); // C++11: returns next element.
-        else
-            ++it;
-}
-
-template <CoefficientDomain T>
-inline void swap(Laurent2<T>& a, Laurent2<T>& b) noexcept {
-    a.swap(b);
-}
-
-template <CoefficientDomain T>
-inline Laurent2<T> operator * (Laurent2<T> poly,
-        const typename Laurent2<T>::Coefficient& scalar) {
-    // When the argument poly is an lvalue reference, we perform a deep copy
-    // due to pass-by-value.  If scalar == 0 then we don't need this deep copy,
-    // since the argument can be ignored.  This special-case optimisation
-    // would require two different lvalue/rvalue implementations of *, and
-    // so we leave it for now.
-    poly *= scalar;
-    return poly;
-}
-
-template <CoefficientDomain T>
-inline Laurent2<T> operator * (const typename Laurent2<T>::Coefficient& scalar,
-        Laurent2<T> poly) {
-    // See the notes above on a possible optimisation for scalar == 0.
-    poly *= scalar;
-    return poly;
-}
-
-template <CoefficientDomain T>
-inline Laurent2<T> operator / (Laurent2<T> poly,
-        const typename Laurent2<T>::Coefficient& scalar) {
-    poly /= scalar;
-    return poly;
-}
-
-template <CoefficientDomain T>
-inline Laurent2<T> operator + (const Laurent2<T>& lhs, const Laurent2<T>& rhs) {
-    // We have to make a deep copy since both arguments are read-only.
-    return std::move(Laurent2<T>(lhs) += rhs);
-}
-
-template <CoefficientDomain T>
-inline Laurent2<T> operator + (Laurent2<T>&& lhs, const Laurent2<T>& rhs) {
-    return std::move(lhs += rhs);
-}
-
-template <CoefficientDomain T>
-inline Laurent2<T> operator + (const Laurent2<T>& lhs, Laurent2<T>&& rhs) {
-    return std::move(rhs += lhs);
-}
-
-template <CoefficientDomain T>
-inline Laurent2<T> operator + (Laurent2<T>&& lhs, Laurent2<T>&& rhs) {
-    return std::move(lhs += rhs);
-}
-
-template <CoefficientDomain T>
-inline Laurent2<T> operator - (Laurent2<T> arg) {
-    arg.negate();
-    return arg;
-}
-
-template <CoefficientDomain T>
-inline Laurent2<T> operator - (const Laurent2<T>& lhs, const Laurent2<T>& rhs) {
-    // We have to make a deep copy since both arguments are read-only.
-    return std::move(Laurent2<T>(lhs) -= rhs);
-}
-
-template <CoefficientDomain T>
-inline Laurent2<T> operator - (Laurent2<T>&& lhs, const Laurent2<T>& rhs) {
-    return std::move(lhs -= rhs);
-}
-
-template <CoefficientDomain T>
-inline Laurent2<T> operator - (const Laurent2<T>& lhs, Laurent2<T>&& rhs) {
-    rhs.negate();
-    return std::move(rhs += lhs);
-}
-
-template <CoefficientDomain T>
-inline Laurent2<T> operator - (Laurent2<T>&& lhs, Laurent2<T>&& rhs) {
-    return std::move(lhs -= rhs);
-}
-
-template <CoefficientDomain T>
-inline Laurent2<T> operator * (const Laurent2<T>& lhs, const Laurent2<T>& rhs) {
-    if (lhs.isZero() || rhs.isZero())
-        return Laurent2<T>(); // zero
-
-    Laurent2<T> ans;
-
-    for (const auto& left : lhs.coeff_)
-        for (const auto& right : rhs.coeff_) {
-            typename Laurent2<T>::Exponents e(
-                left.first.first + right.first.first,
-                left.first.second + right.first.second);
-            T term = left.second * right.second;
-            auto result = ans.coeff_.emplace(e, term);
-            if (! result.second)
-                result.first->second += term;
-        }
-
-    // We might have zeroed out some coefficients.
-    ans.removeZeroes();
-    return ans;
-}
-
-template <CoefficientDomain T>
-inline void Laurent2<T>::tightEncode(std::ostream& out) const
-        requires InherentlyTightEncodable<T> {
-    for (const auto& c : coeff_) {
-        // Write the coefficient (which must be non-zero) before the exponents.
-        // This way we can use tightEncode(0) as an unambiguous terminator.
-        c.second.tightEncode(out);
-        regina::tightEncode(out, c.first.first);
-        regina::tightEncode(out, c.first.second);
-    }
-    T().tightEncode(out); // The zero terminator
-}
-
-template <CoefficientDomain T>
-inline Laurent2<T> Laurent2<T>::tightDecode(std::istream& input)
-        requires InherentlyTightEncodable<T> {
-    Laurent2 ans;
-
-    while (true) {
-        T coeff = T::tightDecode(input);
-        if (coeff == 0)
-            return ans;
-
-        long x = regina::tightDecode<long>(input);
-        long y = regina::tightDecode<long>(input);
-        if (! ans.coeff_.emplace(Exponents(x, y), std::move(coeff)).second)
-            throw InvalidInput("The tight encoding has a repeated "
-                "pair of exponents");
-    }
-}
 
 } // namespace regina
 

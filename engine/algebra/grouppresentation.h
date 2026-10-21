@@ -883,7 +883,7 @@ class SplayedExpression : public ShortOutput<SplayedExpression, true> {
          * \param sequence the integer sequence that represents this
          * splayed expression, as described in the class notes.
          */
-        SplayedExpression(std::initializer_list<Term> values);
+        SplayedExpression(std::initializer_list<Term> sequence);
 
         /**
          * Repacks this as a group expression.  This will combine adjacent
@@ -2553,7 +2553,7 @@ inline SplayedExpression::SplayedExpression(size_t size) : terms_(size) {
 }
 
 inline SplayedExpression::SplayedExpression(
-        std::initializer_list<Term> values) : terms_(values) {
+        std::initializer_list<Term> sequence) : terms_(sequence) {
 }
 
 inline SplayedExpression& SplayedExpression::operator = (

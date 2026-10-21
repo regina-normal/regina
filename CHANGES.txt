@@ -29,8 +29,15 @@ Version 8.0  [ TODO ]
               for the old deprecated constructor have changed slightly (in
               particular, the container type now needs bidirectional iterators,
               but no longer needs to support rbegin() and rend()).
+        Enum AdjugateAlgorithm:
+            - New enumeration for use with Matrix::adjugate() and
+              Matrix::determinant().
         Class AngleStructures:
             - New routines knowsSpansStrict() and knowsSpansTaut().
+        Class Arrow:
+            - New integer division operators / and /=.
+            - New const routine shifted().
+            - New routine addProduct(), which optimises x ±= y * z.
         Class Attachment:
             - The filename constructor now throws an exception on error,
               instead of creating an empty attachment.
@@ -257,6 +264,7 @@ Version 8.0  [ TODO ]
             - Now supports ordering comparisons between Integer and
               LargeInteger (in addition to equality comparisons, which were
               already available).
+            - New routine addProduct(), which optimises x ±= y * z.
             - Functions that work with NativeInteger<bytes> no longer require
               bytes to be a multiple of sizeof(long).
             - The function makeInfinite() is no longer available for Integer
@@ -266,8 +274,22 @@ Version 8.0  [ TODO ]
               since that class supports infinity).
             - The modulo operators % and %= now support infinite arguments,
               and now throw an exception when computing anything modulo zero.
+            - When constructing or setting an Integer from a LargeInteger, you
+              are now allowed to pass infinity: this will be detected and an
+              exception will be thrown.  As a result, the move variants of
+              these mixed-type operations are no longer marked noexcept.
+            - Routines makeLarge() and tryReduce() now explicitly support
+              working with infinity (in which case they safely do nothing).
             - Added specialisations of std::common_type for use when mixing
               Integer and LargeInteger.
+            - Fixed x.lcmWith(x) (where both operands are the same object in
+              memory), which previously gave an incorrect result.  Note that
+              lcm() was fine, and x.lcmWith(y) where x == y was also fine (as
+              long as x and y were different objects in memory).  No other
+              code within Regina was affected by this.
+            - Many optimisations to this class, including rvalue variants of
+              many operations.
+            - New routine validate(), for use in test suites.
         Class IntegerOverflow:
             - New exception class.
         Class Isomorphism<dim>:
@@ -309,9 +331,49 @@ Version 8.0  [ TODO ]
               iterator type is now required to be random access.
             - Removed the exponent-based constructor Laurent(exp) and
               initialiser init(exp), which were deprecated in Regina 7.4.
+            - Remove the iterator-based init(minExp, begin, end), though the
+              corresponding constructor remains.
+            - New constructors, assignment operators and comparison operators
+              that create or compare against a constant polynomial, given by a
+              coefficient of type T or a native C++ integer.
+            - New routine addProduct(), which optimises x ±= y * z.
+            - New const routine shifted().
+            - Now supports iteration over coefficients.
+            - New routines transform() and extract() for transforming and
+              extracting coefficients in bulk.
+            - New overloads for scalar multiplication and division that take
+              native C++ integers.
+            - Functions scaleUp() and scaleDown() now throw an InvalidArgument
+              exception if the scaling factor is zero.  Note that this changes
+              the exception type for scaleDown() (which will still throw a
+              FailedPrecondition if the exponents with non-zero coefficients
+              are not all multiples of the scaling factor).
+            - Many optimisations to this class, including a better growth
+              policy and rvalue variants of many operations.  This comes with
+              new functions allocation() and reserveRange() that query and
+              manage the range of exponents for which memory is allocated.
         Class Laurent2<T>:
+            - New constructor that converts a single-variable Laurent polynomial
+              into a two-variable Laurent polynomial.
+            - New constructor that builds the product of a Laurent polynomial
+              in x with a Laurent polynomial in y.
+            - New constructors that convert a "nested" Laurent<Laurent<U>>
+              into type Laurent2<T>.
             - Removed the exponent-based constructor Laurent2(xExp, yExp) and
               initialiser init(xExp, yExp), which were deprecated in Regina 7.4.
+            - New constructors, assignment operators and comparison operators
+              that create or compare against a constant polynomial, given by a
+              coefficient of type T or a native C++ integer.
+            - New routine addProduct(), which optimises x ±= y * z.
+            - New routines shift() and shifted().
+            - Deprecated the shift constructor Laurent2(poly, xShift, yShift);
+              just use poly.shifted() instead.
+            - Now supports iteration over non-zero coefficients and their
+              corresponding exponent pairs.
+            - New overloads for scalar multiplication and division that take
+              native C++ integers.
+            - Many optimisations to this class, including rvalue variants of
+              many operations.
         Class LightweightSequence<T>:
             - Removed the inner class SubsequenceCompareFirst<...>.
               This was a very specialised class designed specifically for
@@ -319,6 +381,8 @@ Version 8.0  [ TODO ]
               directly in the Turaev-Viro code instead.
         Class Link:
             - New routine parityProjection().
+            - New routines theta() and longRotations(), and class constants
+              thetaVarX and thetaVarY.
             - Knot/link signatures have been overhauled.  Regina-now supports:
               + first-generation signatures, which are printable strings,
                 identical to the old signatures from Regina ≤ 7.x, and
@@ -379,8 +443,14 @@ Version 8.0  [ TODO ]
         Enum LPConstraintType:
             - New enumeration for use with the various LPConstraint classes.
         Class LPData:
-            - Routine extractSolution() now requires a uint8_t array instead of
-              a char array for the type vector.
+            - Routine extractSolution() has now been split into three routines:
+              + a new routine extractSurfaceSolution() designed for normal
+                surfaces, which takes an arbitrary random access iterator
+                instead of a char array for the type vector;
+              + new routines extractStrictSolution() and extractTautSolution()
+                designed for angle structures, which do not take a type vector
+                at all.
+              The old extractSolution() has been removed completely.
         Class LPInitialTableaux<Constraint>:
             - Removed the copy assignment operator (since this class now uses
               FixedArray internally, which is not copy-assignable).  If you
@@ -402,6 +472,30 @@ Version 8.0  [ TODO ]
               is not implemented for this particular 3-manifold.
             - The comparision operator <=> is now a global function (not a
               member function of Manifold), and is specific to 3-manifolds.
+        Class Matrix<T>:
+            - This class now formally supports empty matrices (of size 0×k,
+              k×0, or 0×0).  Because of this, the routine initialised()
+              no longer makes sense and has been removed completely.
+            - New scalar multiplication operators * and *=.
+            - New in-place addition and subtractions operators += and -=.
+            - New routine negate().
+            - New routines trace(), adjugate() and inverse().
+            - New routines makeRowBasis(), rowBasis() and rowBasisAndOrthComp().
+            - New routines smith(), smithCoB(), makeSmith() and makeSmithCoB(),
+              which replace the deprecated global functions smithNormalForm()
+              and metricalSmithNormalForm().
+            - Renamed rowEchelonForm() and columnEchelonForm() to
+              makeRowEchelon() and makeColumnEchelon(), to better indicate
+              that these routines modify the matrix in-place.  The old names
+              have been removed completely.
+            - New routines rowEchelon() and columnEchelon().
+            - Routine det() now takes an optional algorithm argument.
+            - Routine swapRows() now takes an optional from-column argument.
+            - Multiplying a matrix by a matrix or vector will now throw an
+              exception if the matrix/vector dimensions are incompatible.
+            - Changed the underlying data storage method.  This should make
+              many operations faster; however, swapRows() is now linear time
+              instead of constant time.
         Class Matrix2:
             - Routines inverse() and invert() now throw an exception if the
               matrix does not have determinant ±1.  This also means that
@@ -462,6 +556,17 @@ Version 8.0  [ TODO ]
               iterator type is now required to be random access.
             - Removed the exponent-based constructor Polynomial(degree) and
               initialiser init(degree), which were deprecated in Regina 7.4.
+            - Remove the iterator-based init(begin, end), though the
+              corresponding constructor remains.
+            - New constructors, assignment operators and comparison operators
+              that create or compare against a constant polynomial, given by a
+              coefficient of type T or a native C++ integer.
+            - New const routine shifted().
+            - Now supports iteration over coefficients.
+            - New overloads for scalar multiplication and division that take
+              native C++ integers.
+        Enum PolynomialProductAlgorithm:
+            - New enumeration for use with polynomial multiplication.
         Class Primes:
             - The python-only routines primeDecompInt() and
               primePowerDecompInt() are now just overloads for primeDecomp()
@@ -493,6 +598,9 @@ Version 8.0  [ TODO ]
               or failure).
             - Routine unfill() now throws an exception when called on a null
               SnapPea triangulation (previously it silently did nothing).
+        Enum SNFAlgorithm:
+            - New enumeration for use with Matrix::smithCoB() and
+              Matrix::makeSmithCoB().
         Class SpatialLink:
             - New inner type NodeIterator, and new member functions
               beginNodes() and endNodes().
@@ -514,6 +622,7 @@ Version 8.0  [ TODO ]
               described by the new base class StandardSubcomplexOptions<dim>.
         Class StrandRef:
             - New routine reset().
+            - New routines turnLeft() and turnRight().
         Class SubtreeIterator<const_>:
             - The type std::iterator_traits<SubtreeIterator<...>>::value_type
               is now just Packet (without any const qualifiers), regardless of
@@ -526,6 +635,10 @@ Version 8.0  [ TODO ]
             - In the version of reroot() that uses costs, the cost type T no
               no longer treats zero in a special manner; it is only the total
               order on T that matters.
+        Class TreeTraversal, TreeEnumeration, TreeSingleSoln, TautEnumeration:
+            - Renamed buildStructure() to buildTautStructure(), to emphasise
+              that this is for use specifically with taut angle structures.
+              The old routine is kept but deprecated.
         Class Triangulation<dim>:
             - Routines involving fundamental group now throw an exception if
               the triangulation has > 1 component.  This is true also of
@@ -604,24 +717,37 @@ Version 8.0  [ TODO ]
               triangulations in data files, since they are easy to reconstruct
               (in some cases, using other invariants that _are_ saved).
         Class TypeTrie:
-            - Now uses uint8_t instead of char for vector elements.  This
-              affects the argument types for insert() and dominates().
+            - The insert() and dominates() routines have been rewritten to take
+              the type vector as an iterator pair (as opposed to a raw pointer
+              and vector length).  The old routines are removed completely.
         Class Vector<T>:
+            - New routines front() and back().
             - Now requires the element type T to have a RingTraits
               specialisation.
             - For the iterator-based constructor, the old recommendation that
               the iterator type be random access is now a hard requirement.
         Class Vector3D<Real>:
             - New assignment operator that takes a std::array<Real, 3>.
+        Function columnEchelonForm():
+            - Deprecated with no direct replacement.  However, if you are using
+              this to compute inverses of integer matrices (which is the only
+              thing Regina used this function for), you can use the new routine
+              Matrix<Integer>::inverse() instead.
         Functions forall_constexpr():
             - New routine to support tests over a compile-time range of
               integers (like for_constexpr(), but with a boolean return value).
+        Function isqrt():
+            - New function for computing integer square roots.
         Function isTriangulation():
             - New function that converts a packet type constant into a
               triangulation dimension.
         Function maxPermDegree():
             - New constexpr function that returns the largest supported degree
               of permutation.
+        Function metricalSmithNormalForm():
+            - Moved into the class Matrix<Integer> as the member function
+              makeSmithCoB(SNFAlgorithm::Metrical).  The old global function is
+              kept but deprecated.
         Function open():
             - Both versions of this function now throw an exception if the
               file is unreadable or if no usable Regina data could be found
@@ -632,9 +758,22 @@ Version 8.0  [ TODO ]
               support 128-bit integers (if the platform does), include range
               checking, and are strict with regards to unexpected characters
               (including leading or trailing whitespace).
+        Function polynomialProduct():
+            - New function for computing polynomial products using a specific
+              algorithm.
         Function readDehydrationList(), readOrb(), readSigList():
             - These functions now throw exceptions on error, instead of
               returning null.
+        Function rowBasis(), rowBasisAndOrthComp():
+            - Removed entirely in favour of the new Matrix::makeRowBasis(),
+              Matrix::rowBasis(), and Matrix::rowBasisAndOrthComp().  Note
+              however that the new functions behave differently (in particular,
+              they remove redundant rows from the row basis matrix instead of
+              moving them to the bottom and returning the rank).
+        Function smithNormalForm():
+            - The two variants of this routine have been moved into the class
+              Matrix<Integer> as the member functions makeSmith() and
+              makeSmithCoB().  The old global functions are kept but deprecated.
         Function subscript(), superscript():
             - When passing one of Regina's integer types, there is now a
               precondition that the given value is not infinity.
@@ -710,9 +849,10 @@ Version 8.0  [ TODO ]
               the new type aliases Int128 and UInt128.
         Concepts:
             - Many new concepts:
-              + AssignableTo, CanConstruct, CoefficientDomain, Domain, Field,
-                IntegralDomain, ReginaBitmask, ReginaQitmask, Ring, RingLike,
-                SameModCVRef, StrictWeakOrder, TerminatingCallback, VoidCallback
+              + AssignableTo, CanConstruct, CoefficientDomain, CommutativeRing,
+                Domain, Field, HasAddProduct, IntegralDomain, Negatable,
+                ReginaBitmask, ReginaQitmask, Ring, RingLike, SameModCVRef,
+                StrictWeakOrder, TerminatingCallback, VoidCallback
                 (defined in concepts/core.h)
               + InherentlyTightEncodable, Readable, RichStringifiable,
                 StandardStringifiable, Stringifiable, Writable (defined in
@@ -747,6 +887,10 @@ Version 8.0  [ TODO ]
         Header foreign/isosig.h:
             - Renamed to foreign/siglist.h.  The old header is kept but
               deprecated.
+        Header maths/matrixops.h:
+            - Merged into maths/matrix.h, and moved its global functions into
+              member functions of Matrix<Integer>.  The old header and global
+              functions are kept but deprecated.
         Header triangulation/facetpairing3.h:
             - Merged into triangulation/facetpairing.h.  The old header is
               kept but deprecated.

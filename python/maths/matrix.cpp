@@ -28,7 +28,12 @@
  *                                                                        *
  **************************************************************************/
 
+#include "regina-config.h" // for REGINA_PYBIND11_VERSION
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#if REGINA_PYBIND11_VERSION == 3
+#include <pybind11/native_enum.h>
+#endif
 #include "maths/matrix.h"
 #include "maths/vector.h"
 #include "../helpers.h"
@@ -45,14 +50,14 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
     RDOC_SCOPE_BEGIN(Matrix)
 
     auto c = pybind11::class_<Matrix>(m, className, rdoc::__class)
+        .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<size_t>(), rdoc::__init)
         .def(pybind11::init<size_t, size_t>(), rdoc::__init_2)
         .def(pybind11::init<const Matrix&>(), rdoc::__copy)
         .def(pybind11::init([](pybind11::list l) {
             size_t rows = l.size();
             if (rows == 0)
-                throw regina::InvalidArgument(
-                    "The number of rows must be strictly positive");
+                return new Matrix();
 
             Matrix* m = nullptr;
             size_t cols = 0; // zero is unnecessary but silences warnings
@@ -68,14 +73,11 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
                 }
                 if (i == 0) {
                     cols = row.size();
-                    if (cols == 0)
-                        throw regina::InvalidArgument(
-                            "The number of columns must be strictly positive");
                     m = new Matrix(rows, cols);
                 } else if (row.size() != cols) {
                     delete m;
                     throw regina::InvalidArgument(
-                        "All rows must be given as lists of the same size");
+                        "The matrix rows must all have the same length");
                 }
                 for (size_t j = 0; j < cols; ++j) {
                     try {
@@ -95,7 +97,6 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
         .def("swap", &Matrix::swap, rdoc::swap)
         .def("rows", &Matrix::rows, rdoc::rows)
         .def("columns", &Matrix::columns, rdoc::columns)
-        .def("initialised", &Matrix::initialised, rdoc::initialised)
         .def("set", [](Matrix& m, size_t row, size_t col, const Element& e) {
             m.entry(row, col) = e;
         }, rdoc::set)
@@ -104,9 +105,11 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
         .def("entry", overload_cast<size_t, size_t>(&Matrix::entry),
             pybind11::return_value_policy::reference_internal, rdoc::entry)
         .def("transpose", &Matrix::transpose, rdoc::transpose)
-        .def("swapRows", &Matrix::swapRows, rdoc::swapRows)
+        .def("swapRows", &Matrix::swapRows,
+            "first"_a, "second"_a, "fromCol"_a = 0, rdoc::swapRows)
         .def("swapCols", &Matrix::swapCols,
             "first"_a, "second"_a, "fromRow"_a = 0, rdoc::swapCols)
+        .def("validate", &Matrix::validate, rdoc::validate)
     ;
     if constexpr (regina::Ring<Element>) {
         c
@@ -114,6 +117,9 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
             .def("isZero", &Matrix::isZero, rdoc::isZero)
             .def_static("identity", &Matrix::identity, rdoc::identity)
             .def("makeIdentity", &Matrix::makeIdentity, rdoc::makeIdentity)
+            .def("negate", &Matrix::negate, rdoc::negate)
+            .def("negateRow", &Matrix::negateRow, rdoc::negateRow)
+            .def("negateCol", &Matrix::negateCol, rdoc::negateCol)
             .def("addRow", overload_cast<size_t, size_t>(&Matrix::addRow),
                 rdoc::addRow)
             .def("addRowFrom", &Matrix::addRowFrom, rdoc::addRowFrom)
@@ -142,34 +148,71 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
                 "coeff11"_a, "coeff12"_a, "coeff21"_a, "coeff22"_a,
                 "fromRow"_a = 0,
                 rdoc::combCols)
-            .def("det", &Matrix::det, rdoc::det)
-            .def("__mul__", [](const Matrix& m1, const Matrix& m2){
-                return m1 * m2;
-            }, rdoc::__mul)
+            .def("trace", overload_cast<>(&Matrix::trace, pybind11::const_),
+                rdoc::trace)
+            .def(pybind11::self += pybind11::self, rdoc::__iadd)
+            .def(pybind11::self -= pybind11::self, rdoc::__isub)
+            .def(pybind11::self * Element(), rdoc::__mul)
+            .def(pybind11::self *= Element(), rdoc::__imul)
+            .def(pybind11::self * pybind11::self, rdoc::__mul_2)
+        ;
+    }
+    if constexpr (regina::CommutativeRing<Element>) {
+        c
+            .def("det", &Matrix::det,
+                "alg"_a = regina::AdjugateAlgorithm::Default, rdoc::det)
+            .def("adjugate", &Matrix::adjugate,
+                "alg"_a = regina::AdjugateAlgorithm::Default, rdoc::adjugate)
         ;
     }
     if constexpr (regina::ReginaInteger<Element>) {
         c
-            .def("negateRow", &Matrix::negateRow, rdoc::negateRow)
-            .def("negateCol", &Matrix::negateCol, rdoc::negateCol)
             .def("divRowExact", &Matrix::divRowExact, rdoc::divRowExact)
             .def("divColExact", &Matrix::divColExact, rdoc::divColExact)
             .def("gcdRow", &Matrix::gcdRow, rdoc::gcdRow)
             .def("gcdCol", &Matrix::gcdCol, rdoc::gcdCol)
             .def("reduceRow", &Matrix::reduceRow, rdoc::reduceRow)
             .def("reduceCol", &Matrix::reduceCol, rdoc::reduceCol)
-            .def("rowEchelonForm", &Matrix::rowEchelonForm,
-                rdoc::rowEchelonForm)
-            .def("columnEchelonForm", &Matrix::columnEchelonForm,
-                rdoc::columnEchelonForm)
+            .def("makeRowEchelon", &Matrix::makeRowEchelon,
+                rdoc::makeRowEchelon)
+            .def("makeColumnEchelon", &Matrix::makeColumnEchelon,
+                rdoc::makeColumnEchelon)
+            .def("rowEchelon",
+                static_cast<std::pair<Matrix, size_t> (Matrix::*)() const&>(
+                    &Matrix::rowEchelon),
+                rdoc::rowEchelon)
+            .def("columnEchelon",
+                static_cast<std::pair<Matrix, size_t> (Matrix::*)() const&>(
+                    &Matrix::columnEchelon),
+                rdoc::columnEchelon)
             .def("rank", static_cast<size_t (Matrix::*)() const&>(
                 &Matrix::rank), rdoc::rank)
+            .def("makeRowBasis", &Matrix::makeRowBasis, rdoc::makeRowBasis)
+            .def("rowBasis",
+                static_cast<Matrix (Matrix::*)() const&>(&Matrix::rowBasis),
+                rdoc::rowBasis)
+            .def("rowBasisAndOrthComp", &Matrix::rowBasisAndOrthComp,
+                rdoc::rowBasisAndOrthComp)
+            .def("inverse",
+                static_cast<Matrix (Matrix::*)() const&>(&Matrix::inverse),
+                rdoc::inverse)
             .def("__mul__", [](const Matrix& m, const regina::VectorInt& v){
                 return m * v;
-            }, rdoc::__mul_2)
+            }, rdoc::__mul_3)
             .def("__mul__", [](const Matrix& m, const regina::VectorLarge& v){
                 return m * v;
-            }, rdoc::__mul_2)
+            }, rdoc::__mul_3)
+            .def("makeSmith", &Matrix::makeSmith, rdoc::makeSmith)
+            .def("makeSmithCoB", &Matrix::makeSmithCoB,
+                "alg"_a = regina::SNFAlgorithm::Default, rdoc::makeSmithCoB)
+            .def("smith",
+                static_cast<Matrix (Matrix::*)() const&>(&Matrix::smith),
+                rdoc::smith)
+            .def("smithCoB",
+                static_cast<std::array<Matrix, 5>
+                    (Matrix::*)(regina::SNFAlgorithm) const&>(
+                    &Matrix::smithCoB),
+                "alg"_a = regina::SNFAlgorithm::Default, rdoc::smithCoB)
         ;
     }
     regina::python::add_output_rich(c);
@@ -180,8 +223,94 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
 }
 
 void addMatrix(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(SNFAlgorithm)
+
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::native_enum<regina::SNFAlgorithm>(m, "SNFAlgorithm",
+            "enum.Enum", rdoc::__class)
+#elif REGINA_PYBIND11_VERSION == 2
+    pybind11::enum_<regina::SNFAlgorithm>(m, "SNFAlgorithm", rdoc::__class)
+#endif
+        .value("Default", regina::SNFAlgorithm::Default, rdoc::Default)
+        .value("HafnerMcCurley", regina::SNFAlgorithm::HafnerMcCurley,
+            rdoc::HafnerMcCurley)
+        .value("Metrical", regina::SNFAlgorithm::Metrical, rdoc::Metrical)
+#if REGINA_PYBIND11_VERSION == 3
+        .finalize()
+#endif
+        ;
+
+    RDOC_SCOPE_SWITCH(AdjugateAlgorithm)
+
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::native_enum<regina::AdjugateAlgorithm>(m, "AdjugateAlgorithm",
+            "enum.Enum", rdoc::__class)
+#elif REGINA_PYBIND11_VERSION == 2
+    pybind11::enum_<regina::AdjugateAlgorithm>(m, "AdjugateAlgorithm",
+            rdoc::__class)
+#endif
+        .value("Default", regina::AdjugateAlgorithm::Default, rdoc::Default)
+        .value("FaddeevLeverrier", regina::AdjugateAlgorithm::FaddeevLeverrier,
+            rdoc::FaddeevLeverrier)
+        .value("PreparataSarwate", regina::AdjugateAlgorithm::PreparataSarwate,
+            rdoc::PreparataSarwate)
+        .value("MahajanVinay", regina::AdjugateAlgorithm::MahajanVinay,
+            rdoc::MahajanVinay)
+#if REGINA_PYBIND11_VERSION == 3
+        .finalize()
+#endif
+        ;
+
+    RDOC_SCOPE_END
+
     addMatrixOf<bool>(m, "MatrixBool");
     addMatrixOf<regina::Integer>(m, "MatrixInt");
     addMatrixOf<double>(m, "MatrixReal");
+
+    RDOC_SCOPE_BEGIN_MAIN
+
+    using regina::MatrixInt;
+    m.def("smithNormalForm", [](MatrixInt& m) { // deprecated
+        m.makeSmith();
+    }, rdoc::smithNormalForm);
+    m.def("smithNormalForm", [](MatrixInt& m, MatrixInt& r, MatrixInt& ri,
+            MatrixInt&c, MatrixInt& ci) { // deprecated
+        auto cob = m.makeSmithCoB();
+        r = std::move(cob[0]);
+        ri = std::move(cob[1]);
+        c = std::move(cob[2]);
+        ci = std::move(cob[3]);
+    }, rdoc::smithNormalForm_2);
+    m.def("metricalSmithNormalForm", [](MatrixInt& m, // deprecated
+            MatrixInt& r, MatrixInt& ri, MatrixInt&c, MatrixInt& ci) {
+        auto cob = m.makeSmithCoB(regina::SNFAlgorithm::Metrical);
+        r = std::move(cob[0]);
+        ri = std::move(cob[1]);
+        c = std::move(cob[2]);
+        ci = std::move(cob[3]);
+    }, rdoc::metricalSmithNormalForm);
+    m.def("preImageOfLattice", &regina::preImageOfLattice,
+        rdoc::preImageOfLattice);
+    m.def("torsionAutInverse", &regina::torsionAutInverse,
+        rdoc::torsionAutInverse);
+
+    #if defined(__GNUC__)
+    // The following functions are deprecated, but we still need to bind them
+    // since they have no direct replacements.  Silence the inevitable
+    // deprecation warnings that will occur.
+    #pragma GCC diagnostic push
+    #if defined(__clang__)
+    #pragma GCC diagnostic ignored "-Wdeprecated"
+    #else
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    #endif
+    #endif
+    m.def("columnEchelonForm", &regina::columnEchelonForm,
+        rdoc::columnEchelonForm); // deprecated
+    #if defined(__GNUC__)
+    #pragma GCC diagnostic pop
+    #endif
+
+    RDOC_SCOPE_END
 }
 
