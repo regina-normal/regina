@@ -732,10 +732,10 @@ Version 8.0  [ TODO ]
             - New assignment operator that takes a std::array<Real, 3>.
         Function columnEchelonForm():
             - Removed from Regina's public interface.  This function is specific
-              to the implementation of preImageOfLattice(), and so it is now
-              hidden away as a private member function of Matrix.  If you were
-              using this function to compute inverses of integer matrices, you
-              can use the new routine Matrix<Integer>::inverse() instead.
+              to the implementation of Matrix::preimageOfLattice(), and so it is
+              now hidden away as a private member function of Matrix.  If you
+              were using this function to compute inverses of integer matrices,
+              you can use the new routine Matrix<Integer>::inverse() instead.
         Functions forall_constexpr():
             - New routine to support tests over a compile-time range of
               integers (like for_constexpr(), but with a boolean return value).

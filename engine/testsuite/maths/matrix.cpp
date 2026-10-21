@@ -485,7 +485,7 @@ TEST_F(MatrixTest, noRows) {
         validateEmpty(res[4]);
     }
 
-    validateIdentity(m.preImageOfLattice({}), 3);
+    validateIdentity(m.preimageOfLattice({}), 3);
 }
 
 TEST_F(MatrixTest, noColumns) {
@@ -682,8 +682,8 @@ TEST_F(MatrixTest, noColumns) {
         validateIdentity(res[4], 3);
     }
 
-    validateEmpty(m.preImageOfLattice({ 2, 3, 5 }));
-    validateEmpty(m.preImageOfLattice({ 0, 0, 0 }));
+    validateEmpty(m.preimageOfLattice({ 2, 3, 5 }));
+    validateEmpty(m.preimageOfLattice({ 0, 0, 0 }));
 }
 
 static void verifyEchelonForm(const MatrixInt& m) {
