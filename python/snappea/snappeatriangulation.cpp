@@ -52,7 +52,8 @@ using regina::Cusp;
 using regina::SnapPeaTriangulation;
 using regina::Triangulation;
 
-void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal) {
+void addSnapPeaTriangulation(pybind11::module_& m,
+        pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN_MAIN
 
     regina::python::registerReginaException<regina::SnapPeaFatalError,
@@ -154,7 +155,8 @@ void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal) 
             tri.enumerateCovers(sheets, type, [&](SnapPeaTriangulation&& c,
                     SnapPeaTriangulation::Cover t) {
                 pybind11::tuple pair(2);
-                pair[0] = pybind11::cast(new SnapPeaTriangulation(std::move(c)));
+                pair[0] = pybind11::cast(new SnapPeaTriangulation(
+                    std::move(c)));
                 pair[1] = t;
                 ans.append(pair);
             });

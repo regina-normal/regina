@@ -52,7 +52,8 @@ void addIsomorphism(pybind11::module_& m, const char* name) {
         .def("__len__", &Isomorphism<dim>::size, rdoc::size)
         .def("simpImage", overload_cast<size_t>(
             &Isomorphism<dim>::simpImage, pybind11::const_), rdoc::simpImage)
-        .def("setSimpImage", [](Isomorphism<dim>& iso, size_t s, ssize_t image) {
+        .def("setSimpImage", [](Isomorphism<dim>& iso, size_t s,
+                ssize_t image) {
             iso.simpImage(s) = image;
         }, rdoc::setSimpImage)
         .def("facetPerm", overload_cast<size_t>(

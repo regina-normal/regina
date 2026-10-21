@@ -2026,8 +2026,8 @@ class Matrix : public Output<Matrix<T>> {
          *   the matrix \a C will have dimensions `columns() × columns()`.
          *
          * - The rows of \a B will be a subset of the rows of this matrix, and
-         *   may possibly appear in a different order.  In particular, \a B might
-         *   have fewer rows than this matrix.
+         *   may possibly appear in a different order.  In particular, \a B
+         *   might have fewer rows than this matrix.
          *
          * - The rows of \a B will be linearly independent, and will together
          *   form a basis (over the rationals) of the row space of this matrix.
@@ -2351,8 +2351,9 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
-         * Treats this matrix as a homomorphism from `Z^n` to `Z^k`, and computes
-         * the preimage of a given sublattice of `Z^k` under this homomorphism.
+         * Treats this matrix as a homomorphism from `Z^n` to `Z^k`, and
+         * computes the preimage of a given sublattice of `Z^k` under this
+         * homomorphism.
          *
          * Suppose this matrix (which describes the homomorphism from
          * `Z^n` to `Z^k`) has dimensions `k × n`.  The sublattice is then of
@@ -2497,9 +2498,9 @@ class Matrix : public Output<Matrix<T>> {
          *   containing the first non-zero entries for these columns have
          *   strictly increasing indices in \a rowList;
          *
-         * - given a first non-zero column entry, in that row all the elements to
-         *   the left are smaller and non-negative (all elements to the right are
-         *   already zero by the previous condition);
+         * - given a first non-zero column entry, in that row all the elements
+         *   to the left are smaller and non-negative (all elements to the right
+         *   are already zero by the previous condition);
          *
          * - all the zero columns are on the right hand side of the matrix.
          *
@@ -2521,10 +2522,10 @@ class Matrix : public Output<Matrix<T>> {
          * described above.
          * \param rowList the rows to pay attention to.  This list must contain
          * distinct integers, all between 0 and `rows()-1` inclusive (though it
-         * need not contain _all_ of these integers).  The integers may appear in
-         * any order (though changing the order will change the resulting column
-         * echelon form).  For a "classical" column echelon form, this would be
-         * the list of all rows: `0,...,(rows()-1)`.
+         * need not contain _all_ of these integers).  The integers may appear
+         * in any order (though changing the order will change the resulting
+         * column echelon form).  For a "classical" column echelon form, this
+         * would be the list of all rows: `0,...,(rows()-1)`.
          *
          * \author Ryan Budney
          */

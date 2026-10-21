@@ -140,7 +140,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
         // matrix [MRi_ * N_], where the brackets indicate removal of the
         // first rankM_ rows.
 
-        /** Internal change of basis. presC_ * pres * presR_ is the SNF(pres). */
+        /** Internal change of basis. presC_ * pres * presR_ == SNF(pres). */
         MatrixInt presR_, presC_;
         /** Internal change of basis. This is the inverse of presC_. */
         MatrixInt presCi_;
