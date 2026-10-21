@@ -43,6 +43,7 @@
 #include "maths/polyops.h"
 #include "utilities/stringutils.h"
 #include "utilities/tightencoding.h"
+#include <functional>
 #include <iostream>
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
