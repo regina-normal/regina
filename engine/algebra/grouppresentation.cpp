@@ -40,7 +40,7 @@
 #include "algebra/markedabeliangroup.h"
 #include "algebra/abeliangroup.h"
 #include "maths/numbertheory.h"
-#include "maths/matrixops.h"
+#include "maths/matrix.h"
 #include "utilities/exception.h"
 #include "utilities/stringutils.h"
 

@@ -1375,7 +1375,8 @@ not be stored).
 Returns:
     the integer by which the original surface was divided (i.e., the
     gcd of all normal coordinates in the original surface). This will
-    always be strictly positive.)doc";
+    always be strictly positive. If all of the normal coordinates are
+    zero and/or infinity, then this return value will be 1.)doc";
 
 // Docstring regina::python::doc::NormalSurface::setName
 static constexpr const char setName[] =

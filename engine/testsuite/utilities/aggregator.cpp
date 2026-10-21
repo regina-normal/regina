@@ -132,9 +132,9 @@ TEST(AggregatorTest, setCopyMove) {
     // For this we use the Integer type, where Integer::rawData() gives us
     // a mechanism to detect moves vs copies.
     Integer one(1), two(2), three(3), four(4);
-    auto p1 = ptr(one.rawData());
-    auto p2 = ptr(two.rawData());
-    auto p3 = ptr(three.rawData());
+    auto p1 = ptr(one.rawData()->_mp_d);
+    auto p2 = ptr(two.rawData()->_mp_d);
+    auto p3 = ptr(three.rawData()->_mp_d);
     EXPECT_NE(p1, nullptr);
     EXPECT_NE(p2, nullptr);
     EXPECT_NE(p3, nullptr);
@@ -143,38 +143,38 @@ TEST(AggregatorTest, setCopyMove) {
     a += one;
     a += two;
     EXPECT_EQ(a.result().size(), 2);
-    EXPECT_NE(ptr(a.result().begin()->rawData()), p1);
+    EXPECT_NE(ptr(a.result().begin()->rawData()->_mp_d), p1);
 
     SetAggregator<Integer> b;
     b += std::move(one);
     b += std::move(two);
     EXPECT_EQ(b.result().size(), 2);
-    EXPECT_EQ(ptr(b.result().begin()->rawData()), p1);
+    EXPECT_EQ(ptr(b.result().begin()->rawData()->_mp_d), p1);
 
     SetAggregator<Integer> c;
     c += 2; // two has already been moved from
     c += three;
     c += b;
     EXPECT_EQ(c.result().size(), 3);
-    EXPECT_NE(ptr(c.result().begin()->rawData()), p1);
-    EXPECT_NE(ptr(c.result().rbegin()->rawData()), p3);
+    EXPECT_NE(ptr(c.result().begin()->rawData()->_mp_d), p1);
+    EXPECT_NE(ptr(c.result().rbegin()->rawData()->_mp_d), p3);
 
     SetAggregator<Integer> d;
     d += 2; // two has already been moved from
     d += std::move(three);
     d += std::move(b);
     EXPECT_EQ(d.result().size(), 3);
-    EXPECT_EQ(ptr(d.result().begin()->rawData()), p1);
-    EXPECT_EQ(ptr(d.result().rbegin()->rawData()), p3);
+    EXPECT_EQ(ptr(d.result().begin()->rawData()->_mp_d), p1);
+    EXPECT_EQ(ptr(d.result().rbegin()->rawData()->_mp_d), p3);
 
     std::set<Integer> e = d.result();
     EXPECT_EQ(e.size(), 3);
-    EXPECT_NE(ptr(e.begin()->rawData()), p1);
-    EXPECT_NE(ptr(e.rbegin()->rawData()), p3);
+    EXPECT_NE(ptr(e.begin()->rawData()->_mp_d), p1);
+    EXPECT_NE(ptr(e.rbegin()->rawData()->_mp_d), p3);
 
     std::set<Integer> f = std::move(d).result();
     EXPECT_EQ(f.size(), 3);
-    EXPECT_EQ(ptr(f.begin()->rawData()), p1);
-    EXPECT_EQ(ptr(f.rbegin()->rawData()), p3);
+    EXPECT_EQ(ptr(f.begin()->rawData()->_mp_d), p1);
+    EXPECT_EQ(ptr(f.rbegin()->rawData()->_mp_d), p3);
 }
 

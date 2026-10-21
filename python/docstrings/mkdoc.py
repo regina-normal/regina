@@ -18,7 +18,8 @@ import textwrap
 import ctypes.util
 
 from clang import cindex
-from clang.cindex import CursorKind, TypeKind, AccessSpecifier, AvailabilityKind
+from clang.cindex import CursorKind, TypeKind, AccessSpecifier, \
+    AvailabilityKind, RefQualifierKind
 from collections import OrderedDict
 from glob import glob
 from multiprocessing import cpu_count
@@ -514,13 +515,15 @@ def extract(filename, node, parent_namespace, parent_types, output):
             node.spelling not in CLASS_BLACKLIST and \
             (not node.is_move_constructor())))
 
-    # Check for rvalue reference arguments, which would normally make a
-    # function non-bindable in Python.
     if generateDocstring:
+        # Check for rvalue reference arguments and/or rvalue member functions,
+        # which would normally make a function non-bindable in Python.
         for c in node.get_children():
             if c.type.kind == TypeKind.RVALUEREFERENCE:
                 generateDocstring = False
                 break
+        if node.type.get_ref_qualifier() == RefQualifierKind.RVALUE:
+            generateDocstring = False
 
     if (not generateDocstring) and (node.kind not in PRINT_BLACKLIST) and \
             '\\python' in node.raw_comment:

@@ -1796,6 +1796,129 @@ TEST_F(LinkTest, affineIndex) {
     }
 }
 
+static void verifyTheta(const TestCase& test,
+        const regina::Laurent2<regina::Integer>& expected) {
+    SCOPED_TRACE_CSTRING(test.name);
+
+    Link clone(test.link, false);
+    EXPECT_FALSE(clone.knowsAlexander(true));
+    EXPECT_EQ(clone.theta(), expected);
+    EXPECT_TRUE(clone.knowsAlexander(true));
+
+    // Verify that the Alexander polynomial computed as a side-effect of theta
+    // matches the Alexander polynomial that we compute directly.
+    EXPECT_EQ(Link(test.link, false).alexander(), clone.alexander());
+
+    // Verify that theta behaves as conjectured under simple transformations.
+    {
+        // Reversal should not change theta (Bar-Natan / van der Veen,
+        // Conjecture 22).
+        Link reverse(test.link, false);
+        reverse.reverse();
+        EXPECT_EQ(reverse.theta(), expected);
+    }
+    {
+        // Reflection should negate theta (Bar-Natan / van der Veen,
+        // Conjecture 21).
+        Link reflect(test.link, false);
+        reflect.reflect();
+        EXPECT_EQ(reflect.theta(), -expected);
+    }
+}
+
+TEST_F(LinkTest, theta) {
+    // For classical knots, the affine index polynomial is always zero.
+    verifyTheta(unknot0, {});
+    verifyTheta(unknot1, {});
+    verifyTheta(unknot3, {});
+    verifyTheta(unknotMonster, {});
+    // verifyTheta(unknotGordian, {});
+
+    // The polynomial for the left-hand trefoil is taken from the
+    // original Bar-Natan / van der Veen paper (where this is Knot[3,1]).
+    static const regina::Laurent2<regina::Integer> thetaTrefoilLeft {
+        {-2,-2,-1}, {-2,-1,1}, {-2,0,-1}, {-1,-2,1}, {-1,1,1}, {0,-2,-1},
+        {0,2,-1}, {1,-1,1}, {1,2,1}, {2,0,-1}, {2,1,1}, {2,2,-1} };
+
+    verifyTheta(trefoilLeft, thetaTrefoilLeft);
+    verifyTheta(trefoilRight, -thetaTrefoilLeft);
+    verifyTheta(trefoil_r1x2, -thetaTrefoilLeft);
+    verifyTheta(trefoil_r1x6, -thetaTrefoilLeft);
+
+    verifyTheta(figureEight, {});
+    verifyTheta(figureEight_r1x2, {});
+
+    // The results for Conway and Kinoshita-Terasaka have been verified against
+    // the output from Dror's Mathematica code, where these knots appear as
+    // Knot["K11n34"] and the _reversal_ of Knot["K11n42"] respectively.
+    // A caveat: the expected Kinoshita-Terasaka output below is taken from
+    // Dror's Knot["K11n42"] - not its reverse - and so our test here assumes
+    // that reversal does not change theta.  This is explicitly conjectured by
+    // Bar-Natan / van der Veen and is tested here by verifyTheta(), and so
+    // this does seem a safe assumption for the purpose of the test suite.
+    verifyTheta(conway, {
+        {-6,-4,-1}, {-6,-3,2}, {-6,-2,-1},
+        {-5,-5,2}, {-5,-4,-2}, {-5,-1,-2}, {-5,0,2},
+        {-4,-6,-1}, {-4,-5,-2}, {-4,-4,2}, {-4,-2,2}, {-4,0,2}, {-4,1,-2},
+            {-4,2,-1},
+        {-3,-6,2}, {-3,-2,-1}, {-3,-1,-1}, {-3,3,2},
+        {-2,-6,-1}, {-2,-4,2}, {-2,-3,-1}, {-2,-2,-2}, {-2,0,-2}, {-2,1,-1},
+            {-2,2,2}, {-2,4,-1},
+        {-1,-5,-2}, {-1,-3,-1}, {-1,-1,4}, {-1,0,4}, {-1,2,-1}, {-1,4,-2},
+        {0,-5,2}, {0,-4,2}, {0,-2,-2}, {0,-1,4}, {0,0,-12}, {0,1,4}, {0,2,-2},
+            {0,4,2}, {0,5,2},
+        {1,-4,-2}, {1,-2,-1}, {1,0,4}, {1,1,4}, {1,3,-1}, {1,5,-2},
+        {2,-4,-1}, {2,-2,2}, {2,-1,-1}, {2,0,-2}, {2,2,-2}, {2,3,-1}, {2,4,2},
+            {2,6,-1},
+        {3,-3,2}, {3,1,-1}, {3,2,-1}, {3,6,2},
+        {4,-2,-1}, {4,-1,-2}, {4,0,2}, {4,2,2}, {4,4,2}, {4,5,-2}, {4,6,-1},
+        {5,0,2}, {5,1,-2}, {5,4,-2}, {5,5,2},
+        {6,2,-1}, {6,3,2}, {6,4,-1} });
+    verifyTheta(kinoshitaTerasaka, {
+        {-3,-2,1}, {-3,-1,1},
+        {-2,-3,1}, {-2,-2,-2}, {-2,-1,-2}, {-2,0,-2}, {-2,1,1},
+        {-1,-3,1}, {-1,-2,-2}, {-1,-1,2}, {-1,0,2}, {-1,1,-2}, {-1,2,1},
+        {0,-2,-2}, {0,-1,2}, {0,1,2}, {0,2,-2},
+        {1,-2,1}, {1,-1,-2}, {1,0,2}, {1,1,2}, {1,2,-2}, {1,3,1},
+        {2,-1,1}, {2,0,-2}, {2,1,-2}, {2,2,-2}, {2,3,1},
+        {3,1,1}, {3,2,1} });
+
+    // We do not test GST, since this is a bit slow at the present time.
+
+    // The next two results follow from Bar-Natan / van der Veen's Fact 23
+    // (theta_0 is additive under knot composition, and so theta is additive
+    // after multiplying by the relevant Alexander polynomials)).
+    verifyTheta(rht_rht, thetaTrefoilLeft * -2 *
+        regina::Laurent2<regina::Integer>({{1,0,1}, {0,0,-1}, {-1,0,1}}) *
+        regina::Laurent2<regina::Integer>({{0,1,1}, {0,0,-1}, {0,-1,1}}) *
+        regina::Laurent2<regina::Integer>({{1,1,1}, {0,0,-1}, {-1,-1,1}}));
+    verifyTheta(rht_lht, {});
+
+    // The theta invariant is not available for empty, virtual, and/or
+    // multiple-component links.
+    EXPECT_THROW({ empty.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ unlink2_0.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ unlink3_0.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ unlink2_r2.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ unlink2_r1r1.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ hopf.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ whitehead.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ borromean.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ trefoil_unknot0.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ trefoil_unknot1.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ trefoil_unknot_overlap.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ adams6_28.link.theta(); }, FailedPrecondition);
+
+    EXPECT_THROW({ virtualTrefoil.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ kishino.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ gpv.link.theta(); }, FailedPrecondition);
+
+    EXPECT_THROW({ virtualLink2.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ virtualLink3.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ virtualTrefoilx2.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ virtualDisconnected.link.theta(); }, FailedPrecondition);
+}
+
 static void verifyComplementBasic(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 

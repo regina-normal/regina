@@ -607,7 +607,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \return the integer by which the original hypersurface was divided
          * (i.e., the gcd of all normal coordinates in the original
-         * hypersurface).  This will always be strictly positive.
+         * hypersurface).  This will always be strictly positive. If all of the
+         * normal coordinates are zero and/or infinity, then this return value
+         * will be 1.
          */
         LargeInteger scaleDown();
 

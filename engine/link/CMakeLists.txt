@@ -30,6 +30,7 @@ SET ( FILES
   simplify.cpp
   spatiallink.cpp
   tangle.cpp
+  theta.cpp
   )
 
 # Prepend folder name

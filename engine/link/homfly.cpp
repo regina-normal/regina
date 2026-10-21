@@ -892,17 +892,17 @@ namespace {
         auto existingSoln = solns->try_emplace(
             std::move(key), std::move(value));
         if (! existingSoln.second)
-            existingSoln.first->second += value;
+            existingSoln.first->second += std::move(value);
     }
 
     inline Laurent2<Integer> switchValue(const Laurent2<Integer>& from,
             Crossing* c) {
-        return Laurent2<Integer>(from, (c->sign() > 0 ? -2 : 2), 0);
+        return from.shifted((c->sign() > 0 ? -2 : 2), 0);
     }
 
     inline Laurent2<Integer> spliceValue(const Laurent2<Integer>& from,
             Crossing* c) {
-        Laurent2<Integer> ans(from, (c->sign() > 0 ? -1 : 1), 1);
+        auto ans = from.shifted((c->sign() > 0 ? -1 : 1), 1);
         if (c->sign() < 0)
             ans.negate();
         return ans;
@@ -1467,7 +1467,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                 }
 
                 const Key& kChild = soln.first;
-                const Value& vChild = soln.second;
+                const Value& vChild = soln.second; // TODO: move out?
                 // To avoid a ton of static_casts down to int later on:
                 const int sChild = static_cast<int>(kChild.size());
 
