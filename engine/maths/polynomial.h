@@ -74,8 +74,22 @@ namespace regina {
 template <CoefficientDomain T>
 class Polynomial : public ShortOutput<Polynomial<T>, true> {
     public:
+        /**
+         * The type of each coefficient of the polynomial.
+         */
         using Coefficient = T;
-            /**< The type of each coefficient of the polynomial. */
+
+        /**
+         * A read-only iterator type for iterating over polynomial coefficients.
+         * This is identical to \a const_iterator, since iterators over
+         * coefficients are always read-only.
+         */
+        using iterator = const T*;
+
+        /**
+         * A read-only iterator type for iterating over polynomial coefficients.
+         */
+        using const_iterator = const T*;
 
         // Make sure the compiler can see the zero-argument string output
         // routines, since we declare alternative versions of these below.
@@ -177,6 +191,45 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         Polynomial(std::initializer_list<T> coefficients);
 
         /**
+         * Creates a new polynomial with a single constant term, equal to the
+         * given value.
+         *
+         * There is no problem if the given value is zero.
+         *
+         * \param constant the value of this new constant polynomial.
+         */
+        Polynomial(const T& constant);
+
+        /**
+         * Creates a new polynomial with a single constant term, whose
+         * contents will be moved out of the given value.
+         *
+         * The value that was passed (\a constant) will no longer be usable.
+         *
+         * There is no problem if the given value is zero.
+         *
+         * \param constant the value of this new constant polynomial.
+         */
+        Polynomial(T&& constant);
+
+        /**
+         * Creates a new polynomial with a single integer constant term.
+         *
+         * There is no problem if the given constant is zero (though you can
+         * also construct the zero polynomial by passing no arguments at all).
+         *
+         * The extent to which this constructor can handle large native
+         * integer types without overflow will depend on how well such integer
+         * types are supported by the coefficient type \a T.
+         *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \param constant the value of this new polynomial.
+         */
+        template <CppInteger IntType>
+        Polynomial(IntType constant);
+
+        /**
          * Destroys this polynomial.
          */
         ~Polynomial();
@@ -193,31 +246,6 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \param degree the new degree of this polynomial.
          */
         void initExp(size_t degree);
-
-        /**
-         * Sets this to become the polynomial described by the given
-         * sequence of coefficients.
-         * The coefficients should appear in order from the constant
-         * coefficient to the leading coefficient.
-         *
-         * There is no problem if the leading coefficient (i.e., the
-         * last coefficient in the sequence) is zero.
-         * An empty sequence will be treated as the zero polynomial.
-         *
-         * This routine induces a deep copy of the given range.
-         *
-         * The iterator type must be random access because this allows the
-         * implementation to compute the sequence length in constant time.
-         *
-         * \python Instead of a pair of iterators, this routine
-         * takes a Python list of coefficients.
-         *
-         * \param begin the beginning of the sequence of coefficients.
-         * \param end a past-the-end iterator indicating the end of the
-         * sequence of coefficients.
-         */
-        template <RandomAccessIteratorFor<T> Iterator>
-        void init(Iterator begin, Iterator end);
 
         /**
          * Returns the degree of this polynomial.
@@ -300,6 +328,68 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         void set(size_t exp, const T& value);
 
         /**
+         * Returns a C++ iterator pointing to the constant coefficient of this
+         * polynomial.  Such iterators provide read-only access to the
+         * coefficients: to modify coefficients you will need to call different
+         * routines, such as set().
+         *
+         * The iterator range from begin() to end() runs through all
+         * coefficients of this polynomial, including zeroes, in order from
+         * the constant coefficient to the leading coefficient.  If this is
+         * the zero polynomial then this iterator range will be empty.
+         *
+         * \nopython For Python users, Polynomial implements the Python iterable
+         * interface.  You can iterate through coefficients in the same way
+         * that you would iterate over any native Python container.
+         *
+         * \return an iterator pointing to the constant coefficient.
+         */
+        iterator begin() const;
+
+        /**
+         * Returns a C++ iterator pointing beyond the leading coefficient of
+         * this polynomial.  Such iterators provide read-only access to the
+         * coefficients: to modify coefficients you will need to call
+         * different routines, such as set().
+         *
+         * The iterator range from begin() to end() runs through all
+         * coefficients of this polynomial, including zeroes, in order from
+         * the constant coefficient to the leading coefficient.  If this is
+         * the zero polynomial then this iterator range will be empty.
+         *
+         * \nopython For Python users, Polynomial implements the Python iterable
+         * interface.  You can iterate through coefficients in the same way
+         * that you would iterate over any native Python container.
+         *
+         * \return an iterator pointing beyond the leading coefficient.
+         */
+        iterator end() const;
+
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterator that provides read-only access to all
+         * coefficients of this polynomial.
+         *
+         * The iterator range runs through all coefficients of this polynomial,
+         * including zeroes, in order from the constant coefficient to the
+         * leading coefficient.  If this is the zero polynomial then the
+         * iterator range will be empty.
+         *
+         * To enforce read-only access, Python iterators will return
+         * coefficients by value, not by reference.  If you wish to modify
+         * coefficients then you will need to call different routines, such as
+         * set().
+         *
+         * \nocpp For C++ users, Polynomial provides the usual begin() and end()
+         * functions instead.  In particular, you can iterate over coefficients
+         * in the usual way using a range-based `for` loop.
+         *
+         * \return an iterator over all coefficients of this polynomial.
+         */
+        auto __iter__() const;
+#endif
+
+        /**
          * Tests whether this and the given polynomial are equal.
          *
          * \param rhs the polynomial to compare with this.
@@ -307,6 +397,31 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * are equal.
          */
         bool operator == (const Polynomial& rhs) const;
+
+        /**
+         * Tests whether this polynomial is equal to the given constant.
+         *
+         * \param constant the value to compare this polynomial against.
+         * \return \c true if and only if this polynomial is equal to the
+         * given constant.
+         */
+        bool operator == (const T& constant) const;
+
+        /**
+         * Tests whether this polynomial is equal to the given integer constant.
+         *
+         * The extent to which this operator can handle large native
+         * integer types without overflow will depend on how well such integer
+         * types are supported by the coefficient type \a T.
+         *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \param constant the integer to compare this polynomial against.
+         * \return \c true if and only if this polynomial is equal to the
+         * given integer constant.
+         */
+        template <CppInteger IntType>
+        bool operator == (IntType constant) const;
 
         /**
          * Sets this to be a copy of the given polynomial.
@@ -358,6 +473,46 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         Polynomial& operator = (Polynomial&& value) noexcept;
 
         /**
+         * Sets this to the polynomial with a single constant term, equal to
+         * the given value.
+         *
+         * There is no problem if the given value is zero.
+         *
+         * \param constant the value to assign to this constant polynomial.
+         * \return a reference to this polynomial.
+         */
+        Polynomial& operator = (const T& constant);
+
+        /**
+         * Sets this to the polynomial with a single constant term, whose
+         * contents will be moved out of the given value.
+         *
+         * The value that was passed (\a constant) will no longer be usable.
+         *
+         * There is no problem if the given value is zero.
+         *
+         * \param constant the value to assign to this constant polynomial.
+         * \return a reference to this polynomial.
+         */
+        Polynomial& operator = (T&& constant);
+
+        /**
+         * Sets this to the polynomial with a single integer constant term,
+         * equal to the given value.
+         *
+         * There is no problem if the given constant is zero.
+         *
+         * The extent to which this operator can handle large native
+         * integer types without overflow will depend on how well such integer
+         * types are supported by the coefficient type \a T.
+         *
+         * \param constant the value to assign to this constant polynomial.
+         * \return a reference to this polynomial.
+         */
+        template <CppInteger IntType>
+        Polynomial& operator = (IntType constant);
+
+        /**
          * Swaps the contents of this and the given polynomial.
          * This is a fast (constant time) operation.
          *
@@ -376,7 +531,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
 
         /**
          * Multiplies this polynomial by `x^s` for some integer \a s.
-         * This polynomial is changed directly.
+         * This polynomial will be changed directly.
          *
          * If \a s is negative and this polynomial has lower-degree terms
          * of the form `x^k` where `k < |s|`, then these lower-degree terms
@@ -387,6 +542,19 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         void shift(long s);
 
         /**
+         * Returns the product of this polynomial with `x^s` for some integer
+         * \a s.  This polynomial will not be changed.
+         *
+         * If \a s is negative and this polynomial has lower-degree terms
+         * of the form `x^k` where `k < |s|`, then these lower-degree terms
+         * will simply be omitted from the result.
+         *
+         * \param s the power of \a x to multiply by.
+         * \return the product of this with `x^s`.
+         */
+        Polynomial shifted(long s) const;
+
+        /**
          * Multiplies this polynomial by the given constant.
          *
          * \param scalar the scalar factor to multiply by.
@@ -395,9 +563,24 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         Polynomial& operator *= (const T& scalar);
 
         /**
+         * Multiplies this polynomial by the given integer constant.
+         *
+         * The extent to which this operator can handle large native
+         * integer types without overflow will depend on how well such integer
+         * types are supported by the coefficient type \a T.
+         *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \param scalar the scalar factor to multiply by.
+         * \return a reference to this polynomial.
+         */
+        template <CppInteger IntType>
+        Polynomial& operator *= (IntType scalar);
+
+        /**
          * Divides this polynomial by the given constant.
          *
-         * This uses the division operator /= for the coefficient type \a T.
+         * This uses the division operator `/=` for the coefficient type \a T.
          *
          * \pre The argument \a scalar is non-zero.
          *
@@ -405,6 +588,25 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \return a reference to this polynomial.
          */
         Polynomial& operator /= (const T& scalar);
+
+        /**
+         * Divides this polynomial by the given integer constant.
+         *
+         * This uses the division operator `/=` for the coefficient type \a T.
+         *
+         * The extent to which this operator can handle large native
+         * integer types without overflow will depend on how well such integer
+         * types are supported by the coefficient type \a T.
+         *
+         * \pre The argument \a scalar is non-zero.
+         *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \param scalar the scalar factor to divide by.
+         * \return a reference to this polynomial.
+         */
+        template <CppInteger IntType>
+        Polynomial& operator /= (IntType scalar);
 
         /**
          * Adds the given polynomial to this.
@@ -455,7 +657,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * and discards the remainder.  If you need to keep the remainder
          * also, then call divisionAlg() instead.
          *
-         * Coefficients are divided using the operator /= on type \a T.
+         * Coefficients are divided using the operator `/=` on type \a T.
          *
          * If your coefficient type \a T is not a field (e.g., if \a T
          * is Integer), you must be sure to know in advance that the
@@ -486,7 +688,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * If you do not need the remainder (e.g., if you know in
          * advance that \a divisor divides into this polynomial exactly),
-         * then you can use the division operator /= instead, which will
+         * then you can use the division operator `/=` instead, which will
          * be a little faster.
          *
          * If your coefficient type \a T is not a field (e.g., if \a T
@@ -494,7 +696,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * quotient exists (see the precondition below).  Otherwise the
          * behaviour of this routine is undefined.
          *
-         * Coefficients are divided using the operator /= on type \a T.
+         * Coefficients are divided using the operator `/=` on type \a T.
          *
          * \pre The given divisor is not the zero polynomial.
          *
@@ -669,6 +871,24 @@ Polynomial<T> operator * (Polynomial<T> poly,
 /**
  * Multiplies the given polynomial by the given scalar constant.
  *
+ * The extent to which this constructor can handle large native
+ * integer types without overflow will depend on how well such integer
+ * types are supported by the coefficient type \a T.
+ *
+ * \python It is assumed that the type \a IntType is \c long.
+ *
+ * \param poly the polynomial to multiply by.
+ * \param scalar the scalar to multiply by.
+ * \return the product of the given polynomial and scalar.
+ *
+ * \ingroup maths
+ */
+template <CoefficientDomain T, CppInteger IntType>
+Polynomial<T> operator * (Polynomial<T> poly, IntType scalar);
+
+/**
+ * Multiplies the given polynomial by the given scalar constant.
+ *
  * The scalar is simply of type \a T; we use the identical type
  * Polynomial<T>::Coefficient here to assist with C++ template type matching.
  *
@@ -683,9 +903,27 @@ Polynomial<T> operator * (const typename Polynomial<T>::Coefficient& scalar,
     Polynomial<T> poly);
 
 /**
+ * Multiplies the given polynomial by the given scalar constant.
+ *
+ * The extent to which this constructor can handle large native
+ * integer types without overflow will depend on how well such integer
+ * types are supported by the coefficient type \a T.
+ *
+ * \python It is assumed that the type \a IntType is \c long.
+ *
+ * \param scalar the scalar to multiply by.
+ * \param poly the polynomial to multiply by.
+ * \return the product of the given polynomial and scalar.
+ *
+ * \ingroup maths
+ */
+template <CoefficientDomain T, CppInteger IntType>
+Polynomial<T> operator * (IntType scalar, Polynomial<T> poly);
+
+/**
  * Divides the given polynomial by the given scalar constant.
  *
- * This uses the division operator /= for the coefficient type \a T.
+ * This uses the division operator `/=` for the coefficient type \a T.
  *
  * The scalar is simply of type \a T; we use the identical type
  * Polynomial<T>::Coefficient here to assist with C++ template type matching.
@@ -701,6 +939,28 @@ Polynomial<T> operator * (const typename Polynomial<T>::Coefficient& scalar,
 template <CoefficientDomain T>
 Polynomial<T> operator / (Polynomial<T> poly,
     const typename Polynomial<T>::Coefficient& scalar);
+
+/**
+ * Divides the given polynomial by the given scalar constant.
+ *
+ * This uses the division operator `/=` for the coefficient type \a T.
+ *
+ * The extent to which this constructor can handle large native
+ * integer types without overflow will depend on how well such integer
+ * types are supported by the coefficient type \a T.
+ *
+ * \python It is assumed that the type \a IntType is \c long.
+ *
+ * \pre The argument \a scalar is non-zero.
+ *
+ * \param poly the polynomial to divide by the given scalar.
+ * \param scalar the scalar factor to divide by.
+ * \return the quotient of the given polynomial by the given scalar.
+ *
+ * \ingroup maths
+ */
+template <CoefficientDomain T, CppInteger IntType>
+Polynomial<T> operator / (Polynomial<T> poly, IntType scalar);
 
 /**
  * Adds the two given polynomials.
@@ -857,7 +1117,7 @@ Polynomial<T> operator * (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
  * If you need to keep the remainder also, then call Polynomial::divisionAlg()
  * instead.
  *
- * Coefficients are divided using the operator /= on type \a T.
+ * Coefficients are divided using the operator `/=` on type \a T.
  *
  * If your coefficient type \a T is not a field (e.g., if \a T
  * is Integer), you must be sure to know in advance that the
@@ -902,15 +1162,26 @@ inline Polynomial<T>::Polynomial() : degree_(0), coeff_(new T[1]) {
 
 template <CoefficientDomain T>
 template <RandomAccessIteratorFor<T> Iterator>
-inline Polynomial<T>::Polynomial(Iterator begin, Iterator end) :
-        coeff_(nullptr) {
-    init(begin, end);
+inline Polynomial<T>::Polynomial(Iterator begin, Iterator end) {
+    if (begin == end) {
+        degree_ = 0;
+        coeff_ = new T[1];
+    } else {
+        degree_ = end - begin - 1;
+        coeff_ = new T[degree_ + 1];
+
+        size_t i = 0;
+        while (begin != end)
+            coeff_[i++] = *begin++;
+
+        // The leading coefficient(s) might be zero.
+        fixDegree();
+    }
 }
 
 template <CoefficientDomain T>
 inline Polynomial<T>::Polynomial(std::initializer_list<T> coefficients) :
-        coeff_(nullptr) {
-    init(coefficients.begin(), coefficients.end());
+        Polynomial(coefficients.begin(), coefficients.end()) {
 }
 
 template <CoefficientDomain T>
@@ -938,6 +1209,24 @@ inline Polynomial<T>::Polynomial(Polynomial<T>&& value) noexcept :
 }
 
 template <CoefficientDomain T>
+inline Polynomial<T>::Polynomial(const T& constant) :
+        degree_(0), coeff_(new T[1]) {
+    *coeff_ = constant; // unnecessary but harmless if constant == 0
+}
+
+template <CoefficientDomain T>
+inline Polynomial<T>::Polynomial(T&& constant) : degree_(0), coeff_(new T[1]) {
+    *coeff_ = std::move(constant); // unnecessary but harmless if constant == 0
+}
+
+template <CoefficientDomain T>
+template <CppInteger IntType>
+inline Polynomial<T>::Polynomial(IntType constant) :
+        degree_(0), coeff_(new T[1]) {
+    *coeff_ = constant; // unnecessary but harmless if constant == 0
+}
+
+template <CoefficientDomain T>
 inline Polynomial<T>::~Polynomial() {
     delete[] coeff_;
 }
@@ -956,28 +1245,6 @@ inline void Polynomial<T>::initExp(size_t degree) {
     degree_ = degree;
     coeff_ = new T[degree + 1];
     coeff_[degree] = 1;
-}
-
-template <CoefficientDomain T>
-template <RandomAccessIteratorFor<T> Iterator>
-void Polynomial<T>::init(Iterator begin, Iterator end) {
-    delete[] coeff_;
-
-    if (begin == end) {
-        degree_ = 0;
-        coeff_ = new T[1];
-        return;
-    }
-
-    degree_ = end - begin - 1;
-    coeff_ = new T[degree_ + 1];
-
-    size_t i = 0;
-    while (begin != end)
-        coeff_[i++] = *begin++;
-
-    // The leading coefficient might be zero.
-    fixDegree();
 }
 
 template <CoefficientDomain T>
@@ -1032,6 +1299,16 @@ void Polynomial<T>::set(size_t exp, const T& value) {
 }
 
 template <CoefficientDomain T>
+inline typename Polynomial<T>::iterator Polynomial<T>::begin() const {
+    return coeff_;
+}
+
+template <CoefficientDomain T>
+inline typename Polynomial<T>::iterator Polynomial<T>::end() const {
+    return ((degree_ == 0 && coeff_[0] == 0) ? coeff_ : coeff_ + degree_ + 1);
+}
+
+template <CoefficientDomain T>
 inline bool Polynomial<T>::operator == (const Polynomial<T>& rhs) const {
     if (degree_ != rhs.degree_)
         return false;
@@ -1039,6 +1316,17 @@ inline bool Polynomial<T>::operator == (const Polynomial<T>& rhs) const {
         if (coeff_[i] != rhs.coeff_[i])
             return false;
     return true;
+}
+
+template <CoefficientDomain T>
+inline bool Polynomial<T>::operator == (const T& constant) const {
+    return (degree_ == 0 && *coeff_ == constant);
+}
+
+template <CoefficientDomain T>
+template <CppInteger IntType>
+inline bool Polynomial<T>::operator == (IntType constant) const {
+    return (degree_ == 0 && *coeff_ == constant);
 }
 
 template <CoefficientDomain T>
@@ -1088,6 +1376,28 @@ inline Polynomial<T>& Polynomial<T>::operator = (Polynomial<T>&& value)
 }
 
 template <CoefficientDomain T>
+inline Polynomial<T>& Polynomial<T>::operator = (const T& constant) {
+    degree_ = 0;
+    *coeff_ = constant;
+    return *this;
+}
+
+template <CoefficientDomain T>
+inline Polynomial<T>& Polynomial<T>::operator = (T&& constant) {
+    degree_ = 0;
+    *coeff_ = std::move(constant);
+    return *this;
+}
+
+template <CoefficientDomain T>
+template <CppInteger IntType>
+inline Polynomial<T>& Polynomial<T>::operator = (IntType constant) {
+    degree_ = 0;
+    *coeff_ = constant;
+    return *this;
+}
+
+template <CoefficientDomain T>
 inline void Polynomial<T>::swap(Polynomial<T>& other) noexcept {
     std::swap(degree_, other.degree_);
     std::swap(coeff_, other.coeff_);
@@ -1097,7 +1407,7 @@ template <CoefficientDomain T>
 inline void Polynomial<T>::negate() {
     for (size_t i = 0; i <= degree_; ++i)
         if (coeff_[i] != 0)
-            coeff_[i] = - coeff_[i];
+            coeff_[i].negate();
 }
 
 template <CoefficientDomain T>
@@ -1112,13 +1422,34 @@ void Polynomial<T>::shift(long s) {
         coeff_ = c;
         degree_ += s;
     } else if (s < 0) {
-        if (degree_ < -s) {
+        if (degree_ < static_cast<size_t>(-s)) {
             // The leading term does not survive.
             init();
         } else {
             // The leading term does survive.
             std::move(coeff_ - s, coeff_ + degree_ + 1, coeff_);
             degree_ += s;
+        }
+    }
+}
+
+template <CoefficientDomain T>
+Polynomial<T> Polynomial<T>::shifted(long s) const {
+    if (s == 0 || isZero()) {
+        return *this;
+    } else if (s > 0) {
+        T* c = new T[degree_ + s + 1]; // all initialised to zero
+        std::copy(coeff_, coeff_ + degree_ + 1, c + s);
+        return { degree_ + s, c };
+    } else /* s < 0 */ {
+        if (degree_ < static_cast<size_t>(-s)) {
+            // The leading term does not survive.
+            return {};
+        } else {
+            // The leading term does survive.
+            T* c = new T[degree_ + s + 1];
+            std::copy(coeff_ - s, coeff_ + degree_ + 1, c);
+            return { degree_ + s, c };
         }
     }
 }
@@ -1135,13 +1466,35 @@ Polynomial<T>& Polynomial<T>::operator *= (const T& scalar) {
 }
 
 template <CoefficientDomain T>
+template <CppInteger IntType>
+Polynomial<T>& Polynomial<T>::operator *= (IntType scalar) {
+    if (scalar == 0)
+        init();
+    else {
+        for (size_t i = 0; i <= degree_; ++i)
+            coeff_[i] *= scalar;
+    }
+    return *this;
+}
+
+template <CoefficientDomain T>
 inline Polynomial<T>& Polynomial<T>::operator /= (const T& scalar) {
     for (size_t i = 0; i <= degree_; ++i)
         coeff_[i] /= scalar;
 
     // For integer division, we could have zeroed out some coefficients.
     fixDegree();
+    return *this;
+}
 
+template <CoefficientDomain T>
+template <CppInteger IntType>
+inline Polynomial<T>& Polynomial<T>::operator /= (IntType scalar) {
+    for (size_t i = 0; i <= degree_; ++i)
+        coeff_[i] /= scalar;
+
+    // For integer division, we could have zeroed out some coefficients.
+    fixDegree();
     return *this;
 }
 
@@ -1205,9 +1558,15 @@ Polynomial<T>& Polynomial<T>::operator *= (const Polynomial<T>& other) {
     // std::cerr << "Polynomial: deep copy (*=)" << std::endl;
     size_t i, j;
     T* ans = new T[degree_ + other.degree_ + 1];
-    for (i = 0; i <= degree_; ++i)
-        for (j = 0; j <= other.degree_; ++j)
-            ans[i + j] += (coeff_[i] * other.coeff_[j]);
+    if constexpr (HasAddProduct<T>) {
+        for (i = 0; i <= degree_; ++i)
+            for (j = 0; j <= other.degree_; ++j)
+                ans[i + j].addProduct(coeff_[i], other.coeff_[j]);
+    } else {
+        for (i = 0; i <= degree_; ++i)
+            for (j = 0; j <= other.degree_; ++j)
+                ans[i + j] += (coeff_[i] * other.coeff_[j]);
+    }
 
     delete[] coeff_;
     coeff_ = ans;
@@ -1498,7 +1857,7 @@ inline Polynomial<T>& Polynomial<T>::subtractFrom(const Polynomial<T>& other) {
                 coeff_[i] = other.coeff_[i] - coeff_[i];
         for ( ; i <= degree_; ++i)
             if (coeff_[i] != 0)
-                coeff_[i] = -coeff_[i];
+                coeff_[i].negate();
     }
 
     // We might have zeroed out the leading coefficient.
@@ -1524,6 +1883,13 @@ inline Polynomial<T> operator * (Polynomial<T> poly,
     return poly;
 }
 
+template <CoefficientDomain T, CppInteger IntType>
+inline Polynomial<T> operator * (Polynomial<T> poly, IntType scalar) {
+    // See the notes above on a possible optimisation for scalar == 0.
+    poly *= scalar;
+    return poly;
+}
+
 template <CoefficientDomain T>
 inline Polynomial<T> operator * (
         const typename Polynomial<T>::Coefficient& scalar, Polynomial<T> poly) {
@@ -1532,9 +1898,22 @@ inline Polynomial<T> operator * (
     return poly;
 }
 
+template <CoefficientDomain T, CppInteger IntType>
+inline Polynomial<T> operator * (IntType scalar, Polynomial<T> poly) {
+    // See the notes above on a possible optimisation for scalar == 0.
+    poly *= scalar;
+    return poly;
+}
+
 template <CoefficientDomain T>
 inline Polynomial<T> operator / (Polynomial<T> poly,
         const typename Polynomial<T>::Coefficient& scalar) {
+    poly /= scalar;
+    return poly;
+}
+
+template <CoefficientDomain T, CppInteger IntType>
+inline Polynomial<T> operator / (Polynomial<T> poly, IntType scalar) {
     poly /= scalar;
     return poly;
 }
@@ -1660,9 +2039,15 @@ Polynomial<T> operator * (const Polynomial<T>& lhs, const Polynomial<T>& rhs) {
     // std::cerr << "Polynomial: deep copy (const *)" << std::endl;
     size_t i, j;
     T* coeff = new T[lhs.degree_ + rhs.degree_ + 1];
-    for (i = 0; i <= lhs.degree_; ++i)
-        for (j = 0; j <= rhs.degree_; ++j)
-            coeff[i + j] += (lhs.coeff_[i] * rhs.coeff_[j]);
+    if constexpr (HasAddProduct<T>) {
+        for (i = 0; i <= lhs.degree_; ++i)
+            for (j = 0; j <= rhs.degree_; ++j)
+                coeff[i + j].addProduct(lhs.coeff_[i], rhs.coeff_[j]);
+    } else {
+        for (i = 0; i <= lhs.degree_; ++i)
+            for (j = 0; j <= rhs.degree_; ++j)
+                coeff[i + j] += (lhs.coeff_[i] * rhs.coeff_[j]);
+    }
 
     // Both leading coefficients are non-zero, so the degree is correct.
     return Polynomial<T>(lhs.degree_ + rhs.degree_, coeff);

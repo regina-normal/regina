@@ -32,6 +32,7 @@
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include "maths/integer.h"
+#include "maths/laurent.h"
 #include "maths/laurent2.h"
 #include "../helpers.h"
 #include "../docstrings/maths/laurent2.h"
@@ -41,6 +42,7 @@ using namespace pybind11::literals;
 using pybind11::overload_cast;
 using regina::Integer;
 using regina::Laurent2;
+using regina::python::doc::common::neq_value;
 
 void addLaurent2(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Laurent2)
@@ -48,20 +50,33 @@ void addLaurent2(pybind11::module_& m) {
     auto c = pybind11::class_<Laurent2<Integer>>(m, "Laurent2", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Laurent2<Integer>&>(), rdoc::__copy)
-        .def(pybind11::init<const Laurent2<Integer>&, long, long>(),
-            rdoc::__init)
+        .def(pybind11::init([](const Laurent2<Integer>& toShift,
+                long xShift, long yShift) { // deprecated constructor
+            return toShift.shifted(xShift, yShift);
+        }), "toShift"_a, "xShift"_a, "yShift"_a, rdoc::__init)
         .def(pybind11::init([](const std::vector<
                 std::tuple<long, long, Integer>>& coeffs) {
             return new Laurent2<Integer>(coeffs.begin(), coeffs.end());
         }), "coefficients"_a, rdoc::__init_2)
+        .def(pybind11::init<const Integer&>(), rdoc::__init_3)
+        .def(pybind11::init<long>(), rdoc::__init_4)
+        .def(pybind11::init<const regina::Laurent<Integer>&, long, long>(),
+            rdoc::__init_5)
+        .def(pybind11::init<const regina::Laurent<Integer>&,
+                const regina::Laurent<Integer>&>(), rdoc::__init_6)
         .def("init", overload_cast<>(&Laurent2<Integer>::init), rdoc::init)
         .def("initExp", &Laurent2<Integer>::initExp, rdoc::initExp)
         .def("isZero", &Laurent2<Integer>::isZero, rdoc::isZero)
         .def("set", &Laurent2<Integer>::set, rdoc::set)
         .def("swap", &Laurent2<Integer>::swap, rdoc::swap)
+        .def("shift", &Laurent2<Integer>::shift, rdoc::shift)
+        .def("shifted", static_cast<Laurent2<Integer> (Laurent2<Integer>::*)(
+                long, long) const&>(&Laurent2<Integer>::shifted),
+            rdoc::shifted)
         .def("negate", &Laurent2<Integer>::negate, rdoc::negate)
         .def("invertX", &Laurent2<Integer>::invertX, rdoc::invertX)
         .def("invertY", &Laurent2<Integer>::invertY, rdoc::invertY)
+        .def("addProduct", &Laurent2<Integer>::addProduct, rdoc::addProduct)
         .def("str", overload_cast<const char*, const char*>(
             &Laurent2<Integer>::str, pybind11::const_),
             "varX"_a, "varY"_a = nullptr, rdoc::str)
@@ -77,18 +92,32 @@ void addLaurent2(pybind11::module_& m) {
                 std::pair<long, long> exponents, const Integer& value) {
             p.set(exponents.first, exponents.second, value);
         }, rdoc::__call)
+        .def("__iter__", [](const Laurent2<Integer>& p) {
+            return
+                pybind11::make_iterator<pybind11::return_value_policy::copy>(p);
+        }, pybind11::keep_alive<0, 1>(), // iterator keeps polynomial alive
+            rdoc::__iter__)
         .def(pybind11::self *= Integer(), rdoc::__imul)
+        .def(pybind11::self *= long(), rdoc::__imul_2)
         .def(pybind11::self /= Integer(), rdoc::__idiv)
+        .def(pybind11::self /= long(), rdoc::__idiv_2)
         .def(pybind11::self += pybind11::self, rdoc::__iadd)
         .def(pybind11::self -= pybind11::self, rdoc::__isub)
-        .def(pybind11::self *= pybind11::self, rdoc::__imul_2)
+        .def(pybind11::self *= pybind11::self, rdoc::__imul_3)
         .def(pybind11::self * Integer(), rdoc::__mul)
-        .def(Integer() * pybind11::self, rdoc::__mul_2)
+        .def(pybind11::self * long(), rdoc::__mul_2)
+        .def(Integer() * pybind11::self, rdoc::__mul_3)
+        .def(long() * pybind11::self, rdoc::__mul_4)
         .def(pybind11::self / Integer(), rdoc::__div)
+        .def(pybind11::self / long(), rdoc::__div_2)
         .def(pybind11::self + pybind11::self, rdoc::__add)
         .def(pybind11::self - pybind11::self, rdoc::__sub_2)
-        .def(pybind11::self * pybind11::self, rdoc::__mul_3)
+        .def(pybind11::self * pybind11::self, rdoc::__mul_5)
         .def(- pybind11::self, rdoc::__sub)
+        .def(pybind11::self == Integer(), rdoc::__eq_2)
+        .def(pybind11::self == long(), rdoc::__eq_3)
+        .def(pybind11::self != Integer(), neq_value)
+        .def(pybind11::self != long(), neq_value)
     ;
     regina::python::add_output_rich(c);
     regina::python::add_tight_encoding(c);
