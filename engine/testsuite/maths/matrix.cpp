@@ -291,7 +291,6 @@ TEST_F(MatrixTest, empty) {
     }
 
     validateEmpty(regina::preImageOfLattice(m, {}));
-    validateEmpty(regina::torsionAutInverse(m, {}));
 }
 
 TEST_F(MatrixTest, noRows) {
@@ -487,10 +486,6 @@ TEST_F(MatrixTest, noRows) {
     }
 
     validateIdentity(regina::preImageOfLattice(m, {}), 3);
-    EXPECT_THROW({ regina::torsionAutInverse(m, {}); },
-        regina::InvalidArgument);
-    EXPECT_THROW({ regina::torsionAutInverse(m, { 2, 6, 12 }); },
-        regina::InvalidArgument);
 }
 
 TEST_F(MatrixTest, noColumns) {
@@ -689,10 +684,6 @@ TEST_F(MatrixTest, noColumns) {
 
     validateEmpty(regina::preImageOfLattice(m, { 2, 3, 5 }));
     validateEmpty(regina::preImageOfLattice(m, { 0, 0, 0 }));
-    EXPECT_THROW({ regina::torsionAutInverse(m, {}); },
-        regina::InvalidArgument);
-    EXPECT_THROW({ regina::torsionAutInverse(m, { 2, 6, 12 }); },
-        regina::InvalidArgument);
 }
 
 static void verifyEchelonForm(const MatrixInt& m) {

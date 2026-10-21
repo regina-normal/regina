@@ -788,6 +788,10 @@ Version 8.0  [ TODO ]
             - The native C++ integer versions of these functions are now
               templated, and explicitly support 8-bit integers (i.e., chars)
               and 128-bit integers (if the platform supports them).
+        Function torsionAutInverse():
+            - Removed from Regina's public interface.  This function is specific
+              to the implementation of MarkedAbelianGroup, and so it is now
+              hidden away as an implementation detail.
         Function toString():
             - New function for converting native C++ integers to strings, with
               explicit support for 128-bit integers.

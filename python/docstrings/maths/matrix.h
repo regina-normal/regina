@@ -229,44 +229,6 @@ Parameter ``colSpaceBasis``:
 Parameter ``colSpaceBasisInv``:
     used to return the inverse of *colSpaceBasis*.)doc";
 
-// Docstring regina::python::doc::torsionAutInverse
-inline constexpr const char torsionAutInverse[] =
-R"doc(Given an automorphism of an abelian group, this procedure computes the
-inverse automorphism.
-
-The abelian group is of the form ``Z_p1 + Z_p2 + ... + Z_pn``. The
-input is an n-by-n matrix *A* which represents a lift of the
-automorphism to just some n-by-n matrix. Specifically, you have a
-little commutative diagram with ``Z^n --A--> Z^n`` covering the
-automorphism of ``Z_p1 + Z_p2 + ... + Z_pn``, where the maps down are
-the direct sum of the standard quotients ``Z --> Z_pi``. So if you
-want this procedure to give you meaningful output, *A* must be a lift
-of a genuine automorphism of ``Z_p1 + ... + Z_pn``.
-
-Precondition:
-    The list p1, p2, ..., pn is a list of invariant factors, which
-    means that p1|p2, ..., p{n-1}|pn.
-
-Exception ``InvalidArgument``:
-    Either *input* is not a square matrix, and/or the length of *invF*
-    is different from the side length of *input*. Note that the
-    _contents_ of *invF* (specifically, the divisibility property) are
-    not checked.
-
-Parameter ``input``:
-    the n-by-n matrix *A*, which must be a lift of a genuine
-    automorphism as described above.
-
-Parameter ``invF``:
-    the list p1, p2, ..., pn.
-
-Returns:
-    the inverse automorphism, also described as an n-by-n matrix as
-    per the discussion above.
-
-Author:
-    Ryan Budney)doc";
-
 struct AdjugateAlgorithm {
 
 // Docstring regina::python::doc::AdjugateAlgorithm::Default

@@ -33,6 +33,181 @@
 #include "utilities/stringutils.h"
 #include <iostream>
 
+namespace {
+
+/**
+ * Given an automorphism of an abelian group,
+ * this procedure computes the inverse automorphism.
+ *
+ * The abelian group is of the form `Z_p1 + Z_p2 + ... + Z_pn`.
+ * The input is an n-by-n matrix \a A which represents a lift of the
+ * automorphism to just some n-by-n matrix.  Specifically, you have a little
+ * commutative diagram with `Z^n --A--> Z^n` covering the automorphism
+ * of `Z_p1 + Z_p2 + ... + Z_pn`, where the maps down are the direct
+ * sum of the standard quotients `Z --> Z_pi`.  So if you want this
+ * procedure to give you meaningful output, \a A must be a lift of a genuine
+ * automorphism of `Z_p1 + ... + Z_pn`.
+ *
+ * \pre The list p1, p2, ..., pn is a list of invariant factors,
+ * which means that p1|p2, ..., p{n-1}|pn.
+ *
+ * \exception InvalidArgument Either \a input is not a square matrix, and/or
+ * the length of \a invF is different from the side length of \a input.
+ * Note that the _contents_ of \a invF (specifically, the divisibility
+ * property) are not checked.
+ *
+ * \param input the n-by-n matrix \a A, which must be a lift of a genuine
+ * automorphism as described above.
+ * \param invF the list p1, p2, ..., pn.
+ * \return the inverse automorphism, also described as an n-by-n matrix
+ * as per the discussion above.
+ *
+ * \author Ryan Budney
+ */
+regina::MatrixInt torsionAutInverse(const regina::MatrixInt& input,
+        const std::vector<regina::Integer> &invF) {
+    // Lemma 1: [a b | c d] representing an element of End(Z_n x Z_{mn}) is in
+    //  Aut(Z_n x Z_{mn}) if and only if dA-bc is a unit of Z_{mn} for some lift
+    //  A \in Z_{mn} of a \in Z_n
+    //
+    //  You can get an explicit formula for the inverse, basically it boils down
+    //  to a comparison with the Z_n^2 case, and the observation that
+    //  Z_{mn} --> Z_n is surjective on units.
+
+    // The algorithm:
+    //
+    //  Step 1: reduce all entries mod p_i where i is the row index.
+    //  Step 2: Consider the bottom row of A.  Consider a group of columns for
+    //          which they all share the same p_i. standard Gaussian elimination
+    //          works to put zeros in all but one entry of this row.  Potential
+    //          problem here the 1x1 case where the entry is a unit mod p_1
+    //  Step 3: Now we are in the situation where in this row, any two non-zero
+    //          entries have distinct p_i's, where now i is the column index.
+    //          Let them be in columns i and n respectively.
+    //          Let l_1a_{ni} + l_2a_{nn} = gcd(a_{ni},a_{nn})=g,
+    //          consider matrix [ v_n l_1 | -v_i l_2 ] where
+    //          v_n = a_{nn}/g and v_i=a_{ni}/g.  This is a valid
+    //          column operation by Lemma 1 and some congruence munching.
+    //          Apply, this reduces this bottom row to the point where it has
+    //          only one non-zero entry and it is a unit mod the relevant p_i,
+    //          so we can multiply by its inverse
+    //  Step 4: repeat inductively to square submatrix above and to the left of
+    //          the nn entry.  This results in an upper diagonal matrix.
+    //          Reapply step 1 gives all 1's down diagonal.
+    //  Step 5: row ops to convert to identity.
+    // *Step 6: keep track of all the corresponding matrices, put together to
+    //          assemble inverse. Notice it's all standard Gaussian elimination,
+    //          just done in a funny order and with some modular arithmatic
+    //          stuffed in there.
+    if (input.rows() != input.columns())
+        throw regina::InvalidArgument(
+            "torsionAutInverse() expects a square matrix");
+    if (invF.size() != input.rows())
+        throw regina::InvalidArgument("torsionAutInverse(input, invF) expects "
+            "the length of invF to match the side length of input");
+
+    // inductive step begins right away. Start at bottom row.
+    regina::MatrixInt workMat( input );
+    regina::MatrixInt colOps( input.rows(), input.columns() );
+    colOps.makeIdentity();
+
+    size_t wRow = input.rows();
+    while (wRow > 0) {
+        wRow--;
+        // step 1 modular reduction on the current row. And find last non-zero
+        // entry in this row up to wRow column
+        size_t pivCol=0;
+        for (size_t i=0; i<=wRow; i++) {
+            auto [Q, R] = workMat.entry(wRow, i).divisionAlg(invF[wRow]);
+            workMat.entry(wRow, i) = R;
+            if (R!=0) pivCol=i;
+        } // now pivCol is the last non-zero entry in the 0..wRow square smatrix
+
+        // Step 2: transpose pivCol and column wRow
+        if (wRow != pivCol)
+            for (size_t i=0; i<workMat.rows(); i++) {
+                workMat.entry(i, wRow).swap(workMat.entry(i, pivCol));
+                colOps.entry(i, wRow).swap(colOps.entry(i, pivCol));
+            }
+        pivCol = wRow;
+
+        // Step 3 Gauss eliminate whatever can be done. Start at rightmost
+        //  column (pivCol) and work to the left
+        size_t wCol = pivCol;
+        while (wCol > 0) {
+            wCol--;
+            regina::Integer g, l1, l2;
+            g = workMat.entry( wRow, wCol ).gcdWithCoeffs(
+                               workMat.entry(wRow, pivCol), l1, l2 );
+            regina::Integer u1, u2;
+            u1 = workMat.entry(wRow, wCol).divExact(g);
+            u2 = workMat.entry(wRow, pivCol).divExact(g);
+            // u1 l1 + u2 l2 = 1
+            // [ u2 l1 | -u1 l2 ] is column op matrix for wCol and pivCol
+            for (size_t i=0; i<workMat.rows(); i++) {
+                // wCol -> u2 wCol - u1 pivCol, pivCol -> l1 wCol + l2 pivCol
+                regina::Integer W(workMat.entry(i, wCol)),
+                    P(workMat.entry(i, pivCol));
+                workMat.entry(i, wCol) = u2*W - u1*P;
+                workMat.entry(i, pivCol) = l1*W + l2*P;
+                W = colOps.entry(i, wCol);
+                P = colOps.entry(i, pivCol);
+                colOps.entry(i, wCol) = u2*W - u1*P;
+                colOps.entry(i, pivCol) = l1*W + l2*P;
+            }
+        }
+        // now workMat.entry(wRow, pivCol) is a unit mod invF[pivCol],
+        //  so find its inverse
+        regina::Integer g, a1, a2;
+        g= workMat.entry( wRow, pivCol ).gcdWithCoeffs( invF[pivCol], a1, a2 );
+        // a1 represents this multiplicative inverse so multiply column by it.
+        for (size_t i=0; i<workMat.rows(); i++) {
+            colOps.entry( i, pivCol ) *= a1;
+            workMat.entry( i, pivCol ) *= a1;
+        }
+
+        // step 4 mod reduce the only entry left,
+        //  recurse back to step 1 on the next row up.
+        auto [Q, R] = workMat.entry(wRow, pivCol).divisionAlg(invF[wRow]);
+        workMat.entry(wRow, pivCol) = R;
+        // so we should have 1's down the diagonal now as long
+        //  as I haven't screwed up.
+    }
+
+    regina::MatrixInt rowOps( input.rows(), input.columns() );
+    rowOps.makeIdentity();
+
+    // step 5 upper triang -> identity.  Use row i to kill i-th entry of row j.
+    for (size_t i=1; i<workMat.columns(); i++)
+        for (size_t j=0; j<i; j++) {
+            regina::Integer X(workMat.entry(j, i));
+            // now subtract X times row i from row j in both
+            // workMat and retval. I guess we could eventually
+            // avoid the ops on workMat since it won't affect
+            // the return value but for debugging purposes we'll
+            // keep it for now.
+            for (size_t k=0; k<workMat.columns(); k++) {
+                rowOps.entry(j, k) -= X*rowOps.entry(i, k);
+                workMat.entry(j, k) -= X*workMat.entry(i, k);
+            }
+        }
+
+    regina::MatrixInt retval( input.rows(), input.columns() );
+    for (size_t i=0; i<colOps.rows(); i++)
+        for (size_t j=0; j<rowOps.columns(); j++) {
+            for (size_t k=0; k<colOps.columns(); k++)
+                retval.entry(i,j) += colOps.entry(i,k)*rowOps.entry(k,j);
+            retval.entry(i,j) %= invF[i];
+            if (retval.entry(i,j) < 0)
+                retval.entry(i,j) += invF[i];
+        }
+
+    // done
+    return retval;
+}
+
+} // anonymous namespace
+
 namespace regina {
 
 MarkedAbelianGroup::MarkedAbelianGroup(size_t rk, const Integer &p) :
@@ -1162,11 +1337,10 @@ bool HomMarkedAbelianGroup::isChainMap(const HomMarkedAbelianGroup &other)
 //  [0 |D']  where D' is the inverse of D, A' represents the inverse
 //           automorphism of
 //  Z_p1 + Z_p2 + ... Z_pk, etc.  And so B' must equal -A'BD', which is readily
-//computable.  So it all boils down to computing A'.  So we need a routine which
-//makes a matrix A representing an automorphism of Z_p1 + ... Z_pk and then
-// computes the matrix representing the inverse automorphism.
-// So to do this we'll need a new matrix.cpp command -- call it
-// torsionAutInverse.
+// computable.  So it all boils down to computing A'.  So we need a routine which
+// makes a matrix A representing an automorphism of Z_p1 + ... Z_pk and then
+// computes the matrix representing the inverse automorphism.  This routine is
+// torsionAutInverse(), which we implement above in an anonymous namespace.
 HomMarkedAbelianGroup HomMarkedAbelianGroup::inverseHom() const {
     const_cast<HomMarkedAbelianGroup*>(this)->computeReducedMatrix();
     MatrixInt invMat( reducedMatrix_->columns(), reducedMatrix_->rows() );

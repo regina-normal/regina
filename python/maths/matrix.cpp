@@ -291,8 +291,6 @@ void addMatrix(pybind11::module_& m) {
     }, rdoc::metricalSmithNormalForm);
     m.def("preImageOfLattice", &regina::preImageOfLattice,
         rdoc::preImageOfLattice);
-    m.def("torsionAutInverse", &regina::torsionAutInverse,
-        rdoc::torsionAutInverse);
 
     #if defined(__GNUC__)
     // The following functions are deprecated, but we still need to bind them

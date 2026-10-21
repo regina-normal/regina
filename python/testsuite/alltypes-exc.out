@@ -749,7 +749,6 @@ testEngine : function
 tightDecoding : function
 tightEncoding : function
 timeExceptions : function
-torsionAutInverse : function
 utf8ValidTo : function
 versionMajor : function
 versionMinor : function
