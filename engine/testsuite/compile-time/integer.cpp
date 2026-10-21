@@ -45,7 +45,9 @@ static_assert(N4(6).gcd(0) == 6);
 static_assert(N4(-6).gcd(0) == 6);
 static_assert(N4(0).gcd(0) == 0);
 
-// Note: we make no promises about the sign of the LCM.
+// We make no promises about the sign of the LCM.
+// What we test below is simply current behaviour, which follows the rule
+// gcd(x,y) * lcm(x,y) == x * y.
 static_assert(N4(12).lcm(18) == 36);
 static_assert(N4(12).lcm(-18) == -36);
 static_assert(N4(-12).lcm(18) == -36);
