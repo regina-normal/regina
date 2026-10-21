@@ -275,11 +275,19 @@ void addMatrix(pybind11::module_& m) {
     }, rdoc::smithNormalForm);
     m.def("smithNormalForm", [](MatrixInt& m, MatrixInt& r, MatrixInt& ri,
             MatrixInt&c, MatrixInt& ci) { // deprecated
-        std::tie(r, ri, c, ci) = m.makeSmithCoB();
+        auto cob = m.makeSmithCoB();
+        r = std::move(cob[0]);
+        ri = std::move(cob[1]);
+        c = std::move(cob[2]);
+        ci = std::move(cob[3]);
     }, rdoc::smithNormalForm_2);
     m.def("metricalSmithNormalForm", [](MatrixInt& m, // deprecated
             MatrixInt& r, MatrixInt& ri, MatrixInt&c, MatrixInt& ci) {
-        std::tie(r, ri, c, ci) = m.makeSmithCoB(regina::SNFAlgorithm::Metrical);
+        auto cob = m.makeSmithCoB(regina::SNFAlgorithm::Metrical);
+        r = std::move(cob[0]);
+        ri = std::move(cob[1]);
+        c = std::move(cob[2]);
+        ci = std::move(cob[3]);
     }, rdoc::metricalSmithNormalForm);
     m.def("preImageOfLattice", &regina::preImageOfLattice,
         rdoc::preImageOfLattice);
