@@ -156,13 +156,10 @@ class MinAggregator {
         /**
          * Moves the contents of the given aggregator into this new aggregator.
          *
-         * This constructor is not marked `noexcept`, since its throwing
-         * behaviour depends upon the throwing behaviour of the move
-         * constructor for the type \a Value.
-         *
          * The aggregator that is passed will no longer be usable.
          */
-        constexpr MinAggregator(MinAggregator&&) = default;
+        constexpr MinAggregator(MinAggregator&&)
+                noexcept(std::is_nothrow_move_constructible_v<Value>) = default;
         /**
          * Sets this aggregator's result to be the same as the given
          * aggregator's.
@@ -173,13 +170,12 @@ class MinAggregator {
         /**
          * Moves the contents of the given aggregator into this aggregator.
          *
-         * This operator is not marked `noexcept`, since its throwing
-         * behaviour depends upon the throwing behaviour of the move assignment
-         * operator for the type \a Value.
+         * The aggregator that is passed will no longer be usable.
          *
          * \return a reference to this aggregator.
          */
-        constexpr MinAggregator& operator = (MinAggregator&&) = default;
+        constexpr MinAggregator& operator = (MinAggregator&&)
+                noexcept(std::is_nothrow_move_assignable_v<Value>) = default;
 
         /**
          * Determines whether this aggregator has seen any values at all.
@@ -369,13 +365,11 @@ class MinAggregator {
         /**
          * Swaps the results held by this and the given aggregator.
          *
-         * This operation is not marked `noexcept`, since its throwing behaviour
-         * depends upon the swap operation for the type \a Value.
-         *
          * \param other the aggregator whose results are to be swapped with
          * this.
          */
         constexpr void swap(MinAggregator& other)
+                noexcept(std::is_nothrow_swappable_v<Value>)
                 requires std::swappable<Value> {
             result_.swap(other.result_);
         }
@@ -670,13 +664,10 @@ class MaxCountAggregator {
         /**
          * Moves the contents of the given aggregator into this new aggregator.
          *
-         * This constructor is not marked `noexcept`, since its throwing
-         * behaviour depends upon the throwing behaviour of the move
-         * constructor for type \a Value.
-         *
          * The aggregator that is passed will no longer be usable.
          */
-        constexpr MaxCountAggregator(MaxCountAggregator&&) = default;
+        constexpr MaxCountAggregator(MaxCountAggregator&&)
+                noexcept(std::is_nothrow_move_constructible_v<Value>) = default;
         /**
          * Sets this aggregator's results to be the same as the given
          * aggregator's.
@@ -688,14 +679,12 @@ class MaxCountAggregator {
         /**
          * Moves the contents of the given aggregator into this aggregator.
          *
-         * This operator is not marked `noexcept`, since its throwing
-         * behaviour depends upon the throwing behaviour of the move assignment
-         * operator for the type \a Value.
+         * The aggregator that is passed will no longer be usable.
          *
          * \return a reference to this aggregator.
          */
-        constexpr MaxCountAggregator& operator = (MaxCountAggregator&&) =
-            default;
+        constexpr MaxCountAggregator& operator = (MaxCountAggregator&&)
+                noexcept(std::is_nothrow_move_assignable_v<Value>) = default;
 
         /**
          * Determines whether this aggregator has seen any values at all.
@@ -915,13 +904,11 @@ class MaxCountAggregator {
         /**
          * Swaps the results held by this and the given aggregator.
          *
-         * This operation is not marked `noexcept`, since its throwing behaviour
-         * depends upon the swap operation for the type \a Value.
-         *
          * \param other the aggregator whose results are to be swapped with
          * this.
          */
-        constexpr void swap(MaxCountAggregator& other) noexcept
+        constexpr void swap(MaxCountAggregator& other)
+                noexcept(std::is_nothrow_swappable_v<Value>)
                 requires std::swappable<Value> {
             result_.swap(other.result_);
         }
@@ -995,9 +982,6 @@ class MaxCountAggregator {
  * This global routine simply calls `A::swap()`; it is provided so that
  * Regina's aggregator types meet the C++ Swappable requirements.
  *
- * This operation is not marked `noexcept`, since its throwing behaviour
- * depends upon the swap operation for the type \a Value.
- *
  * \nopython
  *
  * \param a the first aggregator whose contents should be swapped.
@@ -1006,7 +990,7 @@ class MaxCountAggregator {
  * \ingroup utilities
  */
 template <std::swappable Value, Aggregator<Value> A>
-constexpr void swap(A& a, A& b) {
+constexpr void swap(A& a, A& b) noexcept(std::is_nothrow_swappable_v<A>) {
     a.swap(b);
 }
 

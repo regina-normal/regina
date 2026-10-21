@@ -411,10 +411,20 @@ class Arrow : public ShortOutput<Arrow, true>, public TightEncodable<Arrow> {
 
         /**
          * Multiplies this polynomial by `A^s` for some integer \a s.
+         * This polynomial will be changed directly.
          *
          * \param s the power of \a A to multiply by.
          */
         void shift(long s);
+
+        /**
+         * Returns the product of this polynomial with `A^s` for some integer
+         * \a s.  This polynomial will not be changed.
+         *
+         * \param s the power of \a A to multiply by.
+         * \return the product of this with `A^s`.
+         */
+        Arrow shifted(long s) const;
 
         /**
          * Multiplies all exponents of `A` in this polynomial by \a k for some
@@ -503,6 +513,18 @@ class Arrow : public ShortOutput<Arrow, true>, public TightEncodable<Arrow> {
         Arrow& operator *= (const Laurent<Integer>& laurent);
 
         /**
+         * Divides this polynomial by the given integer constant.
+         *
+         * This uses the division operator `/=` for the Integer class.
+         *
+         * \pre The argument \a scalar is non-zero.
+         *
+         * \param scalar the scalar factor to divide by.
+         * \return a reference to this polynomial.
+         */
+        Arrow& operator /= (const Integer& scalar);
+
+        /**
          * Adds the given polynomial to this.
          *
          * \param other the polynomial to add to this.
@@ -525,6 +547,17 @@ class Arrow : public ShortOutput<Arrow, true>, public TightEncodable<Arrow> {
          * \return a reference to this polynomial.
          */
         Arrow& operator *= (const Arrow& other);
+
+        /**
+         * Adds the product of the given arrow and Laurent polynomials to this.
+         *
+         * Calling `z.addProduct(x, y)` is equivalent to, but often faster
+         * than, calling `z += x * y`.
+         *
+         * \param x the arrow polynomial in the product to add to this.
+         * \param y the Laurent polynomial in the product to add to this.
+         */
+        void addProduct(const Arrow& x, const Laurent<Integer>& y);
 
         /**
          * Writes this polynomial to the given output stream.
@@ -645,6 +678,21 @@ Arrow operator * (Arrow arrow, const Laurent<Integer>& laurent);
  * \ingroup maths
  */
 Arrow operator * (const Laurent<Integer>& laurent, Arrow arrow);
+
+/**
+ * Divides the given polynomial by the given integer constant.
+ *
+ * This uses the division operator `/=` for the Integer class.
+ *
+ * \pre The argument \a scalar is non-zero.
+ *
+ * \param poly the polynomial upon which to perform the division.
+ * \param scalar the scalar factor to divide by.
+ * \return the quotient of the given polynomial by the given scalar.
+ *
+ * \ingroup maths
+ */
+Arrow operator / (Arrow poly, const Integer& scalar);
 
 /**
  * Adds the two given polynomials.
@@ -882,6 +930,12 @@ inline void Arrow::shift(long k) {
         term.second.shift(k);
 }
 
+inline Arrow Arrow::shifted(long k) const {
+    Arrow ans(*this);
+    ans.shift(k); // constant time for each Laurent polynomial in A
+    return ans;
+}
+
 inline void Arrow::scaleUp(long k) {
     for (auto& term : terms_)
         term.second.scaleUp(k);
@@ -934,6 +988,28 @@ inline Arrow& Arrow::operator *= (const Arrow& other) {
     return *this;
 }
 
+inline Arrow& Arrow::operator /= (const Integer& scalar) {
+    for (auto& term : terms_)
+        term.second /= scalar;
+    return *this;
+}
+
+inline void Arrow::addProduct(const Arrow& x, const Laurent<Integer>& y) {
+    if (x.isZero() || y.isZero())
+        return;
+
+    for (const auto& term : x.terms_) {
+        auto result = terms_.emplace(term.first, Laurent<Integer>());
+        if (result.second)
+            result.first->second = term.second * y;
+        else
+            result.first->second.addProduct(term.second, y);
+    }
+
+    // We might have zeroed out some terms.
+    removeZeroes();
+}
+
 inline void swap(Arrow& a, Arrow& b) noexcept {
     a.swap(b);
 }
@@ -963,6 +1039,11 @@ inline Arrow operator * (Arrow poly, const Laurent<Integer>& laurent) {
 inline Arrow operator * (const Laurent<Integer>& laurent, Arrow poly) {
     // See the notes above on a possible optimisation for laurent == 0.
     poly *= laurent;
+    return poly;
+}
+
+inline Arrow operator / (Arrow poly, const Integer& scalar) {
+    poly /= scalar;
     return poly;
 }
 

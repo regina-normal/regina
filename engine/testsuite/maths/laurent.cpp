@@ -31,302 +31,2017 @@
 #include "maths/integer.h"
 #include "maths/laurent.h"
 #include "utilities/stringutils.h"
+#include <array>
+#include <ranges>
 
 #include "utilities/tightencodingtest.h"
 
+using regina::CoefficientDomain;
 using regina::Integer;
 using regina::Laurent;
+using regina::polynomialProduct;
+
+using L = Laurent<Integer>;
+
+// An integer that cannot fit into 128 bits, and some small multiples of it.
+// We split the digits into chunks to not break syntax highlighting.
+#define BIG "5421309874" "5789403215" "6654013103" "5798756432" "1035741817"
+#define BIG2 "10842619749" "1578806431" "3308026207" "1597512864" "2071483634"
+#define BIG3 "16263929623" "7368209646" "9962039310" "7396269296" "3107225451"
+#define BIG4 "21685239498" "3157612862" "6616052414" "3195025728" "4142967268"
 
 class LaurentTest : public testing::Test {
     protected:
-        Laurent<Integer> zero {};
-        Laurent<Integer> zero2 { 0, {} };
-        Laurent<Integer> zero3 { 2, {} };
-        Laurent<Integer> one { 0, { 1 } };
-        Laurent<Integer> two { 0, { 2 } };
-        Laurent<Integer> x2 { 2, { 1 } };
-        Laurent<Integer> a { -1, { 1, -1, 1 } };
-        Laurent<Integer> b { 0, { 1, -1, 1 } };
-        Laurent<Integer> c { 1, { 1, -1, 1 } };
-        Laurent<Integer> d { -2, { -1, 1, -1, 1 } };
-        Laurent<Integer> e { 4, { 2, 4, -2, 2 } };
+        // An integer that cannot fit into 128 bits.
+        const Integer bigInt { BIG };
+        const std::array<Integer, 1> bigCoeff { bigInt };
 
-        template <typename T>
-        static void verifyEqual(const Laurent<T>& result,
-                long minExp, std::initializer_list<T> coeffs) {
-            SCOPED_TRACE_REGINA(result);
+        const L zero {};
+        const L zero2 { 0, {} };
+        const L zero3 { 2, {} };
+        const L one { 0, { 1 } };
+        const L two { 0, { 2 } };
+        const L minusOne { 0, { -1 } };
+        const L x2 { 2, { 1 } };
+        const L x5Inv { -5, { 1 } };
+        const L a { -1, { 1, -1, 1 } };
+        const L b { 0, { 1, -1, 1 } };
+        const L c { 1, { 1, -1, 1 } };
+        const L d { -2, { -1, 1, -1, 1 } };
+        const L e { 4, { 2, 4, -2, 2 } };
+        const L f { 3, { -1, 0, 0, 0, 1 } };
+        const L g { 20, { 2, -3 } };
 
-            Laurent<T> expect(minExp, coeffs);
-            SCOPED_TRACE_REGINA(expect);
+        // Several ranges each of which overlap at a single coefficient:
+        const L low { -7, { 1, -2, 3, -4 } };
+        const L lowish { -4, { -1, 2, -3, 4 } };
+        const L mid { -1, { 1, -2, 3 } };
+        const L highish { 1, { 1, -2, -3, 4 } };
+        const L high { 4, { -1, 2, 3, -4 } };
 
-            EXPECT_EQ(result, expect);
-            EXPECT_FALSE(result != expect);
-            EXPECT_EQ(result.str(), expect.str());
-            if (coeffs.size() == 0) {
-                EXPECT_TRUE(result.isZero());
-                EXPECT_EQ(result.minExp(), 0);
-                EXPECT_EQ(result.maxExp(), 0);
-            } else {
-                EXPECT_FALSE(result.isZero());
-                EXPECT_EQ(result.minExp(), minExp);
-                EXPECT_EQ(result.maxExp(), minExp + coeffs.size() - 1);
-            }
-        }
+        // The same polynomials as before, but this time forcing large integer
+        // arithmetic:
+        const L bigLow { -7, { bigInt, bigInt * -2, bigInt * 3, bigInt * -4 } };
+        const L bigLowish { -4,
+            { -bigInt, bigInt * 2, bigInt * -3, bigInt * 4 } };
+        const L bigMid { -1, { bigInt, bigInt * -2, bigInt * 3 } };
+        const L bigHighish { 1,
+            { bigInt, bigInt * -2, bigInt * -3, bigInt * 4 } };
+        const L bigHigh { 4, { -bigInt, bigInt * 2, bigInt * 3, bigInt * -4 } };
 
-        template <typename T>
-        void verifyPlus(const Laurent<T>& x, const Laurent<T>& y,
-                long minExp, std::initializer_list<T> coeffs) {
-            SCOPED_TRACE_REGINA(x);
-            SCOPED_TRACE_REGINA(y);
+        // Some longer polynomials:
+        const L long1 { 2, { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } };
+        const L long2 { 3, { -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 } };
 
-            verifyEqual(x + y, minExp, coeffs);
-            verifyEqual((x + zero) + y, minExp, coeffs);
-            verifyEqual(x + (y + zero), minExp, coeffs);
-            verifyEqual((x + zero) + (y + zero), minExp, coeffs);
+        // Some polynomials with more space allocated than they need:
+        const L paddedZero = g - g;
+        const L paddedConst = (two + d) - d;
+        const L paddedPower = (x2 + highish) - highish;
+        const L paddedPoly = ((c + low + high) - low) - high;
 
-            verifyEqual(y + x, minExp, coeffs);
-            verifyEqual((y + zero) + x, minExp, coeffs);
-            verifyEqual(y + (x + zero), minExp, coeffs);
-            verifyEqual((y + zero) + (x + zero), minExp, coeffs);
+        const std::array<std::reference_wrapper<const L>, 31> cases {
+            std::cref(zero), std::cref(zero2), std::cref(zero3), std::cref(one),
+            std::cref(two), std::cref(minusOne), std::cref(x2),
+            std::cref(x5Inv), std::cref(a), std::cref(b), std::cref(c),
+            std::cref(d), std::cref(e), std::cref(f), std::cref(g),
+            std::cref(low), std::cref(lowish), std::cref(mid),
+            std::cref(highish), std::cref(high), std::cref(bigLow),
+            std::cref(bigLowish), std::cref(bigMid), std::cref(bigHighish),
+            std::cref(bigHigh), std::cref(long1), std::cref(long2),
+            std::cref(paddedZero), std::cref(paddedConst),
+            std::cref(paddedPower), std::cref(paddedPoly) };
 
-            {
-                Laurent<T> z(x);
-                verifyEqual(z += y, minExp, coeffs);
-            }
-            {
-                Laurent<T> z(x);
-                verifyEqual(z += (y + zero), minExp, coeffs);
-            }
-            {
-                Laurent<T> z(y);
-                verifyEqual(z += x, minExp, coeffs);
-            }
-            {
-                Laurent<T> z(y);
-                verifyEqual(z += (x + zero), minExp, coeffs);
-            }
-        }
-
-        template <typename T>
-        void verifyMinus(const Laurent<T>& x, const Laurent<T>& y,
-                long minExp, std::initializer_list<T> coeffs) {
-            SCOPED_TRACE_REGINA(x);
-            SCOPED_TRACE_REGINA(y);
-
-            verifyEqual(x - y, minExp, coeffs);
-            verifyEqual((x + zero) - y, minExp, coeffs);
-            verifyEqual(x - (y + zero), minExp, coeffs);
-            verifyEqual((x + zero) - (y + zero), minExp, coeffs);
-
-            {
-                Laurent<T> z(x);
-                verifyEqual(z -= y, minExp, coeffs);
-            }
-            {
-                Laurent<T> z(x);
-                verifyEqual(z -= (y + zero), minExp, coeffs);
-            }
-
-            verifyPlus(x, -y, minExp, coeffs);
-            {
-                Laurent<T> z(y);
-                z.negate();
-                verifyPlus(x, z, minExp, coeffs);
-            }
-        }
-
-        template <typename T>
-        void verifyMult(const Laurent<T>& x, const T& y,
-                long minExp, std::initializer_list<T> coeffs) {
-            SCOPED_TRACE_REGINA(x);
-            SCOPED_TRACE_REGINA(y);
-
-            verifyEqual(x * y, minExp, coeffs);
-            verifyEqual((x + zero) * y, minExp, coeffs);
-            verifyEqual(y * x, minExp, coeffs);
-            verifyEqual(y * (x + zero), minExp, coeffs);
-            {
-                Laurent<T> z(x);
-                verifyEqual(z *= y, minExp, coeffs);
-            }
-        }
-
-        template <typename T>
-        void verifyDiv(const Laurent<T>& x, const T& y,
-                long minExp, std::initializer_list<T> coeffs) {
-            SCOPED_TRACE_REGINA(x);
-            SCOPED_TRACE_REGINA(y);
-
-            verifyEqual(x / y, minExp, coeffs);
-            verifyEqual((x + zero) / y, minExp, coeffs);
-            {
-                Laurent<T> z(x);
-                verifyEqual(z /= y, minExp, coeffs);
-            }
-        }
-
-        template <typename T>
-        void verifyMult(const Laurent<T>& x, const Laurent<T>& y,
-                long minExp, std::initializer_list<T> coeffs) {
-            SCOPED_TRACE_REGINA(x);
-            SCOPED_TRACE_REGINA(y);
-
-            verifyEqual(x * y, minExp, coeffs);
-            verifyEqual((x + zero) * y, minExp, coeffs);
-            verifyEqual(x * (y + zero), minExp, coeffs);
-            verifyEqual((x + zero) * (y + zero), minExp, coeffs);
-
-            verifyEqual(y * x, minExp, coeffs);
-            verifyEqual((y + zero) * x, minExp, coeffs);
-            verifyEqual(y * (x + zero), minExp, coeffs);
-            verifyEqual((y + zero) * (x + zero), minExp, coeffs);
-
-            {
-                Laurent<T> z(x);
-                verifyEqual(z *= y, minExp, coeffs);
-            }
-            {
-                Laurent<T> z(x);
-                verifyEqual(z *= (y + zero), minExp, coeffs);
-            }
-            {
-                Laurent<T> z(y);
-                verifyEqual(z *= x, minExp, coeffs);
-            }
-            {
-                Laurent<T> z(y);
-                verifyEqual(z *= (x + zero), minExp, coeffs);
-            }
+        // Note which of our cases represent the same mathematical polynomial.
+        enum class Batch { Unique, Zero, Two, X2, Short };
+        Batch batch(const L& poly) {
+            if (std::addressof(poly) == std::addressof(zero) ||
+                    std::addressof(poly) == std::addressof(zero2) ||
+                    std::addressof(poly) == std::addressof(zero3) ||
+                    std::addressof(poly) == std::addressof(paddedZero))
+                return Batch::Zero;
+            else if (std::addressof(poly) == std::addressof(two) ||
+                    std::addressof(poly) == std::addressof(paddedConst))
+                return Batch::Two;
+            else if (std::addressof(poly) == std::addressof(x2) ||
+                    std::addressof(poly) == std::addressof(paddedPower))
+                return Batch::X2;
+            else if (std::addressof(poly) == std::addressof(c) ||
+                    std::addressof(poly) == std::addressof(paddedPoly))
+                return Batch::Short;
+            else
+                return Batch::Unique;
         }
 };
 
-TEST_F(LaurentTest, set) {
-    Laurent<Integer> x { -1, { 1, 2, 1 } };
-
-    verifyEqual<Integer>(x, -1, {1, 2, 1});
-    x.set(0, 3);
-    verifyEqual<Integer>(x, -1, {1, 3, 1});
-    x.set(1, 0);
-    verifyEqual<Integer>(x, -1, {1, 3});
-    x.set(0, 0);
-    verifyEqual<Integer>(x, -1, {1});
-    x.set(1, 0);
-    verifyEqual<Integer>(x, -1, {1});
-    x.set(-1, 0);
-    verifyEqual<Integer>(x, 0, {});
-    x.set(-1, 0);
-    verifyEqual<Integer>(x, 0, {});
-    x.set(-1, 3);
-    verifyEqual<Integer>(x, -1, {3});
-    x.set(-1, 0);
-    verifyEqual<Integer>(x, 0, {});
-    x.set(2, 1);
-    verifyEqual<Integer>(x, 2, {1});
-
-    Laurent<Integer> y = { -1, { 1, 2, 1 } };
-    y.set(-1, 0);
-    verifyEqual<Integer>(y, 0, {2, 1});
-    y.set(0, 0);
-    verifyEqual<Integer>(y, 1, {1});
-    y.set(-2, 3);
-    verifyEqual<Integer>(y, -2, {3, 0, 0, 1});
-    y.set(-2, 0);
-    verifyEqual<Integer>(y, 1, {1});
-    y.set(-2, 3);
-    verifyEqual<Integer>(y, -2, {3, 0, 0, 1});
-    y.set(-2, 0);
-    verifyEqual<Integer>(y, 1, {1});
-    y.set(1, 0);
-    verifyEqual<Integer>(y, 0, {});
+static void validate(const L& poly) {
+    auto alloc = poly.allocation();
+    if (alloc.second == 0) {
+        EXPECT_EQ(alloc.first, 0);
+        EXPECT_TRUE(poly.isZero());
+        EXPECT_EQ(poly.minExp(), 0);
+        EXPECT_EQ(poly.maxExp(), 0);
+        EXPECT_EQ(poly[0], 0);
+    } else if (poly.isZero()) {
+        // We have a zero polynomial but with memory pre-allocated.
+        // In this scenario, alloc.first (the base) is arbitrary.
+        EXPECT_EQ(poly.minExp(), 0);
+        EXPECT_EQ(poly.maxExp(), 0);
+        EXPECT_EQ(poly[0], 0);
+    } else {
+        EXPECT_LE(alloc.first, poly.minExp());
+        EXPECT_LE(poly.minExp(), poly.maxExp());
+        EXPECT_LT(poly.maxExp(),
+            alloc.first + static_cast<long>(alloc.second));
+        EXPECT_NE(poly[poly.minExp()], 0);
+        EXPECT_NE(poly[poly.maxExp()], 0);
+    }
 }
 
-TEST_F(LaurentTest, arithmetic) {
-    verifyEqual<Integer>(zero, 0, {});
-    verifyEqual<Integer>(zero2, 0, {});
-    verifyEqual<Integer>(zero3, 0, {});
+static void validateZero(const L& poly) {
+    EXPECT_TRUE(poly.isZero());
+    EXPECT_EQ(poly.minExp(), 0);
+    EXPECT_EQ(poly.maxExp(), 0);
+    EXPECT_EQ(poly[0], 0);
+    EXPECT_EQ(poly, 0);
 
-    verifyEqual<Integer>(-zero, 0, {});
-    verifyEqual<Integer>(-a, -1, {-1, 1, -1});
-    verifyEqual<Integer>(-c, 1, {-1, 1, -1});
+    auto alloc = poly.allocation();
+    if (alloc.second == 0)
+        EXPECT_EQ(alloc.first, 0);
+    // If alloc.second is positive then we have a zero polynomial
+    // but with memory pre-allocated, which means alloc.first
+    // (the base exponent) is arbitrary.
 
-    verifyPlus<Integer>(zero, zero, 0, {});
-    verifyPlus<Integer>(one, two, 0, {3});
-    verifyPlus<Integer>(a, zero, -1, {1, -1, 1});
-    verifyPlus<Integer>(a, one, -1, {1, 0, 1});
-    verifyPlus<Integer>(b, one, 0, {2, -1, 1});
-    verifyPlus<Integer>(b, x2, 0, {1, -1, 2});
-    verifyPlus<Integer>(a, b, -1, {1, 0, 0, 1});
-    verifyPlus<Integer>(a, a + a, -1, {3, -3, 3});
-    verifyPlus<Integer>(a, e, -1, {1, -1, 1, 0, 0, 2, 4, -2, 2});
-    verifyPlus<Integer>(b, d, -2, {-1, 1, 0, 0, 1});
-    verifyPlus<Integer>(c, d, -2, {-1, 1, -1, 2, -1, 1});
+    const L zero;
+    EXPECT_EQ(poly, zero);
+    EXPECT_FALSE(poly != zero);
+}
 
-    verifyMinus<Integer>(zero, zero, 0, {});
-    verifyMinus<Integer>(one, two, 0, {-1});
-    verifyMinus<Integer>(a, zero, -1, {1, -1, 1});
-    verifyMinus<Integer>(zero, a, -1, {-1, 1, -1});
-    verifyMinus<Integer>(b, one, 1, {-1, 1});
-    verifyMinus<Integer>(b, x2, 0, {1, -1});
-    verifyMinus<Integer>(a, b, -1, {1, -2, 2, -1});
-    verifyMinus<Integer>(b, a, -1, {-1, 2, -2, 1});
-    verifyMinus<Integer>(a, a + a, -1, {-1, 1, -1});
-    verifyMinus<Integer>(a, e, -1, {1, -1, 1, 0, 0, -2, -4, 2, -2});
-    verifyMinus<Integer>(e, a, -1, {-1, 1, -1, 0, 0, 2, 4, -2, 2});
-    verifyMinus<Integer>(b, d, -2, {1, -1, 2, -2, 1});
-    verifyMinus<Integer>(d, b, -2, {-1, 1, -2, 2, -1});
-    verifyMinus<Integer>(a, a, 0, {});
+static void validate(const L& poly, long minExp,
+        std::initializer_list<Integer> coeffs) {
+    if (coeffs.size() == 0) { // initializer_list does not have empty()
+        EXPECT_TRUE(poly.isZero());
+        EXPECT_EQ(poly.minExp(), 0);
+        EXPECT_EQ(poly.maxExp(), 0);
+        EXPECT_EQ(poly[0], 0);
 
-    verifyMult<Integer>(zero, 0, 0, {});
-    verifyMult<Integer>(zero, 1, 0, {});
-    verifyMult<Integer>(zero, 2, 0, {});
-    verifyMult<Integer>(a, 0, 0, {});
-    verifyMult<Integer>(a, 1, -1, {1, -1, 1});
-    verifyMult<Integer>(a, -1, -1, {-1, 1, -1});
-    verifyMult<Integer>(a, 2, -1, {2, -2, 2});
+        auto alloc = poly.allocation();
+        if (alloc.second == 0)
+            EXPECT_EQ(alloc.first, 0);
+        // If alloc.second is positive then we have a zero polynomial
+        // but with memory pre-allocated, which means alloc.first
+        // (the base exponent) is arbitrary.
+    } else {
+        EXPECT_FALSE(poly.isZero());
+        EXPECT_EQ(poly.minExp(), minExp);
+        EXPECT_EQ(poly.maxExp(), minExp + coeffs.size() - 1);
 
-    verifyDiv<Integer>(zero, 1, 0, {});
-    verifyDiv<Integer>(zero, 2, 0, {});
-    verifyDiv<Integer>(a, 1, -1, {1, -1, 1});
-    verifyDiv<Integer>(a, -1, -1, {-1, 1, -1});
-    verifyDiv<Integer>(e, 2, 4, {1, 2, -1, 1});
+        auto alloc = poly.allocation();
+        EXPECT_LE(alloc.first, minExp);
+        EXPECT_GE(alloc.first + static_cast<long>(alloc.second),
+            minExp + static_cast<long>(coeffs.size()));
 
-    verifyMult<Integer>(zero, zero, 0, {});
-    verifyMult<Integer>(zero, a, 0, {});
-    verifyMult<Integer>(a, b, -1, {1, -2, 3, -2, 1});
+        EXPECT_NE(poly[poly.minExp()], 0);
+        EXPECT_NE(poly[poly.maxExp()], 0);
 
+        auto expect = coeffs.begin();
+        for (long e = minExp; expect != coeffs.end(); ++e, ++expect)
+            EXPECT_EQ(poly[e], *expect);
+    }
+
+    const L cmp(minExp, coeffs);
+    EXPECT_EQ(poly, cmp);
+    EXPECT_FALSE(poly != cmp);
+}
+
+template <std::ranges::sized_range Container>
+static void validate(const L& poly, long minExp, const Container& coeffs) {
+    if (coeffs.empty()) {
+        EXPECT_TRUE(poly.isZero());
+        EXPECT_EQ(poly.minExp(), 0);
+        EXPECT_EQ(poly.maxExp(), 0);
+        EXPECT_EQ(poly[0], 0);
+
+        auto alloc = poly.allocation();
+        if (alloc.second == 0)
+            EXPECT_EQ(alloc.first, 0);
+        // If alloc.second is positive then we have a zero polynomial
+        // but with memory pre-allocated, which means alloc.first
+        // (the base exponent) is arbitrary.
+    } else {
+        EXPECT_FALSE(poly.isZero());
+        EXPECT_EQ(poly.minExp(), minExp);
+        EXPECT_EQ(poly.maxExp(), minExp + coeffs.size() - 1);
+
+        auto alloc = poly.allocation();
+        EXPECT_LE(alloc.first, minExp);
+        EXPECT_GE(alloc.first + alloc.second, minExp + coeffs.size());
+
+        EXPECT_NE(poly[poly.minExp()], 0);
+        EXPECT_NE(poly[poly.maxExp()], 0);
+
+        auto expect = coeffs.begin();
+        for (long e = minExp; expect != coeffs.end(); ++e, ++expect)
+            EXPECT_EQ(poly[e], *expect);
+    }
+
+    const L cmp(minExp, coeffs.begin(), coeffs.end());
+    EXPECT_EQ(poly, cmp);
+    EXPECT_FALSE(poly != cmp);
+}
+
+static void validate(const L& poly, const L& expect) {
+    if (expect.isZero()) {
+        EXPECT_TRUE(poly.isZero());
+        EXPECT_EQ(poly.minExp(), 0);
+        EXPECT_EQ(poly.maxExp(), 0);
+        EXPECT_EQ(poly[0], 0);
+
+        auto alloc = poly.allocation();
+        if (alloc.second == 0)
+            EXPECT_EQ(alloc.first, 0);
+        // If alloc.second is positive then we have a zero polynomial
+        // but with memory pre-allocated, which means alloc.first
+        // (the base exponent) is arbitrary.
+    } else {
+        EXPECT_FALSE(poly.isZero());
+        EXPECT_EQ(poly.minExp(), expect.minExp());
+        EXPECT_EQ(poly.maxExp(), expect.maxExp());
+
+        auto alloc = poly.allocation();
+        EXPECT_LE(alloc.first, poly.minExp());
+        EXPECT_GT(alloc.first + static_cast<long>(alloc.second),
+            poly.maxExp());
+
+        EXPECT_NE(poly[poly.minExp()], 0);
+        EXPECT_NE(poly[poly.maxExp()], 0);
+
+        for (long e = expect.minExp(); e != expect.maxExp(); ++e)
+            EXPECT_EQ(poly[e], expect[e]);
+    }
+
+    EXPECT_EQ(poly, expect);
+    EXPECT_FALSE(poly != expect);
+}
+
+/**
+ * Returns a polynomial equal to \a poly, but with more space for
+ * coefficients allocated on each end than is necessary.
+ */
+static L padded(const L& poly) {
+    // Note: this still works if poly is the zero polynomial (in which
+    // case the first call to set() changes _both_ minExp and maxExp).
+    L ans(poly);
+    ans.set(ans.minExp() - 3, 1); // changes minExp
+    ans.set(ans.maxExp() + 2, 1); // changes maxExp
+    ans.set(ans.minExp(), 0);
+    ans.set(ans.maxExp(), 0);
+    return ans;
+}
+
+TEST_F(LaurentTest, construct) {
+    validateZero(L());
+    validateZero(zero);
+    validateZero(zero2);
+    validateZero(zero3);
+    validateZero(paddedZero);
+
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        {
+            L x(c);
+            validate(x, c);
+            L y(std::move(x));
+            validate(y, c);
+        }
+        validate(L(c.minExp(), c.begin(), c.end()), c);
+        {
+            // This test (for iterator ranges with zero padding at either end)
+            // also covers the case where the iterator range contains entirely
+            // zeroes (this is tested when c is the zero polynomial).
+            std::vector<Integer> coeffs(3); // some initial zeroes
+            coeffs.insert(coeffs.end(), c.begin(), c.end());
+            coeffs.resize(coeffs.size() + 2); // some final zeroes
+            EXPECT_FALSE(coeffs.empty());
+            EXPECT_EQ(coeffs.front(), 0);
+            EXPECT_EQ(coeffs.back(), 0);
+            validate(L(c.minExp() - 3, coeffs.begin(), coeffs.end()), c);
+        }
+    }
+
+    Integer zero(0), pos(4), neg(-4), big(bigInt);
+    validateZero(L(zero));
+    validateZero(L(std::move(zero)));
+    validateZero(L(0));
+    validate(L(pos), 0, { 4 });
+    validate(L(std::move(pos)), 0, { 4 });
+    validate(L(4), 0, { 4 });
+    validate(L(neg), 0, { -4 });
+    validate(L(std::move(neg)), 0, { -4 });
+    validate(L(-4), 0, { -4 });
+    validate(L(big), 0, bigCoeff);
+    validate(L(std::move(big)), 0, bigCoeff);
+    // At this point: zero, pos, neg, big are all unusable.
+}
+
+TEST_F(LaurentTest, assign) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+
+        for (const L& d : cases) {
+            SCOPED_TRACE_REGINA(d);
+            {
+                L x(c);
+                validate(x, c);
+                x = d;
+                validate(x, d);
+            }
+            {
+                L x(c), y(d);
+                validate(x, c);
+                validate(y, d);
+                auto alloc = y.allocation();
+                x = std::move(y);
+                validate(x, d);
+                EXPECT_EQ(x.allocation(), alloc);
+            }
+        }
+
+        Integer zero(0), pos(4), neg(-4), big(bigInt);
+        { L x(c); validate(x, c); x = zero; validateZero(x); }
+        { L x(c); validate(x, c); x = std::move(zero); validateZero(x); }
+        { L x(c); validate(x, c); x = 0; validateZero(x); }
+        { L x(c); validate(x, c); x = pos; validate(x, 0, { 4 }); }
+        { L x(c); validate(x, c); x = std::move(pos); validate(x, 0, { 4 }); }
+        { L x(c); validate(x, c); x = 4; validate(x, 0, { 4 }); }
+        { L x(c); validate(x, c); x = neg; validate(x, 0, { -4 }); }
+        { L x(c); validate(x, c); x = std::move(neg); validate(x, 0, { -4 }); }
+        { L x(c); validate(x, c); x = -4; validate(x, 0, { -4 }); }
+        { L x(c); validate(x, c); x = big; validate(x, 0, bigCoeff); }
+        { L x(c); validate(x, c); x = std::move(big);
+            validate(x, 0, bigCoeff); }
+        // At this point: zero, pos, neg, big are all unusable.
+    }
+}
+
+TEST_F(LaurentTest, padding) {
     {
-        Laurent<Integer> x(a);
-        verifyEqual<Integer>(x + x, -1, {2, -2, 2});
-        verifyEqual<Integer>(x += x, -1, {2, -2, 2});
+        auto alloc = paddedZero.allocation();
+        EXPECT_GT(alloc.second, 0);
     }
     {
-        Laurent<Integer> x(a);
-        verifyEqual<Integer>(x - x, 0, {});
-        verifyEqual<Integer>(x -= x, 0, {});
+        // paddedConst: exponent range [0]
+        auto alloc = paddedConst.allocation();
+        EXPECT_LT(alloc.first, 0);
+        EXPECT_GT(alloc.first + static_cast<long>(alloc.second), 1);
     }
     {
-        Laurent<Integer> x(-1, {1, 0, 1});
-        verifyEqual<Integer>(x * x, -2, {1, 0, 2, 0, 1});
-        verifyEqual<Integer>(x *= x, -2, {1, 0, 2, 0, 1});
+        // paddedPower: exponent range [2]
+        auto alloc = paddedPower.allocation();
+        EXPECT_LT(alloc.first, 2);
+        EXPECT_GT(alloc.first + static_cast<long>(alloc.second), 3);
+    }
+    {
+        // paddedPoly: exponent range [1..3]
+        auto alloc = paddedPoly.allocation();
+        EXPECT_LT(alloc.first, 1);
+        EXPECT_GT(alloc.first + static_cast<long>(alloc.second), 4);
+    }
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        {
+            L x = padded(c);
+            validate(x, c);
+
+            auto alloc = x.allocation();
+            EXPECT_GT(alloc.second, 0);
+            if (c.isZero()) {
+                EXPECT_TRUE(x.isZero());
+                // In this case, alloc.first is arbitrary.
+            } else {
+                EXPECT_LT(alloc.first, x.minExp());
+                EXPECT_GT(alloc.first + static_cast<long>(alloc.second),
+                    x.maxExp() + 1);
+            }
+        }
+    }
+}
+
+static void verifyReserveRange(const L& poly, long fromExp, long toExp) {
+    SCOPED_TRACE_NUMERIC(fromExp);
+    SCOPED_TRACE_NUMERIC(toExp);
+
+    L x(poly); // should set the range precisely from poly.
+    const auto initAlloc = x.allocation();
+    if (poly.isZero()) {
+        EXPECT_EQ(initAlloc.second, 0);
+        // initAlloc.first (the base) is arbitrary in this case.
+    } else {
+        EXPECT_EQ(initAlloc.first, poly.minExp());
+        EXPECT_EQ(initAlloc.second, poly.maxExp() - poly.minExp() + 1);
+    }
+
+    x.reserveRange(fromExp, toExp);
+
+    EXPECT_EQ(x.minExp(), poly.minExp());
+    EXPECT_EQ(x.maxExp(), poly.maxExp());
+
+    if (fromExp > toExp) {
+        // Nothing should have changed.
+        EXPECT_EQ(x.allocation(), initAlloc);
+    } else {
+        const auto newAlloc = x.allocation();
+        EXPECT_GT(newAlloc.second, 0);
+        EXPECT_GE(newAlloc.second, initAlloc.second);
+        if (! poly.isZero()) {
+            EXPECT_LE(newAlloc.first, poly.minExp());
+            EXPECT_GT(newAlloc.first + static_cast<long>(newAlloc.second),
+                poly.maxExp());
+        }
+        EXPECT_LE(newAlloc.first, fromExp);
+        EXPECT_GT(newAlloc.first + static_cast<long>(newAlloc.second), toExp);
+
+        validate(x, poly);
+
+        for (long i = fromExp; i <= toExp; ++i) {
+            x.set(i, 1);
+            EXPECT_EQ(x.allocation(), newAlloc);
+        }
+    }
+}
+
+TEST_F(LaurentTest, reserveRange) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        if (c.isZero()) {
+            verifyReserveRange(c, 1000, 999); // no-op
+            verifyReserveRange(c, -999, -1000); // no-op
+            verifyReserveRange(c, 0, 0);
+            verifyReserveRange(c, 100, 100);
+            verifyReserveRange(c, -100, -100);
+            verifyReserveRange(c, -100, -90);
+            verifyReserveRange(c, -10, 10);
+            verifyReserveRange(c, 90, 100);
+        } else {
+            long min = c.minExp();
+            long max = c.maxExp();
+            long mid = (c.minExp() + c.maxExp()) / 2;
+            long span = max - min;
+            verifyReserveRange(c, 1000, 999); // no-op
+            verifyReserveRange(c, -999, -1000); // no-op
+            verifyReserveRange(c, min, min);
+            verifyReserveRange(c, mid, mid);
+            verifyReserveRange(c, max, max);
+            verifyReserveRange(c, min, max);
+            verifyReserveRange(c, min, mid);
+            verifyReserveRange(c, mid, max);
+            verifyReserveRange(c, mid - 1, mid + 1);
+            verifyReserveRange(c, min - 100, min - 100);
+            verifyReserveRange(c, min - 1, min - 1);
+            verifyReserveRange(c, min - 1, min);
+            verifyReserveRange(c, max, max + 1);
+            verifyReserveRange(c, max + 1, max + 1);
+            verifyReserveRange(c, max + 100, max + 100);
+            verifyReserveRange(c, min - 1, max + 1);
+            verifyReserveRange(c, min - 100, max + 100);
+            verifyReserveRange(c, min - 100, mid);
+            verifyReserveRange(c, min - 1, mid);
+            verifyReserveRange(c, mid, max + 1);
+            verifyReserveRange(c, mid, max + 100);
+            verifyReserveRange(c, min - 2 * span, min - span);
+            verifyReserveRange(c, max + span, max + 2 * span);
+        }
+    }
+}
+
+TEST_F(LaurentTest, init) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        {
+            L x(c);
+            x.init();
+            validateZero(x);
+        }
+        {
+            L x(c);
+            x.initExp(-2);
+            validate(x, -2, { 1 });
+        }
+    }
+}
+
+TEST_F(LaurentTest, moveThenAssign) {
+    // Here we test both move-then-assign and move-then-init.
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+
+        // Here *junk indicates the initial value of y.  The point of this is
+        // to ensure that, when moving x into y, we don't end up with unwanted
+        // residue from this junk living within x.
+        //
+        // We also allow junk to be cases.end() which means that y should be
+        // default constructed (hence the awkward structure of this loop).
+        auto junk = cases.begin();
+        while (true) {
+            {
+                L x(c);
+                validate(x, c);
+                L y;
+                if (junk != cases.end()) {
+                    y = *junk;
+                    validate(y, *junk);
+                } else {
+                    validateZero(y);
+                }
+
+                y = std::move(x);
+                x = 3;
+                validate(x, L(3));
+                validate(y, c);
+            }
+            {
+                L x(c);
+                validate(x, c);
+                L y;
+                if (junk != cases.end()) {
+                    y = *junk;
+                    validate(y, *junk);
+                } else {
+                    validateZero(y);
+                }
+
+                y = std::move(x);
+                x = bigInt;
+                validate(x, L(bigInt));
+                validate(y, c);
+            }
+            {
+                L x(c);
+                validate(x, c);
+                L y;
+                if (junk != cases.end()) {
+                    y = *junk;
+                    validate(y, *junk);
+                } else {
+                    validateZero(y);
+                }
+
+                y = std::move(x);
+                Integer i(bigInt);
+                x = std::move(i);
+                validate(x, L(bigInt));
+                validate(y, c);
+            }
+            {
+                L x(c);
+                validate(x, c);
+                L y;
+                if (junk != cases.end()) {
+                    y = *junk;
+                    validate(y, *junk);
+                } else {
+                    validateZero(y);
+                }
+
+                y = std::move(x);
+                x.init();
+                validateZero(x);
+                validate(y, c);
+            }
+            {
+                L x(c);
+                validate(x, c);
+                L y;
+                if (junk != cases.end()) {
+                    y = *junk;
+                    validate(y, *junk);
+                } else {
+                    validateZero(y);
+                }
+
+                y = std::move(x);
+                x.initExp(-5);
+                validate(x, x5Inv);
+                validate(y, c);
+            }
+
+            for (const L& d : cases) {
+                SCOPED_TRACE_REGINA(d);
+                {
+                    L x(c);
+                    validate(x, c);
+                    L y;
+                    if (junk != cases.end()) {
+                        y = *junk;
+                        validate(y, *junk);
+                    } else {
+                        validateZero(y);
+                    }
+
+                    y = std::move(x);
+                    x = d;
+                    validate(x, d);
+                    validate(y, c);
+                }
+            }
+
+            if (junk == cases.end())
+                break;
+            ++junk;
+        }
+    }
+}
+
+TEST_F(LaurentTest, set) {
+    // Some tests specific to the zero polynomial:
+    {
+        L x;
+        const auto alloc = x.allocation();
+        EXPECT_EQ(alloc.second, 0);
+        x.set(0, 0);
+        validateZero(x);
+        EXPECT_EQ(x.allocation(), alloc);
+    }
+    {
+        L x;
+        x.reserveRange(-5, 5);
+        const auto alloc = x.allocation();
+        EXPECT_GT(alloc.second, 0);
+        x.set(0, 0);
+        validateZero(x);
+        EXPECT_EQ(x.allocation(), alloc);
+    }
+    {
+        L x;
+        x.reserveRange(10, 20);
+        const auto alloc = x.allocation();
+        EXPECT_GT(alloc.second, 0);
+        x.set(0, 0);
+        validateZero(x);
+        EXPECT_EQ(x.allocation(), alloc);
+    }
+    {
+        L x;
+        x.set(2, -7);
+        validate(x, 2, { -7 });
+    }
+    {
+        L x;
+        x.reserveRange(-5, 5);
+        const auto alloc = x.allocation();
+        EXPECT_GT(alloc.second, 0);
+        x.set(2, -7);
+        validate(x, 2, { -7 });
+        EXPECT_EQ(x.allocation(), alloc);
+    }
+    {
+        L x;
+        x.reserveRange(10, 20);
+        const auto alloc = x.allocation();
+        EXPECT_GT(alloc.second, 0);
+        x.set(2, -7);
+        validate(x, 2, { -7 });
+        EXPECT_NE(x.allocation(), alloc);
+    }
+    {
+        L x;
+        x.reserveRange(-20, -10);
+        const auto alloc = x.allocation();
+        EXPECT_GT(alloc.second, 0);
+        x.set(2, -7);
+        validate(x, 2, { -7 });
+        EXPECT_NE(x.allocation(), alloc);
+    }
+    {
+        L x;
+        x.set(2, bigInt);
+        validate(x, 2, bigCoeff);
+    }
+    {
+        L x;
+        x.reserveRange(-5, 5);
+        const auto alloc = x.allocation();
+        EXPECT_GT(alloc.second, 0);
+        x.set(2, bigInt);
+        validate(x, 2, bigCoeff);
+        EXPECT_EQ(x.allocation(), alloc);
+    }
+    {
+        L x;
+        x.reserveRange(10, 20);
+        const auto alloc = x.allocation();
+        EXPECT_GT(alloc.second, 0);
+        x.set(2, bigInt);
+        validate(x, 2, bigCoeff);
+        EXPECT_NE(x.allocation(), alloc);
+    }
+    {
+        L x;
+        x.reserveRange(-20, -10);
+        const auto alloc = x.allocation();
+        EXPECT_GT(alloc.second, 0);
+        x.set(2, bigInt);
+        validate(x, 2, bigCoeff);
+        EXPECT_NE(x.allocation(), alloc);
+    }
+
+    // Tests to run for all cases:
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+
+        // Setting coefficients to zero:
+        {
+            L x(c);
+            const auto alloc = x.allocation();
+            x.set(c.minExp() - 1, 0);
+            validate(x, c);
+            EXPECT_EQ(x.allocation(), alloc);
+        }
+        {
+            L x(c);
+            const auto alloc = x.allocation();
+            x.set(c.minExp() - 100, 0);
+            validate(x, c);
+            EXPECT_EQ(x.allocation(), alloc);
+        }
+        {
+            L x(c);
+            const auto alloc = x.allocation();
+            x.set(c.maxExp() + 1, 0);
+            validate(x, c);
+            EXPECT_EQ(x.allocation(), alloc);
+        }
+        {
+            L x(c);
+            const auto alloc = x.allocation();
+            x.set(c.maxExp() + 100, 0);
+            validate(x, c);
+            EXPECT_EQ(x.allocation(), alloc);
+        }
+        if (! c.isZero()) {
+            if (c.minExp() == c.maxExp()) {
+                {
+                    L x(c);
+                    x.set(c.minExp(), 0);
+                    validateZero(x);
+                }
+                {
+                    L x(c);
+                    x.reserveRange(c.minExp() - 5, c.minExp() + 5);
+                    x.set(c.minExp(), 0);
+                    validateZero(x);
+                }
+            } else {
+                {
+                    L x(c);
+                    x.set(c.minExp(), 0);
+                    validate(x);
+                    EXPECT_NE(x, c);
+                    EXPECT_GT(x.minExp(), c.minExp());
+                    EXPECT_EQ(x.maxExp(), c.maxExp());
+                }
+                {
+                    L x(c);
+                    x.set(c.maxExp(), 0);
+                    validate(x);
+                    EXPECT_NE(x, c);
+                    EXPECT_EQ(x.minExp(), c.minExp());
+                    EXPECT_LT(x.maxExp(), c.maxExp());
+                }
+                if (c.maxExp() >= c.minExp() + 2) {
+                    L x(c);
+                    long mid = (c.minExp() + c.maxExp()) >> 1;
+                    x.set(mid, 0);
+                    validate(x);
+                    EXPECT_EQ(x.minExp(), c.minExp());
+                    EXPECT_EQ(x.maxExp(), c.maxExp());
+                    if (c[mid] == 0)
+                        EXPECT_EQ(x, c);
+                    else
+                        EXPECT_NE(x, c);
+                }
+            }
+        }
+
+        // Some tests involving setting coefficients to non-zero:
+        if (! c.isZero()) {
+            const long mid = (c.minExp() + c.maxExp()) >> 1;
+            const Integer minCoeff = c[c.minExp()];
+            const Integer midCoeff = c[mid];
+            const Integer maxCoeff = c[c.maxExp()];
+
+            // Changes within the degree span:
+            {
+                L x(c);
+                x.set(c.minExp(), minCoeff + bigInt + 5);
+                validate(x);
+                EXPECT_NE(x, c);
+                EXPECT_EQ(x.minExp(), c.minExp());
+                EXPECT_EQ(x.maxExp(), c.maxExp());
+                EXPECT_EQ(x[c.minExp()], minCoeff + bigInt + 5);
+                x.set(c.minExp(), minCoeff);
+                validate(x, c);
+            }
+            {
+                L x(c);
+                x.set(mid, midCoeff + bigInt + 5);
+                validate(x);
+                EXPECT_NE(x, c);
+                EXPECT_EQ(x.minExp(), c.minExp());
+                EXPECT_EQ(x.maxExp(), c.maxExp());
+                EXPECT_EQ(x[mid], midCoeff + bigInt + 5);
+                x.set(mid, midCoeff);
+                validate(x, c);
+            }
+            {
+                L x(c);
+                x.set(c.maxExp(), maxCoeff + bigInt + 5);
+                validate(x);
+                EXPECT_NE(x, c);
+                EXPECT_EQ(x.minExp(), c.minExp());
+                EXPECT_EQ(x.maxExp(), c.maxExp());
+                EXPECT_EQ(x[c.maxExp()], maxCoeff + bigInt + 5);
+                x.set(c.maxExp(), maxCoeff);
+                validate(x, c);
+            }
+            {
+                L x(c);
+                x.reserveRange(c.minExp() - 5, c.maxExp() + 5);
+                x.set(mid, midCoeff + bigInt + 5);
+                validate(x);
+                EXPECT_NE(x, c);
+                EXPECT_EQ(x.minExp(), c.minExp());
+                EXPECT_EQ(x.maxExp(), c.maxExp());
+                EXPECT_EQ(x[mid], midCoeff + bigInt + 5);
+                x.set(mid, midCoeff);
+                validate(x, c);
+            }
+
+            // Changes outside the degree span, but within the allocated range:
+            {
+                L x(c);
+                x.reserveRange(c.minExp() - 5, c.maxExp() + 5);
+                const auto alloc = x.allocation();
+
+                x.set(c.minExp() - 1, -7);
+                validate(x);
+                EXPECT_EQ(x.allocation(), alloc);
+                EXPECT_NE(x, c);
+                EXPECT_EQ(x.minExp(), c.minExp() - 1);
+                EXPECT_EQ(x.maxExp(), c.maxExp());
+                EXPECT_EQ(x[c.minExp() - 1], -7);
+
+                x.set(c.minExp() - 1, 0);
+                validate(x, c);
+                EXPECT_EQ(x.allocation(), alloc);
+            }
+            {
+                L x(c);
+                x.reserveRange(c.minExp() - 5, c.maxExp() + 5);
+                const auto alloc = x.allocation();
+
+                x.set(c.maxExp() + 1, -7);
+                validate(x);
+                EXPECT_EQ(x.allocation(), alloc);
+                EXPECT_NE(x, c);
+                EXPECT_EQ(x.minExp(), c.minExp());
+                EXPECT_EQ(x.maxExp(), c.maxExp() + 1);
+                EXPECT_EQ(x[c.maxExp() + 1], -7);
+
+                x.set(c.maxExp() + 1, 0);
+                validate(x, c);
+                EXPECT_EQ(x.allocation(), alloc);
+            }
+            {
+                L x(c);
+                x.reserveRange(c.minExp() - 5, c.maxExp() + 5);
+                const auto alloc = x.allocation();
+
+                x.set(c.minExp() - 3, bigInt);
+                validate(x);
+                EXPECT_EQ(x.allocation(), alloc);
+                EXPECT_NE(x, c);
+                EXPECT_EQ(x.minExp(), c.minExp() - 3);
+                EXPECT_EQ(x.maxExp(), c.maxExp());
+                EXPECT_EQ(x[c.minExp() - 3], bigInt);
+
+                x.set(c.minExp() - 3, 0);
+                validate(x, c);
+                EXPECT_EQ(x.allocation(), alloc);
+            }
+            {
+                L x(c);
+                x.reserveRange(c.minExp() - 5, c.maxExp() + 5);
+                const auto alloc = x.allocation();
+
+                x.set(c.maxExp() + 3, bigInt);
+                validate(x);
+                EXPECT_EQ(x.allocation(), alloc);
+                EXPECT_NE(x, c);
+                EXPECT_EQ(x.minExp(), c.minExp());
+                EXPECT_EQ(x.maxExp(), c.maxExp() + 3);
+                EXPECT_EQ(x[c.maxExp() + 3], bigInt);
+
+                x.set(c.maxExp() + 3, 0);
+                validate(x, c);
+                EXPECT_EQ(x.allocation(), alloc);
+            }
+
+            // Changes outside the allocated range:
+            {
+                L x(c);
+                x.reserveRange(c.minExp() - 5, c.maxExp() + 5);
+                auto alloc = x.allocation();
+                long exp = alloc.first - 1;
+
+                x.set(exp, -7);
+                validate(x);
+                EXPECT_NE(x.allocation(), alloc);
+                EXPECT_NE(x, c);
+                EXPECT_EQ(x.minExp(), exp);
+                EXPECT_EQ(x.maxExp(), c.maxExp());
+                EXPECT_EQ(x[exp], -7);
+                alloc = x.allocation();
+
+                x.set(exp, 0);
+                validate(x, c);
+                EXPECT_EQ(x.allocation(), alloc);
+            }
+            {
+                L x(c);
+                x.reserveRange(c.minExp() - 5, c.maxExp() + 5);
+                auto alloc = x.allocation();
+                long exp = alloc.first + alloc.second;
+
+                x.set(exp, -7);
+                validate(x);
+                EXPECT_NE(x.allocation(), alloc);
+                EXPECT_NE(x, c);
+                EXPECT_EQ(x.minExp(), c.minExp());
+                EXPECT_EQ(x.maxExp(), exp);
+                EXPECT_EQ(x[exp], -7);
+                alloc = x.allocation();
+
+                x.set(exp, 0);
+                validate(x, c);
+                EXPECT_EQ(x.allocation(), alloc);
+            }
+            {
+                L x(c);
+                x.reserveRange(c.minExp() - 5, c.maxExp() + 5);
+                auto alloc = x.allocation();
+                long exp = alloc.first - 5;
+
+                x.set(exp, bigInt);
+                validate(x);
+                EXPECT_NE(x.allocation(), alloc);
+                EXPECT_NE(x, c);
+                EXPECT_EQ(x.minExp(), exp);
+                EXPECT_EQ(x.maxExp(), c.maxExp());
+                EXPECT_EQ(x[exp], bigInt);
+                alloc = x.allocation();
+
+                x.set(exp, 0);
+                validate(x, c);
+                EXPECT_EQ(x.allocation(), alloc);
+            }
+            {
+                L x(c);
+                x.reserveRange(c.minExp() - 5, c.maxExp() + 5);
+                auto alloc = x.allocation();
+                long exp = alloc.first + alloc.second + 5;
+
+                x.set(exp, bigInt);
+                validate(x);
+                EXPECT_NE(x.allocation(), alloc);
+                EXPECT_NE(x, c);
+                EXPECT_EQ(x.minExp(), c.minExp());
+                EXPECT_EQ(x.maxExp(), exp);
+                EXPECT_EQ(x[exp], bigInt);
+                alloc = x.allocation();
+
+                x.set(exp, 0);
+                validate(x, c);
+                EXPECT_EQ(x.allocation(), alloc);
+            }
+        }
+    }
+}
+
+TEST_F(LaurentTest, iterators) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+
+        // Here is as good a time as any to test operator[] also.
+        if (c.isZero()) {
+            EXPECT_EQ(c.begin(), c.end());
+
+            EXPECT_EQ(c[-100], 0);
+            EXPECT_EQ(c[-1], 0);
+            EXPECT_EQ(c[0], 0);
+            EXPECT_EQ(c[1], 0);
+            EXPECT_EQ(c[100], 0);
+        } else {
+            long exp = c.minExp();
+            auto it = c.begin();
+            while (exp <= c.maxExp() && it != c.end()) {
+                EXPECT_EQ(c[exp], *it);
+                ++exp;
+                ++it;
+            }
+            EXPECT_EQ(it, c.end());
+
+            EXPECT_EQ(c[c.minExp() - 100], 0);
+            EXPECT_EQ(c[c.minExp() - 1], 0);
+            EXPECT_NE(c[c.minExp()], 0);
+            EXPECT_NE(c[c.maxExp()], 0);
+            EXPECT_EQ(c[c.maxExp() + 1], 0);
+            EXPECT_EQ(c[c.maxExp() + 100], 0);
+        }
+    }
+}
+
+TEST_F(LaurentTest, comparison) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        Batch cBatch = batch(c);
+
+        EXPECT_TRUE(c == c);
+        EXPECT_TRUE(c == L(c));
+        EXPECT_FALSE(c != c);
+        EXPECT_FALSE(c != L(c));
+        EXPECT_EQ(c <=> c, std::strong_ordering::equal);
+        EXPECT_EQ(c <=> L(c), std::strong_ordering::equal);
+
+        for (const L& d : cases) {
+            if (std::addressof(c) == std::addressof(d))
+                continue;
+
+            SCOPED_TRACE_REGINA(d);
+            Batch dBatch = batch(d);
+            auto c_vs_d = c <=> d;
+
+            if (cBatch != Batch::Unique && cBatch == dBatch) {
+                EXPECT_TRUE(c == d);
+                EXPECT_FALSE(c != d);
+                EXPECT_EQ(c_vs_d, std::strong_ordering::equal);
+            } else {
+                EXPECT_FALSE(c == d);
+                EXPECT_TRUE(c != d);
+                EXPECT_NE(c_vs_d, std::strong_ordering::equal);
+                EXPECT_EQ(d <=> c, 0 <=> c_vs_d);
+            }
+
+            // Test transitivity of comparisions:
+            for (const L& e : cases) {
+                if (std::addressof(e) == std::addressof(c) ||
+                        std::addressof(e) == std::addressof(d))
+                    continue;
+                if (c_vs_d == std::strong_ordering::equal)
+                    EXPECT_EQ(c <=> e, d <=> e);
+                else if ((d <=> e) != (0 <=> c_vs_d))
+                    EXPECT_EQ(c <=> e, c_vs_d);
+            }
+        }
+
+        EXPECT_EQ(c == 0, cBatch == Batch::Zero);
+        EXPECT_EQ(c != 0, cBatch != Batch::Zero);
+        EXPECT_EQ(c == Integer(), cBatch == Batch::Zero);
+        EXPECT_EQ(c != Integer(), cBatch != Batch::Zero);
+        EXPECT_EQ(c == 2, cBatch == Batch::Two);
+        EXPECT_EQ(c != 2, cBatch != Batch::Two);
+        EXPECT_EQ(c == Integer(2), cBatch == Batch::Two);
+        EXPECT_EQ(c != Integer(2), cBatch != Batch::Two);
+        EXPECT_FALSE(c == 3);
+        EXPECT_TRUE(c != 3);
+        EXPECT_FALSE(c == Integer(3));
+        EXPECT_TRUE(c != Integer(3));
+        EXPECT_FALSE(c == bigInt);
+        EXPECT_TRUE(c != bigInt);
+    }
+}
+
+TEST_F(LaurentTest, shift) {
+    static constexpr int shifts[5] = { -100, -5, 0, 5, 100 };
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        for (int shift : shifts) {
+            SCOPED_TRACE_NUMERIC(shift);
+            if (c.isZero()) {
+                validateZero(c.shifted(shift));
+                validateZero(L(c).shifted(shift));
+                {
+                    L x(c);
+                    x.shift(shift);
+                    validateZero(x);
+                }
+            } else {
+                L ans = c.shifted(shift);
+                validate(ans);
+                EXPECT_FALSE(ans.isZero());
+                EXPECT_EQ(ans.minExp(), c.minExp() + shift);
+                EXPECT_EQ(ans.maxExp(), c.maxExp() + shift);
+                for (long i = c.minExp(); i <= c.maxExp(); ++i)
+                    EXPECT_EQ(ans[i + shift], c[i]);
+
+                validate(L(c).shifted(shift), ans);
+                {
+                    L x(c);
+                    size_t capacity = x.allocation().second;
+                    x.shift(shift);
+                    validate(x, ans);
+                    EXPECT_EQ(x.allocation().second, capacity);
+                }
+            }
+        }
+    }
+}
+
+TEST_F(LaurentTest, scale) {
+    static constexpr int factors[6] = { 1, -1, 2, -2, 5, -5 };
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        {
+            L x(c);
+            EXPECT_THROW({ x.scaleUp(0); }, regina::InvalidArgument);
+        }
+        {
+            L x(c);
+            EXPECT_THROW({ x.scaleDown(0); }, regina::InvalidArgument);
+        }
+        for (int factor : factors) {
+            SCOPED_TRACE_NUMERIC(factor);
+            if (c.isZero()) {
+                {
+                    L x(c);
+                    EXPECT_NO_THROW({ x.scaleUp(factor); });
+                    validateZero(x);
+                }
+                {
+                    L x(c);
+                    EXPECT_NO_THROW({ x.scaleDown(factor); });
+                    validateZero(x);
+                }
+            } else {
+                {
+                    L x(c);
+                    EXPECT_NO_THROW({ x.scaleUp(factor); });
+                    validate(x);
+                    EXPECT_FALSE(x.isZero());
+                    if (factor >= 0) {
+                        EXPECT_EQ(x.minExp(), c.minExp() * factor);
+                        EXPECT_EQ(x.maxExp(), c.maxExp() * factor);
+                    } else {
+                        EXPECT_EQ(x.maxExp(), c.minExp() * factor);
+                        EXPECT_EQ(x.minExp(), c.maxExp() * factor);
+                    }
+                    for (long i = x.minExp(); i <= x.maxExp(); ++i)
+                        if (i % factor == 0)
+                            EXPECT_EQ(x[i], c[i / factor]);
+                        else
+                            EXPECT_EQ(x[i], 0);
+                }
+                bool canScaleDown = true;
+                for (long i = c.minExp(); i <= c.maxExp(); ++i)
+                    if (c[i] != 0 && i % factor != 0) {
+                        canScaleDown = false;
+                        break;
+                    }
+                if (canScaleDown) {
+                    L x(c);
+                    EXPECT_NO_THROW({ x.scaleDown(factor); });
+                    validate(x);
+                    EXPECT_FALSE(x.isZero());
+                    if (factor >= 0) {
+                        EXPECT_EQ(x.minExp() * factor, c.minExp());
+                        EXPECT_EQ(x.maxExp() * factor, c.maxExp());
+                    } else {
+                        EXPECT_EQ(x.maxExp() * factor, c.minExp());
+                        EXPECT_EQ(x.minExp() * factor, c.maxExp());
+                    }
+                    for (long i = x.minExp(); i <= x.maxExp(); ++i)
+                        EXPECT_EQ(x[i], c[i * factor]);
+                } else {
+                    L x(c);
+                    EXPECT_THROW({ x.scaleDown(factor); },
+                        regina::FailedPrecondition);
+                }
+
+                {
+                    L x(c);
+                    EXPECT_NO_THROW({ x.scaleUp(factor); });
+                    EXPECT_NO_THROW({ x.scaleDown(factor); });
+                    validate(x, c);
+                }
+                {
+                    L x(c);
+                    EXPECT_NO_THROW({ x.scaleUp(1); });
+                    validate(x, c);
+                }
+                {
+                    L x(c);
+                    EXPECT_NO_THROW({ x.scaleDown(1); });
+                    validate(x, c);
+                }
+                {
+                    L x(c), y(c);
+                    EXPECT_NO_THROW({ x.scaleUp(-1); });
+                    y.invertX();
+                    validate(x);
+                    validate(y);
+                    EXPECT_EQ(x, y);
+                }
+                {
+                    L x(c), y(c);
+                    EXPECT_NO_THROW({ x.scaleDown(-1); });
+                    y.invertX();
+                    validate(x);
+                    validate(y);
+                    EXPECT_EQ(x, y);
+                }
+            }
+        }
+    }
+}
+
+TEST_F(LaurentTest, negate) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        if (c.isZero()) {
+            validateZero(-c);
+
+            L x(c);
+            x.negate();
+            validateZero(x);
+            validateZero(-c);
+            validateZero(-std::move(x));
+        } else {
+            L neg = -c;
+            validate(neg);
+            EXPECT_FALSE(neg.isZero());
+            EXPECT_EQ(neg.minExp(), c.minExp());
+            EXPECT_EQ(neg.maxExp(), c.maxExp());
+            for (long i = c.minExp(); i <= c.maxExp(); ++i)
+                EXPECT_EQ(neg[i], -c[i]);
+
+            {
+                L x(c);
+                validate(-std::move(x), neg);
+            }
+            {
+                L x(c);
+                x.negate();
+                validate(x, neg);
+            }
+
+            validateZero(c + neg);
+        }
+    }
+}
+
+TEST_F(LaurentTest, invertX) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        if (c.isZero()) {
+            L x(c);
+            x.invertX();
+            validateZero(x);
+        } else {
+            L x(c);
+            x.invertX();
+            validate(x);
+            EXPECT_FALSE(x.isZero());
+            EXPECT_EQ(x.maxExp(), -c.minExp());
+            EXPECT_EQ(x.minExp(), -c.maxExp());
+            long cExp = c.minExp();
+            long xExp = -c.minExp();
+            while (cExp <= c.maxExp()) {
+                EXPECT_EQ(x[xExp], c[cExp]);
+                ++cExp;
+                --xExp;
+            }
+        }
+    }
+}
+
+TEST_F(LaurentTest, transform) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+
+        {
+            // A transformation that preserves minExp/maxExp:
+            L x(c);
+            x.transform([&c](Integer& i) {
+                EXPECT_FALSE(c.isZero());
+                i *= 2;
+            });
+            validate(x, c * 2);
+        }
+        {
+            // A transformation that could change minExp/maxExp or even make
+            // the entire polynomial zero:
+            L x(c);
+            x.transform([&c](Integer& i) {
+                EXPECT_FALSE(c.isZero());
+                i /= 2;
+            });
+            validate(x, c / 2);
+        }
+        {
+            // A transformation that uses the exponent:
+            L x(c), y;
+            x.transform([&c, &y](Integer& i, long exp) {
+                EXPECT_FALSE(c.isZero());
+                EXPECT_GE(exp, c.minExp());
+                EXPECT_LE(exp, c.maxExp());
+                if (exp == c.minExp() || exp == c.maxExp())
+                    EXPECT_NE(i, 0);
+
+                y.set(exp, i);
+                i /= 2;
+            });
+            validate(x, c / 2);
+            validate(y, c);
+        }
+    }
+}
+
+TEST_F(LaurentTest, extract) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+
+        L x(c);
+        std::vector<Integer> coeffs;
+        if (! c.isZero())
+            coeffs.resize(c.maxExp() - c.minExp() + 1);
+
+        std::move(x).extract([&c, &coeffs](Integer&& i, long exp) {
+            EXPECT_FALSE(c.isZero());
+            EXPECT_NE(i, 0);
+            EXPECT_GE(exp, c.minExp());
+            EXPECT_LE(exp, c.maxExp());
+            coeffs[exp - c.minExp()] = std::move(i);
+        });
+
+        EXPECT_TRUE(std::equal(c.begin(), c.end(),
+            coeffs.begin(), coeffs.end()));
+    }
+}
+
+template <regina::CppInteger Native>
+static void verifyNativeProduct(const L& poly, const Integer& scalar,
+        const L& product) {
+    SCOPED_TRACE_TYPE(Native);
+
+    Native native;
+    if (scalar >= std::numeric_limits<Native>::min() &&
+            scalar <= std::numeric_limits<Native>::max()) {
+        EXPECT_NO_THROW({ native = scalar.safeValue<Native>(); });
+    } else {
+        EXPECT_THROW({ scalar.safeValue<Native>(); }, regina::IntegerOverflow);
+        return;
+    }
+
+    validate(poly * native, product);
+    validate(L(poly) * native, product);
+    validate(native * poly, product);
+    validate(native * L(poly), product);
+    {
+        L x(poly);
+        validate(x *= native, product);
+    }
+}
+
+template <regina::CppInteger Native>
+static void verifyNativeQuotient(const L& poly, const Integer& scalar,
+        const std::optional<L>& quotient) {
+    SCOPED_TRACE_TYPE(Native);
+
+    Native native;
+    if (scalar >= std::numeric_limits<Native>::min() &&
+            scalar <= std::numeric_limits<Native>::max()) {
+        EXPECT_NO_THROW({ native = scalar.safeValue<Native>(); });
+    } else {
+        EXPECT_THROW({ scalar.safeValue<Native>(); }, regina::IntegerOverflow);
+        return;
+    }
+
+    if (quotient) {
+        validate(poly / native, *quotient);
+        validate(L(poly) / native, *quotient);
+        {
+            L x(poly);
+            validate(x /= native, *quotient);
+        }
+    } else {
+        #if 0 // For now, Laurent division requires a non-zero divisor.
+        EXPECT_THROW({ poly / native; }, regina::DivisionByZero);
+        EXPECT_THROW({ L(poly) / native; }, regina::DivisionByZero);
+        {
+            L x(poly);
+            EXPECT_THROW({ x /= native; }, regina::DivisionByZero);
+        }
+        #endif
+    }
+}
+
+template <typename Container>
+static void verifyScalarMultiplyDivide(const L& poly, const Integer& scalar,
+        const Container& cases) {
+    SCOPED_TRACE_REGINA(scalar);
+
+    const L product = poly * scalar;
+    if (poly.isZero() || scalar == 0) {
+        validateZero(product);
+    } else {
+        validate(product);
+        EXPECT_FALSE(product.isZero());
+        EXPECT_EQ(product.minExp(), poly.minExp());
+        EXPECT_EQ(product.maxExp(), poly.maxExp());
+        for (long i = poly.minExp(); i <= poly.maxExp(); ++i)
+            EXPECT_EQ(product[i], poly[i] * scalar);
+    }
+    validate(L(poly) * scalar, product);
+    validate(scalar * poly, product);
+    validate(scalar * L(poly), product);
+    {
+        L x(poly);
+        validate(x *= scalar, product);
+    }
+
+    verifyNativeProduct<int8_t>(poly, scalar, product);
+    verifyNativeProduct<int16_t>(poly, scalar, product);
+    verifyNativeProduct<int32_t>(poly, scalar, product);
+    verifyNativeProduct<int64_t>(poly, scalar, product);
+    #ifdef INT128_AVAILABLE
+    verifyNativeProduct<regina::Int128>(poly, scalar, product);
+    #endif
+
+    if (scalar.sign() >= 0) {
+        verifyNativeProduct<uint8_t>(poly, scalar, product);
+        verifyNativeProduct<uint16_t>(poly, scalar, product);
+        verifyNativeProduct<uint32_t>(poly, scalar, product);
+        verifyNativeProduct<uint64_t>(poly, scalar, product);
+        #ifdef INT128_AVAILABLE
+        verifyNativeProduct<regina::UInt128>(poly, scalar, product);
+        #endif
+    }
+
+    if (scalar == 0) {
+        #if 0 // For now, Laurent division requires a non-zero divisor.
+        EXPECT_THROW({ poly / scalar; }, regina::DivisionByZero);
+        EXPECT_THROW({ L(poly) / scalar; }, regina::DivisionByZero);
+        {
+            L x(poly);
+            EXPECT_THROW({ x /= scalar; }, regina::DivisionByZero);
+        }
+
+        verifyNativeQuotient<int8_t>(poly, scalar, {});
+        verifyNativeQuotient<int16_t>(poly, scalar, {});
+        verifyNativeQuotient<int32_t>(poly, scalar, {});
+        verifyNativeQuotient<int64_t>(poly, scalar, {});
+        #ifdef INT128_AVAILABLE
+        verifyNativeQuotient<regina::Int128>(poly, scalar, {});
+        #endif
+
+        verifyNativeQuotient<uint8_t>(poly, scalar, {});
+        verifyNativeQuotient<uint16_t>(poly, scalar, {});
+        verifyNativeQuotient<uint32_t>(poly, scalar, {});
+        verifyNativeQuotient<uint64_t>(poly, scalar, {});
+        #ifdef INT128_AVAILABLE
+        verifyNativeQuotient<regina::UInt128>(poly, scalar, {});
+        #endif
+        #endif
+    } else {
+        const L quotient = poly / scalar;
+        if (poly.isZero()) {
+            validateZero(quotient);
+        } else {
+            validate(quotient);
+            if (poly[poly.minExp()].abs() >= scalar.abs()) {
+                EXPECT_FALSE(quotient.isZero());
+                EXPECT_EQ(quotient.minExp(), poly.minExp());
+            } else {
+                if (! quotient.isZero())
+                    EXPECT_GT(quotient.minExp(), poly.minExp());
+            }
+            if (poly[poly.maxExp()].abs() >= scalar.abs()) {
+                EXPECT_FALSE(quotient.isZero());
+                EXPECT_EQ(quotient.maxExp(), poly.maxExp());
+            } else {
+                if (! quotient.isZero())
+                    EXPECT_LT(quotient.maxExp(), poly.maxExp());
+            }
+            for (long i = poly.minExp(); i <= poly.maxExp(); ++i)
+                EXPECT_EQ(quotient[i], poly[i] / scalar);
+        }
+        validate(L(poly) / scalar, quotient);
+        {
+            L x(poly);
+            validate(x /= scalar, quotient);
+        }
+
+        verifyNativeQuotient<int8_t>(poly, scalar, quotient);
+        verifyNativeQuotient<int16_t>(poly, scalar, quotient);
+        verifyNativeQuotient<int32_t>(poly, scalar, quotient);
+        verifyNativeQuotient<int64_t>(poly, scalar, quotient);
+        #ifdef INT128_AVAILABLE
+        verifyNativeQuotient<regina::Int128>(poly, scalar, quotient);
+        #endif
+
+        if (scalar.sign() >= 0) {
+            verifyNativeQuotient<uint8_t>(poly, scalar, quotient);
+            verifyNativeQuotient<uint16_t>(poly, scalar, quotient);
+            verifyNativeQuotient<uint32_t>(poly, scalar, quotient);
+            verifyNativeQuotient<uint64_t>(poly, scalar, quotient);
+            #ifdef INT128_AVAILABLE
+            verifyNativeQuotient<regina::UInt128>(poly, scalar, quotient);
+            #endif
+        }
+    }
+
+    // Verify the scalar version of addProduct() while we're here.
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        {
+            L x(c);
+            x.addProduct(poly, scalar);
+            validate(x, c + product);
+        }
+        {
+            L x(c);
+            x.addProduct(L(poly), scalar);
+            validate(x, c + product);
+        }
+    }
+
+    // Finally, test the scalar addProduct() when operating upon one's self.
+    {
+        L x(poly);
+        x.addProduct(x, scalar);
+        validate(x, poly + product);
+    }
+}
+
+TEST_F(LaurentTest, scalarMultiplyDivide) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+
+        for (int i = -3; i <= 3; ++i)
+            verifyScalarMultiplyDivide(c, i, cases);
+
+        // Run through boundaries and "midpoints" for {8,16,32,64,128}-bit ints:
+        Integer pow2 = 256; // 2^8
+        Integer halfPow2 = 128;
+        Integer quarterPow2 = 64;
+        for (int i = 0; i < 5; ++i) {
+            // pow2 = 2^bits = 2^{2^b} for some b
+            // halfPow2 = 2^(bits-1)
+            // quarterPow2 = 2^(bits-2)
+            for (int j = -1; j <= 1; ++j) {
+                verifyScalarMultiplyDivide(c, pow2 + j, cases);
+                verifyScalarMultiplyDivide(c, -pow2 + j, cases);
+                verifyScalarMultiplyDivide(c, halfPow2 + j, cases);
+                verifyScalarMultiplyDivide(c, -halfPow2 + j, cases);
+                verifyScalarMultiplyDivide(c, quarterPow2 + j, cases);
+                verifyScalarMultiplyDivide(c, -quarterPow2 + j, cases);
+            }
+            // Double the number of bits in pow2:
+            quarterPow2 *= pow2;
+            halfPow2 *= pow2;
+            pow2 *= pow2;
+        }
+
+        verifyScalarMultiplyDivide(c, bigInt, cases);
+        verifyScalarMultiplyDivide(c, -bigInt, cases);
+
+        // Test expected arithmetic properties:
+        validateZero(c * 0);
+        validate(c * 1, c);
+        validate(c * -1, -c);
+        validate(c * 2, c + c);
+
+        if (! c.isZero()) {
+            verifyScalarMultiplyDivide(c, c[c.minExp()], cases);
+            verifyScalarMultiplyDivide(c, c[c.maxExp()], cases);
+
+            L c0 = c / c[c.minExp()];
+            EXPECT_EQ(c0.minExp(), c.minExp());
+            EXPECT_EQ(c0[c0.minExp()], 1);
+
+            L c1 = c / c[c.maxExp()];
+            EXPECT_EQ(c1.maxExp(), c.maxExp());
+            EXPECT_EQ(c1[c1.maxExp()], 1);
+        }
+    }
+}
+
+TEST_F(LaurentTest, addSubtract) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        for (const L& d : cases) {
+            SCOPED_TRACE_REGINA(d);
+
+            const L sum = c + d;
+            if (sum.isZero()) {
+                validateZero(sum);
+                validate(-c, d);
+            } else if (c.isZero()) {
+                validate(sum, d);
+            } else if (d.isZero()) {
+                validate(sum, c);
+            } else {
+                validate(sum);
+                if (c.minExp() == d.minExp())
+                    EXPECT_GE(sum.minExp(), c.minExp());
+                else
+                    EXPECT_EQ(sum.minExp(), std::min(c.minExp(), d.minExp()));
+                if (c.maxExp() == d.maxExp())
+                    EXPECT_LE(sum.maxExp(), c.maxExp());
+                else
+                    EXPECT_EQ(sum.maxExp(), std::max(c.maxExp(), d.maxExp()));
+                for (long i = std::min(c.minExp(), d.minExp());
+                        i <= std::max(c.maxExp(), d.maxExp()); ++i)
+                    EXPECT_EQ(sum[i], c[i] + d[i]);
+            }
+            validate(c + L(d), sum);
+            validate(L(c) + d, sum);
+            validate(L(c) + L(d), sum);
+            {
+                L x(c);
+                validate(x += d, sum);
+            }
+            {
+                L x(c);
+                validate(x += L(d), sum);
+            }
+
+            const L diff = c - d;
+            if (diff.isZero()) {
+                validateZero(diff);
+                validate(c, d);
+            } else if (d.isZero()) {
+                validate(diff, c);
+            } else if (c.isZero()) {
+                validate(diff);
+                EXPECT_EQ(diff.minExp(), d.minExp());
+                EXPECT_EQ(diff.maxExp(), d.maxExp());
+                for (long i = d.minExp(); i <= d.maxExp(); ++i)
+                    EXPECT_EQ(diff[i], - d[i]);
+            } else {
+                validate(diff);
+                if (c.minExp() == d.minExp())
+                    EXPECT_GE(diff.minExp(), c.minExp());
+                else
+                    EXPECT_EQ(diff.minExp(), std::min(c.minExp(), d.minExp()));
+                if (c.maxExp() == d.maxExp())
+                    EXPECT_LE(diff.maxExp(), c.maxExp());
+                else
+                    EXPECT_EQ(diff.maxExp(), std::max(c.maxExp(), d.maxExp()));
+                for (long i = std::min(c.minExp(), d.minExp());
+                        i <= std::max(c.maxExp(), d.maxExp()); ++i)
+                    EXPECT_EQ(diff[i], c[i] - d[i]);
+            }
+            validate(c - L(d), diff);
+            validate(L(c) - d, diff);
+            validate(L(c) - L(d), diff);
+            {
+                L x(c);
+                validate(x -= d, diff);
+            }
+            {
+                L x(c);
+                validate(x -= L(d), diff);
+            }
+
+            // Test expected arithmetic properties:
+            validate((c + d) - d, c);
+            validate((c + d) - c, d);
+            validate(c - d, -(d - c));
+            validate((c - d) + d, c);
+            validate(-((c - d) - c), d);
+            validate(-(c - d) + c, d);
+            validate(c + (-d), c - d);
+            validate(c - (-d), c + d);
+        }
+
+        // Test operations upon one's self:
+        const L dbl = c * 2;
+        if (c.isZero()) {
+            validateZero(dbl);
+        } else {
+            validate(dbl);
+            EXPECT_FALSE(dbl.isZero());
+            EXPECT_EQ(dbl.minExp(), c.minExp());
+            EXPECT_EQ(dbl.maxExp(), c.maxExp());
+            for (long i = c.minExp(); i <= c.maxExp(); ++i)
+                EXPECT_EQ(dbl[i], c[i] * 2);
+        }
+        validate(c + c, dbl);
+        {
+            L x(c);
+            validate(x += x, dbl);
+        }
+        validateZero(c - c);
+        {
+            L x(c);
+            validateZero(x -= x);
+        }
+
+        // More expected arithmetic properties:
+        validate(c + zero, c);
+        validate(zero + c, c);
+        validate(c - zero, c);
+        validate(zero - c, -c);
+        validateZero(c + -c);
+    }
+}
+
+TEST_F(LaurentTest, multiply) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        for (const L& d : cases) {
+            SCOPED_TRACE_REGINA(d);
+
+            if (c.isZero() || d.isZero()) {
+                validateZero(c * d);
+                validateZero(c * L(d));
+                validateZero(L(c) * d);
+                validateZero(L(c) * L(d));
+                {
+                    L x(c);
+                    validateZero(x *= d);
+                }
+                {
+                    L x(c);
+                    validateZero(x *= L(d));
+                }
+            } else {
+                const L product = c * d;
+                validate(product);
+                EXPECT_FALSE(product.isZero());
+                EXPECT_EQ(product.minExp(), c.minExp() + d.minExp());
+                EXPECT_EQ(product.maxExp(), c.maxExp() + d.maxExp());
+                for (long i = product.minExp(); i <= product.maxExp(); ++i) {
+                    long cExp = std::max(c.minExp(), i - d.maxExp());
+                    long dExp = i - cExp;
+                    Integer coeff;
+                    while (cExp <= c.maxExp() && dExp >= d.minExp())
+                        coeff.addProduct(c[cExp++], d[dExp--]);
+                    EXPECT_EQ(product[i], coeff);
+                }
+
+                validate(c * L(d), product);
+                validate(L(c) * d, product);
+                validate(L(c) * L(d), product);
+                {
+                    L x(c);
+                    validate(x *= d, product);
+                }
+                {
+                    L x(c);
+                    validate(x *= L(d), product);
+                }
+
+                {
+                    L x(c);
+                    x.addProduct(d, d);
+                    validate(x, c + d * d);
+                }
+                {
+                    // Compute the expected result of c -> c + c * d:
+                    const L expect = c * (d + L(1));
+                    {
+                        L x(c);
+                        x.addProduct(x, d);
+                        validate(x, expect);
+                    }
+                    {
+                        L x(c);
+                        x.addProduct(d, x);
+                        validate(x, expect);
+                    }
+                }
+
+                // Test expected arithmetic properties:
+                validate(c * d, d * c);
+
+                // Verify that our different multiplication algorithms
+                // give the same results:
+                using PPA = regina::PolynomialProductAlgorithm;
+                using Array = regina::FixedArray<Integer>;
+
+                auto def = polynomialProduct<PPA::Default>(
+                    Array(c.begin(), c.end()),
+                    Array(d.begin(), d.end()));
+                auto classic = polynomialProduct<PPA::Classic>(
+                    Array(c.begin(), c.end()),
+                    Array(d.begin(), d.end()));
+                EXPECT_EQ(def, classic);
+
+                long cSpan = c.maxExp() - c.minExp();
+                long dSpan = d.maxExp() - d.minExp();
+                if (cSpan >= 1 && dSpan >= 1 &&
+                        (2 * cSpan <= dSpan || 2 * dSpan <= cSpan)) {
+                    EXPECT_THROW({
+                        polynomialProduct<PPA::Karatsuba>(
+                            Array(c.begin(), c.end()),
+                            Array(d.begin(), d.end()));
+                    }, regina::InvalidArgument);
+                } else {
+                    EXPECT_NO_THROW({
+                        auto karatsuba = polynomialProduct<PPA::Karatsuba>(
+                            Array(c.begin(), c.end()),
+                            Array(d.begin(), d.end()));
+                        EXPECT_EQ(def, karatsuba);
+                    });
+                }
+            }
+
+            for (const L& e : cases) {
+                SCOPED_TRACE_REGINA(e);
+                {
+                    L x(c);
+                    x.addProduct(d, e);
+                    validate(x, c + d * e);
+                }
+                {
+                    L x(c);
+                    x.addProduct(L(d), L(e));
+                    validate(x, c + d * e);
+                }
+            }
+        }
+
+        // Test operations upon one's self:
+        const L copy(c);
+        const L square = c * copy;
+        if (c.isZero()) {
+            validateZero(square);
+        } else {
+            validate(square);
+            EXPECT_FALSE(square.isZero());
+            EXPECT_EQ(square.minExp(), 2 * c.minExp());
+            EXPECT_EQ(square.maxExp(), 2 * c.maxExp());
+            for (long i = square.minExp(); i <= square.maxExp(); ++i) {
+                long lhsExp = std::max(c.minExp(), i - c.maxExp());
+                long rhsExp = i - lhsExp;
+                Integer coeff;
+                while (lhsExp <= c.maxExp() && rhsExp >= c.minExp())
+                    coeff.addProduct(c[lhsExp++], c[rhsExp--]);
+                EXPECT_EQ(square[i], coeff);
+            }
+        }
+        validate(c * c, square);
+        {
+            L x(c);
+            validate(x *= x, square);
+        }
+
+        {
+            L x(c);
+            x.addProduct(x, x);
+            validate(x, c + square);
+        }
+
+        // More expected arithmetic properties:
+        validate(c * one, c);
+        validate(one * c, c);
+        validate(c * minusOne, -c);
+        validate(minusOne * c, -c);
+        validate(c * x2, c.shifted(2));
+        validate(x2 * c, c.shifted(2));
+        validate(c * x5Inv, c.shifted(-5));
+        validate(x5Inv * c, c.shifted(-5));
     }
 }
 
 TEST_F(LaurentTest, ringConstants) {
     // Verify that the RingTraits constants looks correct.
-    EXPECT_EQ(regina::RingTraits<Laurent<Integer>>::zero.str(), "0");
-    EXPECT_EQ(regina::RingTraits<Laurent<Integer>>::one.str(), "1");
+    EXPECT_EQ(regina::RingTraits<L>::zero.str(), "0");
+    EXPECT_EQ(regina::RingTraits<L>::one.str(), "1");
+}
+
+TEST_F(LaurentTest, str) {
+    EXPECT_EQ(zero.str(), "0");
+    EXPECT_EQ(zero2.str(), "0");
+    EXPECT_EQ(zero3.str(), "0");
+    EXPECT_EQ(one.str(), "1");
+    EXPECT_EQ(two.str(), "2");
+    EXPECT_EQ(minusOne.str(), "-1");
+    EXPECT_EQ(x2.str(), "x^2");
+    EXPECT_EQ(x5Inv.str(), "x^-5");
+    EXPECT_EQ(a.str(), "x - 1 + x^-1");
+    EXPECT_EQ(b.str(), "x^2 - x + 1");
+    EXPECT_EQ(c.str(), "x^3 - x^2 + x");
+    EXPECT_EQ(d.str(), "x - 1 + x^-1 - x^-2");
+    EXPECT_EQ(e.str(), "2 x^7 - 2 x^6 + 4 x^5 + 2 x^4");
+    EXPECT_EQ(f.str(), "x^7 - x^3");
+    EXPECT_EQ(g.str(), "-3 x^21 + 2 x^20");
+
+    EXPECT_EQ(low.str(), "-4 x^-4 + 3 x^-5 - 2 x^-6 + x^-7");
+    EXPECT_EQ(lowish.str(), "4 x^-1 - 3 x^-2 + 2 x^-3 - x^-4");
+    EXPECT_EQ(mid.str(), "3 x - 2 + x^-1");
+    EXPECT_EQ(highish.str(), "4 x^4 - 3 x^3 - 2 x^2 + x");
+    EXPECT_EQ(high.str(), "-4 x^7 + 3 x^6 + 2 x^5 - x^4");
+
+    EXPECT_EQ(bigLow.str(),
+        "-" BIG4 " x^-4 + " BIG3 " x^-5 - " BIG2 " x^-6 + " BIG " x^-7");
+    EXPECT_EQ(bigLowish.str(),
+        BIG4 " x^-1 - " BIG3 " x^-2 + " BIG2 " x^-3 - " BIG " x^-4");
+    EXPECT_EQ(bigMid.str(),
+        BIG3 " x - " BIG2 " + " BIG " x^-1");
+    EXPECT_EQ(bigHighish.str(),
+        BIG4 " x^4 - " BIG3 " x^3 - " BIG2 " x^2 + " BIG " x");
+    EXPECT_EQ(bigHigh.str(),
+        "-" BIG4 " x^7 + " BIG3 " x^6 + " BIG2 " x^5 - " BIG " x^4");
+
+    EXPECT_EQ(long1.str(), "x^14 + x^13 + x^12 + x^11 + x^10 + x^9 + x^8 + "
+        "x^7 + x^6 + x^5 + x^4 + x^3 + x^2");
+    EXPECT_EQ(long2.str(), "x^13 - x^3");
+
+    EXPECT_EQ(paddedZero.str(), "0");
+    EXPECT_EQ(paddedConst.str(), "2");
+    EXPECT_EQ(paddedPower.str(), "x^2");
+    EXPECT_EQ(paddedPoly.str(), "x^3 - x^2 + x");
+}
+
+static void verifyUtf8(const L& poly, const char8_t* expect) {
+    EXPECT_EQ(poly.utf8(), std::string(reinterpret_cast<const char*>(expect)));
+}
+
+TEST_F(LaurentTest, utf8) {
+    // Here we directly use unicode superscripts and minus signs in the C++
+    // source code.
+    verifyUtf8(zero, u8"0");
+    verifyUtf8(zero2, u8"0");
+    verifyUtf8(zero3, u8"0");
+    verifyUtf8(one, u8"1");
+    verifyUtf8(two, u8"2");
+    verifyUtf8(minusOne, u8"−1");
+    verifyUtf8(x2, u8"x²");
+    verifyUtf8(x5Inv, u8"x⁻⁵");
+    verifyUtf8(a, u8"x − 1 + x⁻¹");
+    verifyUtf8(b, u8"x² − x + 1");
+    verifyUtf8(c, u8"x³ − x² + x");
+    verifyUtf8(d, u8"x − 1 + x⁻¹ − x⁻²");
+    verifyUtf8(e, u8"2 x⁷ − 2 x⁶ + 4 x⁵ + 2 x⁴");
+    verifyUtf8(f, u8"x⁷ − x³");
+    verifyUtf8(g, u8"−3 x²¹ + 2 x²⁰");
+
+    verifyUtf8(low, u8"−4 x⁻⁴ + 3 x⁻⁵ − 2 x⁻⁶ + x⁻⁷");
+    verifyUtf8(lowish, u8"4 x⁻¹ − 3 x⁻² + 2 x⁻³ − x⁻⁴");
+    verifyUtf8(mid, u8"3 x − 2 + x⁻¹");
+    verifyUtf8(highish, u8"4 x⁴ − 3 x³ − 2 x² + x");
+    verifyUtf8(high, u8"−4 x⁷ + 3 x⁶ + 2 x⁵ − x⁴");
+
+    verifyUtf8(bigLow,
+        u8"−" BIG4 " x⁻⁴ + " BIG3 " x⁻⁵ − " BIG2 " x⁻⁶ + " BIG " x⁻⁷");
+    verifyUtf8(bigLowish,
+        u8"" BIG4 " x⁻¹ − " BIG3 " x⁻² + " BIG2 " x⁻³ − " BIG " x⁻⁴");
+    verifyUtf8(bigMid,
+        u8"" BIG3 " x − " BIG2 " + " BIG " x⁻¹");
+    verifyUtf8(bigHighish,
+        u8"" BIG4 " x⁴ − " BIG3 " x³ − " BIG2 " x² + " BIG " x");
+    verifyUtf8(bigHigh,
+        u8"−" BIG4 " x⁷ + " BIG3 " x⁶ + " BIG2 " x⁵ − " BIG " x⁴");
+
+    verifyUtf8(long1, u8"x¹⁴ + x¹³ + x¹² + x¹¹ + x¹⁰ + x⁹ + x⁸ + "
+        "x⁷ + x⁶ + x⁵ + x⁴ + x³ + x²");
+    verifyUtf8(long2, u8"x¹³ − x³");
+
+    verifyUtf8(paddedZero, u8"0");
+    verifyUtf8(paddedConst, u8"2");
+    verifyUtf8(paddedPower, u8"x²");
+    verifyUtf8(paddedPoly, u8"x³ − x² + x");
 }
 
 TEST_F(LaurentTest, tightEncoding) {
-    TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(zero);
-    TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(zero2);
-    TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(zero3);
-    TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(one);
-    TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(two);
-    TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(x2);
-    TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(a);
-    TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(b);
-    TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(c);
-    TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(d);
-    TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(e);
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        TightEncodingTest<L>::verifyTightEncoding(c);
+    }
 }
+
+TEST_F(LaurentTest, swap) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        for (const L& d : cases) {
+            SCOPED_TRACE_REGINA(d);
+            {
+                L x(c);
+                L y(d);
+                x.swap(y);
+                validate(x, d);
+                validate(y, c);
+            }
+            {
+                L x(c);
+                L y(d);
+                swap(x, y);
+                validate(x, d);
+                validate(y, c);
+            }
+        }
+    }
+}
+

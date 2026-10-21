@@ -1,0 +1,444 @@
+
+/**************************************************************************
+ *                                                                        *
+ *  Regina - A Normal Surface Theory Calculator                           *
+ *  Computational Engine                                                  *
+ *                                                                        *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
+ *  For further details contact Ben Burton (bab@debian.org).              *
+ *                                                                        *
+ *  This program is free software; you can redistribute it and/or         *
+ *  modify it under the terms of the GNU General Public License as        *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  As an exception, when this program is distributed through (i) the     *
+ *  App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or     *
+ *  (iii) Google Play by Google Inc., then that store may impose any      *
+ *  digital rights management, device limits and/or redistribution        *
+ *  restrictions that are required by its terms of service.               *
+ *                                                                        *
+ *  This program is distributed in the hope that it will be useful, but   *
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
+ *  General Public License for more details.                              *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public License     *
+ *  along with this program. If not, see <https://www.gnu.org/licenses/>. *
+ *                                                                        *
+ **************************************************************************/
+
+#include "maths/matrix-impl.h"
+#include "maths/numbertheory.h"
+
+namespace regina {
+
+// MARK: - Template instantiations
+
+template size_t Matrix<Integer>::makeRowEchelon();
+template size_t Matrix<Integer>::makeColumnEchelon();
+template void Matrix<Integer>::makeRowBasis();
+template std::pair<Matrix<Integer>, Matrix<Integer>>
+    Matrix<Integer>::rowBasisAndOrthComp() const;
+template Matrix<Integer> Matrix<Integer>::inverse() &&;
+template void Matrix<Integer>::makeSmith();
+template std::array<Matrix<Integer>, 4>
+    Matrix<Integer>::makeSmithHafnerMcCurley();
+template std::array<Matrix<Integer>, 4> Matrix<Integer>::makeSmithMetrical();
+
+// MARK: - Basis and echelon form algorithms
+
+void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
+        const std::vector<size_t> &rowList) {
+    if (R.columns() != M.columns() || Ri.rows() != M.columns())
+        throw InvalidArgument("columnEchelonForm(M, R, Ri, rowList) expects "
+            "M.columns() == R.columns() == Ri.rows()");
+
+    size_t CR=0;
+    size_t CC=0;
+    // these are the indices of the current WORKING rows and columns
+    // respectively.
+    // thus the entries of M above CR will not change, and to the left of
+    // CC all that can happen is some reduction.
+
+    std::vector<size_t> rowNZlist; // in the current row, this is the
+                                   // list of column coordinates
+                                   // for the non-zero entries.
+
+    Integer u,v,a,b; // for column operations u,v,a,b represent a 2x2 matrix.
+    // the algorithm will think of itself as working top to bottom.
+    while ( (CR<rowList.size()) && (CC<M.columns())) {
+        // build rowNZlist
+        rowNZlist.clear();
+
+        for (size_t i=CC;i<M.columns();i++)
+            if (M.entry(rowList[CR],i) != 0)
+                rowNZlist.push_back(i);
+
+        // now the column operations
+        if (rowNZlist.size() == 0) {
+            // nothing to do.
+            CR++;
+        } else if (rowNZlist.size() == 1) {
+            // let's move this entry to be the leading entry.
+            if (rowNZlist[0]==CC) {
+                // step 1: ensure entry(CR,CC) is positive.
+                if (M.entry(rowList[CR],CC)<0) {
+                    M.negateCol(CC);
+                    R.negateCol(CC);
+                    Ri.negateRow(CC);
+                }
+                // step 2: reduce entries(CR,i) for i<CC
+                for (size_t i=0;i<CC;i++) {
+                    // write entry(CR,i) as d*entry(CR,CC) + r.
+                    auto [d, r] = M.entry(rowList[CR],i).divisionAlg(
+                        M.entry(rowList[CR],CC) );
+                    // reduce column i: subtract d * column CC from column i.
+                    M.addCol(CC, i, -d);
+                    R.addCol(CC, i, -d);
+                    // corresponding update for Ri: add d * row i to row CC
+                    Ri.addRow(i, CC, d);
+                }
+                // done, move on.
+                CC++;
+                CR++;
+            } else {
+                M.swapCols(CC, rowNZlist[0]);
+                R.swapCols(CC, rowNZlist[0]);
+                Ri.swapRows(CC, rowNZlist[0]);
+            }
+        } else {
+            // there is at least 2 non-zero entries to deal with. we go
+            // through them, one by one, a pair at a time.
+            while (rowNZlist.size()>1) {
+                // do column reduction on columns rowNZlist[0] and rowNZlist[1]
+                // first we need to find the approp modification matrix.
+                // This will be the matrix ( u -b ) where ua+vb = 1. We get
+                //                         ( v a  )
+                // a and b from entry(CR, r[0]) and entry(CR, r[1])
+                // by dividing by their GCD, found with
+                // rowNZlist[0].gcdWithCoeffs(rowNZlist[1],u,v)
+                Integer gcd = M.entry(rowList[CR], rowNZlist[0]).gcdWithCoeffs(
+                    M.entry(rowList[CR], rowNZlist[1]), u,v);
+                a = M.entry(rowList[CR], rowNZlist[0]).divExact(gcd);
+                b = M.entry(rowList[CR], rowNZlist[1]).divExact(gcd);
+                // so multiplication on the right by the above matrix
+                // corresponds to replacing column r[0] by u r[0] + v r[1]
+                // and column r[1] by -b r[0] + a r[1].
+                M.combCols(rowNZlist[0], rowNZlist[1], u, v, -b, a);
+                R.combCols(rowNZlist[0], rowNZlist[1], u, v, -b, a);
+                Ri.combRows(rowNZlist[0], rowNZlist[1], a, b, -v, u);
+                // modify rowNZlist by deleting the entry corresponding to
+                // rowNZlist[1]
+                rowNZlist.erase( rowNZlist.begin()+1 );
+            }
+        }
+    }
+}
+
+// MARK: - Other algorithms
+
+MatrixInt preImageOfLattice(const MatrixInt& hom,
+        const std::vector<Integer>& L) {
+    if (L.size() != hom.rows())
+        throw InvalidArgument("preImageOfLattice(hom, sublattice) expects "
+            "the length of sublattice to match the number of rows in hom");
+
+    // there are two main steps to this algorithm.
+    // 1) find a basis for the domain which splits into a) vectors sent to the
+    //    complement of the primitive subspace generated by the range lattice
+    //    and b) a basis of vectors sent to the primitive subspace generated
+    //    by the range lattice.
+    // 2) modify the basis (b) by column ops to get the preimage of the lattice.
+    // step (1) is an application of the columnEchelonForm
+    // step (2) starts with another application of columnEchelonForm, but then
+    // it finishes with a variation on it...
+
+    MatrixInt basis = MatrixInt::identity(hom.columns());
+    MatrixInt basisi = MatrixInt::identity(hom.columns());
+    // and we proceed to modify it solely via column operations.
+    // one for every column operation performed on homModL
+    MatrixInt homModL(hom);
+
+    // set up two lists: the coordinates that correspond to free generators
+    // of the range and coordinates corresponding to torsion generators.
+
+    // these lists need to be built from L
+    std::vector<size_t> freeList;
+    std::vector<size_t> torList;
+    for (size_t i=0;i<L.size();i++)
+        if (L[i]==0)
+            freeList.push_back(i);
+        else
+            torList.push_back(i);
+
+    // so first put the free image part of it in column echelon form
+
+    columnEchelonForm( homModL, basis, basisi, freeList );
+
+    std::vector<size_t> torCol;
+    bool zeroCol;
+
+    for (size_t i=0; i<homModL.columns(); i++) {
+        zeroCol=true;
+        for (auto pos : freeList)
+            if (homModL.entry( pos, i) != 0)
+                zeroCol=false;
+        if (zeroCol)
+            torCol.push_back(i);
+    }
+
+    // set up a new matrix consisting of columns being sent to the primitive
+    // subspace generated by the torsion lattice.
+
+    MatrixInt tHom( homModL.rows(), torCol.size() );
+    MatrixInt tBasis( basis.rows(), torCol.size() ); // this will be the
+                                                     // eventual retval.
+    MatrixInt dummy( torCol.size(), 0 ); // needed when we call
+    // columnEchelonForm. choosing it to have 0 columns speeds up
+    // the algorithm.
+
+    for (size_t i=0;i<tHom.rows();i++)
+        for (size_t j=0;j<tHom.columns();j++)
+            tHom.entry(i,j) = homModL.entry(i, torCol[j]);
+
+    for (size_t i=0;i<basis.rows();i++)
+        for (size_t j=0;j<torCol.size();j++)
+            tBasis.entry(i,j) = basis.entry(i, torCol[j]);
+
+    columnEchelonForm( tHom, tBasis, dummy, torList );
+
+    // so now we have a primitive collection of vectors being sent to the
+    // primitive subspace generated by the torsion lattice in the target.
+    // The idea is to run through the rows, for each non-zero row, through
+    // a basis change we can ensure there is at most one non-zero entry.
+    // multiply this column by the smallest factor so that it is in
+    // the torsion lattice, repeat. etc.
+
+    size_t CR=0; // current row under consideration. The actual row index
+    // will of course be torList[CR] since all other rows are already zero.
+
+    std::vector<size_t> rowNZlist; // in the current row, this is the list
+    // of column coordinates for the non-zero entries.
+
+    Integer d,r; // given two Integers a and b, we will represent
+    // a/b by d and a % b by r in the algorithm.
+    Integer u,v,gcd, a,b; // for column operations u,v,a,b represent
+    // a 2x2 matrix.
+    Integer tmp;
+
+    while (CR<torList.size()) {
+        // build rowNZlist
+        rowNZlist.clear();
+
+        for (size_t i=0;i<tHom.columns();i++)
+            if (tHom.entry(torList[CR],i) != 0)
+                rowNZlist.push_back(i);
+        // okay, so now we have a list of non-zero entries.
+        // case 1: rowNZlist.size()==0, increment CR, continue;
+
+        if (rowNZlist.empty()) {
+            CR++;
+            continue;
+        }
+        // case 2: rowNZlist.size()==1 multiply column only if neccessary,
+        // increment CR, continue;
+
+        if (rowNZlist.size()==1) {
+            // check to see if tHom.entry(torList[CR], rowNZlist[0]) %
+            // L[torList[CR]] == 0 if not, find smallest positive integer
+            // s.t. when multiplied by it, above becomes true.
+            gcd = tHom.entry(torList[CR], rowNZlist[0]).gcd( L[torList[CR]] );
+            d = L[torList[CR]].divExact(gcd);
+            // multiply column  rowNZlist[0] of tHom by d.
+            for (auto pos : torList)
+                tHom.entry( pos, rowNZlist[0] ) *= d;
+            // corresponding operation on tBasis.
+            for (size_t i=0;i<tBasis.rows();i++)
+                tBasis.entry( i, rowNZlist[0] ) *= d;
+            // done.
+            CR++;
+            continue;
+        }
+        // case 3: rowNZlist.size()>1.row ops to reduce rowNZlist.size().
+        // then continue
+        while (rowNZlist.size()>1) {
+            // do column op on columns rowNZlist[0] and rowNZlist[1]
+            // first we need to find the approp modification matrix. This will
+            // be the matrix ( u -b ) where ua+vb = 1. We get a and b from
+            //               ( v a  ) from entry(torList[CR], r[0]) and
+            // entry(torlist[CR], r[1]) by dividing by their GCD, found with
+            // rowNZlist[0].gcdWithCoeffs(rowNZlist[1],u,v)
+            gcd = tHom.entry(torList[CR], rowNZlist[0]).gcdWithCoeffs(
+                        tHom.entry(torList[CR], rowNZlist[1]), u,v);
+            a = tHom.entry(torList[CR], rowNZlist[0]).divExact(gcd);
+            b = tHom.entry(torList[CR], rowNZlist[1]).divExact(gcd);
+            // so multiplication on the right by the above matrix corresponds
+            // to replacing column r[0] by u r[0] + v r[1] and column r[1] by
+            // -b r[0] + a r[1].
+            for (auto pos : torList) {
+                tmp = u * tHom.entry( pos, rowNZlist[0] ) +
+                    v * tHom.entry( pos, rowNZlist[1] );
+                tHom.entry( pos,rowNZlist[1]) =
+                    a * tHom.entry( pos, rowNZlist[1]) -
+                    b * tHom.entry( pos, rowNZlist[0]);
+                tHom.entry( pos,rowNZlist[0]) = tmp;
+            }
+            // modify tBasis
+            for (size_t i=0;i<tBasis.rows();i++) {
+                tmp = u * tBasis.entry( i, rowNZlist[0] ) +
+                    v * tBasis.entry(i, rowNZlist[1] );
+                tBasis.entry(i,rowNZlist[1]) =
+                    a * tBasis.entry( i, rowNZlist[1]) -
+                    b * tBasis.entry( i, rowNZlist[0]);
+                tBasis.entry(i,rowNZlist[0]) = tmp;
+            }
+            // now rowNZlist[1] entry is zero, remove it from the list.
+            rowNZlist.erase( rowNZlist.begin()+1 );
+        }
+    }
+    return tBasis;
+}
+
+// Lemma 1: [a b | c d] representing an element of End(Z_n x Z_{mn}) is in
+//  Aut(Z_n x Z_{mn}) if and only if dA-bc is a unit of Z_{mn} for some lift
+//  A \in Z_{mn} of a \in Z_n
+//
+//  You can get an explicit formula for the inverse, basically it boils down
+//  to a comparison with the Z_n^2 case, and the observation that
+//  Z_{mn} --> Z_n is surjective on units.
+
+// The algorithm:
+//
+//  Step 1: reduce all entries mod p_i where i is the row index.
+//  Step 2: Consider the bottom row of A.  Consider a group of columns for which
+//          they all share the same p_i. standard Gaussian elimination works to
+//          put zeros in all but one entry of this row.  Potential problem here
+//          the 1x1 case where the entry is a unit mod p_1
+//  Step 3: Now we are in the situation where in this row, any two non-zero
+//          entries have distinct p_i's, where now i is the column index.
+//          Let them be in columns i and n respectively.
+//          Let l_1a_{ni} + l_2a_{nn} = gcd(a_{ni},a_{nn})=g,
+//          consider matrix [ v_n l_1 | -v_i l_2 ] where
+//          v_n = a_{nn}/g and v_i=a_{ni}/g.  This is a valid
+//          column operation by Lemma 1 and some congruence munching.
+//          Apply, this reduces this bottom row to the point where it has only
+//          one non-zero entry and it is a unit mod the relevant p_i,
+//          so we can multiply by its inverse
+//  Step 4: repeat inductively to square submatrix above and to the left of the
+//          nn entry.  This results in an upper diagonal matrix.
+//          Reapply step 1 gives all 1's down diagonal.
+//  Step 5: row ops to convert to identity.
+// *Step 6: keep track of all the corresponding matrices, put together to
+//          assemble inverse. Notice it's all standard Gaussian elimination,
+//          just done in a funny order and with some modular arithmatic
+//          stuffed in there.
+MatrixInt torsionAutInverse(const MatrixInt& input,
+        const std::vector<Integer> &invF) {
+    if (input.rows() != input.columns())
+        throw InvalidArgument("torsionAutInverse() expects a square matrix");
+    if (invF.size() != input.rows())
+        throw InvalidArgument("torsionAutInverse(input, invF) expects "
+            "the length of invF to match the side length of input");
+
+    // inductive step begins right away. Start at bottom row.
+    MatrixInt workMat( input );
+    MatrixInt colOps( input.rows(), input.columns() );
+    colOps.makeIdentity();
+
+    size_t wRow = input.rows();
+    while (wRow > 0) {
+        wRow--;
+        // step 1 modular reduction on the current row. And find last non-zero
+        // entry in this row up to wRow column
+        size_t pivCol=0;
+        for (size_t i=0; i<=wRow; i++) {
+            auto [Q, R] = workMat.entry(wRow, i).divisionAlg(invF[wRow]);
+            workMat.entry(wRow, i) = R;
+            if (R!=0) pivCol=i;
+        } // now pivCol is the last non-zero entry in the 0..wRow square smatrix
+
+        // Step 2: transpose pivCol and column wRow
+        if (wRow != pivCol)
+            for (size_t i=0; i<workMat.rows(); i++) {
+                workMat.entry(i, wRow).swap(workMat.entry(i, pivCol));
+                colOps.entry(i, wRow).swap(colOps.entry(i, pivCol));
+            }
+        pivCol = wRow;
+
+        // Step 3 Gauss eliminate whatever can be done. Start at rightmost
+        //  column (pivCol) and work to the left
+        size_t wCol = pivCol;
+        while (wCol > 0) {
+            wCol--;
+            Integer g, l1, l2;
+            g = workMat.entry( wRow, wCol ).gcdWithCoeffs(
+                               workMat.entry(wRow, pivCol), l1, l2 );
+            Integer u1, u2;
+            u1 = workMat.entry(wRow, wCol).divExact(g);
+            u2 = workMat.entry(wRow, pivCol).divExact(g);
+            // u1 l1 + u2 l2 = 1
+            // [ u2 l1 | -u1 l2 ] is column op matrix for wCol and pivCol
+            for (size_t i=0; i<workMat.rows(); i++) {
+                // wCol -> u2 wCol - u1 pivCol, pivCol -> l1 wCol + l2 pivCol
+                Integer W(workMat.entry(i, wCol)), P(workMat.entry(i, pivCol));
+                workMat.entry(i, wCol) = u2*W - u1*P;
+                workMat.entry(i, pivCol) = l1*W + l2*P;
+                W = colOps.entry(i, wCol);
+                P = colOps.entry(i, pivCol);
+                colOps.entry(i, wCol) = u2*W - u1*P;
+                colOps.entry(i, pivCol) = l1*W + l2*P;
+            }
+        }
+        // now workMat.entry(wRow, pivCol) is a unit mod invF[pivCol],
+        //  so find its inverse
+        Integer g, a1, a2;
+        g= workMat.entry( wRow, pivCol ).gcdWithCoeffs( invF[pivCol], a1, a2 );
+        // a1 represents this multiplicative inverse so multiply column by it.
+        for (size_t i=0; i<workMat.rows(); i++) {
+            colOps.entry( i, pivCol ) *= a1;
+            workMat.entry( i, pivCol ) *= a1;
+        }
+
+        // step 4 mod reduce the only entry left,
+        //  recurse back to step 1 on the next row up.
+        auto [Q, R] = workMat.entry(wRow, pivCol).divisionAlg(invF[wRow]);
+        workMat.entry(wRow, pivCol) = R;
+        // so we should have 1's down the diagonal now as long
+        //  as I haven't screwed up.
+    }
+
+    MatrixInt rowOps( input.rows(), input.columns() );
+    rowOps.makeIdentity();
+
+    // step 5 upper triang -> identity.  Use row i to kill i-th entry of row j.
+    for (size_t i=1; i<workMat.columns(); i++)
+        for (size_t j=0; j<i; j++) {
+            Integer X(workMat.entry(j, i));
+            // now subtract X times row i from row j in both
+            // workMat and retval. I guess we could eventually
+            // avoid the ops on workMat since it won't affect
+            // the return value but for debugging purposes we'll
+            // keep it for now.
+            for (size_t k=0; k<workMat.columns(); k++) {
+                rowOps.entry(j, k) -= X*rowOps.entry(i, k);
+                workMat.entry(j, k) -= X*workMat.entry(i, k);
+            }
+        }
+
+    MatrixInt retval( input.rows(), input.columns() );
+    for (size_t i=0; i<colOps.rows(); i++)
+        for (size_t j=0; j<rowOps.columns(); j++) {
+            for (size_t k=0; k<colOps.columns(); k++)
+                retval.entry(i,j) += colOps.entry(i,k)*rowOps.entry(k,j);
+            retval.entry(i,j) %= invF[i];
+            if (retval.entry(i,j) < 0)
+                retval.entry(i,j) += invF[i];
+        }
+
+    // done
+    return retval;
+}
+
+} // namespace regina
+

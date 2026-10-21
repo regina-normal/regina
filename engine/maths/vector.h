@@ -275,6 +275,56 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
             return elts_[index];
         }
         /**
+         * Returns the first element of this vector.
+         * A constant reference to the element is returned; the element may
+         * not be altered.
+         *
+         * \pre This vector is non-empty.
+         *
+         * \return the first element.
+         */
+        inline const T& front() const {
+            return *elts_;
+        }
+        /**
+         * Gives write access to the first element of this vector.
+         *
+         * \pre This vector is non-empty.
+         *
+         * \nopython In Python, front() and back() are read-only.  To set the
+         * first or last element, use the syntax `vector[index] = value`.
+         *
+         * \return a reference to the first element.
+         */
+        inline T& front() {
+            return *elts_;
+        }
+        /**
+         * Returns the last element of this vector.
+         * A constant reference to the element is returned; the element may
+         * not be altered.
+         *
+         * \pre This vector is non-empty.
+         *
+         * \return the last element.
+         */
+        inline const T& back() const {
+            return *(end_ - 1);
+        }
+        /**
+         * Gives write access to the last element of this vector.
+         *
+         * \pre This vector is non-empty.
+         *
+         * \nopython In Python, front() and back() are read-only.  To set the
+         * first or last element, use the syntax `vector[index] = value`.
+         *
+         * \return a reference to the last element.
+         */
+        inline T& back() {
+            return *(end_ - 1);
+        }
+        /**
          * Returns a C++ non-const iterator pointing to the first element of
          * this vector.
          *
@@ -552,8 +602,13 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
 
             const T* e = elts_;
             const T* o = other.elts_;
-            for ( ; e < end_; ++e, ++o)
-                ans += (*e) * (*o);
+            if constexpr (HasAddProduct<T>) {
+                for ( ; e < end_; ++e, ++o)
+                    ans.addProduct(*e, *o);
+            } else {
+                for ( ; e < end_; ++e, ++o)
+                    ans += (*e) * (*o);
+            }
 
             return ans;
         }
@@ -561,8 +616,7 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * Negates every element of this vector.
          */
         inline void negate() {
-            if constexpr (ReginaInteger<T> ||
-                    std::is_same_v<T, regina::Rational>) {
+            if constexpr (Negatable<T>) {
                 for (T* e = elts_; e < end_; ++e)
                     e->negate();
             } else {
@@ -578,8 +632,13 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          */
         inline T norm() const {
             T ans(0);
-            for (const T* e = elts_; e < end_; ++e)
-                ans += (*e) * (*e);
+            if constexpr (HasAddProduct<T>) {
+                for (const T* e = elts_; e < end_; ++e)
+                    ans.addProduct(*e, *e);
+            } else {
+                for (const T* e = elts_; e < end_; ++e)
+                    ans += (*e) * (*e);
+            }
             return ans;
         }
         /**
@@ -617,8 +676,13 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
             }
             T* e = elts_;
             const T* o = other.elts_;
-            for ( ; e < end_; ++e, ++o)
-                *e += *o * multiple;
+            if constexpr (HasAddProduct<T>) {
+                for ( ; e < end_; ++e, ++o)
+                    e->addProduct(*o, multiple);
+            } else {
+                for ( ; e < end_; ++e, ++o)
+                    *e += *o * multiple;
+            }
         }
         /**
          * Subtracts the given multiple of the given vector to this vector.
@@ -734,6 +798,9 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          *
          * \return the integer by which this vector was divided (i.e.,
          * the gcd of its original elements).  This will be strictly positive.
+         * If all of the elements of this vector are zero and/or infinity
+         * (or if this vector has no elements at all), then this return value
+         * will be 1.
          */
         T scaleDown() requires ReginaInteger<T> {
             T gcd; // Initialised to 0.

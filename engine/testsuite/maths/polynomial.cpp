@@ -159,6 +159,24 @@ class PolynomialTest : public testing::Test {
             }
         }
 
+        template <typename T, regina::CppInteger U>
+        void verifyMult(const Polynomial<T>& x, U y,
+                std::initializer_list<T> coeffs) {
+            SCOPED_TRACE_REGINA(x);
+            SCOPED_TRACE_INTEGER(y);
+
+            verifyEqual(x * y, coeffs);
+            verifyEqual((x + zero) * y, coeffs);
+            verifyEqual(y * x, coeffs);
+            verifyEqual(y * (x + zero), coeffs);
+            {
+                Polynomial<T> z(x);
+                verifyEqual(z *= y, coeffs);
+            }
+
+            verifyMult(x, T(y), coeffs);
+        }
+
         template <typename T>
         void verifyDiv(const Polynomial<T>& x, const T& y,
                 std::initializer_list<T> coeffs) {
@@ -171,6 +189,22 @@ class PolynomialTest : public testing::Test {
                 Polynomial<T> z(x);
                 verifyEqual(z /= y, coeffs);
             }
+        }
+
+        template <typename T, regina::CppInteger U>
+        void verifyDiv(const Polynomial<T>& x, U y,
+                std::initializer_list<T> coeffs) {
+            SCOPED_TRACE_REGINA(x);
+            SCOPED_TRACE_INTEGER(y);
+
+            verifyEqual(x / y, coeffs);
+            verifyEqual((x + zero) / y, coeffs);
+            {
+                Polynomial<T> z(x);
+                verifyEqual(z /= y, coeffs);
+            }
+
+            verifyDiv(x, T(y), coeffs);
         }
 
         template <typename T>

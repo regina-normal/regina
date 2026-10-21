@@ -143,8 +143,8 @@ search, or have tighter control over multithreading.
 If next() does return ``True`` because it found a solution, you can
 extract details of the solution directly from this enumeration object:
 for instance, you can dump the type vector using dumpTypes(), or you
-can reconstruct the full taut angle structure using buildStructure()
-and perform some other operations upon it.
+can reconstruct the full taut angle structure using
+buildTautStructure() and perform some other operations upon it.
 
 An optional progress tracker may be passed. If so, this routine will
 update the percentage progress and poll for cancellation requests. It
@@ -200,7 +200,7 @@ For each taut angle structure that is found, this routine will call
 Your action can extract details of the solution directly from the
 enumeration object: for instance, it can dump the type vector using
 dumpTypes(), or it can reconstruct the full taut angle structure using
-buildStructure() and perform some other operations upon it.
+buildTautStructure() and perform some other operations upon it.
 
 The usual way of using this routine is to construct an TautEnumeration
 object and then immediately call run(). However, if you prefer, you
@@ -918,12 +918,12 @@ of tetrahedra in the underlying triangulation.
   location of the two π angles in the *i*th tetrahedron.
 
 In the original Algorithmica paper, we choose types in the order
-type_[0], type_[1] and so on, working from the root of the tree down
-to the leaves. Here we support a more flexible system: there is an
-internal permutation *typeOrder_*, and we choose types in the order
-type_[typeOrder_[0]], type_[typeOrder_[1]] and so on. This permutation
-may mix quadrilateral and triangle processing, and may even change as
-the algorithm runs.
+``type_[0]``, ``type_[1]`` and so on, working from the root of the
+tree down to the leaves. Here we support a more flexible system: there
+is an internal permutation *typeOrder_*, and we choose types in the
+order ``type_[typeOrder_[0]]``, ``type_[typeOrder_[1]]`` and so on.
+This permutation may mix quadrilateral and triangle processing, and
+may even change as the algorithm runs.
 
 This class can also support octagon types in almost normal surfaces.
 However, we still do our linear programming in standard or
@@ -996,20 +996,17 @@ Template parameter ``IntType``:
 
 // Docstring regina::python::doc::TreeTraversal::buildStructure
 static constexpr const char buildStructure[] =
-R"doc(Reconstructs the full taut angle structure that is represented by the
-type vector at the current stage of the search. This routine is for
-use only with taut angle structures, not normal or almost normal
-surfaces.
+R"doc(Deprecated routine that reconstructs the full taut angle structure
+represented by the type vector at the current stage of the search.
 
-There will always be a unique taut angle structure corresponding to
-this type vector (this follows from the preconditions below).
+.. deprecated::
+    This routine has been renamed to buildTautStructure(), to
+    emphasise that it is for use with _taut_ angle structures only.
+    See buildTautStructure() for further details.
 
 Precondition:
     This tree traversal is at a point in the search where it has found
-    a feasible solution that represents a taut angle structure. This
-    condition is always true after TautEnumeration::next() returns
-    ``True``, or any time that TautEnumeration::run() calls its
-    callback function.
+    a feasible solution that represents a taut angle structure.
 
 Precondition:
     We are working with angle structure coordinates. This will be
@@ -1060,6 +1057,36 @@ Exception ``FailedPrecondition``:
 Returns:
     a normal surface that has been found at the current stage of the
     search.)doc";
+
+// Docstring regina::python::doc::TreeTraversal::buildTautStructure
+static constexpr const char buildTautStructure[] =
+R"doc(Reconstructs the full taut angle structure that is represented by the
+type vector at the current stage of the search. This routine is for
+use only with taut angle structures, not normal or almost normal
+surfaces.
+
+There will always be a unique taut angle structure corresponding to
+this type vector (this follows from the preconditions below).
+
+Precondition:
+    This tree traversal is at a point in the search where it has found
+    a feasible solution that represents a taut angle structure. This
+    condition is always true after TautEnumeration::next() returns
+    ``True``, or any time that TautEnumeration::run() calls its
+    callback function.
+
+Precondition:
+    We are working with angle structure coordinates. This will be
+    checked (see the exception details below).
+
+Exception ``FailedPrecondition``:
+    We are not working with angle structure coordinates (i.e., the
+    coordinate system passed to the TreeTraversal constructor was not
+    NormalCoords::Angle).
+
+Returns:
+    the taut angle structure that has been found at the current stage
+    of the search.)doc";
 
 // Docstring regina::python::doc::TreeTraversal::supported
 static constexpr const char supported[] =

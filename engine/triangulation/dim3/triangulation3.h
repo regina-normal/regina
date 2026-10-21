@@ -4075,9 +4075,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * the new solid torus should cut the edge `boundary->edge(2)`.
          * \param boundary the boundary component to fill.  If the triangulation
          * has precisely one boundary component then this may be `null`.
-         * \return `true` if the boundary component was filled successfully,
-         * or `false` if one of the required conditions as described
-         * above is not satisfied.
          */
         void fillTorus(size_t cuts0, size_t cuts1, size_t cuts2,
             BoundaryComponent<3>* boundary = nullptr);
@@ -4132,9 +4129,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * the new solid torus should cut the edge \a edge1.
          * \param cuts2 the number of times that the meridional curve of
          * the new solid torus should cut the edge \a edge2.
-         * \return `true` if the boundary component was filled successfully,
-         * or `false` if one of the required conditions as described
-         * above is not satisfied.
          */
         void fillTorus(Edge<3>* edge0, Edge<3>* edge1, Edge<3>* edge2,
             size_t cuts0, size_t cuts1, size_t cuts2);

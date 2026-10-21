@@ -37,11 +37,11 @@
 #include "enumerate/hilbertprimal.h"
 #include "enumerate/treetraversal.h"
 #include "libnormaliz/cone.h"
-#include "maths/matrixops.h"
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"
 #include "surface/normalsurfaces.h"
 #include "triangulation/dim3.h"
+#include "utilities/fixedarray.h"
 
 namespace regina {
 
@@ -344,19 +344,18 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
             return;
     }
 
+    // Remove redundant matching equations:
+    eqns.makeRowBasis();
+
     NormalEncoding enc(list_->coords_);
 
     size_t i, j;
-    Integer tmp;
-
-    // The rank of the matching equation matrix:
-    size_t rank = rowBasis(eqns);
 
     // The maximum entry in the matching equation matrix:
     Integer maxEqnEntry = 0;
-    for (i = 0; i < rank; ++i)
+    for (i = 0; i < eqns.rows(); ++i)
         for (j = 0; j < eqns.columns(); ++j) {
-            tmp = eqns.entry(i, j).abs();
+            Integer tmp = eqns.entry(i, j).abs();
             if (tmp > maxEqnEntry)
                 maxEqnEntry = tmp;
         }
@@ -370,8 +369,8 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
     // the octagon column will be the sum of two original columns):
     Integer maxOrigColSum = 0;
     for (i = 0; i < eqns.columns(); ++i) {
-        tmp = 0;
-        for (j = 0; j < rank; ++j)
+        Integer tmp = 0;
+        for (j = 0; j < eqns.rows(); ++j)
             tmp += Integer(eqns.entry(j, i).abs());
         if (tmp > maxOrigColSum)
             maxOrigColSum = tmp;
@@ -381,16 +380,17 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
 
     // The square of the Hadamard bound for the original tableaux:
     Integer hadamardSquare = 1;
-    auto* colNorm = new Integer[eqns.columns()];
-    for (i = 0; i < eqns.columns(); ++i) {
-        colNorm[i] = 0;
-        for (j = 0; j < rank; ++j)
-            colNorm[i] += Integer(eqns.entry(j, i) * eqns.entry(j, i));
+    {
+        FixedArray<Integer> colNorm(eqns.columns()); // initialised to zeroes
+        for (i = 0; i < eqns.columns(); ++i)
+            for (j = 0; j < eqns.rows(); ++j)
+                colNorm[i].addProduct(eqns.entry(j, i), eqns.entry(j, i));
+        std::sort(colNorm.begin(), colNorm.end());
+        // This loop relies on the fact that the equations have been made
+        // linearly independent, and therefore eqns.rows() ≤ eqns.columns().
+        for (i = 0; i < eqns.rows(); ++i)
+            hadamardSquare *= std::move(colNorm[eqns.columns() - 1 - i]);
     }
-    std::sort(colNorm, colNorm + eqns.columns());
-    for (i = 0; i < rank; ++i)
-        hadamardSquare *= colNorm[eqns.columns() - 1 - i];
-    delete[] colNorm;
 
     if (enc.storesOctagons()) {
         // The octagon column is the sum of two quadrilateral columns.
@@ -399,11 +399,11 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
         hadamardSquare *= 4;
     }
 
-    // The maximum entry in the tableaux, at any stage of the algorithm,
-    // is hadamard * maxOrigColSum.  Call this X.
+    // The maximum entry in the tableaux, at any stage of the algorithm, is
+    // hadamard * maxOrigColSum.  Call this X.
 
-    // The maximum entry on the RHS, at any stage of the algorithm,
-    // is hadamard * rank * maxOrigRHS.  Call this Y.
+    // The maximum entry on the RHS, at any stage of the algorithm, is
+    // hadamard * rank * maxOrigRHS (where rank == eqns.rows().  Call this Y.
 
     // Assume nTetrahedra >= 2, since with 1 tetrahedron, all enumerations
     // easily fit into small native integers.
@@ -421,7 +421,7 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
     Integer worst = hadamardSquare;
     worst *= 2;
     worst *= maxOrigColSum;
-    worst *= rank;
+    worst *= eqns.rows();
     worst *= maxOrigRHS;
 
     // Bridge builders add safety margins, and we can add one too.
@@ -620,16 +620,16 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
     if (tracker_)
         tracker_->newStage("Enumerating Hilbert basis of full cone", 0.8);
 
-    // NOTE: Calling rowBasis() will change the matching equation matrix.
+    // NOTE: Calling makeRowBasis() will change the matching equation matrix.
     // This is okay, since fillFundamentalFullCone() is only used as a
     // top-level enumeration routine (and is never used at all unless
     // the user explicitly chooses this algorithm).
-    size_t rank = rowBasis(const_cast<MatrixInt&>(eqns_));
+    const_cast<MatrixInt&>(eqns_).makeRowBasis();
     size_t dim = eqns_.columns();
 
     std::vector<std::vector<mpz_class>> input;
-    input.reserve(rank);
-    for (size_t r = 0; r < rank; ++r) {
+    input.reserve(eqns_.rows());
+    for (size_t r = 0; r < eqns_.rows(); ++r) {
         std::vector<mpz_class> v;
         v.reserve(eqns_.columns());
         for (size_t c = 0; c < eqns_.columns(); ++c) {
