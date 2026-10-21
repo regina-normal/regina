@@ -33,7 +33,7 @@
 
 namespace regina {
 
-// MARK: - Template instantiations
+// Instantiate routines in matrix-impl.h for the common case Matrix<Integer>:
 
 template size_t Matrix<Integer>::makeRowEchelon();
 template size_t Matrix<Integer>::makeColumnEchelon();
@@ -45,8 +45,6 @@ template void Matrix<Integer>::makeSmith();
 template std::array<Matrix<Integer>, 4>
     Matrix<Integer>::makeSmithHafnerMcCurley();
 template std::array<Matrix<Integer>, 4> Matrix<Integer>::makeSmithMetrical();
-
-// MARK: - Basis and echelon form algorithms
 
 void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
         const std::vector<size_t> &rowList) {
@@ -135,8 +133,6 @@ void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
         }
     }
 }
-
-// MARK: - Other algorithms
 
 MatrixInt preImageOfLattice(const MatrixInt& hom,
         const std::vector<Integer>& L) {

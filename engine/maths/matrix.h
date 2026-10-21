@@ -2654,32 +2654,32 @@ using MatrixBool = Matrix<bool>;
         const std::vector<size_t> &rowList);
 
 /**
- * Given a homomorphism from Z^n to Z^k and a sublattice of Z^k,
+ * Given a homomorphism from `Z^n` to `Z^k` and a sublattice of `Z^k`,
  * compute the preimage of this sublattice under this homomorphism.
  *
- * The homomorphism from Z^n to Z^k is described by the given
- * \a k by \a n matrix \a hom.  The sublattice is of the form
+ * The homomorphism from `Z^n` to `Z^k` is described by the given
+ * `k × n` matrix \a hom.  The sublattice is of the form
  * `(p1 Z) * (p2 Z) * ... * (pk Z)`, where the non-negative integers
- * \a p1, ..., \a pk are passed in the given list \a sublattice.
+ * `p1,...,pk` are passed in the given list \a sublattice.
  *
  * An equivalent problem is to consider \a hom to be a homomorphism
- * from Z^n to Z_p1 + ... + Z_pk; this routine then finds the kernel
+ * from `Z^n` to `Z_p1 + ... + Z_pk`; this routine then finds the kernel
  * of this homomorphism.
  *
  * The preimage of the sublattice (equivalently, the kernel described
- * above) is some rank \a n lattice in Z^n.  This algorithm finds and
+ * above) is some rank \a n lattice in `Z^n`.  This algorithm finds and
  * returns a basis for the lattice.
  *
  * \exception InvalidArgument The length of \a sublattice is different from
  * the number of rows of \a hom.  Note that the _contents_ of \a sublattice
  * (specifically, the signs of the integers it contains) are not checked.
  *
- * \param hom the matrix representing the homomorphism from Z^n to Z^k;
- * this must be a \a k by \a n matrix.
- * \param sublattice a list of length \a k describing the sublattice of Z^k;
- * the elements of this list must be the non-negative integers
- * \a p1, ..., \a pk as described above.
- * \return a new matrix whose columns are a basis for the preimage lattice.
+ * \param hom the `k × n` matrix representing the homomorphism from
+ * `Z^n` to `Z^k`.
+ * \param sublattice a list of length \a k describing the sublattice of `Z^k`;
+ * the elements of this list must be the non-negative integers `p1,...,pk`
+ * as described above.
+ * \return a matrix whose columns are a basis for the preimage lattice.
  * This matrix will have precisely \a n rows.
  *
  * \author Ryan Budney
