@@ -37,6 +37,7 @@
 #define __REGINA_MATRIX_H
 #endif
 
+#include <array>
 #include <initializer_list>
 #include <iostream>
 #include <memory>
