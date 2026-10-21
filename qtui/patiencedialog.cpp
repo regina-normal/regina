@@ -41,7 +41,7 @@ PatienceDialog* PatienceDialog::warn(const QString& message,
         QWidget* parent) {
     auto* dlg = new PatienceDialog(message, parent);
     dlg->show();
-    
+
     QApplication::instance()->processEvents();
 
     return dlg;

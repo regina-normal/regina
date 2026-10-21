@@ -7,8 +7,8 @@ SET ( FILES
   arrow.cpp
   cyclotomic.cpp
   integer.cpp
+  matrix.cpp
   matrix2.cpp
-  matrixops.cpp
   numbertheory.cpp
   perm.cpp
   permgroup.cpp
@@ -34,6 +34,7 @@ if (${REGINA_INSTALL_DEV})
     laurent.h
     laurent2.h
     matrix.h
+    matrix-impl.h
     matrix2.h
     matrixops.h
     numbertheory.h
@@ -41,6 +42,7 @@ if (${REGINA_INSTALL_DEV})
     permgroup.h
     permsn.h
     polynomial.h
+    polyops.h
     primes.h
     rational.h
     ring.h

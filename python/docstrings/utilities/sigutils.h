@@ -426,6 +426,12 @@ R"doc(Moves the final encoded base64 string out of this encoder.
 
 After calling this function, this encoder object will be unusable.
 
+Python:
+    Although this is an rvalue member function, it is still available
+    in Python. Python will explicitly watch for any call to str(), and
+    will raise a runtime error if you try to use an encoder after
+    calling str() upon it.
+
 Returns:
     the final base64 encoding.)doc";
 
@@ -1335,6 +1341,12 @@ static constexpr const char bytes[] =
 R"doc(Moves the final encoded byte sequence out of this encoder.
 
 After calling this function, this encoder object will be unusable.
+
+Python:
+    Although this is an rvalue member function, it is still available
+    in Python. Python will explicitly watch for any call to bytes(),
+    and will raise a runtime error if you try to use an encoder after
+    calling bytes() upon it.
 
 Returns:
     the final encoded byte sequence.)doc";

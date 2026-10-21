@@ -69,7 +69,8 @@ namespace regina {
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
- * even when passing or returning objects by value.
+ * even when passing or returning objects by value.  Moving from a Rational
+ * will leave the source object in a valid but undefined state.
  *
  * \ingroup maths
  */
@@ -81,11 +82,10 @@ class Rational {
             /**< Globally available one. */
         static const Rational infinity;
             /**< Globally available infinity.  Note that both 1/0 and
-             *   -1/0 evaluate to this same rational.  When queried,
-             *   the representation 1/0 will be returned. */
+                 -1/0 evaluate to this same rational.  When queried,
+                 the representation 1/0 will be returned. */
         static const Rational undefined;
-            /**< Globally available undefined.  This is represented as
-             *   0/0. */
+            /**< Globally available undefined.  This is represented as 0/0. */
     private:
         /**
          * Represents the available flavours of rational number.
@@ -100,20 +100,20 @@ class Rational {
         };
         Flavour flavour;
             /**< Stores whether this rational is infinity, undefined or
-             *   normal (non-zero denominator). */
+                 normal (non-zero denominator). */
         mpq_t data;
             /**< Contains the arbitrary precision rational data for normal
-             *   (non-zero denominator) rationals.
-             *   This is initialised even if the rational is infinite. */
+                 (non-zero denominator) rationals.  This is initialised
+                 (but ignored) even if the rational is infinite. */
 
         static const Rational maxDouble;
             /**< The largest positive rational number that can be converted
-             *   to a finite double.  This begins as undefined, and is set
-             *   to its correct value on the first call to doubleApprox(). */
+                 to a finite double.  This begins as undefined, and is set
+                 to its correct value on the first call to doubleApprox(). */
         static const Rational minDouble;
             /**< The smallest positive rational number that can be converted
-             *   to a non-zero double.  This begins as undefined, and is set
-             *   to its correct value on the first call to doubleApprox(). */
+                 to a non-zero double.  This begins as undefined, and is set
+                 to its correct value on the first call to doubleApprox(). */
 
     public:
         /**
@@ -129,8 +129,6 @@ class Rational {
         /**
          * Moves the given rational into this new rational.
          * This is a fast (constant time) operation.
-         *
-         * The rational that is passed (\a src) will no longer be usable.
          *
          * \param src the rational to move.
          */
@@ -218,8 +216,6 @@ class Rational {
         /**
          * Moves the given rational into this rational.
          * This is a fast (constant time) operation.
-         *
-         * The rational that is passed (\a src) will no longer be usable.
          *
          * \param src the rational to move.
          * \return a reference to this rational.
@@ -367,10 +363,11 @@ class Rational {
          * \python This spaceship operator `x <=> y` is not available, but the
          * other comparison operators that it generates _are_ available.
          *
+         * \param compare the rational against which this will be compared.
          * \return the result of the numerical comparison between this
          * and the given rational.
          */
-        std::strong_ordering operator <=> (const Rational&) const;
+        std::strong_ordering operator <=> (const Rational& compare) const;
 
         /**
          * Attempts to convert this rational to a real number.

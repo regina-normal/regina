@@ -37,6 +37,10 @@ static_assert(regina::bitsRequired(33) == 6);
 static_assert(regina::nextPowerOfTwo(32) == 32);
 static_assert(regina::nextPowerOfTwo(33) == 64);
 
+static_assert(regina::isqrt(63) == 7);
+static_assert(regina::isqrt(64) == 8);
+static_assert(regina::isqrt(65) == 8);
+
 static_assert(std::same_as<std::common_type_t<
     regina::NativeInteger<4>, regina::NativeInteger<4>>,
     regina::NativeInteger<4>>);

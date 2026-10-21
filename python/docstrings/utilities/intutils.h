@@ -14,8 +14,10 @@ namespace regina::python::doc {
 // Docstring regina::python::doc::bitsRequired
 inline constexpr const char bitsRequired[] =
 R"doc(Returns the number of bits required to store integers in the range
-``0,...,n-1``. This is simply the number of bits in the binary
-expansion of ``n-1``.
+``0,...,n-1``.
+
+This is simply the number of bits in the binary expansion of ``n-1``.
+Equivalently, it is the ceiling of ``log_2(n)``.
 
 If *n* is non-positive then this function will return 0.
 
@@ -28,6 +30,26 @@ Parameter ``n``:
 
 Returns:
     the number of bits required to store ``0,...,n-1``.)doc";
+
+// Docstring regina::python::doc::isqrt
+inline constexpr const char isqrt[] =
+R"doc(Returns the integer square root of the given argument. Specifically,
+this returns the floor of the square root of *n*.
+
+If *n* is negative then this function will throw an exception.
+
+Python:
+    In Python, this routine fixes the integer type *IntType* to be
+    ``long``.
+
+Exception ``NoSolution``:
+    The argument *n* is negative.
+
+Parameter ``n``:
+    any integer.
+
+Returns:
+    the floor of the square root of *n*.)doc";
 
 // Docstring regina::python::doc::nextPowerOfTwo
 inline constexpr const char nextPowerOfTwo[] =

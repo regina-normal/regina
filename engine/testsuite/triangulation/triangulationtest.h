@@ -2372,17 +2372,17 @@ class TriangulationTest : public testing::Test {
                 if (! dualBoundariesAsPrimal.isZero()) {
                     // Test whether the column space for dualBoundariesAsPrimal
                     // lives within the column space for boundaryMap<k + 1>.
-                    auto b = tri.template boundaryMap<k + 1>();
-                    auto rank = b.columnEchelonForm();
+                    auto [b, rank] =
+                        tri.template boundaryMap<k + 1>().columnEchelon();
 
                     regina::MatrixInt comb(b.rows(),
-                        b.columns() + dualBoundariesAsPrimal.columns());
+                        rank + dualBoundariesAsPrimal.columns());
                     for (size_t row = 0; row < b.rows(); ++row) {
-                        for (size_t col = 0; col < b.columns(); ++col)
+                        for (size_t col = 0; col < rank; ++col)
                             comb.entry(row, col) = b.entry(row, col);
                         for (size_t col = 0;
                                 col < dualBoundariesAsPrimal.columns(); ++col)
-                            comb.entry(row, b.columns() + col) =
+                            comb.entry(row, rank + col) =
                                 dualBoundariesAsPrimal.entry(row, col);
                     }
 

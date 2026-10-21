@@ -366,7 +366,7 @@ void ReginaAbout::showLicense() {
 
     const QFont font = ReginaPrefSet::fixedWidthFont();
     QFontMetrics metrics(font);
-    
+
     auto* text = new QTextBrowser;
     text->setFont(font);
     text->setLineWrapMode(QTextEdit::NoWrap);
