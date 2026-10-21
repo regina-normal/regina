@@ -974,9 +974,9 @@ rowMuckerLoop:
 
 template <typename T>
 requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
-Matrix<T> Matrix<T>::preimageOfLattice(const std::vector<T>& L) const
+Matrix<T> Matrix<T>::preimageOfLattice(const std::vector<T>& sublattice) const
         requires ReginaInteger<T> {
-    if (L.size() != rows_)
+    if (sublattice.size() != rows_)
         throw InvalidArgument("preimageOfLattice() requires the length of the "
             "sublattice vector to match the number of matrix rows");
 
@@ -1002,8 +1002,8 @@ Matrix<T> Matrix<T>::preimageOfLattice(const std::vector<T>& L) const
     // these lists need to be built from L
     std::vector<size_t> freeList;
     std::vector<size_t> torList;
-    for (size_t i=0;i<L.size();i++)
-        if (L[i]==0)
+    for (size_t i=0;i<sublattice.size();i++)
+        if (sublattice[i]==0)
             freeList.push_back(i);
         else
             torList.push_back(i);
@@ -1084,8 +1084,9 @@ Matrix<T> Matrix<T>::preimageOfLattice(const std::vector<T>& L) const
             // check to see if tHom.entry(torList[CR], rowNZlist[0]) %
             // L[torList[CR]] == 0 if not, find smallest positive integer
             // s.t. when multiplied by it, above becomes true.
-            gcd = tHom.entry(torList[CR], rowNZlist[0]).gcd( L[torList[CR]] );
-            d = L[torList[CR]].divExact(gcd);
+            gcd = tHom.entry(torList[CR], rowNZlist[0]).gcd(
+                sublattice[torList[CR]]);
+            d = sublattice[torList[CR]].divExact(gcd);
             // multiply column  rowNZlist[0] of tHom by d.
             for (auto pos : torList)
                 tHom.entry( pos, rowNZlist[0] ) *= d;

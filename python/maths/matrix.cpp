@@ -292,7 +292,7 @@ void addMatrix(pybind11::module_& m) {
         ci = std::move(cob[3]);
     }, rdoc::metricalSmithNormalForm);
     m.def("preImageOfLattice", [](const MatrixInt& hom, // deprecated
-            const std::vector<Integer>& sublattice) {
+            const std::vector<regina::Integer>& sublattice) {
         return hom.preimageOfLattice(sublattice);
     }, rdoc::preImageOfLattice);
 
