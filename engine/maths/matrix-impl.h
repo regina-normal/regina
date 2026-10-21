@@ -412,6 +412,96 @@ Matrix<T> Matrix<T>::inverse() && requires ReginaInteger<T> {
 
 template <typename T>
 requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
+void Matrix<T>::makeColumnEchelonForRows(const std::vector<size_t>& rowList,
+        Matrix& R, Matrix& Ri) requires ReginaInteger<T> {
+    if (R.columns() != M.columns() || Ri.rows() != M.columns())
+        throw InvalidArgument("M.makeColumnEchelonFoRows(rowList, R, Ri) "
+            "expects M.columns() == R.columns() == Ri.rows()");
+
+    size_t CR=0;
+    size_t CC=0;
+    // these are the indices of the current WORKING rows and columns
+    // respectively.
+    // thus the entries of M above CR will not change, and to the left of
+    // CC all that can happen is some reduction.
+
+    std::vector<size_t> rowNZlist; // in the current row, this is the
+                                   // list of column coordinates
+                                   // for the non-zero entries.
+
+    T u,v,a,b; // for column operations u,v,a,b represent a 2x2 matrix.
+    // the algorithm will think of itself as working top to bottom.
+    while ( (CR<rowList.size()) && (CC<M.columns())) {
+        // build rowNZlist
+        rowNZlist.clear();
+
+        for (size_t i=CC;i<M.columns();i++)
+            if (M.entry(rowList[CR],i) != 0)
+                rowNZlist.push_back(i);
+
+        // now the column operations
+        if (rowNZlist.size() == 0) {
+            // nothing to do.
+            CR++;
+        } else if (rowNZlist.size() == 1) {
+            // let's move this entry to be the leading entry.
+            if (rowNZlist[0]==CC) {
+                // step 1: ensure entry(CR,CC) is positive.
+                if (M.entry(rowList[CR],CC)<0) {
+                    M.negateCol(CC);
+                    R.negateCol(CC);
+                    Ri.negateRow(CC);
+                }
+                // step 2: reduce entries(CR,i) for i<CC
+                for (size_t i=0;i<CC;i++) {
+                    // write entry(CR,i) as d*entry(CR,CC) + r.
+                    auto [d, r] = M.entry(rowList[CR],i).divisionAlg(
+                        M.entry(rowList[CR],CC) );
+                    // reduce column i: subtract d * column CC from column i.
+                    M.addCol(CC, i, -d);
+                    R.addCol(CC, i, -d);
+                    // corresponding update for Ri: add d * row i to row CC
+                    Ri.addRow(i, CC, d);
+                }
+                // done, move on.
+                CC++;
+                CR++;
+            } else {
+                M.swapCols(CC, rowNZlist[0]);
+                R.swapCols(CC, rowNZlist[0]);
+                Ri.swapRows(CC, rowNZlist[0]);
+            }
+        } else {
+            // there is at least 2 non-zero entries to deal with. we go
+            // through them, one by one, a pair at a time.
+            while (rowNZlist.size()>1) {
+                // do column reduction on columns rowNZlist[0] and rowNZlist[1]
+                // first we need to find the approp modification matrix.
+                // This will be the matrix ( u -b ) where ua+vb = 1. We get
+                //                         ( v a  )
+                // a and b from entry(CR, r[0]) and entry(CR, r[1])
+                // by dividing by their GCD, found with
+                // rowNZlist[0].gcdWithCoeffs(rowNZlist[1],u,v)
+                T gcd = M.entry(rowList[CR], rowNZlist[0]).gcdWithCoeffs(
+                    M.entry(rowList[CR], rowNZlist[1]), u,v);
+                a = M.entry(rowList[CR], rowNZlist[0]).divExact(gcd);
+                b = M.entry(rowList[CR], rowNZlist[1]).divExact(gcd);
+                // so multiplication on the right by the above matrix
+                // corresponds to replacing column r[0] by u r[0] + v r[1]
+                // and column r[1] by -b r[0] + a r[1].
+                M.combCols(rowNZlist[0], rowNZlist[1], u, v, -b, a);
+                R.combCols(rowNZlist[0], rowNZlist[1], u, v, -b, a);
+                Ri.combRows(rowNZlist[0], rowNZlist[1], a, b, -v, u);
+                // modify rowNZlist by deleting the entry corresponding to
+                // rowNZlist[1]
+                rowNZlist.erase( rowNZlist.begin()+1 );
+            }
+        }
+    }
+}
+
+template <typename T>
+requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
 void Matrix<T>::makeSmith() requires ReginaInteger<T> {
     size_t currStage = 0;
     size_t nonEmptyRows = rows();

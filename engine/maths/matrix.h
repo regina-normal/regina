@@ -2411,6 +2411,75 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
+         * Transforms this matrix into column echelon form with respect to a
+         * collection of rows.  The transformation will perform only column
+         * operations.
+         *
+         * Given the list \a rowList of rows from this matrix, this algorithm
+         * puts this matrix in column echelon form with respect to those rows.
+         * The only purpose of \a rowList is to clarify and/or weaken precisely
+         * what is meant by "column echelon form"; all rows of this matrix are
+         * affected by the resulting column operations that take place.
+         *
+         * This routine also computes the corresponding change of coordinate
+         * matrices through the arguments \a R and \a Ri:
+         *
+         * - The matrix \a R will have precisely the same column operations
+         *   applied to it as this matrix.  The matrix \a Ri will have the
+         *   inverse _row_ operations applied to it, thereby maintaining a
+         *   constant value of the product `R * Ri` as the algorithm runs.
+         *
+         * - In particular, if \a R and \a Ri are passed into this routine as
+         *   square identity matrices, then after the reduction is complete we
+         *   will have `original * R = final` and `final * Ri = original`, where
+         *   \a original and \a final refer to the original and final values of
+         *   this matrix.
+         *
+         * Our convention is that a matrix is in column echelon form with
+         * respect to \a rowList if:
+         *
+         * - each column is either zero or there is a first non-zero entry which
+         *   is positive, following the note regarding \a rowList below;
+         *
+         * - moving from the leftmost column to the rightmost column, the rows
+         *   containing the first non-zero entries for these columns have
+         *   strictly increasing indices in \a rowList;
+         *
+         * - given a first non-zero column entry, in that row all the elements to
+         *   the left are smaller and non-negative (all elements to the right are
+         *   already zero by the previous condition);
+         *
+         * - all the zero columns are on the right hand side of the matrix.
+         *
+         * By a "zero column" here we simply mean "zero for every row in
+         * \a rowList".  Likewise, by "first non-zero entry" we mean "first row
+         * in \a rowList with a non-zero entry".
+         *
+         * \pre If \a n is the number of _columns_ in this matrix, then \a R
+         * has precisely \a n columns and \a Ri has precisely \a n rows.
+         *
+         * \headers This routine is implemented in a separate header
+         * (matrix-impl.h), which is not included automatically by this file.
+         *
+         * \exception InvalidArgument Either `R.columns() ≠ M.columns()`, and/or
+         * `Ri.rows() ≠ M.columns()`.
+         *
+         * \param R used to collect the column operations, as described above.
+         * \param Ri used to collect the inverse row operations, again as
+         * described above.
+         * \param rowList the rows to pay attention to.  This list must contain
+         * distinct integers, all between 0 and `rows()-1` inclusive (though it
+         * need not contain _all_ of these integers).  The integers may appear in
+         * any order (though changing the order will change the resulting column
+         * echelon form).  For a "classical" column echelon form, this would be
+         * the list of all rows: `0,...,(rows()-1)`.
+         *
+         * \author Ryan Budney
+         */
+        void makeColumnEchelonForRows(const std::vector<size_t>& rowList,
+                Matrix& R, Matrix& Ri) requires ReginaInteger<T>;
+
+        /**
          * Implements makeSmithCoB() for the case where the algorithm argument
          * is SNFAlgorithm::HafnerMcCurley.  See makeSmithCoB() for more
          * details.
@@ -2578,80 +2647,6 @@ using MatrixBool = Matrix<bool>;
     colSpaceBasis = std::move(cob[2]);
     colSpaceBasisInv = std::move(cob[3]);
 }
-
-/**
- * Deprecated routine that transforms a given matrix into column echelon form
- * with respect to a collection of rows.  The transformation will perform only
- * column operations.
- *
- * Given the matrix \a M and the list \a rowList of rows from \a M, this
- * algorithm puts \a M in column echelon form with respect to the rows
- * in \a rowList.  The only purpose of \a rowList is to clarify and/or
- * weaken precisely what is meant by "column echelon form"; all rows of
- * \a M are affected by the resulting column operations that take place.
- *
- * This routine also returns the corresponding change of coordinate
- * matrices \a R and \a Ri:
- *
- * - The matrix \a R will have precisely the same column operations applied to
- *   it as the matrix \a M.  The matrix \a Ri will have the inverse _row_
- *   operations applied to it, thereby maintaining a constant value of the
- *   product `R * Ri` as the algorithm runs.
- *
- * - In particular, if \a R and \a Ri are passed into this routine as
- *   square identity matrices, then after the reduction is complete we will
- *   have `original_M * R = final_M` and `final_M * Ri = original_M`.
- *
- * Our convention is that a matrix is in column echelon form if:
- *
- * - each column is either zero or there is a first non-zero entry which
- *   is positive (but see the note regarding \a rowList below);
- *
- * - moving from the leftmost column to the rightmost column, the rows
- *   containing the first non-zero entries for these columns have strictly
- *   increasing indices in \a rowList;
- *
- * - given a first non-zero column entry, in that row all the elements to
- *   the left are smaller and non-negative (all elements to the right are
- *   already zero by the previous condition);
- *
- * - all the zero columns are on the right hand side of the matrix.
- *
- * By a "zero column" here we simply mean "zero for every row in \a
- * rowList".  Likewise, by "first non-zero entry" we mean "first row in
- * \a rowList with a non-zero entry".
- *
- * If you just wish to reduce the matrix, you do not care about the order of
- * rows, and you do not want the change-of-basis matrices, then you should
- * call MatrixInt::makeColumnEchelon() instead, which is simpler but also more
- * streamlined.
- *
- * \deprecated This routine was only being used to compute matrix inverses (and
- * only with a trivial \a rowList consisting of all rows).  It has therefore been
- * replaced with the simpler routine `Matrix::inverse()`.
- *
- * \pre If \a n is the number of _columns_ in \a M, then \a R has precisely
- * \a n columns also, and \a Ri has precisely \a n rows.
- *
- * \exception InvalidArgument Either `R.columns() ≠ M.columns()`, and/or
- * `Ri.rows() ≠ M.columns()`.
- *
- * \param M the matrix to reduce.
- * \param R used to return the row-reduction matrix, as described above.
- * \param Ri used to return the inverse of \a R.
- * \param rowList the rows to pay attention to.  This list must contain
- * distinct integers, all between 0 and M.rows()-1 inclusive (though it
- * need not contain _all_ of these integers).  The integers may appear in
- * any order (though changing the order will change the resulting column
- * echelon form).  For a "classical" column echelon form, this would be the
- * list of all rows: `0,...,(M.rows()-1)`.
- *
- * \author Ryan Budney
- *
- * \ingroup maths
- */
-[[deprecated]] void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
-        const std::vector<size_t> &rowList);
 
 /**
  * Given a homomorphism from `Z^n` to `Z^k` and a sublattice of `Z^k`,

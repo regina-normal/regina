@@ -757,42 +757,6 @@ static void verifyEchelonForm(const MatrixInt& m) {
                 comb.entry(m.rows() + i, j) = res.first.entry(i, j);
         EXPECT_EQ(comb.rank(), res.second);
     }
-
-    // Compare results with the more complex global columnEchelonForm() (which
-    // is now deprecated, and will eventually be removed).
-    {
-        MatrixInt copy(trans);
-        auto r = MatrixInt::identity(trans.columns());
-        auto ri = MatrixInt::identity(trans.columns());
-        std::vector<size_t> rowList;
-        for (size_t i = 0; i < trans.rows(); ++i)
-            rowList.push_back(i);
-
-        #if defined(__GNUC__)
-        // Silence the deprecation warning.
-        #pragma GCC diagnostic push
-        #if defined(__clang__)
-        #pragma GCC diagnostic ignored "-Wdeprecated"
-        #else
-        #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-        #endif
-        #endif
-        regina::columnEchelonForm(copy, r, ri, rowList);
-        #if defined(__GNUC__)
-        #pragma GCC diagnostic pop
-        #endif
-
-        EXPECT_EQ(copy, resTrans.first);
-
-        EXPECT_EQ(r.rows(), trans.columns());
-        EXPECT_EQ(r.columns(), trans.columns());
-        EXPECT_EQ(ri.rows(), trans.columns());
-        EXPECT_EQ(ri.columns(), trans.columns());
-        EXPECT_EQ(trans * r, copy);
-        EXPECT_EQ(copy * ri, trans);
-        EXPECT_TRUE((r * ri).isIdentity());
-        EXPECT_TRUE((ri * r).isIdentity());
-    }
 }
 
 TEST_F(MatrixTest, echelonForm) {

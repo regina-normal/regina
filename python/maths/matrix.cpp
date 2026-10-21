@@ -292,23 +292,6 @@ void addMatrix(pybind11::module_& m) {
     m.def("preImageOfLattice", &regina::preImageOfLattice,
         rdoc::preImageOfLattice);
 
-    #if defined(__GNUC__)
-    // The following functions are deprecated, but we still need to bind them
-    // since they have no direct replacements.  Silence the inevitable
-    // deprecation warnings that will occur.
-    #pragma GCC diagnostic push
-    #if defined(__clang__)
-    #pragma GCC diagnostic ignored "-Wdeprecated"
-    #else
-    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    #endif
-    #endif
-    m.def("columnEchelonForm", &regina::columnEchelonForm,
-        rdoc::columnEchelonForm); // deprecated
-    #if defined(__GNUC__)
-    #pragma GCC diagnostic pop
-    #endif
-
     RDOC_SCOPE_END
 }
 

@@ -701,7 +701,6 @@ basicTokenise : function
 binomMedium : function
 bitsRequired : function
 buildInfo : function
-columnEchelonForm : function
 digit : function
 discOrientationFollowsEdge : function
 faceOppositeEdge : function
