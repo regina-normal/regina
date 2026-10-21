@@ -44,6 +44,21 @@
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
+#ifndef __DOXYGEN
+    /**
+     * If __REGINA_FIXED_ARRAY_RANGE_CHECKING is defined, this class will
+     * range-check its indexing operator `[]` and will throw an InvalidArgument
+     * exception if the given index is out of range.  Likewise, it will verify
+     * that the array is non-empty when calling front() and back() and will
+     * throw a FailedPrecondition exception if this fails.
+     */
+    // #define __REGINA_FIXED_ARRAY_RANGE_CHECKING
+#endif
+
+#if defined(__REGINA_FIXED_ARRAY_RANGE_CHECKING)
+#include "utilities/exception.h"
+#endif
+
 namespace regina {
 
 /**
@@ -215,6 +230,10 @@ class FixedArray {
          * \return a reference to the requested array element.
          */
         T& operator [] (size_t index) {
+            #if defined(__REGINA_FIXED_ARRAY_RANGE_CHECKING)
+            if (index >= size_)
+                throw InvalidArgument("FixedArray: index out of range");
+            #endif
             return data_[index];
         }
 
@@ -228,6 +247,10 @@ class FixedArray {
          * \return a reference to the requested array element.
          */
         const T& operator [] (size_t index) const {
+            #if defined(__REGINA_FIXED_ARRAY_RANGE_CHECKING)
+            if (index >= size_)
+                throw InvalidArgument("FixedArray: index out of range");
+            #endif
             return data_[index];
         }
 
@@ -328,6 +351,11 @@ class FixedArray {
          * \return a reference to the first element.
          */
         const T& front() const {
+            #if defined(__REGINA_FIXED_ARRAY_RANGE_CHECKING)
+            if (size_ == 0)
+                throw FailedPrecondition(
+                    "FixedArray::front() requires a non-empty array");
+            #endif
             return *data_;
         }
         /**
@@ -338,6 +366,11 @@ class FixedArray {
          * \return a reference to the first element.
          */
         T& front() {
+            #if defined(__REGINA_FIXED_ARRAY_RANGE_CHECKING)
+            if (size_ == 0)
+                throw FailedPrecondition(
+                    "FixedArray::front() requires a non-empty array");
+            #endif
             return *data_;
         }
         /**
@@ -348,6 +381,11 @@ class FixedArray {
          * \return a reference to the last element.
          */
         const T& back() const {
+            #if defined(__REGINA_FIXED_ARRAY_RANGE_CHECKING)
+            if (size_ == 0)
+                throw FailedPrecondition(
+                    "FixedArray::back() requires a non-empty array");
+            #endif
             return data_[size_ - 1];
         }
         /**
@@ -358,6 +396,11 @@ class FixedArray {
          * \return a reference to the last element.
          */
         T& back() {
+            #if defined(__REGINA_FIXED_ARRAY_RANGE_CHECKING)
+            if (size_ == 0)
+                throw FailedPrecondition(
+                    "FixedArray::back() requires a non-empty array");
+            #endif
             return data_[size_ - 1];
         }
 

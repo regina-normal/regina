@@ -37,8 +37,9 @@
 #define __REGINA_TYPETRIE_H
 #endif
 
-#include "regina-core.h"
 #include "core/output.h"
+#include "utilities/fixedarray.h"
+#include "utilities/intutils.h"
 #include <cstdint>
 #include <cstring>
 #include <stack>
@@ -87,7 +88,7 @@ namespace regina {
  *
  * \ingroup enumerate
  */
-template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
+template <int nTypes> requires (nTypes >= 1)
 class TypeTrie : public Output<TypeTrie<nTypes>> {
     private:
         /**
@@ -200,40 +201,49 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
 
         /**
          * Inserts the given type vector into this trie.
+         * The type vector is specified by an iterator range.
          *
-         * \pre The given length \a len is non-zero, and is fixed throughout
-         * the life of this trie; that is, it is the same every time
-         * insert() or dominates() is called.
+         * \pre Each element of the given type vector is between 0 and
+         * `nTypes-1` inclusive.
          *
-         * \python Instead of the arguments \a entry and \a len,
-         * you should pass a single argument which is a Python sequence
-         * of length \a len.  This list should be a type vector, and
-         * each list element should be between 0 and (\a nTypes - 1) inclusive.
+         * \pre The length of the type vector (`endTypes - beginTypes`) is
+         * fixed throughout the life of this trie; that is, it is the same
+         * for every call to insert() or dominates().
          *
-         * \param entry the type vector to insert.
-         * \param len the number of elements in the given type vector.
+         * \python Instead of a pair of iterators, you should pass the type
+         * vector as a single argument, which is a Python list of integers.
+         *
+         * \param beginTypes the beginning of the type vector to insert.
+         * \param endTypes a past-the-end iterator indicating the end of the
+         * type vector to insert.
          */
-        void insert(const uint8_t* entry, size_t len);
+        template <std::bidirectional_iterator Iterator>
+            requires CppInteger<std::iter_value_t<Iterator>>
+        void insert(Iterator beginTypes, Iterator endTypes);
 
         /**
-         * Determines whether the given type vector dominates any vector
-         * in this trie.
+         * Determines whether the given type vector dominates any vector in
+         * this trie.  The given type vector is specified by an iterator range.
          *
-         * \pre The given length \a len is non-zero, and is fixed throughout
-         * the life of this trie; that is, it is the same every time
-         * insert() or dominates() is called.
+         * \pre Each element of the given type vector is between 0 and
+         * `nTypes-1` inclusive.
          *
-         * \python Instead of the arguments \a vec and \a len,
-         * you should pass a single argument which is a Python sequence
-         * of length \a len.  This list should be a type vector, and
-         * each list element should be between 0 and (\a nTypes - 1) inclusive.
+         * \pre The length of the type vector (`endTypes - beginTypes`) is
+         * fixed throughout the life of this trie; that is, it is the same
+         * for every call to insert() or dominates().
          *
-         * \param vec the type vector to test.
-         * \param len the number of elements in the given type vector.
-         * \return \c true if and only if \a vec dominates some type
-         * vector stored in this trie.
+         * \python Instead of a pair of iterators, you should pass the type
+         * vector as a single argument, which is a Python list of integers.
+         *
+         * \param beginTypes the beginning of the type vector to test.
+         * \param endTypes a past-the-end iterator indicating the end of the
+         * type vector to test.
+         * \return \c true if and only if the given type vector dominates some
+         * type vector stored in this trie.
          */
-        bool dominates(const uint8_t* vec, size_t len) const;
+        template <std::random_access_iterator Iterator>
+            requires CppInteger<std::iter_value_t<Iterator>>
+        bool dominates(Iterator beginTypes, Iterator endTypes) const;
 
         /**
          * Writes a short text representation of this object to the
@@ -268,19 +278,19 @@ void swap(TypeTrie<nTypes>& a, TypeTrie<nTypes>& b) noexcept;
 
 // Inline functions for TypeTrie
 
-template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
+template <int nTypes> requires (nTypes >= 1)
 inline TypeTrie<nTypes>::Node::Node() : elementHere_(false) {
     // NOLINTNEXTLINE(bugprone-sizeof-expression)
     ::memset(child_, 0, sizeof(Node*) * nTypes);
 }
 
-template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
+template <int nTypes> requires (nTypes >= 1)
 inline TypeTrie<nTypes>::Node::~Node() {
     for (int i = 0; i < nTypes; ++i)
         delete child_[i];
 }
 
-template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
+template <int nTypes> requires (nTypes >= 1)
 TypeTrie<nTypes>::TypeTrie(const TypeTrie& src) {
     // We don't know how deep the tree could get, so to avoid recursion
     // we use our own stack.
@@ -299,14 +309,14 @@ TypeTrie<nTypes>::TypeTrie(const TypeTrie& src) {
     }
 }
 
-template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
+template <int nTypes> requires (nTypes >= 1)
 inline TypeTrie<nTypes>::TypeTrie(TypeTrie&& src) noexcept {
     std::copy(src.root_.child_, src.root_.child_ + nTypes, root_.child_);
     std::fill(src.root_.child_, src.root_.child_ + nTypes, nullptr);
     root_.elementHere_ = src.root_.elementHere_;
 }
 
-template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
+template <int nTypes> requires (nTypes >= 1)
 TypeTrie<nTypes>& TypeTrie<nTypes>::operator = (const TypeTrie& src) {
     for (int i = 0; i < nTypes; ++i) {
         delete root_.child_[i];
@@ -331,7 +341,7 @@ TypeTrie<nTypes>& TypeTrie<nTypes>::operator = (const TypeTrie& src) {
     return *this;
 }
 
-template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
+template <int nTypes> requires (nTypes >= 1)
 inline TypeTrie<nTypes>& TypeTrie<nTypes>::operator = (TypeTrie&& src)
         noexcept {
     std::swap_ranges(root_.child_, root_.child_ + nTypes, src.root_.child_);
@@ -340,13 +350,13 @@ inline TypeTrie<nTypes>& TypeTrie<nTypes>::operator = (TypeTrie&& src)
     return *this;
 }
 
-template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
+template <int nTypes> requires (nTypes >= 1)
 inline void TypeTrie<nTypes>::swap(TypeTrie& other) noexcept {
     std::swap_ranges(root_.child_, root_.child_ + nTypes, other.root_.child_);
     std::swap(root_.elementHere_, other.root_.elementHere_);
 }
 
-template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
+template <int nTypes> requires (nTypes >= 1)
 bool TypeTrie<nTypes>::operator == (const TypeTrie& other) const {
     std::stack<std::pair<const Node*, const Node*>> toProcess;
     toProcess.push({&root_, &other.root_});
@@ -370,7 +380,7 @@ bool TypeTrie<nTypes>::operator == (const TypeTrie& other) const {
     return true;
 }
 
-template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
+template <int nTypes> requires (nTypes >= 1)
 inline void TypeTrie<nTypes>::clear() {
     for (int i = 0; i < nTypes; ++i) {
         delete root_.child_[i];
@@ -379,88 +389,112 @@ inline void TypeTrie<nTypes>::clear() {
     root_.elementHere_ = false;
 }
 
-template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
-void TypeTrie<nTypes>::insert(const uint8_t* entry, size_t len) {
+template <int nTypes> requires (nTypes >= 1)
+template <std::bidirectional_iterator Iterator>
+    requires CppInteger<std::iter_value_t<Iterator>>
+void TypeTrie<nTypes>::insert(Iterator beginTypes, Iterator endTypes) {
     // Strip off trailing zeroes.
-    while (len > 0 && ! entry[len - 1])
-        --len;
+    while (endTypes != beginTypes && ! *std::prev(endTypes))
+        --endTypes;
 
     // Insert this type vector, creating new nodes only when required.
     Node* node = &root_;
-    const uint8_t* next = entry;
-    for (size_t pos = 0; pos < len; ++pos, ++next) {
-        if (! node->child_[*next])
-            node->child_[*next] = new Node();
-        node = node->child_[*next];
+    while (beginTypes != endTypes) {
+        if (! node->child_[*beginTypes])
+            node->child_[*beginTypes] = new Node();
+        node = node->child_[*beginTypes++];
     }
     node->elementHere_ = true;
 }
 
-template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
-bool TypeTrie<nTypes>::dominates(const uint8_t* vec, size_t len) const {
+template <int nTypes> requires (nTypes >= 1)
+template <std::random_access_iterator Iterator>
+    requires CppInteger<std::iter_value_t<Iterator>>
+bool TypeTrie<nTypes>::dominates(Iterator beginTypes, Iterator endTypes) const {
+    // Note: we need Iterator to be random access because further down we
+    // compute the type vector length as (endTypes - beginTypes).
+
     // Strip off trailing zeroes.
-    while (len > 0 && ! vec[len - 1])
-        --len;
+    while (endTypes != beginTypes && ! *std::prev(endTypes))
+        --endTypes;
 
     // At worst we have a recursive O(2^len) search on our hands.
     // Create a stack of options that describe which branch of the
     // trie we follow at each stage of the search.
     //
-    // Here node[i] will store the next candidate node to try at
+    // Here nodes[i] will store the next candidate node to try at
     // depth i in the tree (where the root is at depth 0), or null
     // if we have exhausted our options at that level of the search.
-    const Node** node = new const Node*[len + 2];
+    FixedArray<const Node*> nodes(endTypes - beginTypes + 1);
 
-    ssize_t level = 0;
-    node[0] = &root_;
-    while (level >= 0) {
-        if ((! node[level]) || level > static_cast<ssize_t>(len)) {
-            // If node[level] is 0, then we ran out of siblings
-            // at this level.
-            // If level > len, then any vector in this subtree
-            // must have non-zero elements where vec only has zeros.
-            // Either way, we need to backtrack.
+    auto level = nodes.begin();
+    auto type = beginTypes;
+
+    *level = std::addressof(root_);
+    while (true) {
+        // INV: level and type are at the same index in their respective
+        // sequences, with 0 ≤ index ≤ length of given type vector.
+        // This means that level must be dereferenceable, but type could be
+        // equal to endTypes.
+
+        if (! *level) {
+            // We ran out of options at this level - we need to backtrack.
+            if (level == nodes.begin())
+                return false;
 
             // Move back up one level...
             --level;
-            // ... and then move to the next sibling at this (higher)
-            // level.
-            if (level > 0 &&
-                    node[level] == node[level - 1]->child_[0] &&
-                    vec[level - 1])
-                node[level] = node[level - 1]->child_[vec[level - 1]];
-            else if (level >= 0)
-                node[level] = nullptr;
+            --type;
+            // ... and then across to the next sibling at this (higher) level.
+            if (level != nodes.begin() &&
+                    *level == (*std::prev(level))->child_[0] &&
+                    *std::prev(type))
+                *level = (*std::prev(level))->child_[*std::prev(type)];
+            else
+                *level = nullptr;
             continue;
         }
 
-        // Process the node at the current level.
-        if (node[level]->elementHere_) {
-            // This node (padded with trailing zeroes) is
-            // dominated by the given type vector.
-            delete[] node;
+        // Is this node (padded with trailing zeroes) dominated by the given
+        // type vector?
+        if ((*level)->elementHere_)
             return true;
+
+        if (type == endTypes) {
+            // Any node deeper in this subtree must have non-zero elements
+            // where the given vector only has zeros.  Therefore we cannot
+            // continue this path through the tree: instead move on to the
+            // next sibling at this level.
+            if (level != nodes.begin() &&
+                    *level == (*std::prev(level))->child_[0] &&
+                    *std::prev(type))
+                *level = (*std::prev(level))->child_[*std::prev(type)];
+            else
+                *level = nullptr;
+            continue;
         }
 
-        // Descend further into the tree.
+        // Descend deeper into the tree.
         //
-        // If vec[level] == 0, we must descend to child_[0].
-        // Otherwise we try child_[0] and then child_[type].
+        // Our first option is always to descend to child_[0].
+        // If the given vector has a non-zero type at the corresponding
+        // position, we can also try descending to child_[type].
         //
-        // The following code sets node[level + 1] to the first non-null
-        // child in this selection, or to null if all such children are null.
-        if (node[level]->child_[0])
-            node[level + 1] = node[level]->child_[0];
-        else
-            node[level + 1] = node[level]->child_[vec[level]];
+        // The following code will descend to the first of these options that
+        // is non-null (if there are any).  A null value here means there are
+        // no usable options at all.
+        auto next = (*level)->child_[0];
+        if (! next)
+            next = (*level)->child_[*type];
         ++level;
+        ++type;
+        *level = next;
     }
 
-    delete[] node;
     return false;
 }
 
-template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
+template <int nTypes> requires (nTypes >= 1)
 inline void TypeTrie<nTypes>::writeTextShort(std::ostream& out) const {
     if (nTypes == 1)
         out << "Trie for 1 type";
@@ -468,7 +502,7 @@ inline void TypeTrie<nTypes>::writeTextShort(std::ostream& out) const {
         out << "Trie for " << nTypes << " types";
 }
 
-template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
+template <int nTypes> requires (nTypes >= 1)
 void TypeTrie<nTypes>::writeTextLong(std::ostream& out) const {
     if (nTypes == 1)
         out << "Trie for 1 type:";

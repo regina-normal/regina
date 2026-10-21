@@ -11,6 +11,326 @@
 namespace regina::python::doc {
 
 
+// Docstring regina::python::doc::columnEchelonForm
+inline constexpr const char columnEchelonForm[] =
+R"doc(Deprecated routine that transforms a given matrix into column echelon
+form with respect to a collection of rows. The transformation will
+perform only column operations.
+
+Given the matrix *M* and the list *rowList* of rows from *M*, this
+algorithm puts *M* in column echelon form with respect to the rows in
+*rowList*. The only purpose of *rowList* is to clarify and/or weaken
+precisely what is meant by "column echelon form"; all rows of *M* are
+affected by the resulting column operations that take place.
+
+This routine also returns the corresponding change of coordinate
+matrices *R* and *Ri:*
+
+* The matrix *R* will have precisely the same column operations
+  applied to it as the matrix *M*. The matrix *Ri* will have the
+  inverse _row_ operations applied to it, thereby maintaining a
+  constant value of the product ``R * Ri`` as the algorithm runs.
+
+* In particular, if *R* and *Ri* are passed into this routine as
+  square identity matrices, then after the reduction is complete we
+  will have ``original_M * R = final_M`` and ``final_M * Ri =
+  original_M``.
+
+Our convention is that a matrix is in column echelon form if:
+
+* each column is either zero or there is a first non-zero entry which
+  is positive (but see the note regarding *rowList* below);
+
+* moving from the leftmost column to the rightmost column, the rows
+  containing the first non-zero entries for these columns have
+  strictly increasing indices in *rowList*;
+
+* given a first non-zero column entry, in that row all the elements to
+  the left are smaller and non-negative (all elements to the right are
+  already zero by the previous condition);
+
+* all the zero columns are on the right hand side of the matrix.
+
+By a "zero column" here we simply mean "zero for every row in
+*rowList*". Likewise, by "first non-zero entry" we mean "first row in
+*rowList* with a non-zero entry".
+
+If you just wish to reduce the matrix, you do not care about the order
+of rows, and you do not want the change-of-basis matrices, then you
+should call MatrixInt::makeColumnEchelon() instead, which is simpler
+but also more streamlined.
+
+.. deprecated::
+    This routine was only being used to compute matrix inverses (and
+    only with a trivial *rowList* consisting of all rows). It has
+    therefore been replaced with the simpler routine
+    ``Matrix::inverse()``.
+
+Precondition:
+    If *n* is the number of _columns_ in *M*, then *R* has precisely
+    *n* columns also, and *Ri* has precisely *n* rows.
+
+Exception ``InvalidArgument``:
+    Either ``R.columns() ≠ M.columns()``, and/or ``Ri.rows() ≠
+    M.columns()``.
+
+Parameter ``M``:
+    the matrix to reduce.
+
+Parameter ``R``:
+    used to return the row-reduction matrix, as described above.
+
+Parameter ``Ri``:
+    used to return the inverse of *R*.
+
+Parameter ``rowList``:
+    the rows to pay attention to. This list must contain distinct
+    integers, all between 0 and M.rows()-1 inclusive (though it need
+    not contain _all_ of these integers). The integers may appear in
+    any order (though changing the order will change the resulting
+    column echelon form). For a "classical" column echelon form, this
+    would be the list of all rows: ``0,...,(M.rows()-1)``.
+
+Author:
+    Ryan Budney)doc";
+
+// Docstring regina::python::doc::metricalSmithNormalForm
+inline constexpr const char metricalSmithNormalForm[] =
+R"doc(Deprecated alternative Smith normal form routine that may be
+preferable for extremely large matrices.
+
+This simply calls ``Matrix::makeSmithCoB(SNFAlgorithm::Metrical)``;
+see that routine for further details.
+
+In this (deprecated) routine, the four change-of-basis matrices are
+given as input and refilled by this routine. Upon input, they may be
+of any size (or may even be empty); upon return they will be square
+matrices of the appropriate size.
+
+.. deprecated::
+    You should now call ``matrix.metricalSmithNormalForm()`` instead,
+    and collect the change-of-basis matrices from the return value of
+    that function.
+
+Parameter ``matrix``:
+    the matrix to transform into Smith normal form.
+
+Parameter ``rowSpaceBasis``:
+    used to return the matrix of all row operations in the conversion
+    from the original matrix into its Smith normal form.
+
+Parameter ``rowSpaceBasisInv``:
+    used to return the inverse of *rowSpaceBasis*.
+
+Parameter ``colSpaceBasis``:
+    used to return the matrix of all column operations in the
+    conversion from the original matrix into its Smith normal form.
+
+Parameter ``colSpaceBasisInv``:
+    used to return the inverse of *colSpaceBasis*.
+
+Precondition:
+    All entries in the given input matrix are finite.
+
+Author:
+    Ryan Budney)doc";
+
+// Docstring regina::python::doc::preImageOfLattice
+inline constexpr const char preImageOfLattice[] =
+R"doc(Given a homomorphism from Z^n to Z^k and a sublattice of Z^k, compute
+the preimage of this sublattice under this homomorphism.
+
+The homomorphism from Z^n to Z^k is described by the given *k* by *n*
+matrix *hom*. The sublattice is of the form ``(p1 Z) * (p2 Z) * ... *
+(pk Z)``, where the non-negative integers *p1*, ..., *pk* are passed
+in the given list *sublattice*.
+
+An equivalent problem is to consider *hom* to be a homomorphism from
+Z^n to Z_p1 + ... + Z_pk; this routine then finds the kernel of this
+homomorphism.
+
+The preimage of the sublattice (equivalently, the kernel described
+above) is some rank *n* lattice in Z^n. This algorithm finds and
+returns a basis for the lattice.
+
+Exception ``InvalidArgument``:
+    The length of *sublattice* is different from the number of rows of
+    *hom*. Note that the _contents_ of *sublattice* (specifically, the
+    signs of the integers it contains) are not checked.
+
+Parameter ``hom``:
+    the matrix representing the homomorphism from Z^n to Z^k; this
+    must be a *k* by *n* matrix.
+
+Parameter ``sublattice``:
+    a list of length *k* describing the sublattice of Z^k; the
+    elements of this list must be the non-negative integers *p1*, ...,
+    *pk* as described above.
+
+Returns:
+    a new matrix whose columns are a basis for the preimage lattice.
+    This matrix will have precisely *n* rows.
+
+Author:
+    Ryan Budney)doc";
+
+// Docstring regina::python::doc::smithNormalForm
+inline constexpr const char smithNormalForm[] =
+R"doc(Deprecated routine that transforms the given integer matrix into Smith
+normal form.
+
+This simply calls Matrix::makeSmith(); see that routine for further
+details.
+
+.. deprecated::
+    You should now call ``matrix.smithNormalForm()`` instead.
+
+Precondition:
+    All entries in the given matrix are finite.
+
+Parameter ``matrix``:
+    the matrix to transform.)doc";
+
+// Docstring regina::python::doc::smithNormalForm_2
+inline constexpr const char smithNormalForm_2[] =
+R"doc(Deprecated Smith normal form routine that also computes change-of-
+basis matrices.
+
+This simply calls Matrix::makeSmithCoB(); see that routine for further
+details.
+
+In this (deprecated) routine, the four change-of-basis matrices are
+given as input and refilled by this routine. Upon input, they may be
+of any size (or may even be empty); upon return they will be square
+matrices of the appropriate size.
+
+.. deprecated::
+    You should now call ``matrix.smithNormalFormCoB()`` instead, and
+    collect the change-of-basis matrices from the return value of that
+    function.
+
+Precondition:
+    All entries in the given input matrix are finite.
+
+Parameter ``matrix``:
+    the matrix to transform into Smith normal form.
+
+Parameter ``rowSpaceBasis``:
+    used to return the matrix of all row operations in the conversion
+    from the original matrix into its Smith normal form.
+
+Parameter ``rowSpaceBasisInv``:
+    used to return the inverse of *rowSpaceBasis*.
+
+Parameter ``colSpaceBasis``:
+    used to return the matrix of all column operations in the
+    conversion from the original matrix into its Smith normal form.
+
+Parameter ``colSpaceBasisInv``:
+    used to return the inverse of *colSpaceBasis*.)doc";
+
+// Docstring regina::python::doc::torsionAutInverse
+inline constexpr const char torsionAutInverse[] =
+R"doc(Given an automorphism of an abelian group, this procedure computes the
+inverse automorphism.
+
+The abelian group is of the form ``Z_p1 + Z_p2 + ... + Z_pn``. The
+input is an n-by-n matrix *A* which represents a lift of the
+automorphism to just some n-by-n matrix. Specifically, you have a
+little commutative diagram with ``Z^n --A--> Z^n`` covering the
+automorphism of ``Z_p1 + Z_p2 + ... + Z_pn``, where the maps down are
+the direct sum of the standard quotients ``Z --> Z_pi``. So if you
+want this procedure to give you meaningful output, *A* must be a lift
+of a genuine automorphism of ``Z_p1 + ... + Z_pn``.
+
+Precondition:
+    The list p1, p2, ..., pn is a list of invariant factors, which
+    means that p1|p2, ..., p{n-1}|pn.
+
+Exception ``InvalidArgument``:
+    Either *input* is not a square matrix, and/or the length of *invF*
+    is different from the side length of *input*. Note that the
+    _contents_ of *invF* (specifically, the divisibility property) are
+    not checked.
+
+Parameter ``input``:
+    the n-by-n matrix *A*, which must be a lift of a genuine
+    automorphism as described above.
+
+Parameter ``invF``:
+    the list p1, p2, ..., pn.
+
+Returns:
+    the inverse automorphism, also described as an n-by-n matrix as
+    per the discussion above.
+
+Author:
+    Ryan Budney)doc";
+
+struct AdjugateAlgorithm {
+
+// Docstring regina::python::doc::AdjugateAlgorithm::Default
+static constexpr const char Default[] = R"doc(Allow Regina to choose a sensible default.)doc";
+
+// Docstring regina::python::doc::AdjugateAlgorithm::FaddeevLeverrier
+static constexpr const char FaddeevLeverrier[] =
+R"doc(The Faddeev-Leverrier algorithm. This runs in time ``O(n^{ω+1})``, and
+the bottleneck is *n* matrix multiplications.
+
+Every matrix multiplication is by the input matrix. This is beneficial
+if the input matrix is sparse and computing products of matrix
+elements is expensive (e.g., when working with matrices of
+polynomials). In particular, if the input matrix has a constant number
+of non-zero entries per row or column, then each matrix multiplication
+will involve ``O(n^3)`` element products (assuming naïve matrix
+multiplication), but only ``O(n^2)`` of these products will be non-
+trivial.
+
+For a modern write-up of this algorithm, see Fredrik Johansson, "On a
+fast and nearly division-free algorithm for the characteristic
+polynomial", preprint, hal-03016034v3, November 2020.)doc";
+
+// Docstring regina::python::doc::AdjugateAlgorithm::MahajanVinay
+static constexpr const char MahajanVinay[] =
+R"doc(The Mahajan-Vinay dynamic programming algorithm, which is _only_
+suitable for computing determinants (not adjugates). This runs in time
+``O(n^4)``.
+
+For further details, see Meena Mahajan and V. Vinay, "Determinant:
+Combinatorics, algorithms, and complexity", Chicago J. Theor. Comput.
+Sci., Vol. 1997, Article 5.)doc";
+
+// Docstring regina::python::doc::AdjugateAlgorithm::PreparataSarwate
+static constexpr const char PreparataSarwate[] =
+R"doc(The Faddeev-Leverrier algorithm, with the baby-step/giant-step
+improvement of Preparata and Sarwate. This runs in time ``O(n^{ω+0.5}
++ n^3)``. The bottlenecks are ``√n`` multiplications by the input
+matrix, ``√n`` multiplications by arbitrary (typically dense)
+matrices, and *n* "product trace" computations that compute ``Tr(X *
+Y)`` without computing the full matrix product ``X * Y``.
+
+Although the time complexity appears better than plain Faddeev-
+Leverrier, one must be careful: if the input matrix is sparse and
+computing products of matrix elements is expensive (e.g., when working
+with matrices of polynomials), the need to multiply dense matrices
+here may in fact make the overall time complexity worse once the cost
+of element products is factored in.
+
+For a modern write-up of this algorithm, see Fredrik Johansson, "On a
+fast and nearly division-free algorithm for the characteristic
+polynomial", preprint, hal-03016034v3, November 2020.)doc";
+
+// Docstring regina::python::doc::AdjugateAlgorithm::__class
+static constexpr const char __class[] =
+R"doc(Represents different algorithms for computing adjugate matrices and
+determinants.
+
+In all complexity notes, *n* denotes the side length of the input
+matrix, and ω denotes the time complexity of matrix multiplication
+(which in Regina is currently the naïve ``n^3``).)doc";
+
+}; // struct AdjugateAlgorithm
+
 struct Matrix {
 
 // Docstring regina::python::doc::Matrix::__class
@@ -22,12 +342,13 @@ instead the relevant functions are only enabled in scenarios where *T*
 adheres to the Ring concept. Nowadays you should always just use the
 type ``Matrix<T>``.
 
-The header maths/matrixops.h contains several additional algorithms
-that work with the specific class Matrix<Integer>.
+As of Regina 8.0, empty matrices (where one or both of the matrix
+dimensions are zero) are explicitly supported.
 
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
-possible, even when passing or returning objects by value.
+possible, even when passing or returning objects by value. If a matrix
+is moved from, it can later be reused by assigning it a new value.
 
 Python:
     The C++ types ``Matrix<Integer>``, ``Matrix<bool>`` and
@@ -40,11 +361,11 @@ R"doc(Creates a new matrix that is a clone of the given matrix.
 
 This constructor induces a deep copy of *src*.
 
-This routine is safe to call even if *src* is uninitialised (in which
-case this matrix will become uninitialised also).
-
 Parameter ``src``:
     the matrix to clone.)doc";
+
+// Docstring regina::python::doc::Matrix::__default
+static constexpr const char __default[] = R"doc(Creates a new empty matrix. The size of this matrix will be ``0×0``.)doc";
 
 // Docstring regina::python::doc::Matrix::__eq
 static constexpr const char __eq[] =
@@ -66,6 +387,39 @@ Returns:
     ``True`` if the matrices are equal as described above, or
     ``False`` otherwise.)doc";
 
+// Docstring regina::python::doc::Matrix::__iadd
+static constexpr const char __iadd[] =
+R"doc(Adds the given matrix to this matrix in-place.
+
+Precondition:
+    The given matrix has the same dimensions as this matrix.
+
+Parameter ``rhs``:
+    the matrix to add to this.
+
+Returns:
+    a reference to this matrix.)doc";
+
+// Docstring regina::python::doc::Matrix::__imul
+static constexpr const char __imul[] =
+R"doc(Multiplies this matrix in-place by the given scalar.
+
+This matrix and the given scalar may use different underlying types
+(e.g., you can multiply a matrix of LargeInteger objects by a native
+C++ integer). The type of object that is stored in the resulting
+matrix will be deduced accordingly (specifically, it will be the type
+obtained by multiplying objects of types *T* and *U* in that order
+using the binary multiplication operator).
+
+Python:
+    It is assumed that type *U* is the same as *T*.
+
+Parameter ``scalar``:
+    the scalar to multiply this matrix by.
+
+Returns:
+    a reference to this matrix.)doc";
+
 // Docstring regina::python::doc::Matrix::__init
 static constexpr const char __init[] =
 R"doc(Creates a new square matrix of the given size. Both the number of rows
@@ -80,9 +434,6 @@ zero.
     If *T* is a native C++ integer type (such as ``int`` or ``long``),
     then the matrix elements will not be initialised to any particular
     value.
-
-Precondition:
-    The given size is strictly positive.
 
 Parameter ``size``:
     the number of rows and columns in the new matrix.)doc";
@@ -101,9 +452,6 @@ zero.
     then the matrix elements will not be initialised to any particular
     value.
 
-Precondition:
-    The given number of rows and columns are both strictly positive.
-
 Parameter ``rows``:
     the number of rows in the new matrix.
 
@@ -119,23 +467,58 @@ directly in C++ code.
 Each element of the initialiser list *data* describes a single row of
 the matrix.
 
-Precondition:
-    The list *data* is non-empty (i.e., the number of rows is
-    positive), and each of its elements is non-empty (i.e., the number
-    of columns is positive).
+Note that you cannot create a ``0×k`` matrix using this constructor
+for positive *k*, but you can always use ``Matrix(0, k)`` instead.
 
 Precondition:
-    All elements of *data* (representing the rows of the matrix) are
-    lists of the same size.
+    All of the sub-lists within *data* have the same size (i.e., each
+    row has the same number of columns).
 
 Python:
     The argument *data* should be a Python list of Python lists.
 
+Exception ``InvalidArgument``:
+    The number of rows in the given list is positive, but the
+    individual rows are empty and/or have different sizes.
+
 Parameter ``data``:
     the rows of the matrix, each given as a list of elements.)doc";
 
+// Docstring regina::python::doc::Matrix::__isub
+static constexpr const char __isub[] =
+R"doc(Subtracts the given matrix from this matrix in-place.
+
+Precondition:
+    The given matrix has the same dimensions as this matrix.
+
+Parameter ``rhs``:
+    the matrix to subtract from this.
+
+Returns:
+    a reference to this matrix.)doc";
+
 // Docstring regina::python::doc::Matrix::__mul
 static constexpr const char __mul[] =
+R"doc(Multiplies this matrix by the given scalar and returns the result.
+
+This matrix and the given scalar may use different underlying types
+(e.g., you can multiply a matrix of LargeInteger objects by a native
+C++ integer). The type of object that is stored in the resulting
+matrix will be deduced accordingly (specifically, it will be the type
+obtained by multiplying objects of types *T* and *U* in that order
+using the binary multiplication operator).
+
+Python:
+    It is assumed that type *U* is the same as *T*.
+
+Parameter ``scalar``:
+    the scalar to multiply this matrix by.
+
+Returns:
+    the matrix ``this * scalar``.)doc";
+
+// Docstring regina::python::doc::Matrix::__mul_2
+static constexpr const char __mul_2[] =
 R"doc(Multiplies this by the given matrix, and returns the result. This
 matrix is not changed.
 
@@ -143,21 +526,25 @@ The two matrices being multiplied may use different underlying types
 (e.g., you can multiply a matrix of LargeInteger objects with a matrix
 of native C++ long integers). The type of object that is stored in the
 resulting matrix will be deduced accordingly (specifically, it will be
-the type obtained by multiplying objects of types *T* and *U* using
-the binary multiplication operator).
+the type obtained by multiplying objects of types *T* and *U* in that
+order using the binary multiplication operator).
 
 Precondition:
     The number of columns in this matrix equals the number of rows in
     the given matrix.
 
-Parameter ``other``:
+Exception ``InvalidArgument``:
+    The matrix dimensions are incompatible; that is, ``columns() ≠
+    rhs.rows()``.
+
+Parameter ``rhs``:
     the other matrix to multiply this matrix by.
 
 Returns:
-    the product matrix ``this * other``.)doc";
+    the product matrix ``this * rhs``.)doc";
 
-// Docstring regina::python::doc::Matrix::__mul_2
-static constexpr const char __mul_2[] =
+// Docstring regina::python::doc::Matrix::__mul_3
+static constexpr const char __mul_3[] =
 R"doc(Multiplies this matrix by the given vector, and returns the result.
 The given vector is treated as a column vector.
 
@@ -172,12 +559,16 @@ Precondition:
     The length of the given vector is precisely the number of columns
     in this matrix.
 
-Parameter ``other``:
+Exception ``InvalidArgument``:
+    The matrix and vector dimensions are incompatible; that is,
+    ``columns() ≠ rhs.size()``.
+
+Parameter ``rhs``:
     the vector to multiply this matrix by.
 
 Returns:
-    the product ``this * other``, which will be a vector whose length
-    is the number of rows in this matrix.)doc";
+    the product ``this * rhs``, which will be a vector whose length is
+    the number of rows in this matrix.)doc";
 
 // Docstring regina::python::doc::Matrix::addCol
 static constexpr const char addCol[] =
@@ -191,8 +582,8 @@ R"doc(Adds the given source column to the given destination column.
     you will need to call addColFrom().
 
 Precondition:
-    The two given columns are distinct and between 0 and columns()-1
-    inclusive.
+    The two given columns are distinct and between 0 and
+    ``columns()-1`` inclusive.
 
 Parameter ``source``:
     the columns to add.
@@ -213,11 +604,11 @@ only be performed for the elements from that row down to the bottom of
 the column (inclusive).
 
 Precondition:
-    The two given columns are distinct and between 0 and columns()-1
-    inclusive.
+    The two given columns are distinct and between 0 and
+    ``columns()-1`` inclusive.
 
 Precondition:
-    If passed, *fromRow* is between 0 and rows() -1 inclusive.
+    If passed, *fromRow* is between 0 and rows() inclusive.
 
 Parameter ``source``:
     the columns to add.
@@ -242,11 +633,11 @@ performed for the elements from the row *fromRow* down to the bottom
 of the column (inclusive).
 
 Precondition:
-    The two given columns are distinct and between 0 and columns()-1
-    inclusive.
+    The two given columns are distinct and between 0 and
+    ``columns()-1`` inclusive.
 
 Precondition:
-    If passed, *fromRow* is between 0 and rows() -1 inclusive.
+    If passed, *fromRow* is between 0 and rows() inclusive.
 
 Parameter ``source``:
     the columns to add.
@@ -263,7 +654,7 @@ static constexpr const char addRow[] =
 R"doc(Adds the given source row to the given destination row.
 
 Precondition:
-    The two given rows are distinct and between 0 and rows()-1
+    The two given rows are distinct and between 0 and ``rows()-1``
     inclusive.
 
 .. warning::
@@ -292,11 +683,11 @@ only be performed for the elements from that column to the rightmost
 end of the row (inclusive).
 
 Precondition:
-    The two given rows are distinct and between 0 and rows()-1
+    The two given rows are distinct and between 0 and ``rows()-1``
     inclusive.
 
 Precondition:
-    If passed, *fromCol* is between 0 and columns() -1 inclusive.
+    If passed, *fromCol* is between 0 and columns() inclusive.
 
 Parameter ``source``:
     the row to add.
@@ -320,11 +711,11 @@ performed for the elements from the column *fromCol* to the rightmost
 end of the row (inclusive).
 
 Precondition:
-    The two given rows are distinct and between 0 and rows()-1
+    The two given rows are distinct and between 0 and ``rows()-1``
     inclusive.
 
 Precondition:
-    If passed, *fromCol* is between 0 and columns() -1 inclusive.
+    If passed, *fromCol* is between 0 and columns() inclusive.
 
 Parameter ``source``:
     the row to add.
@@ -336,15 +727,41 @@ Parameter ``fromCol``:
     the starting point in the row from which the operation will be
     performed.)doc";
 
-// Docstring regina::python::doc::Matrix::columnEchelonForm
-static constexpr const char columnEchelonForm[] =
-R"doc(Transforms this matrix into column echelon form. The transformation
-will perform only column operations.
+// Docstring regina::python::doc::Matrix::adjugate
+static constexpr const char adjugate[] =
+R"doc(Computes both the adjugate matrix and the determinant of this matrix.
+The adjugate ``adj`` and the determinant ``det`` of a square matrix
+``M`` satisfy the relation ``M * adj = adj * M = det * I``, where
+``I`` is the identity matrix of the same size.
 
-This is simpler than the global routine regina::columnEchelonForm():
-it does not return the change of basis matrices, and it processes all
-rows in order from left to right (instead of passing a custom row
-list).
+For an empty matrix (of size ``0×0``), the adjugate will likewise be
+empty, and the determinant will be 1.
+
+Precondition:
+    This is a square matrix.
+
+Exception ``FailedPrecondition``:
+    This matrix is not square.
+
+Exception ``InvalidArgument``:
+    The argument *alg* is an algorithm that does not support adjugates
+    (such as AdjugateAlgorithm::MahajanVinay).
+
+Parameter ``alg``:
+    the algorithm to use for this computation. If you do not specify
+    an algorithm, Regina will choose a sensible default.
+
+Returns:
+    a pair containing the adjugate matrix and the determinant.)doc";
+
+// Docstring regina::python::doc::Matrix::columnEchelon
+static constexpr const char columnEchelon[] =
+R"doc(Returns the column echelon form of this matrix along with the rank.
+This matrix itself will not be changed.
+
+The column echelon form will have the same dimensions as this matrix,
+and will be obtained from this matrix by performing only column
+operations.
 
 Our convention is that a matrix is in column echelon form if:
 
@@ -360,9 +777,12 @@ Our convention is that a matrix is in column echelon form if:
 
 * all the zero columns are at the right hand end of the matrix.
 
+Precondition:
+    All entries in this matrix are finite.
+
 Returns:
-    the rank of this matrix, i.e., the number of non-zero columns
-    remaining.)doc";
+    a pair consisting of the column echelon form *E*, and the rank of
+    this matrix (i.e., the number of non-zero columns in *E*).)doc";
 
 // Docstring regina::python::doc::Matrix::columns
 static constexpr const char columns[] =
@@ -390,11 +810,11 @@ only be performed for the elements from that column down to the bottom
 of each column (inclusive).
 
 Precondition:
-    The two given columns are distinct and between 0 and columns()-1
-    inclusive.
+    The two given columns are distinct and between 0 and
+    ``columns()-1`` inclusive.
 
 Precondition:
-    If passed, *fromCol* is between 0 and columns() -1 inclusive.
+    If passed, *fromCol* is between 0 and columns() inclusive.
 
 Parameter ``col1``:
     the first column to operate on.
@@ -441,11 +861,11 @@ only be performed for the elements from that column to the rightmost
 end of each row (inclusive).
 
 Precondition:
-    The two given rows are distinct and between 0 and rows()-1
+    The two given rows are distinct and between 0 and ``rows()-1``
     inclusive.
 
 Precondition:
-    If passed, *fromCol* is between 0 and columns() -1 inclusive.
+    If passed, *fromCol* is between 0 and columns() inclusive.
 
 Parameter ``row1``:
     the first row to operate on.
@@ -473,20 +893,17 @@ Parameter ``fromCol``:
 static constexpr const char det[] =
 R"doc(Evaluates the determinant of the matrix.
 
-This algorithm has quartic complexity, and uses the dynamic
-programming approach of Mahajan and Vinay. For further details, see
-Meena Mahajan and V. Vinay, "Determinant: Combinatorics, algorithms,
-and complexity", Chicago J. Theor. Comput. Sci., Vol. 1997, Article 5.
-
-Although the Matrix class does not formally support empty matrices, if
-this _is_ found to be a 0-by-0 matrix then the determinant returned
-will be 1.
+The determinant of an empty matrix (of size ``0×0``) will be 1.
 
 Precondition:
     This is a square matrix.
 
 Exception ``FailedPrecondition``:
     This matrix is not square.
+
+Parameter ``alg``:
+    the algorithm to use for this computation. If you do not specify
+    an algorithm, Regina will choose a sensible default.
 
 Returns:
     the determinant of this matrix.)doc";
@@ -507,7 +924,8 @@ Precondition:
     given column (i.e., it leaves no remainder).
 
 Precondition:
-    The given column number is between 0 and columns()-1 inclusive.
+    The given column number is between 0 and ``columns()-1``
+    inclusive.
 
 Parameter ``col``:
     the index of the column whose elements should be divided by
@@ -532,7 +950,7 @@ Precondition:
     given row (i.e., it leaves no remainder).
 
 Precondition:
-    The given row number is between 0 and rows()-1 inclusive.
+    The given row number is between 0 and ``rows()-1`` inclusive.
 
 Parameter ``row``:
     the index of the row whose elements should be divided by *divBy*.
@@ -555,12 +973,12 @@ Python:
     call ``matrix.set(r, c, value)``.
 
 Parameter ``row``:
-    the row of the desired entry; this must be between 0 and rows()-1
-    inclusive.
+    the row of the desired entry; this must be between 0 and
+    ``rows()-1`` inclusive.
 
 Parameter ``column``:
     the column of the desired entry; this must be between 0 and
-    columns()-1 inclusive.
+    ``columns()-1`` inclusive.
 
 Returns:
     a reference to the entry in the given row and column.)doc";
@@ -571,19 +989,19 @@ R"doc(Returns a read-only reference to the entry at the given row and
 column. Rows and columns are numbered beginning at zero.
 
 Parameter ``row``:
-    the row of the desired entry; this must be between 0 and rows()-1
-    inclusive.
+    the row of the desired entry; this must be between 0 and
+    ``rows()-1`` inclusive.
 
 Parameter ``column``:
     the column of the desired entry; this must be between 0 and
-    columns()-1 inclusive.
+    ``columns()-1`` inclusive.
 
 Returns:
     a reference to the entry in the given row and column.)doc";
 
 // Docstring regina::python::doc::Matrix::fill
 static constexpr const char fill[] =
-R"doc(Sets every entry in the matrix to the given value.
+R"doc(Sets every entry in this matrix to the given value.
 
 Parameter ``value``:
     the value to assign to each entry.)doc";
@@ -593,8 +1011,12 @@ static constexpr const char gcdCol[] =
 R"doc(Computes the greatest common divisor of all elements of the given
 column. The value returned is guaranteed to be non-negative.
 
+If this is a ``0×k`` matrix (i.e., the given column is empty), then
+the return value will be zero.
+
 Precondition:
-    The given column number is between 0 and columns()-1 inclusive.
+    The given column number is between 0 and ``columns()-1``
+    inclusive.
 
 Parameter ``col``:
     the index of the column whose gcd should be computed.
@@ -607,8 +1029,11 @@ static constexpr const char gcdRow[] =
 R"doc(Computes the greatest common divisor of all elements of the given row.
 The value returned is guaranteed to be non-negative.
 
+If this is a ``k×0`` matrix (i.e., the given row is empty), then the
+return value will be zero.
+
 Precondition:
-    The given row number is between 0 and rows()-1 inclusive.
+    The given row number is between 0 and ``rows()-1`` inclusive.
 
 Parameter ``row``:
     the index of the row whose gcd should be computed.
@@ -642,7 +1067,7 @@ Returns:
 
 // Docstring regina::python::doc::Matrix::initialise
 static constexpr const char initialise[] =
-R"doc(Deprecated function that sets every entry in the matrix to the given
+R"doc(Deprecated function that sets every entry in this matrix to the given
 value.
 
 .. deprecated::
@@ -652,21 +1077,30 @@ value.
 Parameter ``value``:
     the value to assign to each entry.)doc";
 
-// Docstring regina::python::doc::Matrix::initialised
-static constexpr const char initialised[] =
-R"doc(Determines whether this matrix is initialised or uninitialised.
+// Docstring regina::python::doc::Matrix::inverse
+static constexpr const char inverse[] =
+R"doc(Computes the inverse of this matrix, if this exists as an integer
+matrix.
 
-The only ways for a matrix to be _uninitialised_ are:
+Currently this is only implemented for integer matrices. If this
+matrix does not have an inverse, or if the inverse is not an integer
+matrix, then this routine will throw an exception.
 
-* it was created using the default constructor, and has not yet been
-  initialised using the assignment operator;
+If your matrix might not have an integer inverse, or if you are
+working over some other ring or field, you might wish to consider
+calling adjugate() instead.
 
-* it was the result of assignment or copy construction from some other
-  uninitialised matrix.
+Precondition:
+    This is a square matrix.
+
+Exception ``FailedPrecondition``:
+    This matrix is not square.
+
+Exception ``NoSolution``:
+    This matrix is not invertible over the integers.
 
 Returns:
-    ``True`` if this matrix is initialised, or ``False`` if it is
-    uninitialised.)doc";
+    the inverse matrix.)doc";
 
 // Docstring regina::python::doc::Matrix::isIdentity
 static constexpr const char isIdentity[] =
@@ -689,11 +1123,151 @@ R"doc(Determines whether this is the zero matrix.
 Returns:
     ``True`` if and only if all entries in the matrix are zero.)doc";
 
+// Docstring regina::python::doc::Matrix::makeColumnEchelon
+static constexpr const char makeColumnEchelon[] =
+R"doc(Transforms this matrix into column echelon form. The transformation
+will perform only column operations.
+
+This matrix will be modified directly, and its size will not change
+(even if the rank is less than the number of columns).
+
+Our convention is that a matrix is in column echelon form if:
+
+* each column is either zero or there is a first non-zero entry which
+  is positive;
+
+* moving from the left column to the right, these first non-zero
+  entries have strictly increasing row indices;
+
+* for each first non-zero column entry, in that row all the elements
+  to the left are smaller and non-negative (and all elements to the
+  right are already zero by the previous condition);
+
+* all the zero columns are at the right hand end of the matrix.
+
+Precondition:
+    All entries in this matrix are finite.
+
+Returns:
+    the rank of this matrix, i.e., the number of non-zero columns
+    remaining.)doc";
+
 // Docstring regina::python::doc::Matrix::makeIdentity
 static constexpr const char makeIdentity[] =
 R"doc(Turns this matrix into an identity matrix. This matrix need not be
 square; after this routine it will have ``entry(r,c)`` equal to 1 if
 ``r == c`` and 0 otherwise.)doc";
+
+// Docstring regina::python::doc::Matrix::makeRowBasis
+static constexpr const char makeRowBasis[] =
+R"doc(Rearranges and/or deletes rows of this matrix so that whatever rows
+remain form a basis of the original row space. The main purpose of
+this routine is to provide a way to remove redundant equations from a
+system of linear equations.
+
+This routine may reorder rows and/or remove rows, but will perform no
+other operations. As a result, this routine _could_ change the
+dimensions of the matrix. After this routine returns, the rows of this
+matrix will be linearly independent, and will together form a basis
+(over the rationals) of the row space of the original matrix.)doc";
+
+// Docstring regina::python::doc::Matrix::makeRowEchelon
+static constexpr const char makeRowEchelon[] =
+R"doc(Transforms this matrix into row echelon form. The transformation will
+perform only row operations.
+
+This matrix will be modified directly, and its size will not change
+(even if the rank is less than the number of rows).
+
+Our convention is that a matrix is in row echelon form if:
+
+* each row is either zero or there is a first non-zero entry which is
+  positive;
+
+* moving from the top row to the bottom, these first non-zero entries
+  have strictly increasing column indices;
+
+* for each first non-zero row entry, in that column all the elements
+  above are smaller and non-negative (and all elements below are
+  already zero by the previous condition);
+
+* all the zero rows are at the bottom of the matrix.
+
+Precondition:
+    All entries in this matrix are finite.
+
+Returns:
+    the rank of this matrix, i.e., the number of non-zero rows
+    remaining.)doc";
+
+// Docstring regina::python::doc::Matrix::makeSmith
+static constexpr const char makeSmith[] =
+R"doc(Transforms this matrix into Smith normal form.
+
+Reading down the main diagonal, the final Smith normal form will have
+a series of non-negative, non-decreasing invariant factors followed by
+zeroes. "Invariant factor" refers to the convention that the ``i``th
+term divides the (``i+1``)th term, and so these invariant factors are
+unique.
+
+This routine will use Regina's default Smith normal form algorithm. If
+you wish to use a different algorithm, you will need to call
+makeSmithCoB() instead.
+
+This matrix need not be square and need not be of full rank.
+
+Precondition:
+    All entries in this matrix are finite.)doc";
+
+// Docstring regina::python::doc::Matrix::makeSmithCoB
+static constexpr const char makeSmithCoB[] =
+R"doc(Transforms this matrix into Smith normal form and returns change-of-
+basis matrices.
+
+This routine is similar to makeSmith(); however, it allows you to
+specify a custom algorithm, and it also computes and returns change-
+of-basis matrices describing all of the row and column operations that
+were performed.
+
+As with makeSmith(), the final Smith normal form will have a main
+diagonal consisting of a series of non-negative, non-decreasing
+invariant factors followed by zeroes. "Invariant factor" refers to the
+convention that the ``i``th term divides the (``i+1``)th term, and so
+these invariant factors are unique.
+
+The change-of-basis matrices work as follows. Let *M* denote the
+initial value of this matrix, let *S* denote its Smith normal form,
+and let the returned array be ``(rowSpaceBasis, rowSpaceBasisInv,
+colSpaceBasis, colSpaceBasisInv)``. Then:
+
+* this matrix will be converted from *M* into *S*;
+
+* *colSpaceBasis* will be square with side length ``rows()``, and
+  *colSpaceBasisInv* will be its inverse matrix;
+
+* *rowSpaceBasis* will be square with side length ``columns()``, and
+  *rowSpaceBasisInv* will be its inverse matrix;
+
+* ``S = colSpaceBasis * M * rowSpaceBasis``; and
+
+* ``M = colSpaceBasisInv * S * rowSpaceBasisInv``.
+
+This matrix need not be square and need not be of full rank.
+
+Precondition:
+    All entries in this matrix are finite.
+
+Parameter ``alg``:
+    the algorithm to use for this computation. If you do not specify
+    an algorithm, Regina will choose a sensible default.
+
+Returns:
+    the four change-of-basis matrices ``(rowSpaceBasis,
+    rowSpaceBasisInv, colSpaceBasis, colSpaceBasisInv)``, as described
+    above.
+
+Author:
+    B.B. and Ryan Budney)doc";
 
 // Docstring regina::python::doc::Matrix::multCol
 static constexpr const char multCol[] =
@@ -707,10 +1281,10 @@ only be performed for the elements from that row down to the bottom of
 the column (inclusive).
 
 Precondition:
-    The given column is between 0 and columns()-1 inclusive.
+    The given column is between 0 and ``columns()-1`` inclusive.
 
 Precondition:
-    If passed, *fromRow* is between 0 and rows() -1 inclusive.
+    If passed, *fromRow* is between 0 and rows() inclusive.
 
 Parameter ``column``:
     the column to work with.
@@ -734,10 +1308,10 @@ only be performed for the elements from that column to the rightmost
 end of the row (inclusive).
 
 Precondition:
-    The given row is between 0 and rows()-1 inclusive.
+    The given row is between 0 and ``rows()-1`` inclusive.
 
 Precondition:
-    If passed, *fromCol* is between 0 and columns() -1 inclusive.
+    If passed, *fromCol* is between 0 and columns() inclusive.
 
 Parameter ``row``:
     the row to work with.
@@ -749,12 +1323,16 @@ Parameter ``fromCol``:
     the starting point in the row from which the operation will be
     performed.)doc";
 
+// Docstring regina::python::doc::Matrix::negate
+static constexpr const char negate[] = R"doc(Negates every entry in this matrix.)doc";
+
 // Docstring regina::python::doc::Matrix::negateCol
 static constexpr const char negateCol[] =
 R"doc(Negates all elements in the given column.
 
 Precondition:
-    The given column number is between 0 and columns()-1 inclusive.
+    The given column number is between 0 and ``columns()-1``
+    inclusive.
 
 Parameter ``col``:
     the index of the column whose elements should be negated.)doc";
@@ -764,29 +1342,17 @@ static constexpr const char negateRow[] =
 R"doc(Negates all elements in the given row.
 
 Precondition:
-    The given row number is between 0 and rows()-1 inclusive.
+    The given row number is between 0 and ``rows()-1`` inclusive.
 
 Parameter ``row``:
     the index of the row whose elements should be negated.)doc";
 
 // Docstring regina::python::doc::Matrix::rank
 static constexpr const char rank[] =
-R"doc(A non-destructive routine that returns the rank of this matrix whilst
-preserving the contents of the matrix.
+R"doc(Returns the rank of this matrix.
 
-Normally, a rank computation would involve modifying the matrix
-directly (e.g., by converting it to row echelon form). In contrast,
-this routine will leave the matrix unchanged. The cost is an extra
-deep copy in the implementation.
-
-If your matrix is disposable (i.e., you will never need to use it
-again), then it is faster to use the rvalue reference version of this
-routine, which will avoid the extra overhead of the deep copy. To do
-this, replace ``matrix.rank()`` with ``std::move(matrix).rank()``.
-
-Python:
-    Only the const version of rank() (i.e., this version) is available
-    for Python users.
+Precondition:
+    All entries in this matrix are finite.
 
 Returns:
     the rank of this matrix.)doc";
@@ -798,7 +1364,8 @@ greatest common divisor. It is guaranteed that, if the column is
 changed at all, it will be divided by a _positive_ integer.
 
 Precondition:
-    The given column number is between 0 and columns()-1 inclusive.
+    The given column number is between 0 and ``columns()-1``
+    inclusive.
 
 Parameter ``col``:
     the index of the column to reduce.)doc";
@@ -810,20 +1377,63 @@ common divisor. It is guaranteed that, if the row is changed at all,
 it will be divided by a _positive_ integer.
 
 Precondition:
-    The given row number is between 0 and rows()-1 inclusive.
+    The given row number is between 0 and ``rows()-1`` inclusive.
 
 Parameter ``row``:
     the index of the row to reduce.)doc";
 
-// Docstring regina::python::doc::Matrix::rowEchelonForm
-static constexpr const char rowEchelonForm[] =
-R"doc(Transforms this matrix into row echelon form. The transformation will
-perform only row operations.
+// Docstring regina::python::doc::Matrix::rowBasis
+static constexpr const char rowBasis[] =
+R"doc(Returns a subset of rows of this matrix which together form a basis of
+the row space of this matrix. The main purpose of this routine is to
+provide a way to remove redundant equations from a system of linear
+equations.
 
-This is simpler than the global routine regina::columnEchelonForm():
-it does not return the change of basis matrices, and it processes all
-columns in order from left to right (instead of passing a custom
-column list).
+Specifically: let *B* be the matrix that is returned. Then the rows of
+*B* will be a subset of the rows of this matrix, and may possibly
+appear in a different order. In particular, *B* might have fewer rows
+than this matrix. The rows of *B* will be linearly independent, and
+will together form a basis (over the rationals) of the row space of
+this matrix.
+
+Returns:
+    a basis of the row space of this matrix.)doc";
+
+// Docstring regina::python::doc::Matrix::rowBasisAndOrthComp
+static constexpr const char rowBasisAndOrthComp[] =
+R"doc(Returns a subset of rows of this matrix which together form a basis of
+its row space, along with an "incremental" basis for its orthogonal
+complement. This routine can help with larger procedures that need to
+build up a row space and simultaneously cut down the complement one
+dimension at a time.
+
+Specifically, this routine returns two matrices ``(B, C)`` as follows:
+
+* The matrix *B* will have dimensions ``rank() × columns()``, and the
+  matrix *C* will have dimensions ``columns() × columns()``.
+
+* The rows of *B* will be a subset of the rows of this matrix, and may
+  possibly appear in a different order. In particular, *B* might have
+  fewer rows than this matrix.
+
+* The rows of *B* will be linearly independent, and will together form
+  a basis (over the rationals) of the row space of this matrix.
+
+* For each *i* between 0 and ``rank()`` inclusive, the final
+  ``(columns() - i)`` rows of *C* will form a basis for the orthogonal
+  complement of the first *i* rows of *B*.
+
+Returns:
+    the basis of the row space and the "incremental" basis for its
+    orthogonal complement, as described above.)doc";
+
+// Docstring regina::python::doc::Matrix::rowEchelon
+static constexpr const char rowEchelon[] =
+R"doc(Returns the row echelon form of this matrix along with the rank. This
+matrix itself will not be changed.
+
+The row echelon form will have the same dimensions as this matrix, and
+will be obtained from this matrix by performing only row operations.
 
 Our convention is that a matrix is in row echelon form if:
 
@@ -839,9 +1449,12 @@ Our convention is that a matrix is in row echelon form if:
 
 * all the zero rows are at the bottom of the matrix.
 
+Precondition:
+    All entries in this matrix are finite.
+
 Returns:
-    the rank of this matrix, i.e., the number of non-zero rows
-    remaining.)doc";
+    a pair consisting of the row echelon form *E*, and the rank of
+    this matrix (i.e., the number of non-zero rows in *E*).)doc";
 
 // Docstring regina::python::doc::Matrix::rows
 static constexpr const char rows[] =
@@ -864,15 +1477,85 @@ Python:
     work, but ``matrix.entry(r, c) = value`` will not.
 
 Parameter ``row``:
-    the row of the entry to set; this must be between 0 and rows()-1
-    inclusive.
+    the row of the entry to set; this must be between 0 and
+    ``rows()-1`` inclusive.
 
 Parameter ``column``:
     the column of the entry to set; this must be between 0 and
-    columns()-1 inclusive.
+    ``columns()-1`` inclusive.
 
 Parameter ``value``:
     the new entry to place in the given row and column.)doc";
+
+// Docstring regina::python::doc::Matrix::smith
+static constexpr const char smith[] =
+R"doc(Returns the Smith normal form of this matrix. This matrix itself will
+not be changed.
+
+Reading down the main diagonal, the final Smith normal form will have
+a series of non-negative, non-decreasing invariant factors followed by
+zeroes. "Invariant factor" refers to the convention that the ``i``th
+term divides the (``i+1``)th term, and so these invariant factors are
+unique.
+
+This routine will use Regina's default Smith normal form algorithm. If
+you wish to use a different algorithm, you will need to call
+smithCoB() instead.
+
+This matrix need not be square and need not be of full rank.
+
+Precondition:
+    All entries in this matrix are finite.
+
+Returns:
+    the Smith normal form of this matrix.)doc";
+
+// Docstring regina::python::doc::Matrix::smithCoB
+static constexpr const char smithCoB[] =
+R"doc(Returns the Smith normal form of this matrix along with change-of-
+basis matrices. This matrix itself will not be changed.
+
+This routine is similar to smith(); however, it allows you to specify
+a custom algorithm, and it also computes and returns change-of-basis
+matrices describing all of the row and column operations that were
+performed.
+
+As with smith(), the final Smith normal form will have a main diagonal
+consisting of a series of non-negative, non-decreasing invariant
+factors followed by zeroes. "Invariant factor" refers to the
+convention that the ``i``th term divides the (``i+1``)th term, and so
+these invariant factors are unique.
+
+The change-of-basis matrices work as follows. Let *M* denote the
+initial value of this matrix, and let the returned array be ``(S,
+rowSpaceBasis, rowSpaceBasisInv, colSpaceBasis, colSpaceBasisInv)``.
+Then:
+
+* *S* will be the Smith normal form of the original matrix *M*;
+
+* *colSpaceBasis* will be square with side length ``rows()``, and
+  *colSpaceBasisInv* will be its inverse matrix;
+
+* *rowSpaceBasis* will be square with side length ``columns()``, and
+  *rowSpaceBasisInv* will be its inverse matrix;
+
+* ``S = colSpaceBasis * M * rowSpaceBasis``; and
+
+* ``M = colSpaceBasisInv * S * rowSpaceBasisInv``.
+
+This matrix need not be square and need not be of full rank.
+
+Precondition:
+    All entries in this matrix are finite.
+
+Parameter ``alg``:
+    the algorithm to use for this computation. If you do not specify
+    an algorithm, Regina will choose a sensible default.
+
+Returns:
+    the Smith normal form and the four change-of-basis matrices; that
+    is, the tuple ``(S, rowSpaceBasis, rowSpaceBasisInv,
+    colSpaceBasis, colSpaceBasisInv)``, as described above.)doc";
 
 // Docstring regina::python::doc::Matrix::swap
 static constexpr const char swap[] =
@@ -885,18 +1568,17 @@ Parameter ``other``:
 static constexpr const char swapCols[] =
 R"doc(Swaps the elements of the two given columns in the matrix.
 
-This operation is linear time (unlike swapping rows, which is constant
-time).
+Like swapRows(), this operation is linear time.
 
 If the optional argument *fromRow* is passed, then the operation will
 only be performed for the elements from that row down to the bottom of
 each column (inclusive).
 
 Precondition:
-    The two given columns are between 0 and columns()-1 inclusive.
+    The two given columns are between 0 and ``columns()-1`` inclusive.
 
 Precondition:
-    If passed, *fromRow* is between 0 and rows() -1 inclusive.
+    If passed, *fromRow* is between 0 and rows() inclusive.
 
 Parameter ``first``:
     the first column to swap.
@@ -912,22 +1594,43 @@ Parameter ``fromRow``:
 static constexpr const char swapRows[] =
 R"doc(Swaps the elements of the two given rows in the matrix.
 
-This operation is constant time (unlike swapping columns, which is
-linear time).
+As of Regina 8.0, this operation is linear time (not constant time).
 
-Unlike swapCols(), this operation does not take a *fromCol* argument.
-This is because swapping rows is already as fast possible (internally,
-just a single pointer swap), and so iterating along only part of the
-row would slow the routine down considerably.
+If the optional argument *fromCol* is passed, then the operation will
+only be performed for the elements from that column to the rightmost
+end of each row (inclusive).
 
 Precondition:
-    The two given rows are between 0 and rows()-1 inclusive.
+    The two given rows are between 0 and ``rows()-1`` inclusive.
+
+Precondition:
+    If passed, *fromCol* is between 0 and columns() inclusive.
 
 Parameter ``first``:
     the first row to swap.
 
 Parameter ``second``:
-    the second row to swap.)doc";
+    the second row to swap.
+
+Parameter ``fromCol``:
+    the starting point in each row from which the operation will be
+    performed.)doc";
+
+// Docstring regina::python::doc::Matrix::trace
+static constexpr const char trace[] =
+R"doc(Returns the trace of this matrix. The trace is simply the sum of the
+elements along the main diagonal.
+
+The trace of an empty matrix (of size ``0×0``) will be zero.
+
+Precondition:
+    This is a square matrix.
+
+Exception ``FailedPrecondition``:
+    This matrix is not square.
+
+Returns:
+    the trace of this matrix.)doc";
 
 // Docstring regina::python::doc::Matrix::transpose
 static constexpr const char transpose[] =
@@ -936,7 +1639,61 @@ R"doc(Returns the transpose of this matrix. This matrix is not changed.
 Returns:
     the transpose.)doc";
 
+// Docstring regina::python::doc::Matrix::validate
+static constexpr const char validate[] =
+R"doc(A diagnostic routine that ensures that the internal representation of
+this matrix is valid.
+
+If Regina is working correctly, this routine should do nothing. If the
+internal representation of this matrix is _not_ valid, this routine
+will throw an exception.
+
+This routine is provided for use within Regina's various test suites.
+End users should not need to call it at all.
+
+Exception ``ImpossibleScenario``:
+    The internal state of this matrix is invalid.)doc";
+
 }; // struct Matrix
+
+struct SNFAlgorithm {
+
+// Docstring regina::python::doc::SNFAlgorithm::Default
+static constexpr const char Default[] = R"doc(Allow Regina to choose a sensible default.)doc";
+
+// Docstring regina::python::doc::SNFAlgorithm::HafnerMcCurley
+static constexpr const char HafnerMcCurley[] =
+R"doc(The Hafner-McCurley algorithm.
+
+This has historically been Regina's default Smith normal form
+algorithm. It follows James L. Hafner and Kevin S. McCurley,
+"Asymptotically fast triangularization of matrices over rings", SIAM
+J. Comput. 20 (1991), no. 6, 1068–1083.
+
+This algorithm does not use modular arithmetic to control the
+intermediate coefficient explosion.)doc";
+
+// Docstring regina::python::doc::SNFAlgorithm::Metrical
+static constexpr const char Metrical[] =
+R"doc(An alternative Smith normal form algorithm that may be preferable for
+extremely large matrices.
+
+This uses a variant of the Hafner-McCurley algorithm and Havas-Holt-
+Rees' description of pivoting methods. See James L. Hafner and Kevin
+S. McCurley, "Asymptotically fast triangularization of matrices over
+rings", SIAM J. Comput. 20 (1991), no. 6, 1068–1083, and George Havas,
+Derek F. Holt and Sarah Rees, "Recognizing badly presented Z-modules",
+Linear Algebra Appl. 192 (1993), 137–163.
+
+This algorithm does not use modular arithmetic to control the
+intermediate coefficient explosion.)doc";
+
+// Docstring regina::python::doc::SNFAlgorithm::__class
+static constexpr const char __class[] =
+R"doc(Represents different algorithms for computing Smith normal forms of
+matrices.)doc";
+
+}; // struct SNFAlgorithm
 
 } // namespace regina::python::doc
 

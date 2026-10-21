@@ -113,6 +113,24 @@ This constructor induces a deep copy of the given polynomial.)doc";
 // Docstring regina::python::doc::Arrow::__default
 static constexpr const char __default[] = R"doc(Creates the zero polynomial.)doc";
 
+// Docstring regina::python::doc::Arrow::__div
+static constexpr const char __div[] =
+R"doc(Divides the given polynomial by the given integer constant.
+
+This uses the division operator ``/=`` for the Integer class.
+
+Precondition:
+    The argument *scalar* is non-zero.
+
+Parameter ``poly``:
+    the polynomial upon which to perform the division.
+
+Parameter ``scalar``:
+    the scalar factor to divide by.
+
+Returns:
+    the quotient of the given polynomial by the given scalar.)doc";
+
 // Docstring regina::python::doc::Arrow::__eq
 static constexpr const char __eq[] =
 R"doc(Tests whether this and the given polynomial are equal.
@@ -143,6 +161,21 @@ R"doc(Adds the given polynomial to this.
 
 Parameter ``other``:
     the polynomial to add to this.
+
+Returns:
+    a reference to this polynomial.)doc";
+
+// Docstring regina::python::doc::Arrow::__idiv
+static constexpr const char __idiv[] =
+R"doc(Divides this polynomial by the given integer constant.
+
+This uses the division operator ``/=`` for the Integer class.
+
+Precondition:
+    The argument *scalar* is non-zero.
+
+Parameter ``scalar``:
+    the scalar factor to divide by.
 
 Returns:
     a reference to this polynomial.)doc";
@@ -342,6 +375,19 @@ Parameter ``rhs``:
 Returns:
     the difference of the two given polynomials.)doc";
 
+// Docstring regina::python::doc::Arrow::addProduct
+static constexpr const char addProduct[] =
+R"doc(Adds the product of the given arrow and Laurent polynomials to this.
+
+Calling ``z.addProduct(x, y)`` is equivalent to, but often faster
+than, calling ``z += x * y``.
+
+Parameter ``x``:
+    the arrow polynomial in the product to add to this.
+
+Parameter ``y``:
+    the Laurent polynomial in the product to add to this.)doc";
+
 // Docstring regina::python::doc::Arrow::global_swap
 static constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given polynomials.
@@ -470,10 +516,22 @@ Parameter ``value``:
 
 // Docstring regina::python::doc::Arrow::shift
 static constexpr const char shift[] =
-R"doc(Multiplies this polynomial by ``A^s`` for some integer *s*.
+R"doc(Multiplies this polynomial by ``A^s`` for some integer *s*. This
+polynomial will be changed directly.
 
 Parameter ``s``:
     the power of *A* to multiply by.)doc";
+
+// Docstring regina::python::doc::Arrow::shifted
+static constexpr const char shifted[] =
+R"doc(Returns the product of this polynomial with ``A^s`` for some integer
+*s*. This polynomial will not be changed.
+
+Parameter ``s``:
+    the power of *A* to multiply by.
+
+Returns:
+    the product of this with ``A^s``.)doc";
 
 // Docstring regina::python::doc::Arrow::sumLaurent
 static constexpr const char sumLaurent[] =

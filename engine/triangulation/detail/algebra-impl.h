@@ -73,7 +73,11 @@ AbelianGroup TriangulationBase<dim>::homology() const {
         size_t nGens = countFaces<dim-1>() - countBoundaryFacets()
             + countComponents() - size();
         size_t nRels = countFaces<dim-2>() - nBdryRidges;
+        if (nRels == 0)
+            return *(homology_[0] = AbelianGroup(nGens));
 
+        // Here nRels > 0.  This means we have internal (dim-2)-faces, and so
+        // we have internal (dim-1)-faces also.  Therefore nGens > 0 also.
         MatrixInt pres(nRels, nGens);
 
         // Find out which (dim-1)-face corresponds to which generator.
@@ -253,6 +257,8 @@ const GroupPresentation& TriangulationBase<dim>::group() const {
 template <int dim> requires (supportedDim(dim))
 template <int subdim> requires (subdim > 0 && subdim <= dim)
 MatrixInt TriangulationBase<dim>::boundaryMap() const {
+    // The dimensions of this matrix are either (0, 0) or (positive, positive),
+    // according to whether or not the triangulation is empty.
     MatrixInt ans(countFaces<subdim - 1>(), countFaces<subdim>());
 
     if constexpr (subdim == dim) {
@@ -337,6 +343,10 @@ template <int subdim>
 requires (subdim > 0 && subdim <= (standardDim(dim) ? dim : dim - 1))
 MatrixInt TriangulationBase<dim>::dualBoundaryMap() const {
     ensureSkeleton();
+
+    // Note: we could have a situation where the matrix will have dimensions
+    // (positive x zero).  This occurs when some faces of codimension (subdim-1)
+    // are internal, but all faces of codimension subdim are boundary.
 
     if constexpr (subdim == 1) {
         MatrixInt bdry(size(), countFaces<dim-1>() - nBoundaryFaces_[dim-1]);
@@ -424,6 +434,8 @@ MatrixInt TriangulationBase<dim>::dualToPrimal() const {
     ensureSkeleton();
 
     if constexpr (subdim == 0) {
+        // The dimensions of this matrix are either (0, 0) or (+ve, +ve),
+        // according to whether or not the triangulation is empty.
         MatrixInt ans(std::get<0>(faces_).size(), size());
 
         size_t col = 0;
@@ -432,6 +444,9 @@ MatrixInt TriangulationBase<dim>::dualToPrimal() const {
 
         return ans;
     } else {
+        // Note: we could have a situation where the matrix will have dimensions
+        // (positive x zero).  This occurs when some faces of codimension
+        // subdim are internal.
         MatrixInt ans(
             std::get<subdim>(faces_).size(),
             std::get<dim-subdim>(faces_).size() - nBoundaryFaces_[dim-subdim]);
