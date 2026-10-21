@@ -752,7 +752,7 @@ void swap(MarkedAbelianGroup& lhs, MarkedAbelianGroup& rhs) noexcept;
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \todo \optlong preImageOf in CC and SNF coordinates.  This routine would
+ * \todo \optlong preimageOf in CC and SNF coordinates.  This routine would
  * return a generating list of elements in the preimage, thought of as an
  * affine subspace. Or maybe just one element together with the kernel
  * inclusion.  IMO smarter to be a list because that way there's a more

@@ -484,6 +484,7 @@ Version 8.0  [ TODO ]
             - New routines smith(), smithCoB(), makeSmith() and makeSmithCoB(),
               which replace the deprecated global functions smithNormalForm()
               and metricalSmithNormalForm().
+            - New routine preimageOfLattice().
             - Renamed rowEchelonForm() and columnEchelonForm() to
               makeRowEchelon() and makeColumnEchelon(), to better indicate
               that these routines modify the matrix in-place.  The old names
@@ -763,6 +764,10 @@ Version 8.0  [ TODO ]
         Function polynomialProduct():
             - New function for computing polynomial products using a specific
               algorithm.
+        Function preImageOfLattice():
+            - This routine has been moved into the class Matrix<Integer> under
+              the name preimageOfLattice (note the case change).  The old global
+              function is kept but deprecated.
         Function readDehydrationList(), readOrb(), readSigList():
             - These functions now throw exceptions on error, instead of
               returning null.

@@ -290,7 +290,7 @@ TEST_F(MatrixTest, empty) {
             validateEmpty(bit);
     }
 
-    validateEmpty(regina::preImageOfLattice(m, {}));
+    validateEmpty(m.preimageOfLattice({}));
 }
 
 TEST_F(MatrixTest, noRows) {
@@ -485,7 +485,7 @@ TEST_F(MatrixTest, noRows) {
         validateEmpty(res[4]);
     }
 
-    validateIdentity(regina::preImageOfLattice(m, {}), 3);
+    validateIdentity(m.preImageOfLattice({}), 3);
 }
 
 TEST_F(MatrixTest, noColumns) {
@@ -682,8 +682,8 @@ TEST_F(MatrixTest, noColumns) {
         validateIdentity(res[4], 3);
     }
 
-    validateEmpty(regina::preImageOfLattice(m, { 2, 3, 5 }));
-    validateEmpty(regina::preImageOfLattice(m, { 0, 0, 0 }));
+    validateEmpty(m.preImageOfLattice({ 2, 3, 5 }));
+    validateEmpty(m.preImageOfLattice({ 0, 0, 0 }));
 }
 
 static void verifyEchelonForm(const MatrixInt& m) {

@@ -1943,6 +1943,8 @@ class Matrix : public Output<Matrix<T>> {
          * this matrix will be linearly independent, and will together form a
          * basis (over the rationals) of the row space of the original matrix.
          *
+         * \pre All entries in this matrix are finite.
+         *
          * \headers This routine is implemented in a separate header
          * (matrix-impl.h), which is not included automatically by this file.
          * However, typical end users will not need this extra header, since
@@ -1964,6 +1966,8 @@ class Matrix : public Output<Matrix<T>> {
          * fewer rows than this matrix.  The rows of \a B will be linearly
          * independent, and will together form a basis (over the rationals) of
          * the row space of this matrix.
+         *
+         * \pre All entries in this matrix are finite.
          *
          * \headers This routine is implemented in a separate header
          * (matrix-impl.h), which is not included automatically by this file.
@@ -1992,6 +1996,8 @@ class Matrix : public Output<Matrix<T>> {
          *
          * See the const version of rowBasis() for further information on row
          * bases.
+         *
+         * \pre All entries in this matrix are finite.
          *
          * \headers This routine is implemented in a separate header
          * (matrix-impl.h), which is not included automatically by this file.
@@ -2030,6 +2036,8 @@ class Matrix : public Output<Matrix<T>> {
          *   `(columns() - i)` rows of \a C will form a basis for the orthogonal
          *   complement of the first \a i rows of \a B.
          *
+         * \pre All entries in this matrix are finite.
+         *
          * \headers This routine is implemented in a separate header
          * (matrix-impl.h), which is not included automatically by this file.
          * However, typical end users will not need this extra header, since
@@ -2056,6 +2064,7 @@ class Matrix : public Output<Matrix<T>> {
          * calling adjugate() instead.
          *
          * \pre This is a square matrix.
+         * \pre All entries in this matrix are finite.
          *
          * \exception FailedPrecondition This matrix is not square.
          * \exception NoSolution This matrix is not invertible over the
@@ -2094,6 +2103,7 @@ class Matrix : public Output<Matrix<T>> {
          * matrix directly instead of working on a temporary copy.
          *
          * \pre This is a square matrix.
+         * \pre All entries in this matrix are finite.
          *
          * \exception FailedPrecondition This matrix is not square.
          * \exception NoSolution This matrix is not invertible over the
@@ -2341,6 +2351,48 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
+         * Treats this matrix as a homomorphism from `Z^n` to `Z^k`, and computes
+         * the preimage of a given sublattice of `Z^k` under this homomorphism.
+         *
+         * Suppose this matrix (which describes the homomorphism from
+         * `Z^n` to `Z^k`) has dimensions `k × n`.  The sublattice is then of
+         * the form `(p1 Z) * (p2 Z) * ... * (pk Z)`, where the non-negative
+         * integers `p1,...,pk` are passed in the list \a sublattice.
+         *
+         * The preimage of the sublattice is some rank \a n lattice in `Z^n`.
+         * This routine computes a basis for that lattice.
+         *
+         * An equivalent problem is to treat this matrix as a homomorphism from
+         * `Z^n` to `Z_p1 + ... + Z_pk`; this routine then computes the kernel
+         * of this homomorphism.
+         *
+         * \pre All entries in this matrix are finite.
+         *
+         * \headers This routine is implemented in a separate header
+         * (matrix-impl.h), which is not included automatically by this file.
+         * However, typical end users will not need this extra header, since
+         * Regina's calculation engine already includes explicit instantiations
+         * for `Matrix<Integer>`, which is where this routine is most commonly
+         * used.
+         *
+         * \exception InvalidArgument The length of \a sublattice is different
+         * from the number of rows in this matrix.  Note that the _contents_ of
+         * \a sublattice (specifically, the signs of the integers it contains)
+         * are not checked.
+         *
+         * \param sublattice a list of length rows() describing the sublattice
+         * of `Z^k`; the elements of this list must be the non-negative integers
+         * `p1,...,pk` as described above.
+         * \return a matrix whose columns are a basis for the preimage lattice.
+         * The number of rows of the returned matrix will be the same as the
+         * number of _columns_ of this input matrix.
+         *
+         * \author Ryan Budney
+         */
+        Matrix preimageOfLattice(const std::vector<T>& sublattice) const
+                requires ReginaInteger<T>;
+
+        /**
          * A diagnostic routine that ensures that the internal representation
          * of this matrix is valid.
          *
@@ -2455,14 +2507,14 @@ class Matrix : public Output<Matrix<T>> {
          * \a rowList".  Likewise, by "first non-zero entry" we mean "first row
          * in \a rowList with a non-zero entry".
          *
-         * \pre If \a n is the number of _columns_ in this matrix, then \a R
-         * has precisely \a n columns and \a Ri has precisely \a n rows.
+         * \pre `R.columns() == Ri.rows() == columns()`.
+         * \pre All entries in this matrix are finite.
          *
          * \headers This routine is implemented in a separate header
          * (matrix-impl.h), which is not included automatically by this file.
          *
-         * \exception InvalidArgument Either `R.columns() ≠ M.columns()`, and/or
-         * `Ri.rows() ≠ M.columns()`.
+         * \exception InvalidArgument Either `R.columns() ≠ columns()`, and/or
+         * `Ri.rows() ≠ columns()`.
          *
          * \param R used to collect the column operations, as described above.
          * \param Ri used to collect the inverse row operations, again as
@@ -2649,21 +2701,24 @@ using MatrixBool = Matrix<bool>;
 }
 
 /**
- * Given a homomorphism from `Z^n` to `Z^k` and a sublattice of `Z^k`,
- * compute the preimage of this sublattice under this homomorphism.
+ * Deprecated function that, given a homomorphism from `Z^n` to `Z^k` and a
+ * sublattice of `Z^k`, compute the preimage of this sublattice under this
+ * homomorphism.
  *
  * The homomorphism from `Z^n` to `Z^k` is described by the given
  * `k × n` matrix \a hom.  The sublattice is of the form
  * `(p1 Z) * (p2 Z) * ... * (pk Z)`, where the non-negative integers
  * `p1,...,pk` are passed in the given list \a sublattice.
  *
- * An equivalent problem is to consider \a hom to be a homomorphism
- * from `Z^n` to `Z_p1 + ... + Z_pk`; this routine then finds the kernel
- * of this homomorphism.
+ * The preimage of the sublattice is some rank \a n lattice in `Z^n`.
+ * This routine computes a basis for that lattice.
  *
- * The preimage of the sublattice (equivalently, the kernel described
- * above) is some rank \a n lattice in `Z^n`.  This algorithm finds and
- * returns a basis for the lattice.
+ * An equivalent problem is to treat \a hom as a homomorphism from
+ * `Z^n` to `Z_p1 + ... + Z_pk`; this routine then computes the kernel of this
+ * homomorphism.
+ *
+ * \deprecated You should now call `hom.preimageOfLattice(sublattice)` instead
+ * (note also the change of case in the function name).
  *
  * \exception InvalidArgument The length of \a sublattice is different from
  * the number of rows of \a hom.  Note that the _contents_ of \a sublattice
@@ -2681,8 +2736,10 @@ using MatrixBool = Matrix<bool>;
  *
  * \ingroup maths
  */
-MatrixInt preImageOfLattice(const MatrixInt& hom,
-        const std::vector<Integer>& sublattice);
+[[deprecated]] inline MatrixInt preImageOfLattice(const MatrixInt& hom,
+        const std::vector<Integer>& sublattice) {
+    return hom.preimageOfLattice(sublattice);
+}
 
 } // namespace regina
 

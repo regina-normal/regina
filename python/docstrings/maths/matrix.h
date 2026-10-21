@@ -11,89 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::columnEchelonForm
-inline constexpr const char columnEchelonForm[] =
-R"doc(Deprecated routine that transforms a given matrix into column echelon
-form with respect to a collection of rows. The transformation will
-perform only column operations.
-
-Given the matrix *M* and the list *rowList* of rows from *M*, this
-algorithm puts *M* in column echelon form with respect to the rows in
-*rowList*. The only purpose of *rowList* is to clarify and/or weaken
-precisely what is meant by "column echelon form"; all rows of *M* are
-affected by the resulting column operations that take place.
-
-This routine also returns the corresponding change of coordinate
-matrices *R* and *Ri:*
-
-* The matrix *R* will have precisely the same column operations
-  applied to it as the matrix *M*. The matrix *Ri* will have the
-  inverse _row_ operations applied to it, thereby maintaining a
-  constant value of the product ``R * Ri`` as the algorithm runs.
-
-* In particular, if *R* and *Ri* are passed into this routine as
-  square identity matrices, then after the reduction is complete we
-  will have ``original_M * R = final_M`` and ``final_M * Ri =
-  original_M``.
-
-Our convention is that a matrix is in column echelon form if:
-
-* each column is either zero or there is a first non-zero entry which
-  is positive (but see the note regarding *rowList* below);
-
-* moving from the leftmost column to the rightmost column, the rows
-  containing the first non-zero entries for these columns have
-  strictly increasing indices in *rowList*;
-
-* given a first non-zero column entry, in that row all the elements to
-  the left are smaller and non-negative (all elements to the right are
-  already zero by the previous condition);
-
-* all the zero columns are on the right hand side of the matrix.
-
-By a "zero column" here we simply mean "zero for every row in
-*rowList*". Likewise, by "first non-zero entry" we mean "first row in
-*rowList* with a non-zero entry".
-
-If you just wish to reduce the matrix, you do not care about the order
-of rows, and you do not want the change-of-basis matrices, then you
-should call MatrixInt::makeColumnEchelon() instead, which is simpler
-but also more streamlined.
-
-.. deprecated::
-    This routine was only being used to compute matrix inverses (and
-    only with a trivial *rowList* consisting of all rows). It has
-    therefore been replaced with the simpler routine
-    ``Matrix::inverse()``.
-
-Precondition:
-    If *n* is the number of _columns_ in *M*, then *R* has precisely
-    *n* columns also, and *Ri* has precisely *n* rows.
-
-Exception ``InvalidArgument``:
-    Either ``R.columns() ≠ M.columns()``, and/or ``Ri.rows() ≠
-    M.columns()``.
-
-Parameter ``M``:
-    the matrix to reduce.
-
-Parameter ``R``:
-    used to return the row-reduction matrix, as described above.
-
-Parameter ``Ri``:
-    used to return the inverse of *R*.
-
-Parameter ``rowList``:
-    the rows to pay attention to. This list must contain distinct
-    integers, all between 0 and M.rows()-1 inclusive (though it need
-    not contain _all_ of these integers). The integers may appear in
-    any order (though changing the order will change the resulting
-    column echelon form). For a "classical" column echelon form, this
-    would be the list of all rows: ``0,...,(M.rows()-1)``.
-
-Author:
-    Ryan Budney)doc";
-
 // Docstring regina::python::doc::metricalSmithNormalForm
 inline constexpr const char metricalSmithNormalForm[] =
 R"doc(Deprecated alternative Smith normal form routine that may be
@@ -137,21 +54,25 @@ Author:
 
 // Docstring regina::python::doc::preImageOfLattice
 inline constexpr const char preImageOfLattice[] =
-R"doc(Given a homomorphism from Z^n to Z^k and a sublattice of Z^k, compute
-the preimage of this sublattice under this homomorphism.
+R"doc(Deprecated function that, given a homomorphism from ``Z^n`` to ``Z^k``
+and a sublattice of ``Z^k``, compute the preimage of this sublattice
+under this homomorphism.
 
-The homomorphism from Z^n to Z^k is described by the given *k* by *n*
-matrix *hom*. The sublattice is of the form ``(p1 Z) * (p2 Z) * ... *
-(pk Z)``, where the non-negative integers *p1*, ..., *pk* are passed
-in the given list *sublattice*.
+The homomorphism from ``Z^n`` to ``Z^k`` is described by the given ``k
+× n`` matrix *hom*. The sublattice is of the form ``(p1 Z) * (p2 Z) *
+... * (pk Z)``, where the non-negative integers ``p1,...,pk`` are
+passed in the given list *sublattice*.
 
-An equivalent problem is to consider *hom* to be a homomorphism from
-Z^n to Z_p1 + ... + Z_pk; this routine then finds the kernel of this
-homomorphism.
+The preimage of the sublattice is some rank *n* lattice in ``Z^n``.
+This routine computes a basis for that lattice.
 
-The preimage of the sublattice (equivalently, the kernel described
-above) is some rank *n* lattice in Z^n. This algorithm finds and
-returns a basis for the lattice.
+An equivalent problem is to treat *hom* as a homomorphism from ``Z^n``
+to ``Z_p1 + ... + Z_pk``; this routine then computes the kernel of
+this homomorphism.
+
+.. deprecated::
+    You should now call ``hom.preimageOfLattice(sublattice)`` instead
+    (note also the change of case in the function name).
 
 Exception ``InvalidArgument``:
     The length of *sublattice* is different from the number of rows of
@@ -159,17 +80,17 @@ Exception ``InvalidArgument``:
     signs of the integers it contains) are not checked.
 
 Parameter ``hom``:
-    the matrix representing the homomorphism from Z^n to Z^k; this
-    must be a *k* by *n* matrix.
+    the ``k × n`` matrix representing the homomorphism from ``Z^n`` to
+    ``Z^k``.
 
 Parameter ``sublattice``:
-    a list of length *k* describing the sublattice of Z^k; the
-    elements of this list must be the non-negative integers *p1*, ...,
-    *pk* as described above.
+    a list of length *k* describing the sublattice of ``Z^k``; the
+    elements of this list must be the non-negative integers
+    ``p1,...,pk`` as described above.
 
 Returns:
-    a new matrix whose columns are a basis for the preimage lattice.
-    This matrix will have precisely *n* rows.
+    a matrix whose columns are a basis for the preimage lattice. This
+    matrix will have precisely *n* rows.
 
 Author:
     Ryan Budney)doc";
@@ -1308,6 +1229,43 @@ Precondition:
 
 Parameter ``row``:
     the index of the row whose elements should be negated.)doc";
+
+// Docstring regina::python::doc::Matrix::preimageOfLattice
+static constexpr const char preimageOfLattice[] =
+R"doc(Treats this matrix as a homomorphism from ``Z^n`` to ``Z^k``, and
+computes the preimage of a given sublattice of ``Z^k`` under this
+homomorphism.
+
+Suppose this matrix (which describes the homomorphism from ``Z^n`` to
+``Z^k``) has dimensions ``k × n``. The sublattice is then of the form
+``(p1 Z) * (p2 Z) * ... * (pk Z)``, where the non-negative integers
+``p1,...,pk`` are passed in the list *sublattice*.
+
+The preimage of the sublattice is some rank *n* lattice in ``Z^n``.
+This routine computes a basis for that lattice.
+
+An equivalent problem is to treat this matrix as a homomorphism from
+``Z^n`` to ``Z_p1 + ... + Z_pk``; this routine then computes the
+kernel of this homomorphism.
+
+Exception ``InvalidArgument``:
+    The length of *sublattice* is different from the number of rows in
+    this matrix. Note that the _contents_ of *sublattice*
+    (specifically, the signs of the integers it contains) are not
+    checked.
+
+Parameter ``sublattice``:
+    a list of length rows() describing the sublattice of ``Z^k``; the
+    elements of this list must be the non-negative integers
+    ``p1,...,pk`` as described above.
+
+Returns:
+    a matrix whose columns are a basis for the preimage lattice. The
+    number of rows of the returned matrix will be the same as the
+    number of _columns_ of this input matrix.
+
+Author:
+    Ryan Budney)doc";
 
 // Docstring regina::python::doc::Matrix::rank
 static constexpr const char rank[] =

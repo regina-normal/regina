@@ -213,6 +213,8 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
                     (Matrix::*)(regina::SNFAlgorithm) const&>(
                     &Matrix::smithCoB),
                 "alg"_a = regina::SNFAlgorithm::Default, rdoc::smithCoB)
+            .def("preimageOfLattice", &Matrix::preimageOfLattice,
+                rdoc::preimageOfLattice)
         ;
     }
     regina::python::add_output_rich(c);
@@ -289,8 +291,10 @@ void addMatrix(pybind11::module_& m) {
         c = std::move(cob[2]);
         ci = std::move(cob[3]);
     }, rdoc::metricalSmithNormalForm);
-    m.def("preImageOfLattice", &regina::preImageOfLattice,
-        rdoc::preImageOfLattice);
+    m.def("preImageOfLattice", [](const MatrixInt& hom, // deprecated
+            const std::vector<Integer>& sublattice) {
+        return hom.preimageOfLattice(sublattice);
+    }, rdoc::preImageOfLattice);
 
     RDOC_SCOPE_END
 }

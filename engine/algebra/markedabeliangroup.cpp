@@ -1079,7 +1079,7 @@ void HomMarkedAbelianGroup::computeReducedKernelLattice() {
             else
                 dcL[i]=0;
 
-        reducedKernelLattice_ = preImageOfLattice(redMatrix, dcL);
+        reducedKernelLattice_ = redMatrix.preimageOfLattice(dcL);
     }
 }
 
