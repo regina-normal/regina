@@ -467,12 +467,7 @@ Parameter ``cuts2``:
 
 Parameter ``boundary``:
     the boundary component to fill. If the triangulation has precisely
-    one boundary component then this may be ``None``.
-
-Returns:
-    ``True`` if the boundary component was filled successfully, or
-    ``False`` if one of the required conditions as described above is
-    not satisfied.)doc";
+    one boundary component then this may be ``None``.)doc";
 
 // Docstring regina::python::doc::Triangulation3::fillTorus_2
 static constexpr const char fillTorus_2[] =
@@ -535,12 +530,7 @@ Parameter ``cuts1``:
 
 Parameter ``cuts2``:
     the number of times that the meridional curve of the new solid
-    torus should cut the edge *edge2*.
-
-Returns:
-    ``True`` if the boundary component was filled successfully, or
-    ``False`` if one of the required conditions as described above is
-    not satisfied.)doc";
+    torus should cut the edge *edge2*.)doc";
 
 // Docstring regina::python::doc::Triangulation3::fromSnapPea
 static constexpr const char fromSnapPea[] =

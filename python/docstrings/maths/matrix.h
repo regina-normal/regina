@@ -976,6 +976,9 @@ calling adjugate() instead.
 Precondition:
     This is a square matrix.
 
+Precondition:
+    All entries in this matrix are finite.
+
 Exception ``FailedPrecondition``:
     This matrix is not square.
 
@@ -1052,7 +1055,10 @@ This routine may reorder rows and/or remove rows, but will perform no
 other operations. As a result, this routine _could_ change the
 dimensions of the matrix. After this routine returns, the rows of this
 matrix will be linearly independent, and will together form a basis
-(over the rationals) of the row space of the original matrix.)doc";
+(over the rationals) of the row space of the original matrix.
+
+Precondition:
+    All entries in this matrix are finite.)doc";
 
 // Docstring regina::python::doc::Matrix::makeRowEchelon
 static constexpr const char makeRowEchelon[] =
@@ -1248,6 +1254,9 @@ An equivalent problem is to treat this matrix as a homomorphism from
 ``Z^n`` to ``Z_p1 + ... + Z_pk``; this routine then computes the
 kernel of this homomorphism.
 
+Precondition:
+    All entries in this matrix are finite.
+
 Exception ``InvalidArgument``:
     The length of *sublattice* is different from the number of rows in
     this matrix. Note that the _contents_ of *sublattice*
@@ -1316,6 +1325,9 @@ than this matrix. The rows of *B* will be linearly independent, and
 will together form a basis (over the rationals) of the row space of
 this matrix.
 
+Precondition:
+    All entries in this matrix are finite.
+
 Returns:
     a basis of the row space of this matrix.)doc";
 
@@ -1342,6 +1354,9 @@ Specifically, this routine returns two matrices ``(B, C)`` as follows:
 * For each *i* between 0 and ``rank()`` inclusive, the final
   ``(columns() - i)`` rows of *C* will form a basis for the orthogonal
   complement of the first *i* rows of *B*.
+
+Precondition:
+    All entries in this matrix are finite.
 
 Returns:
     the basis of the row space and the "incremental" basis for its
