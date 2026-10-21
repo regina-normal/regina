@@ -507,6 +507,7 @@ Version 8.0  [ TODO ]
             - The constructor that takes an Integer or LargeInteger is now
               deprecated.  Instead, you should initialise this using either
               safeValue() or unsafeValue() from Integer / LargeInteger.
+            - New routines lcm() and lcmWith().
             - The str() function and output stream operator now support
               128-bit integers on all platforms where native 128-bit integers
               are available.
