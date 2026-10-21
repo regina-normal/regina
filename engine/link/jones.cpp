@@ -242,21 +242,20 @@ namespace {
                 }
             }
 
+            /**
+             * Warning: After calling finalise(), this accumulator can no
+             * longer be used (since it may move data out of its own storage).
+             */
             Laurent<Integer> finalise() {
                 Laurent<Integer> ans;
-
-                Laurent<Integer> loopPow = RingTraits<Laurent<Integer>>::one;
+                Laurent<Integer> loopPow(1);
                 for (size_t loops = 0; loops < maxLoops_; ++loops) {
                     // std::cerr << "count[" << loops << "] = "
                     //     << count[loops] << std::endl;
-                    if (! count_[loops].isZero()) {
-                        count_[loops] *= loopPow;
-                        ans += count_[loops];
-                    }
-
+                    // Note: addProduct() already tests for zero factors.
+                    ans.addProduct(std::move(count_[loops]), loopPow);
                     loopPow *= loopPoly;
                 }
-
                 return ans;
             }
     };
@@ -418,8 +417,7 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
             Key k(nStrands);
             std::fill(k.begin(), k.end(), -2);
 
-            partial[index]->emplace(std::move(k),
-                RingTraits<Laurent<Integer>>::one);
+            partial[index]->emplace(std::move(k), Laurent<Integer>(1));
         } else if (bag->niceType() == NiceType::Introduce) {
             // Introduce bag.
             child = bag->children();
@@ -583,7 +581,7 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
                     auto existingSoln = partial[index]->try_emplace(
                         std::move(kNew), std::move(vNew));
                     if (! existingSoln.second)
-                        existingSoln.first->second += vNew;
+                        existingSoln.first->second += std::move(vNew);
                 }
             }
 

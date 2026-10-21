@@ -115,10 +115,10 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
         // overload_cast has trouble with templated vs non-templated overloads.
         // Just cast directly.
         .def("divExact",
-            static_cast<Int (Int::*)(const Int&) const>(&Int::divExact),
+            static_cast<Int (Int::*)(const Int&) const&>(&Int::divExact),
             rdoc::divExact)
         .def("divExact",
-            static_cast<Int (Int::*)(long) const>(&Int::divExact),
+            static_cast<Int (Int::*)(long) const&>(&Int::divExact),
             rdoc::divExact_2)
         .def(pybind11::self % pybind11::self, rdoc::__mod)
         .def(pybind11::self % long(), rdoc::__mod_2)
@@ -143,13 +143,16 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
             rdoc::divByExact_2)
         .def(pybind11::self %= pybind11::self, rdoc::__imod)
         .def(pybind11::self %= long(), rdoc::__imod_2)
+        .def("addProduct", &Int::addProduct, rdoc::addProduct)
         .def("negate", &Int::negate, rdoc::negate)
         .def("raiseToPower", &Int::raiseToPower, rdoc::raiseToPower)
-        .def("abs", &Int::abs, rdoc::abs)
+        .def("abs", static_cast<Int (Int::*)() const&>(&Int::abs), rdoc::abs)
         .def("gcdWith", &Int::gcdWith, rdoc::gcdWith)
-        .def("gcd", &Int::gcd, rdoc::gcd)
+        .def("gcd", static_cast<Int (Int::*)(const Int&) const&>(&Int::gcd),
+            rdoc::gcd)
         .def("lcmWith", &Int::lcmWith, rdoc::lcmWith)
-        .def("lcm", &Int::lcm, rdoc::lcm)
+        .def("lcm", static_cast<Int (Int::*)(const Int&) const&>(&Int::lcm),
+            rdoc::lcm)
         .def("gcdWithCoeffs", overload_cast<const Int&>(
             &Int::gcdWithCoeffs, pybind11::const_),
             rdoc::gcdWithCoeffs)
@@ -164,6 +167,7 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
             rdoc::randomCornerBinary)
         .def("makeLarge", &Int::makeLarge, rdoc::makeLarge)
         .def("tryReduce", &Int::tryReduce, rdoc::tryReduce)
+        .def("validate", &Int::validate, rdoc::validate)
         .def_readonly_static("supportsInfinity", &Int::supportsInfinity)
         .def_readonly_static("zero", &Int::zero)
         .def_readonly_static("one", &Int::one)

@@ -96,6 +96,10 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
         .def("next", &StrandRef::next, rdoc::next)
         .def("prev", &StrandRef::prev, rdoc::prev)
         .def("jump", &StrandRef::jump, rdoc::jump)
+        .def("turnLeft", &StrandRef::turnLeft,
+            "forwards"_a = true, rdoc::turnLeft)
+        .def("turnRight", &StrandRef::turnRight,
+            "forwards"_a = true, rdoc::turnRight)
         .def("reset", &StrandRef::reset, rdoc::reset)
         .def("__bool__", &StrandRef::operator bool, rdoc::__as_bool)
     ;
@@ -284,6 +288,8 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
         .def("isClassical", &Link::isClassical, rdoc::isClassical)
         .def("virtualGenus", &Link::virtualGenus, rdoc::virtualGenus)
         .def("seifertCircles", &Link::seifertCircles, rdoc::seifertCircles)
+        .def("longRotations", &Link::longRotations,
+            "breakOpen"_a = StrandRef(), rdoc::longRotations)
         .def("complement", &Link::complement,
             "simplify"_a = true, rdoc::complement)
         .def("longComplement", &Link::longComplement,
@@ -356,6 +362,8 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
             "alg"_a = regina::Algorithm::Default, "tracker"_a = nullptr,
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::homflyLM)
+        .def("theta", &Link::theta,
+            pybind11::return_value_policy::reference_internal, rdoc::theta)
         .def("arrow", &Link::arrow,
             pybind11::return_value_policy::reference_internal,
             "alg"_a = regina::Algorithm::Default, "threads"_a = 1,
@@ -372,6 +380,8 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
         .def("knowsHomfly", &Link::knowsHomfly,
             "cachedOnly"_a = false, rdoc::knowsHomfly)
         .def_static("homflyAZtoLM", &Link::homflyAZtoLM, rdoc::homflyAZtoLM)
+        .def("knowsTheta", &Link::knowsTheta,
+            "cachedOnly"_a = false, rdoc::knowsTheta)
         .def("knowsArrow", &Link::knowsArrow,
             "cachedOnly"_a = false, rdoc::knowsArrow)
         .def("group", &Link::group,
@@ -643,6 +653,8 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
         .def_readonly_static("homflyAZVarY", Link::homflyAZVarY)
         .def_readonly_static("homflyLMVarX", Link::homflyLMVarX)
         .def_readonly_static("homflyLMVarY", Link::homflyLMVarY)
+        .def_readonly_static("thetaVarX", Link::thetaVarX)
+        .def_readonly_static("thetaVarY", Link::thetaVarY)
         .def_readonly_static("affineIndexVar", Link::affineIndexVar)
     ;
     regina::python::add_output_rich(l);

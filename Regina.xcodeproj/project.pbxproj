@@ -63,7 +63,6 @@
 		050F5DDA1B9BAB9C00C1F681 /* pyangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D0B1B9BAB9C00C1F681 /* pyangle.cpp */; };
 		050F5DE81B9BAB9C00C1F681 /* pyfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D1D1B9BAB9C00C1F681 /* pyfile.cpp */; };
 		050F5DF41B9BAB9C00C1F681 /* pymanifold.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D2B1B9BAB9C00C1F681 /* pymanifold.cpp */; };
-		050F5DF51B9BAB9C00C1F681 /* matrixops.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D2E1B9BAB9C00C1F681 /* matrixops.cpp */; };
 		050F5DF61B9BAB9C00C1F681 /* cyclotomic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D2F1B9BAB9C00C1F681 /* cyclotomic.cpp */; };
 		050F5DF71B9BAB9C00C1F681 /* integer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D301B9BAB9C00C1F681 /* integer.cpp */; };
 		050F5DF91B9BAB9C00C1F681 /* matrix2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D321B9BAB9C00C1F681 /* matrix2.cpp */; };
@@ -270,7 +269,6 @@
 		052F9F11180600FB00FAE4DF /* orb.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CB0180600FA00FAE4DF /* orb.h */; };
 		052F9F2B180600FB00FAE4DF /* notation.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CCE180600FA00FAE4DF /* notation.h */; };
 		052F9F36180600FB00FAE4DF /* order.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CD9180600FA00FAE4DF /* order.cpp */; };
-		052F9F39180600FB00FAE4DF /* matrixops.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CE1180600FA00FAE4DF /* matrixops.cpp */; };
 		052F9F3A180600FB00FAE4DF /* matrixops.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CE2180600FA00FAE4DF /* matrixops.h */; };
 		052F9F3B180600FB00FAE4DF /* integer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CE3180600FA00FAE4DF /* integer.cpp */; };
 		052F9F3C180600FB00FAE4DF /* integer.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CE4180600FA00FAE4DF /* integer.h */; };
@@ -370,6 +368,8 @@
 		052FA0A1180600FB00FAE4DF /* xmlutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E7F180600FB00FAE4DF /* xmlutils.cpp */; };
 		052FA0A2180600FB00FAE4DF /* xmlutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E80180600FB00FAE4DF /* xmlutils.h */; };
 		052FA11F18060A4C00FAE4DF /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
+		0530306130164D16004DEC1D /* theta.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0530306030164D16004DEC1D /* theta.cpp */; };
+		0530306230164D16004DEC1D /* theta.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0530306030164D16004DEC1D /* theta.cpp */; };
 		05329E4D2F0D35190048C8C6 /* flags.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05329E4C2F0D35190048C8C6 /* flags.cpp */; };
 		05329E4F2F11E5240048C8C6 /* boundaries.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05329E4E2F11E5240048C8C6 /* boundaries.cpp */; };
 		05329E512F25548A0048C8C6 /* boolset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05329E502F25548A0048C8C6 /* boolset.cpp */; };
@@ -482,7 +482,7 @@
 		05431F841C40F3C9009BC072 /* sublattice_representation.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F5F1C40F3C9009BC072 /* sublattice_representation.h */; };
 		05431F861C40F3C9009BC072 /* vector_operations.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F611C40F3C9009BC072 /* vector_operations.h */; };
 		05431F871C40F3C9009BC072 /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F621C40F3C9009BC072 /* version.h */; };
-		05431F8C1C40F40D009BC072 /* offload_handler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F561C40F3C9009BC072 /* offload_handler.cpp */; };
+		05431F8C1C40F40D009BC072 /* offload_handler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F561C40F3C9009BC072 /* offload_handler.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
 		05431FA91C40F5A2009BC072 /* perm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431FA51C40F599009BC072 /* perm.cpp */; };
 		05431FAA1C40F5A2009BC072 /* perm2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431FA61C40F599009BC072 /* perm2.cpp */; };
 		05431FCF1C40F663009BC072 /* intutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431FCD1C40F65D009BC072 /* intutils.cpp */; };
@@ -513,6 +513,7 @@
 		0545A04E2FB66FC5008D3ADB /* spatiallink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A04D2FB66FC5008D3ADB /* spatiallink.cpp */; };
 		0545A0512FBBCD71008D3ADB /* tri2composition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A0502FBBCD71008D3ADB /* tri2composition.cpp */; };
 		0547513A2FE34054002150C4 /* treeconstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054751392FE34054002150C4 /* treeconstraint.cpp */; };
+		0547513F2FFD30D0002150C4 /* typetrie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0547513D2FFD30D0002150C4 /* typetrie.cpp */; };
 		054C6A7E1DCC20DA005373F0 /* example.h in Headers */ = {isa = PBXBuildFile; fileRef = 054C6A7C1DCC20DA005373F0 /* example.h */; };
 		054C6A7F1DCC20DA005373F0 /* strings.h in Headers */ = {isa = PBXBuildFile; fileRef = 054C6A7D1DCC20DA005373F0 /* strings.h */; };
 		054C6A821DCC2127005373F0 /* example.h in Headers */ = {isa = PBXBuildFile; fileRef = 054C6A811DCC2127005373F0 /* example.h */; };
@@ -811,6 +812,8 @@
 		0553FBB62AF6A4E700BE89A7 /* LinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0553FBB52AF6A4E700BE89A7 /* LinkView.swift */; };
 		0553FBBA2AF8643D00BE89A7 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0553FBB92AF8643D00BE89A7 /* SettingsView.swift */; };
 		0553FBBE2AF92A3700BE89A7 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0553FBBD2AF92A3700BE89A7 /* Settings.bundle */; };
+		055869C73056399E00E446A3 /* polyops.h in Headers */ = {isa = PBXBuildFile; fileRef = 055869C63056399E00E446A3 /* polyops.h */; };
+		055869C9305639B400E446A3 /* polyops.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055869C8305639B400E446A3 /* polyops.cpp */; };
 		055BC3E92653380600E5E34C /* sigutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 055BC3E82653380600E5E34C /* sigutils.h */; };
 		055BC3ED265338FC00E5E34C /* pd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055BC3EC265338FC00E5E34C /* pd.cpp */; };
 		055CD8F62A23605A0072F4B5 /* topologylock.h in Headers */ = {isa = PBXBuildFile; fileRef = 055CD8F52A23605A0072F4B5 /* topologylock.h */; };
@@ -957,7 +960,6 @@
 		056AED792A431AE200EAF4FA /* cyclotomic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AED2D2A431AE200EAF4FA /* cyclotomic.cpp */; };
 		056AED7A2A431AE200EAF4FA /* laurent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AED2F2A431AE200EAF4FA /* laurent.cpp */; };
 		056AED7B2A431AE200EAF4FA /* primes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AED302A431AE200EAF4FA /* primes.cpp */; };
-		056AED7C2A431AE200EAF4FA /* matrixops.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AED312A431AE200EAF4FA /* matrixops.cpp */; };
 		056AED7D2A431AE200EAF4FA /* numbertheory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AED322A431AE200EAF4FA /* numbertheory.cpp */; };
 		056AED7E2A431AE200EAF4FA /* binom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AED332A431AE200EAF4FA /* binom.cpp */; };
 		056AED7F2A431AE200EAF4FA /* perm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AED342A431AE200EAF4FA /* perm.cpp */; };
@@ -1270,7 +1272,6 @@
 		05A6281C2AE921580049739E /* cyclotomic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0541AF481B8BE2F5002E166B /* cyclotomic.cpp */; };
 		05A6281D2AE921580049739E /* integer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CE3180600FA00FAE4DF /* integer.cpp */; };
 		05A6281E2AE921580049739E /* seedprimes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CFA180600FA00FAE4DF /* seedprimes.cpp */; };
-		05A6281F2AE921580049739E /* matrixops.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CE1180600FA00FAE4DF /* matrixops.cpp */; };
 		05A628202AE921580049739E /* numbertheory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CF6180600FA00FAE4DF /* numbertheory.cpp */; };
 		05A628212AE921580049739E /* perm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059493062920B1C300940F0D /* perm.cpp */; };
 		05A628222AE921580049739E /* primes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CF0180600FA00FAE4DF /* primes.cpp */; };
@@ -1334,7 +1335,7 @@
 		05B4D2BB229F376B00B7B11C /* nmz_integrate.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B4D2A9229F376800B7B11C /* nmz_integrate.h */; };
 		05B4D2C0229F376B00B7B11C /* nmz_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B4D2AC229F376800B7B11C /* nmz_config.h */; };
 		05B4D2C3229F376B00B7B11C /* output.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B4D2AE229F376900B7B11C /* output.h */; };
-		05B4D2CA229F376B00B7B11C /* output.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B4D2B2229F376A00B7B11C /* output.cpp */; };
+		05B4D2CA229F376B00B7B11C /* output.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B4D2B2229F376A00B7B11C /* output.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
 		05B4D2CE229F376B00B7B11C /* descent.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B4D2B4229F376B00B7B11C /* descent.h */; };
 		05B4D2D6229F42D700B7B11C /* engine.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B4D2D2229F42D600B7B11C /* engine.h */; };
 		05B4D2D7229F42D700B7B11C /* output.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B4D2D3229F42D600B7B11C /* output.h */; };
@@ -1355,23 +1356,23 @@
 		05B7002725AC2305003BAF5C /* input.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B7001E25AC2305003BAF5C /* input.h */; };
 		05B7002825AC2305003BAF5C /* input_type.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B7001F25AC2305003BAF5C /* input_type.h */; };
 		05B7002925AC2305003BAF5C /* automorph.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B7002025AC2305003BAF5C /* automorph.h */; };
-		05B7FF8825AC22AA003BAF5C /* automorph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B7FF8125AC22A9003BAF5C /* automorph.cpp */; };
-		05B7FF8A25AC22AA003BAF5C /* options.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B7FF8225AC22A9003BAF5C /* options.cpp */; };
-		05B7FF8C25AC22AA003BAF5C /* collection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B7FF8325AC22A9003BAF5C /* collection.cpp */; };
-		05B7FF8E25AC22AA003BAF5C /* general.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B7FF8425AC22AA003BAF5C /* general.cpp */; };
-		05B7FF9025AC22AA003BAF5C /* input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B7FF8525AC22AA003BAF5C /* input.cpp */; };
-		05B7FF9225AC22AA003BAF5C /* face_lattice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B7FF8625AC22AA003BAF5C /* face_lattice.cpp */; };
-		05B7FFC025AC22D3003BAF5C /* reduction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F591C40F3C9009BC072 /* reduction.cpp */; };
-		05B7FFC125AC22D3003BAF5C /* sublattice_representation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F5E1C40F3C9009BC072 /* sublattice_representation.cpp */; };
-		05B7FFC225AC22D3003BAF5C /* simplex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F5C1C40F3C9009BC072 /* simplex.cpp */; };
-		05B7FFC325AC22D3003BAF5C /* cone_property.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F3F1C40F3C9009BC072 /* cone_property.cpp */; };
-		05B7FFC525AC22D3003BAF5C /* matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F521C40F3C9009BC072 /* matrix.cpp */; };
-		05B7FFC625AC22D3003BAF5C /* project_and_lift.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B4D2AA229F376800B7B11C /* project_and_lift.cpp */; };
-		05B7FFC725AC22D3003BAF5C /* HilbertSeries.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F481C40F3C9009BC072 /* HilbertSeries.cpp */; };
-		05B7FFC825AC22D3003BAF5C /* full_cone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F451C40F3C9009BC072 /* full_cone.cpp */; };
-		05B7FFC925AC22D3003BAF5C /* cone_dual_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F3D1C40F3C9009BC072 /* cone_dual_mode.cpp */; };
-		05B7FFCA25AC22D3003BAF5C /* descent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B4D2A7229F376700B7B11C /* descent.cpp */; };
-		05B7FFCB25AC22D3003BAF5C /* cone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F411C40F3C9009BC072 /* cone.cpp */; };
+		05B7FF8825AC22AA003BAF5C /* automorph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B7FF8125AC22A9003BAF5C /* automorph.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		05B7FF8A25AC22AA003BAF5C /* options.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B7FF8225AC22A9003BAF5C /* options.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		05B7FF8C25AC22AA003BAF5C /* collection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B7FF8325AC22A9003BAF5C /* collection.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		05B7FF8E25AC22AA003BAF5C /* general.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B7FF8425AC22AA003BAF5C /* general.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		05B7FF9025AC22AA003BAF5C /* input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B7FF8525AC22AA003BAF5C /* input.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		05B7FF9225AC22AA003BAF5C /* face_lattice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B7FF8625AC22AA003BAF5C /* face_lattice.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		05B7FFC025AC22D3003BAF5C /* reduction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F591C40F3C9009BC072 /* reduction.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		05B7FFC125AC22D3003BAF5C /* sublattice_representation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F5E1C40F3C9009BC072 /* sublattice_representation.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		05B7FFC225AC22D3003BAF5C /* simplex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F5C1C40F3C9009BC072 /* simplex.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		05B7FFC325AC22D3003BAF5C /* cone_property.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F3F1C40F3C9009BC072 /* cone_property.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		05B7FFC525AC22D3003BAF5C /* matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F521C40F3C9009BC072 /* matrix.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		05B7FFC625AC22D3003BAF5C /* project_and_lift.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B4D2AA229F376800B7B11C /* project_and_lift.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		05B7FFC725AC22D3003BAF5C /* HilbertSeries.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F481C40F3C9009BC072 /* HilbertSeries.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		05B7FFC825AC22D3003BAF5C /* full_cone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F451C40F3C9009BC072 /* full_cone.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		05B7FFC925AC22D3003BAF5C /* cone_dual_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F3D1C40F3C9009BC072 /* cone_dual_mode.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		05B7FFCA25AC22D3003BAF5C /* descent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B4D2A7229F376700B7B11C /* descent.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		05B7FFCB25AC22D3003BAF5C /* cone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F411C40F3C9009BC072 /* cone.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
 		05B9EC1B18245F2100DCACF3 /* euler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B9EC1A18245F2100DCACF3 /* euler.cpp */; };
 		05BDA5622CB64CCD006F4738 /* binomial.h in Headers */ = {isa = PBXBuildFile; fileRef = 05BDA5562CB64CCD006F4738 /* binomial.h */; };
 		05BDA5632CB64CCD006F4738 /* binomial_containers.h in Headers */ = {isa = PBXBuildFile; fileRef = 05BDA5582CB64CCD006F4738 /* binomial_containers.h */; };
@@ -1379,12 +1380,12 @@
 		05BDA5652CB64CCD006F4738 /* fusion.h in Headers */ = {isa = PBXBuildFile; fileRef = 05BDA55C2CB64CCD006F4738 /* fusion.h */; };
 		05BDA5662CB64CCD006F4738 /* collect_lat.h in Headers */ = {isa = PBXBuildFile; fileRef = 05BDA55A2CB64CCD006F4738 /* collect_lat.h */; };
 		05BDA5672CB64CCD006F4738 /* lattice_ideal.h in Headers */ = {isa = PBXBuildFile; fileRef = 05BDA55E2CB64CCD006F4738 /* lattice_ideal.h */; };
-		05BDA5682CB64CCD006F4738 /* binomial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA5572CB64CCD006F4738 /* binomial.cpp */; };
-		05BDA5692CB64CCD006F4738 /* nmz_polynomial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA5612CB64CCD006F4738 /* nmz_polynomial.cpp */; };
-		05BDA56A2CB64CCD006F4738 /* binomial_containers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA5592CB64CCD006F4738 /* binomial_containers.cpp */; };
-		05BDA56B2CB64CCD006F4738 /* fusion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA55D2CB64CCD006F4738 /* fusion.cpp */; };
-		05BDA56C2CB64CCD006F4738 /* collect_lat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA55B2CB64CCD006F4738 /* collect_lat.cpp */; };
-		05BDA56D2CB64CCD006F4738 /* lattice_ideal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA55F2CB64CCD006F4738 /* lattice_ideal.cpp */; };
+		05BDA5682CB64CCD006F4738 /* binomial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA5572CB64CCD006F4738 /* binomial.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		05BDA5692CB64CCD006F4738 /* nmz_polynomial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA5612CB64CCD006F4738 /* nmz_polynomial.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		05BDA56A2CB64CCD006F4738 /* binomial_containers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA5592CB64CCD006F4738 /* binomial_containers.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		05BDA56B2CB64CCD006F4738 /* fusion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA55D2CB64CCD006F4738 /* fusion.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		05BDA56C2CB64CCD006F4738 /* collect_lat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA55B2CB64CCD006F4738 /* collect_lat.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		05BDA56D2CB64CCD006F4738 /* lattice_ideal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA55F2CB64CCD006F4738 /* lattice_ideal.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
 		05BDA56E2CB64CCD006F4738 /* binomial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA5572CB64CCD006F4738 /* binomial.cpp */; };
 		05BDA56F2CB64CCD006F4738 /* nmz_polynomial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA5612CB64CCD006F4738 /* nmz_polynomial.cpp */; };
 		05BDA5702CB64CCD006F4738 /* binomial_containers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA5592CB64CCD006F4738 /* binomial_containers.cpp */; };
@@ -1393,6 +1394,7 @@
 		05BDA5732CB64CCD006F4738 /* lattice_ideal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA55F2CB64CCD006F4738 /* lattice_ideal.cpp */; };
 		05BDA5752CB65B08006F4738 /* iterators.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA5742CB65B08006F4738 /* iterators.cpp */; };
 		05BDA5842CB6648D006F4738 /* spatiallinkui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA5832CB6648D006F4738 /* spatiallinkui.cpp */; };
+		05BE83F930205F32008EB541 /* intutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BE83F830205F32008EB541 /* intutils.cpp */; };
 		05BF6FD02DB0001D0093D7A2 /* matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BF6FCF2DB0001D0093D7A2 /* matrix.cpp */; };
 		05BF6FD22DB0116A0093D7A2 /* alexander.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BF6FD12DB0116A0093D7A2 /* alexander.cpp */; };
 		05BF6FD32DB0116A0093D7A2 /* alexander.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BF6FD12DB0116A0093D7A2 /* alexander.cpp */; };
@@ -1606,12 +1608,15 @@
 		05EBB41B259DB4A400362FA5 /* regfiledump in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B221D9DC53400B1E33B /* regfiledump */; };
 		05EBB41C259DB4A700362FA5 /* regfiletype in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B2D1D9DC54500B1E33B /* regfiletype */; };
 		05EBB41D259DB4AC00362FA5 /* trisetcmp in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B431D9DC55B00B1E33B /* trisetcmp */; };
-		05EDDA4B27E3102A001743C1 /* chunk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05EDDA4727E3102A001743C1 /* chunk.cpp */; };
-		05EDDA4D27E3102A001743C1 /* signed_dec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05EDDA4827E3102A001743C1 /* signed_dec.cpp */; };
+		05EDDA4B27E3102A001743C1 /* chunk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05EDDA4727E3102A001743C1 /* chunk.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		05EDDA4D27E3102A001743C1 /* signed_dec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05EDDA4827E3102A001743C1 /* signed_dec.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
 		05EDDA4F27E3102A001743C1 /* signed_dec.h in Headers */ = {isa = PBXBuildFile; fileRef = 05EDDA4927E3102A001743C1 /* signed_dec.h */; };
 		05EDDA5027E3102A001743C1 /* chunk.h in Headers */ = {isa = PBXBuildFile; fileRef = 05EDDA4A27E3102A001743C1 /* chunk.h */; };
 		05EDDA5527E31061001743C1 /* nmz_hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 05EDDA5227E31060001743C1 /* nmz_hash.h */; };
 		05EE4AEC2D8BA962006D1495 /* katie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05EE4AEB2D8BA962006D1495 /* katie.cpp */; };
+		05EED702306613CC003A2705 /* matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05EED701306613CC003A2705 /* matrix.cpp */; };
+		05EED703306613CC003A2705 /* matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05EED701306613CC003A2705 /* matrix.cpp */; };
+		05EED70530674DFA003A2705 /* matrix-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05EED70430674DFA003A2705 /* matrix-impl.h */; };
 		05F09FBF1DBEF01800117BFC /* dim2.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FBC1DBEF01800117BFC /* dim2.h */; };
 		05F09FC01DBEF01800117BFC /* dim3.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FBD1DBEF01800117BFC /* dim3.h */; };
 		05F09FC11DBEF01800117BFC /* dim4.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FBE1DBEF01800117BFC /* dim4.h */; };
@@ -2121,7 +2126,6 @@
 		05098A9128F24D98005E4716 /* numbertheory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = numbertheory.h; sourceTree = "<group>"; };
 		05098A9228F24D98005E4716 /* polynomial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = polynomial.h; sourceTree = "<group>"; };
 		05098A9328F24D98005E4716 /* primes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = primes.h; sourceTree = "<group>"; };
-		05098A9428F24D98005E4716 /* matrixops.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = matrixops.h; sourceTree = "<group>"; };
 		05098A9528F24D98005E4716 /* integer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = integer.h; sourceTree = "<group>"; };
 		05098A9628F24D98005E4716 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		05098A9728F24D98005E4716 /* gendoc.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = gendoc.sh; sourceTree = "<group>"; };
@@ -2295,7 +2299,6 @@
 		050F5D201B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5D2B1B9BAB9C00C1F681 /* pymanifold.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pymanifold.cpp; sourceTree = "<group>"; };
 		050F5D2D1B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		050F5D2E1B9BAB9C00C1F681 /* matrixops.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = matrixops.cpp; sourceTree = "<group>"; };
 		050F5D2F1B9BAB9C00C1F681 /* cyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyclotomic.cpp; sourceTree = "<group>"; };
 		050F5D301B9BAB9C00C1F681 /* integer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = integer.cpp; sourceTree = "<group>"; };
 		050F5D321B9BAB9C00C1F681 /* matrix2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = matrix2.cpp; sourceTree = "<group>"; };
@@ -2586,7 +2589,6 @@
 		052F9CDB180600FA00FAE4DF /* sfsnotation.fig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sfsnotation.fig; sourceTree = "<group>"; };
 		052F9CDC180600FA00FAE4DF /* sfsnotation.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sfsnotation.png; sourceTree = "<group>"; };
 		052F9CE0180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		052F9CE1180600FA00FAE4DF /* matrixops.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = matrixops.cpp; sourceTree = "<group>"; };
 		052F9CE2180600FA00FAE4DF /* matrixops.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = matrixops.h; sourceTree = "<group>"; };
 		052F9CE3180600FA00FAE4DF /* integer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = integer.cpp; sourceTree = "<group>"; };
 		052F9CE4180600FA00FAE4DF /* integer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = integer.h; sourceTree = "<group>"; };
@@ -2727,6 +2729,7 @@
 		052F9E7F180600FB00FAE4DF /* xmlutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlutils.cpp; sourceTree = "<group>"; };
 		052F9E80180600FB00FAE4DF /* xmlutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlutils.h; sourceTree = "<group>"; };
 		052FA0C11806072900FAE4DF /* regina-testsuite */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "regina-testsuite"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0530306030164D16004DEC1D /* theta.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = theta.cpp; sourceTree = "<group>"; };
 		0530FEFF284595580069B227 /* tightencoding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tightencoding.h; sourceTree = "<group>"; };
 		05318CA22A84F9F200E89B9D /* org.computop.Regina.desktop */ = {isa = PBXFileReference; lastKnownFileType = text; path = org.computop.Regina.desktop; sourceTree = "<group>"; };
 		05318CA32A84F9F200E89B9D /* org.computop.regina.metainfo.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = org.computop.regina.metainfo.xml; sourceTree = "<group>"; };
@@ -2925,6 +2928,8 @@
 		0545A04F2FBBCD71008D3ADB /* tri2composition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tri2composition.h; sourceTree = "<group>"; };
 		0545A0502FBBCD71008D3ADB /* tri2composition.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tri2composition.cpp; sourceTree = "<group>"; };
 		054751392FE34054002150C4 /* treeconstraint.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = treeconstraint.cpp; sourceTree = "<group>"; };
+		0547513C2FFD30D0002150C4 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		0547513D2FFD30D0002150C4 /* typetrie.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = typetrie.cpp; sourceTree = "<group>"; };
 		0549B4982907D38D00C911AF /* data-anon.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-anon.docbook"; sourceTree = "<group>"; };
 		0549B4992907D38E00C911AF /* data-tri.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-tri.docbook"; sourceTree = "<group>"; };
 		0549B49A2907D38E00C911AF /* data-txi.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-txi.docbook"; sourceTree = "<group>"; };
@@ -3010,6 +3015,9 @@
 		0553FBB92AF8643D00BE89A7 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		0553FBBD2AF92A3700BE89A7 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		05561D191811F27A00FD6E2E /* x-regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "x-regina.icns"; path = "macos-icons/x-regina.icns"; sourceTree = "<group>"; };
+		055869C63056399E00E446A3 /* polyops.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = polyops.h; sourceTree = "<group>"; };
+		055869C8305639B400E446A3 /* polyops.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = polyops.cpp; sourceTree = "<group>"; };
+		055869CA305639C800E446A3 /* polyops.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = polyops.h; sourceTree = "<group>"; };
 		055BC3E82653380600E5E34C /* sigutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sigutils.h; sourceTree = "<group>"; };
 		055BC3EC265338FC00E5E34C /* pd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pd.cpp; sourceTree = "<group>"; };
 		055CD8F52A23605A0072F4B5 /* topologylock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = topologylock.h; sourceTree = "<group>"; };
@@ -3401,7 +3409,6 @@
 		056AED2E2A431AE200EAF4FA /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		056AED2F2A431AE200EAF4FA /* laurent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = laurent.cpp; sourceTree = "<group>"; };
 		056AED302A431AE200EAF4FA /* primes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = primes.cpp; sourceTree = "<group>"; };
-		056AED312A431AE200EAF4FA /* matrixops.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = matrixops.cpp; sourceTree = "<group>"; };
 		056AED322A431AE200EAF4FA /* numbertheory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = numbertheory.cpp; sourceTree = "<group>"; };
 		056AED332A431AE200EAF4FA /* binom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = binom.cpp; sourceTree = "<group>"; };
 		056AED342A431AE200EAF4FA /* perm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = perm.cpp; sourceTree = "<group>"; };
@@ -3903,6 +3910,7 @@
 		05BDA5772CB662ED006F4738 /* comparison.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = comparison.test; sourceTree = "<group>"; };
 		05BDA5822CB6648D006F4738 /* spatiallinkui.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = spatiallinkui.h; sourceTree = "<group>"; };
 		05BDA5832CB6648D006F4738 /* spatiallinkui.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = spatiallinkui.cpp; sourceTree = "<group>"; };
+		05BE83F830205F32008EB541 /* intutils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = intutils.cpp; sourceTree = "<group>"; };
 		05BF6FCF2DB0001D0093D7A2 /* matrix.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = matrix.cpp; sourceTree = "<group>"; };
 		05BF6FD12DB0116A0093D7A2 /* alexander.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = alexander.cpp; sourceTree = "<group>"; };
 		05C1BE961DCA7C77007C946B /* boundarycomponent-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "boundarycomponent-impl.h"; sourceTree = "<group>"; };
@@ -4408,6 +4416,8 @@
 		05EDF2FC2E1CDA220040F824 /* regfiledump.filter */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = regfiledump.filter; sourceTree = "<group>"; };
 		05EDF2FD2E1CDA220040F824 /* trisetcmp.filter */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = trisetcmp.filter; sourceTree = "<group>"; };
 		05EE4AEB2D8BA962006D1495 /* katie.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = katie.cpp; sourceTree = "<group>"; };
+		05EED701306613CC003A2705 /* matrix.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = matrix.cpp; sourceTree = "<group>"; };
+		05EED70430674DFA003A2705 /* matrix-impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "matrix-impl.h"; sourceTree = "<group>"; };
 		05F09FBC1DBEF01800117BFC /* dim2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2.h; sourceTree = "<group>"; };
 		05F09FBD1DBEF01800117BFC /* dim3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim3.h; sourceTree = "<group>"; };
 		05F09FBE1DBEF01800117BFC /* dim4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4.h; sourceTree = "<group>"; };
@@ -4797,7 +4807,6 @@
 				05098AAC28F44AAF005E4716 /* laurent2.h */,
 				05098AAE28F44AAF005E4716 /* matrix.h */,
 				05098AA528F44AAE005E4716 /* matrix2.h */,
-				05098A9428F24D98005E4716 /* matrixops.h */,
 				05098A9128F24D98005E4716 /* numbertheory.h */,
 				05098AA428F44AAE005E4716 /* perm.h */,
 				05098AA828F44AAE005E4716 /* perm2.h */,
@@ -4809,6 +4818,7 @@
 				0594930F2922E93D00940F0D /* permgroup.h */,
 				05E221D62CEC250D009D5D4E /* permsn.h */,
 				05098A9228F24D98005E4716 /* polynomial.h */,
+				055869CA305639C800E446A3 /* polyops.h */,
 				05098A9328F24D98005E4716 /* primes.h */,
 				05098AA928F44AAE005E4716 /* rational.h */,
 				0591FB3B2E5C393C0061D270 /* ring.h */,
@@ -5186,7 +5196,6 @@
 				05721F021F97160200A83FFC /* laurent2.cpp */,
 				05098AB628F4C4CF005E4716 /* matrix.cpp */,
 				050F5D321B9BAB9C00C1F681 /* matrix2.cpp */,
-				050F5D2E1B9BAB9C00C1F681 /* matrixops.cpp */,
 				050F5D3A1B9BAB9C00C1F681 /* numbertheory.cpp */,
 				05431FA51C40F599009BC072 /* perm.cpp */,
 				05431FA61C40F599009BC072 /* perm2.cpp */,
@@ -5198,6 +5207,7 @@
 				0594930C2920B21600940F0D /* permgroup.cpp */,
 				05E221D72CEC2525009D5D4E /* permsn.cpp */,
 				050F5D371B9BAB9C00C1F681 /* polynomial.cpp */,
+				055869C8305639B400E446A3 /* polyops.cpp */,
 				050F5D381B9BAB9C00C1F681 /* primes.cpp */,
 				050F5D3C1B9BAB9C00C1F681 /* pymaths.cpp */,
 				050F5D391B9BAB9C00C1F681 /* rational.cpp */,
@@ -6007,10 +6017,11 @@
 				052F9CE4180600FA00FAE4DF /* integer.h */,
 				05721EFE1F9715C700A83FFC /* laurent.h */,
 				05721EFD1F9715C600A83FFC /* laurent2.h */,
+				05EED701306613CC003A2705 /* matrix.cpp */,
 				052F9CE6180600FA00FAE4DF /* matrix.h */,
+				05EED70430674DFA003A2705 /* matrix-impl.h */,
 				052F9CE7180600FA00FAE4DF /* matrix2.cpp */,
 				052F9CE8180600FA00FAE4DF /* matrix2.h */,
-				052F9CE1180600FA00FAE4DF /* matrixops.cpp */,
 				052F9CE2180600FA00FAE4DF /* matrixops.h */,
 				052F9CF6180600FA00FAE4DF /* numbertheory.cpp */,
 				052F9CF7180600FA00FAE4DF /* numbertheory.h */,
@@ -6020,6 +6031,7 @@
 				059493052920B1C300940F0D /* permgroup.h */,
 				05E221D42CEC24F3009D5D4E /* permsn.h */,
 				0541AF4A1B8BE2F5002E166B /* polynomial.h */,
+				055869C63056399E00E446A3 /* polyops.h */,
 				052F9CF0180600FA00FAE4DF /* primes.cpp */,
 				052F9CF1180600FA00FAE4DF /* primes.h */,
 				052F9CF2180600FA00FAE4DF /* rational.cpp */,
@@ -6649,6 +6661,15 @@
 			path = helpers;
 			sourceTree = "<group>";
 		};
+		0547513E2FFD30D0002150C4 /* enumerate */ = {
+			isa = PBXGroup;
+			children = (
+				0547513C2FFD30D0002150C4 /* CMakeLists.txt */,
+				0547513D2FFD30D0002150C4 /* typetrie.cpp */,
+			);
+			path = enumerate;
+			sourceTree = "<group>";
+		};
 		0553FBB22AF6808E00BE89A7 /* packets */ = {
 			isa = PBXGroup;
 			children = (
@@ -7071,6 +7092,7 @@
 				056AED3F2A431AE200EAF4FA /* census */,
 				056AECE02A431AE200EAF4FA /* CMakeLists.txt */,
 				056AED442A431AE200EAF4FA /* compile-time */,
+				0547513E2FFD30D0002150C4 /* enumerate */,
 				056AECF72A431AE200EAF4FA /* gtest */,
 				056AED232A431AE200EAF4FA /* link */,
 				056AED432A431AE200EAF4FA /* main.cpp */,
@@ -7137,6 +7159,7 @@
 				056AECF32A431AE200EAF4FA /* bitmask.cpp */,
 				05329E502F25548A0048C8C6 /* boolset.cpp */,
 				056AECF02A431AE200EAF4FA /* CMakeLists.txt */,
+				05BE83F830205F32008EB541 /* intutils.cpp */,
 				0545A01E2FA83E57008D3ADB /* sigutils.cpp */,
 				057FDAF22EE56488000C706E /* stringutils.cpp */,
 				056AECEF2A431AE200EAF4FA /* tightencoding.cpp */,
@@ -7264,7 +7287,6 @@
 				056AED2F2A431AE200EAF4FA /* laurent.cpp */,
 				056AED2A2A431AE200EAF4FA /* laurent2.cpp */,
 				05BF6FCF2DB0001D0093D7A2 /* matrix.cpp */,
-				056AED312A431AE200EAF4FA /* matrixops.cpp */,
 				056AED322A431AE200EAF4FA /* numbertheory.cpp */,
 				056AED342A431AE200EAF4FA /* perm.cpp */,
 				056AED2C2A431AE200EAF4FA /* permconv.cpp */,
@@ -7364,6 +7386,7 @@
 				05ACC9F32AFC674C000CF07F /* spatiallink.h */,
 				0568742220C5D86A001C435B /* tangle.cpp */,
 				0568741F20C5D868001C435B /* tangle.h */,
+				0530306030164D16004DEC1D /* theta.cpp */,
 			);
 			path = link;
 			sourceTree = "<group>";
@@ -8567,6 +8590,7 @@
 				05431F6E1C40F3C9009BC072 /* general.h in Headers */,
 				05772EB7270CF97100D26D8A /* angleflags.h in Headers */,
 				057FDB012EE967A3000C706E /* forward.h in Headers */,
+				055869C73056399E00E446A3 /* polyops.h in Headers */,
 				0542087A1DF0D0B50018AB24 /* format.h in Headers */,
 				05431F801C40F3C9009BC072 /* reduction.h in Headers */,
 				055114D51DCC71A700EC753C /* facetspec.h in Headers */,
@@ -8699,6 +8723,7 @@
 				05669D961DCB0E9A00C870C6 /* facetpairing3.h in Headers */,
 				052F9F7E180600FB00FAE4DF /* dual_one_skeleton_curve.h in Headers */,
 				052FA083180600FB00FAE4DF /* base64.h in Headers */,
+				05EED70530674DFA003A2705 /* matrix-impl.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9488,10 +9513,10 @@
 				0594930D2920B21600940F0D /* permgroup.cpp in Sources */,
 				050F5DF91B9BAB9C00C1F681 /* matrix2.cpp in Sources */,
 				05754D18258D834E00236ED7 /* randutils.cpp in Sources */,
+				055869C9305639B400E446A3 /* polyops.cpp in Sources */,
 				057B0CA826A2ABF40017F5EA /* xmlutils.cpp in Sources */,
 				05FB46D31DD92D2800BB00E5 /* grouppresentation.cpp in Sources */,
 				050F5E0A1B9BAB9C00C1F681 /* packettype.cpp in Sources */,
-				050F5DF51B9BAB9C00C1F681 /* matrixops.cpp in Sources */,
 				05A066A41DFA67D40047872E /* pluggedtorusbundle.cpp in Sources */,
 				057B0CA926A2ABF40017F5EA /* base64.cpp in Sources */,
 				050F5E371B9BAB9C00C1F681 /* normalflags.cpp in Sources */,
@@ -9590,6 +9615,7 @@
 				0553FB832AEBE86300BE89A7 /* input.cpp in Sources */,
 				0553FB272AEBE73A00BE89A7 /* blockedsfs.cpp in Sources */,
 				0553FB6E2AEBE7E900BE89A7 /* orient.cpp in Sources */,
+				05EED702306613CC003A2705 /* matrix.cpp in Sources */,
 				0553FB222AEBE73A00BE89A7 /* satregion.cpp in Sources */,
 				0553FAB92AEBE3C700BE89A7 /* facetpairing7.cpp in Sources */,
 				0553FB0C2AEBE6FC00BE89A7 /* simplesurfacebundle.cpp in Sources */,
@@ -9704,7 +9730,6 @@
 				0553FB8E2AEBE86300BE89A7 /* collection.cpp in Sources */,
 				0553FA8C2AEBE3AC00BE89A7 /* homologicaldata.cpp in Sources */,
 				0553FA9B2AEBE3AC00BE89A7 /* simplify.cpp in Sources */,
-				05A6281F2AE921580049739E /* matrixops.cpp in Sources */,
 				05A6281B2AE921580049739E /* matrix2.cpp in Sources */,
 				0553FB622AEBE7E100BE89A7 /* edge_classes.cpp in Sources */,
 				0529094A2AE5EA090028990D /* ReginaApp.swift in Sources */,
@@ -9894,6 +9919,7 @@
 				0553FAD12AEBE3E100BE89A7 /* cut.cpp in Sources */,
 				0553FB642AEBE7E100BE89A7 /* filling.cpp in Sources */,
 				0553FA952AEBE3AC00BE89A7 /* insertlayered.cpp in Sources */,
+				0530306230164D16004DEC1D /* theta.cpp in Sources */,
 				054131192AFA2F6B006AAD75 /* SvgView.swift in Sources */,
 				0553FB612AEBE7E100BE89A7 /* find_cusp.cpp in Sources */,
 				054131092AF9E95A006AAD75 /* Utilities.swift in Sources */,
@@ -9918,7 +9944,6 @@
 			files = (
 				056AED662A431AE200EAF4FA /* base64.cpp in Sources */,
 				05BF6FD02DB0001D0093D7A2 /* matrix.cpp in Sources */,
-				056AED7C2A431AE200EAF4FA /* matrixops.cpp in Sources */,
 				056AED6F2A431AE200EAF4FA /* gtest-assertion-result.cc in Sources */,
 				056AED722A431AE200EAF4FA /* gtest-filepath.cc in Sources */,
 				056AED7D2A431AE200EAF4FA /* numbertheory.cpp in Sources */,
@@ -9963,6 +9988,7 @@
 				05F3DABE2A5CE3B3007A2CE2 /* integer.cpp in Sources */,
 				056AED632A431AE200EAF4FA /* incompressible.cpp in Sources */,
 				056AED7A2A431AE200EAF4FA /* laurent.cpp in Sources */,
+				05BE83F930205F32008EB541 /* intutils.cpp in Sources */,
 				056AED7B2A431AE200EAF4FA /* primes.cpp in Sources */,
 				056AEDBC2A46690D00EAF4FA /* rational.cpp in Sources */,
 				057FDAF32EE56488000C706E /* stringutils.cpp in Sources */,
@@ -9989,6 +10015,7 @@
 				056AED892A431AE200EAF4FA /* intutils.cpp in Sources */,
 				056AED642A431AE200EAF4FA /* normalsurfaces.cpp in Sources */,
 				056AED7E2A431AE200EAF4FA /* binom.cpp in Sources */,
+				0547513F2FFD30D0002150C4 /* typetrie.cpp in Sources */,
 				0545A01F2FA83E57008D3ADB /* sigutils.cpp in Sources */,
 				056AED842A431AE200EAF4FA /* main.cpp in Sources */,
 				057FDAFB2EE86FE1000C706E /* concepts.cpp in Sources */,
@@ -10216,8 +10243,6 @@
 				05C1BEDA1DCA89DA007C946B /* triangulation8.cpp in Sources */,
 				05C1BEAC1DCA7CA9007C946B /* boundary4.cpp in Sources */,
 				05F0A0011DBF078800117BFC /* moves.cpp in Sources */,
-				05B7FFC625AC22D3003BAF5C /* project_and_lift.cpp in Sources */,
-				05B7FF8825AC22AA003BAF5C /* automorph.cpp in Sources */,
 				05F0A03B1DBF0B5E00117BFC /* decompose.cpp in Sources */,
 				0518BA3329D595D00020ADC1 /* tidy_peripheral_curves.cpp in Sources */,
 				05FB46E41DD92D4A00BB00E5 /* abeliangroup.cpp in Sources */,
@@ -10233,6 +10258,7 @@
 				0518B9DF29D595680020ADC1 /* finite_vertices.cpp in Sources */,
 				05ACC9F42AFC674C000CF07F /* spatiallink.cpp in Sources */,
 				05C1BED41DCA89DA007C946B /* triangulation2.cpp in Sources */,
+				05EED703306613CC003A2705 /* matrix.cpp in Sources */,
 				05C265B7282C948700232420 /* facetpairing6.cpp in Sources */,
 				050C64871DA1249600C9420F /* globaldirs.cpp in Sources */,
 				052F9F3B180600FB00FAE4DF /* integer.cpp in Sources */,
@@ -10251,19 +10277,18 @@
 				054208B11DF0D2740018AB24 /* graphloop.cpp in Sources */,
 				0518BA2A29D595C40020ADC1 /* tables.cpp in Sources */,
 				059802EE26683C6D002D5D57 /* xmlreader.cpp in Sources */,
-				05B7FFCB25AC22D3003BAF5C /* cone.cpp in Sources */,
 				052F9F52180600FB00FAE4DF /* seedprimes.cpp in Sources */,
 				05F0A0411DBF0B5E00117BFC /* insertlayered.cpp in Sources */,
 				05C1BEAA1DCA7CA9007C946B /* boundary2.cpp in Sources */,
 				05E62A9F2FC5C6C700AE1B84 /* manifold.cpp in Sources */,
 				0518BA1B29D595B00020ADC1 /* representations.cpp in Sources */,
 				05A73C8419B2EEC50099C617 /* csv.cpp in Sources */,
-				05B7FFC725AC22D3003BAF5C /* HilbertSeries.cpp in Sources */,
 				0518B99B29D594030020ADC1 /* canonize_part_1.cpp in Sources */,
 				0541AF4B1B8BE2F5002E166B /* cyclotomic.cpp in Sources */,
 				05C7A5C92DF7D9BA00CD4551 /* affineindex.cpp in Sources */,
 				054208841DF0D0B50018AB24 /* state.cpp in Sources */,
 				059802ED26683C6D002D5D57 /* xmlcallback.cpp in Sources */,
+				0530306130164D16004DEC1D /* theta.cpp in Sources */,
 				059493072920B1C300940F0D /* permgroup.cpp in Sources */,
 				05A067301DFA68190047872E /* satregion.cpp in Sources */,
 				05F0A0421DBF0B5E00117BFC /* reorder.cpp in Sources */,
@@ -10277,7 +10302,6 @@
 				052FA02F180600FB00FAE4DF /* normalsurfaces.cpp in Sources */,
 				0591E7DC1C4F750200793A9C /* links.cpp in Sources */,
 				059802F726683C6D002D5D57 /* xmllinkreader.cpp in Sources */,
-				052F9F39180600FB00FAE4DF /* matrixops.cpp in Sources */,
 				0518B9AF29D5952A0020ADC1 /* chern_simons.cpp in Sources */,
 				052FA021180600FB00FAE4DF /* crushandcut.cpp in Sources */,
 				05754CE8258D7D6400236ED7 /* randutils.cpp in Sources */,
@@ -10285,14 +10309,7 @@
 				0591E7F31C4F75C300793A9C /* gluingpermsearcher4.cpp in Sources */,
 				05135AE128347BF600C4BFDC /* cut.cpp in Sources */,
 				05C265B9282C948700232420 /* facetpairing4.cpp in Sources */,
-				05BDA5682CB64CCD006F4738 /* binomial.cpp in Sources */,
-				05BDA5692CB64CCD006F4738 /* nmz_polynomial.cpp in Sources */,
-				05BDA56A2CB64CCD006F4738 /* binomial_containers.cpp in Sources */,
-				05BDA56B2CB64CCD006F4738 /* fusion.cpp in Sources */,
-				05BDA56C2CB64CCD006F4738 /* collect_lat.cpp in Sources */,
-				05BDA56D2CB64CCD006F4738 /* lattice_ideal.cpp in Sources */,
 				054208B91DF0D2740018AB24 /* lensspace.cpp in Sources */,
-				05B7FFCA25AC22D3003BAF5C /* descent.cpp in Sources */,
 				05C1BEAE1DCA7CA9007C946B /* boundary6.cpp in Sources */,
 				051CBE842DE561370019D73D /* arrow.cpp in Sources */,
 				05B4D2D8229F42D700B7B11C /* engine.cpp in Sources */,
@@ -10309,7 +10326,6 @@
 				0518B9F329D595760020ADC1 /* intersection_numbers.cpp in Sources */,
 				0582FDE62731FE0900203AE7 /* attachment.cpp in Sources */,
 				052F9FDB180600FB00FAE4DF /* snappeatriangulation.cpp in Sources */,
-				05B7FF9025AC22AA003BAF5C /* input.cpp in Sources */,
 				052FA099180600FB00FAE4DF /* osutils.cpp in Sources */,
 				05772EC4270CF98F00D26D8A /* xmltreeresolver.cpp in Sources */,
 				05DC13811FEB86E900171D66 /* retriangulate.cpp in Sources */,
@@ -10345,7 +10361,6 @@
 				05B9EC1B18245F2100DCACF3 /* euler.cpp in Sources */,
 				054208BD1DF0D2740018AB24 /* sfs.cpp in Sources */,
 				05A067141DFA68190047872E /* layeredchain.cpp in Sources */,
-				05EDDA4D27E3102A001743C1 /* signed_dec.cpp in Sources */,
 				05C1BEB01DCA7CA9007C946B /* boundary8.cpp in Sources */,
 				05048A2226B274650088C978 /* perm6.cpp in Sources */,
 				0545A0152F9CD9A7008D3ADB /* bytesequence.cpp in Sources */,
@@ -10403,7 +10418,6 @@
 				05F0A0491DBF0B5E00117BFC /* surfaces.cpp in Sources */,
 				0518B9E729D595680020ADC1 /* fundamental_group.cpp in Sources */,
 				0518BA2529D595BA0020ADC1 /* subdivide.cpp in Sources */,
-				05B7FF8C25AC22AA003BAF5C /* collection.cpp in Sources */,
 				0591E7E21C4F750200793A9C /* normalhypersurfaces.cpp in Sources */,
 				0518B99429D5932D0020ADC1 /* snappy_get_gluing_equations.cpp in Sources */,
 				054208C51DF0D2740018AB24 /* torusbundle.cpp in Sources */,
@@ -10414,19 +10428,14 @@
 				05A067201DFA68190047872E /* layering.cpp in Sources */,
 				0542088A1DF0D0B50018AB24 /* themedata.cpp in Sources */,
 				05FB46E61DD92D4A00BB00E5 /* grouppresentation.cpp in Sources */,
-				05B7FFC225AC22D3003BAF5C /* simplex.cpp in Sources */,
 				05A067161DFA68190047872E /* layeredchainpair.cpp in Sources */,
-				05B7FFC025AC22D3003BAF5C /* reduction.cpp in Sources */,
-				05B7FFC525AC22D3003BAF5C /* matrix.cpp in Sources */,
 				0512E0A326DF356300DDB222 /* trieset.cpp in Sources */,
 				0518BA0629D595940020ADC1 /* my_malloc.cpp in Sources */,
 				0518B9A329D594030020ADC1 /* abelian_group.cpp in Sources */,
 				0542087C1DF0D0B50018AB24 /* keywordlist.cpp in Sources */,
 				059802FA26683C6D002D5D57 /* xmlalgebrareader.cpp in Sources */,
-				05B7FF8A25AC22AA003BAF5C /* options.cpp in Sources */,
 				056EC5502A288F2E006EE87A /* default_theme.cpp in Sources */,
 				0591E85E1C50D28700793A9C /* enumerate.cpp in Sources */,
-				05B4D2CA229F376B00B7B11C /* output.cpp in Sources */,
 				052F9EA9180600FB00FAE4DF /* gluingpermsearcher3.cpp in Sources */,
 				0518BA1529D595A00020ADC1 /* precision.cpp in Sources */,
 				05A067261DFA68190047872E /* plugtrisolidtorus.cpp in Sources */,
@@ -10448,7 +10457,6 @@
 				05BF6FD32DB0116A0093D7A2 /* alexander.cpp in Sources */,
 				05FEA07A19C1890900A31924 /* examplesnappea.cpp in Sources */,
 				05772EC0270CF98F00D26D8A /* xmlsnappeawriter.cpp in Sources */,
-				05B7FF9225AC22AA003BAF5C /* face_lattice.cpp in Sources */,
 				052F9EFA180600FB00FAE4DF /* treetraversal.cpp in Sources */,
 				051261A7278D65B9006A55B1 /* intersectionform.cpp in Sources */,
 				05A067241DFA68190047872E /* pluggedtorusbundle.cpp in Sources */,
@@ -10456,7 +10464,6 @@
 				0518B99D29D594030020ADC1 /* canonize_part_2.cpp in Sources */,
 				05F0A0031DBF078800117BFC /* skeleton.cpp in Sources */,
 				052F9F3F180600FB00FAE4DF /* matrix2.cpp in Sources */,
-				05B7FFC325AC22D3003BAF5C /* cone_property.cpp in Sources */,
 				05A0670E1DFA68190047872E /* blockedsfspair.cpp in Sources */,
 				05C1BED91DCA89DA007C946B /* triangulation7.cpp in Sources */,
 				0541AF611B8BE40B002E166B /* treedecomposition.cpp in Sources */,
@@ -10505,12 +10512,9 @@
 				054208C31DF0D2740018AB24 /* snappeacensusmfd.cpp in Sources */,
 				05ACC9EC2AFC6714000CF07F /* xmlspatiallinkwriter.cpp in Sources */,
 				052FA054180600FB00FAE4DF /* stdtoquad.cpp in Sources */,
-				05B7FFC125AC22D3003BAF5C /* sublattice_representation.cpp in Sources */,
-				05431F8C1C40F40D009BC072 /* offload_handler.cpp in Sources */,
 				0518BA0A29D595940020ADC1 /* Moebius_transformations.cpp in Sources */,
 				052FA09E180600FB00FAE4DF /* stringutils.cpp in Sources */,
 				05721EE61F97153E00A83FFC /* jones.cpp in Sources */,
-				05B7FFC825AC22D3003BAF5C /* full_cone.cpp in Sources */,
 				05C265B5282C948700232420 /* facetpairing3.cpp in Sources */,
 				0518B9C829D595490020ADC1 /* cusp_cross_sections.cpp in Sources */,
 				05098A6628F24CBC005E4716 /* typeutils.cpp in Sources */,
@@ -10524,10 +10528,8 @@
 				052F9E94180600FB00FAE4DF /* compact.cpp in Sources */,
 				0518B9F129D595760020ADC1 /* hyperbolic_structure.cpp in Sources */,
 				052F9FE2180600FB00FAE4DF /* sigisomorphism.cpp in Sources */,
-				05EDDA4B27E3102A001743C1 /* chunk.cpp in Sources */,
 				05F0A03A1DBF0B5E00117BFC /* crushtri.cpp in Sources */,
 				05F0A0431DBF0B5E00117BFC /* retriangulate.cpp in Sources */,
-				05B7FFC925AC22D3003BAF5C /* cone_dual_mode.cpp in Sources */,
 				05A0670C1DFA68190047872E /* blockedsfsloop.cpp in Sources */,
 				05A067181DFA68190047872E /* layeredlensspace.cpp in Sources */,
 				052F9F10180600FB00FAE4DF /* orb.cpp in Sources */,
@@ -10535,7 +10537,6 @@
 				059802DE26683C6D002D5D57 /* xmlsurfacereader.cpp in Sources */,
 				050C646B1DA1019B00C9420F /* anglestructures.cpp in Sources */,
 				052FA087180600FB00FAE4DF /* i18nutils.cpp in Sources */,
-				05B7FF8E25AC22AA003BAF5C /* general.cpp in Sources */,
 				0518B9BC29D595380020ADC1 /* complex.cpp in Sources */,
 				05CAE65427450D89007C93F3 /* gluingperms8.cpp in Sources */,
 				05ACC9F72AFC674C000CF07F /* knotplot.cpp in Sources */,
@@ -10548,6 +10549,33 @@
 				0518B9E929D595680020ADC1 /* holonomy.cpp in Sources */,
 				052FA04E180600FB00FAE4DF /* quadtostd.cpp in Sources */,
 				0518B9CA29D595490020ADC1 /* cusp_neighborhoods.cpp in Sources */,
+				05B7FF8825AC22AA003BAF5C /* automorph.cpp in Sources */,
+				05BDA5682CB64CCD006F4738 /* binomial.cpp in Sources */,
+				05BDA56A2CB64CCD006F4738 /* binomial_containers.cpp in Sources */,
+				05EDDA4B27E3102A001743C1 /* chunk.cpp in Sources */,
+				05BDA56C2CB64CCD006F4738 /* collect_lat.cpp in Sources */,
+				05B7FF8C25AC22AA003BAF5C /* collection.cpp in Sources */,
+				05B7FFC925AC22D3003BAF5C /* cone_dual_mode.cpp in Sources */,
+				05B7FFC325AC22D3003BAF5C /* cone_property.cpp in Sources */,
+				05B7FFCB25AC22D3003BAF5C /* cone.cpp in Sources */,
+				05B7FFCA25AC22D3003BAF5C /* descent.cpp in Sources */,
+				05B7FF9225AC22AA003BAF5C /* face_lattice.cpp in Sources */,
+				05B7FFC825AC22D3003BAF5C /* full_cone.cpp in Sources */,
+				05BDA56B2CB64CCD006F4738 /* fusion.cpp in Sources */,
+				05B7FF8E25AC22AA003BAF5C /* general.cpp in Sources */,
+				05B7FFC725AC22D3003BAF5C /* HilbertSeries.cpp in Sources */,
+				05B7FF9025AC22AA003BAF5C /* input.cpp in Sources */,
+				05BDA56D2CB64CCD006F4738 /* lattice_ideal.cpp in Sources */,
+				05B7FFC525AC22D3003BAF5C /* matrix.cpp in Sources */,
+				05BDA5692CB64CCD006F4738 /* nmz_polynomial.cpp in Sources */,
+				05431F8C1C40F40D009BC072 /* offload_handler.cpp in Sources */,
+				05B7FF8A25AC22AA003BAF5C /* options.cpp in Sources */,
+				05B4D2CA229F376B00B7B11C /* output.cpp in Sources */,
+				05B7FFC625AC22D3003BAF5C /* project_and_lift.cpp in Sources */,
+				05B7FFC025AC22D3003BAF5C /* reduction.cpp in Sources */,
+				05EDDA4D27E3102A001743C1 /* signed_dec.cpp in Sources */,
+				05B7FFC225AC22D3003BAF5C /* simplex.cpp in Sources */,
+				05B7FFC125AC22D3003BAF5C /* sublattice_representation.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -11616,7 +11644,7 @@
 					"\"$(SRCROOT)/python/pybind11_v2\"",
 					/usr/include/libxml2,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 			};
@@ -11678,7 +11706,7 @@
 					"\"$(SRCROOT)/python/pybind11_v2\"",
 					/usr/include/libxml2,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
 			};

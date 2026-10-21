@@ -105,7 +105,9 @@ at these ideas.
 
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
-possible, even when passing or returning objects by value.
+possible, even when passing or returning objects by value. Moving from
+an arbitrary precision integer will leave the source object in a valid
+but undefined state.
 
 Python:
     Both variants of this template are available through Python. For
@@ -457,8 +459,9 @@ Parameter ``value``:
 static constexpr const char __init_2[] =
 R"doc(Initialises this integer to the given value.
 
-Precondition:
-    The given integer is not infinite.
+Exception ``InvalidArgument``:
+    This class does not support infinity, but the given integer is
+    infinite.
 
 Parameter ``value``:
     the new value of this integer.)doc";
@@ -736,6 +739,21 @@ changed.
 
 Returns:
     the absolute value of this integer.)doc";
+
+// Docstring regina::python::doc::IntegerBase::addProduct
+static constexpr const char addProduct[] =
+R"doc(Adds the product of the two given integers to this integer. This is a
+common operation in (for example) inner products and matrix
+multiplication.
+
+Calling ``z.addProduct(x, y)`` is equivalent to, but sometimes faster
+than, calling ``z += x * y``.
+
+Parameter ``x``:
+    the first integer in the product to add to this.
+
+Parameter ``y``:
+    the second integer in the product to add to this.)doc";
 
 // Docstring regina::python::doc::IntegerBase::divByExact
 static constexpr const char divByExact[] =
@@ -1128,8 +1146,7 @@ integer will be preserved.
 It does not matter which kind of representation this integer is
 currently using.
 
-Precondition:
-    This integer is not infinite.)doc";
+If this integer is infinite then this routine will do nothing.)doc";
 
 // Docstring regina::python::doc::IntegerBase::negate
 static constexpr const char negate[] =
@@ -1191,7 +1208,7 @@ RandomEngine class, but instead uses a separate random number
 generator provided by GMP.
 
 Precondition:
-    This integer is strictly positive.
+    This integer is strictly positive and not infinite.
 
 .. warning::
     Even if this integer is small, this routine is still slow - it
@@ -1357,8 +1374,7 @@ will be preserved.
 It does not matter which kind of representation this integer is
 currently using.
 
-Precondition:
-    This integer is not infinite.)doc";
+If this integer is infinite then this routine will do nothing.)doc";
 
 // Docstring regina::python::doc::IntegerBase::unsafeValue
 static constexpr const char unsafeValue[] =
@@ -1384,6 +1400,21 @@ Python:
 
 Returns:
     the value of this integer.)doc";
+
+// Docstring regina::python::doc::IntegerBase::validate
+static constexpr const char validate[] =
+R"doc(A diagnostic routine that ensures that the internal representation of
+this integer is valid.
+
+If Regina is working correctly, this routine should do nothing. If the
+internal representation of this integer is _not_ valid, this routine
+will throw an exception.
+
+This routine is provided for use within Regina's various test suites.
+End users should not need to call it at all.
+
+Exception ``ImpossibleScenario``:
+    The internal state of this integer is invalid.)doc";
 
 }; // struct IntegerBase
 
@@ -1423,22 +1454,6 @@ Parameter ``x``:
 
 Returns:
     a corresponding unsigned representation of ``-x``.)doc";
-
-struct InfinityBase {
-
-// Docstring regina::python::doc::detail::InfinityBase::__class
-static constexpr const char __class[] =
-R"doc(An internal base class inherited by LargeInteger, which provides
-support for infinity as an allowed value.
-
-End users should not use this class directly.)doc";
-
-// Docstring regina::python::doc::detail::InfinityBase::__class_2
-static constexpr const char __class_2[] =
-R"doc(An empty internal base class inherited by Integer, which does not
-support infinity as an allowed value.)doc";
-
-}; // struct InfinityBase
 
 } // namespace detail
 
