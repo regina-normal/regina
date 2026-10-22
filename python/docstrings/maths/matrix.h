@@ -808,6 +808,35 @@ Parameter ``fromCol``:
     the starting point in the rows from which the operation will be
     performed.)doc";
 
+// Docstring regina::python::doc::Matrix::copyRows
+static constexpr const char copyRows[] =
+R"doc(Copies the given collection of rows from this matrix. This original
+matrix will not be changed.
+
+The rows are given as a sequence of integer row indices (passed as an
+iterator pair). You may request the same row multiple times (i.e., the
+sequence of indices may contain duplicate entries).
+
+Precondition:
+    All row indices in the given sequence are integers in the range
+    ``0,...,rows()-1`` inclusive.
+
+Python:
+    Instead of an iterator pair, this routine takes a Python list of
+    integers.
+
+Parameter ``beginRows``:
+    the beginning of the sequence of row indices.
+
+Parameter ``endRows``:
+    a past-the-end iterator indicating the end of the sequence of row
+    indices.
+
+Returns:
+    a matrix containing only the requested rows, in the order in which
+    they appear in the given sequence. This matrix will have
+    dimensions ``rows.size() × columns()``.)doc";
+
 // Docstring regina::python::doc::Matrix::det
 static constexpr const char det[] =
 R"doc(Evaluates the determinant of the matrix.

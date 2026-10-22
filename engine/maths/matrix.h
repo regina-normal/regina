@@ -622,6 +622,73 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
+         * Copies the given collection of rows from this matrix.
+         * This original matrix will not be changed.
+         *
+         * The rows are given as a sequence of integer row indices (passed as
+         * an iterator pair).  You may request the same row multiple times
+         * (i.e., the sequence of indices may contain duplicate entries).
+         *
+         * \pre All row indices in the given sequence are integers in the range
+         * `0,...,rows()-1` inclusive.
+         *
+         * \python Instead of an iterator pair, this routine takes a Python
+         * list of integers.
+         *
+         * \param beginRows the beginning of the sequence of row indices.
+         * \param endRows a past-the-end iterator indicating the end of the
+         * sequence of row indices.
+         * \return a matrix containing only the requested rows, in the order
+         * in which they appear in the given sequence.  This matrix will have
+         * dimensions `rows.size() × columns()`.
+         */
+        template <RandomAccessIteratorFor<size_t> Iterator>
+        Matrix copyRows(Iterator beginRows, Iterator endRows) const {
+            Matrix ans(endRows - beginRows, cols_);
+            T* pos = ans.data_;
+            for (auto it = beginRows; it != endRows; ++it, pos += cols_) {
+                auto row = data_ + (*it) * cols_;
+                std::copy(row, row + cols_, pos);
+            }
+            return ans;
+        }
+
+        /**
+         * Moves the given collection of rows out of this matrix.
+         *
+         * The rows are given as a sequence of integer row indices (passed as
+         * an iterator pair).  Unlike copyRows(), each row may be requested
+         * at most once (i.e., the sequence of indices must not contain
+         * duplicate entries).
+         *
+         * Typically an object cannot be used after you call an rvalue member
+         * function.  There is an exception here: it is safe to make several
+         * successive calls to moveRows() as long as the sequences of row
+         * indices are disjoint (i.e., each individual row is extracted at
+         * most once).
+         *
+         * \pre All row indices in the given sequence are _distinct_ integers
+         * in the range `0,...,rows()-1` inclusive.
+         *
+         * \param beginRows the beginning of the sequence of row indices.
+         * \param endRows a past-the-end iterator indicating the end of the
+         * sequence of row indices.
+         * \return a matrix containing only the requested rows, in the order
+         * in which they appear in the given sequence.  This matrix will have
+         * dimensions `rows.size() × columns()`.
+         */
+        template <RandomAccessIteratorFor<size_t> Iterator>
+        Matrix moveRows(Iterator beginRows, Iterator endRows) && {
+            Matrix ans(endRows - beginRows, cols_);
+            T* pos = ans.data_;
+            for (auto it = beginRows; it != endRows; ++it, pos += cols_) {
+                auto row = data_ + (*it) * cols_;
+                std::move(row, row + cols_, pos);
+            }
+            return ans;
+        }
+
+        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
