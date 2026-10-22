@@ -85,6 +85,7 @@ size_t Matrix<T>::makeRowEchelon() requires ReginaInteger<T> {
         T* currPos = data_ + currRow * cols_ + currCol;
 
         // Zero out all entries in currCol that appear *below* currRow.
+        // TODO: I think we can just ++i instead of starting from currRow + 1.
         for (i = currRow + 1, pos = currPos + cols_; i < rows_;
                 ++i, pos += cols_) {
             // Now pos points to entry (i, currCol).
@@ -148,6 +149,7 @@ size_t Matrix<T>::makeColumnEchelon() requires ReginaInteger<T> {
         T* currPos = data_ + currRow * cols_ + currCol;
 
         // Zero out all entries in currRow that appear right of currCol.
+        // TODO: I think we can just ++i instead of starting from currCol + 1.
         for (i = currCol + 1, pos = currPos + 1; i < cols_; ++i, ++pos) {
             // Now pos points to entry (currRow, i).
             if (*pos != 0) {
@@ -173,6 +175,85 @@ size_t Matrix<T>::makeColumnEchelon() requires ReginaInteger<T> {
     }
 
     return currCol;
+}
+
+template <typename T>
+requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
+void Matrix<T>::makeColumnEchelonCoB(const std::vector<size_t>& rowList,
+        Matrix& R, Matrix& Ri) requires ReginaInteger<T> {
+    if (R.columns() != cols_ || Ri.rows() != cols_)
+        throw InvalidArgument("M.makeColumnEchelonFoRows(rowList, R, Ri) "
+            "requires M.columns() == R.columns() == Ri.rows()");
+
+    size_t i;
+    T* pos;
+
+    // The current working row and column:
+    // The entries above currRow will not change, and to the left of
+    // currCol all that can happen is some reduction.
+    size_t currRowIdx = 0; // index into rowList
+    size_t currCol = 0;
+
+    // The algorithm works from top to bottom (with respect to rowList).
+    while (currRowIdx < rowList.size() && currCol < cols_) {
+        size_t currRow = rowList[currRowIdx];
+
+        // Find the first column with a non-zero entry in the current row.
+        // Identify the first non-zero entry in currRow.
+        for (i = currCol, pos = data_ + currRow * cols_ + currCol;
+                i < cols_; ++i, ++pos)
+            if (*pos != 0)
+                break;
+
+        if (i == cols_) {
+            // We found no non-zero entry.  Nothing to do.
+            ++currRowIdx;
+            continue;
+        }
+
+        if (i > currCol) {
+            // Swap columns so this first non-zero entry is currCol.
+            swapCols(currCol, i);
+            R.swapCols(currCol, i);
+            Ri.swapRows(currCol, i);
+        }
+
+        // Now our first non-zero entry is in currCol.
+        T* currPos = data_ + currRow * cols_ + currCol;
+
+        // Zero out all entries in currRow that appear right of currCol.
+        // TODO: I think we can just ++i instead of starting from currCol + 1.
+        for (i = currCol + 1, pos = currPos + 1; i < cols_; ++i, ++pos) {
+            // Now pos points to entry (currRow, i).
+            if (*pos != 0) {
+                auto [gcd, u, v] = currPos->gcdWithCoeffs(*pos);
+                T a = currPos->divExact(gcd);
+                T b = -(pos->divExact(gcd));
+                combCols(currCol, i, u, v, b, a);
+                R.combCols(currCol, i, u, v, b, a);
+                Ri.combRows(currCol, i, a, -b, -v, u);
+            }
+        }
+
+        // Ensure that our leading coefficient (currRow, currCol) is
+        // positive, and reduce the entries in currRow left of currCol.
+        if (*currPos < 0) {
+            negateCol(currCol);
+            R.negateCol(currCol);
+            Ri.negateRow(currCol);
+        }
+        for (i = 0, pos = data_ + currRow * cols_; pos != currPos; ++i, ++pos) {
+            auto [d, r] = pos->divisionAlg(*currPos);
+            if (d != 0) {
+                addCol(currCol, i, -d);
+                R.addCol(currCol, i, -d);
+                Ri.addRow(i, currCol, d);
+            }
+        }
+
+        ++currRowIdx;
+        ++currCol;
+    }
 }
 
 template <typename T>
@@ -408,96 +489,6 @@ Matrix<T> Matrix<T>::inverse() && requires ReginaInteger<T> {
     }
 
     return inv;
-}
-
-template <typename T>
-requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
-void Matrix<T>::makeColumnEchelonForRows(const std::vector<size_t>& rowList,
-        Matrix& R, Matrix& Ri) requires ReginaInteger<T> {
-    if (R.columns() != cols_ || Ri.rows() != cols_)
-        throw InvalidArgument("M.makeColumnEchelonFoRows(rowList, R, Ri) "
-            "requires M.columns() == R.columns() == Ri.rows()");
-
-    size_t CR=0;
-    size_t CC=0;
-    // these are the indices of the current WORKING rows and columns
-    // respectively.
-    // thus the entries of M above CR will not change, and to the left of
-    // CC all that can happen is some reduction.
-
-    std::vector<size_t> rowNZlist; // in the current row, this is the
-                                   // list of column coordinates
-                                   // for the non-zero entries.
-
-    T u,v,a,b; // for column operations u,v,a,b represent a 2x2 matrix.
-    // the algorithm will think of itself as working top to bottom.
-    while ( (CR<rowList.size()) && (CC<cols_)) {
-        // build rowNZlist
-        rowNZlist.clear();
-
-        for (size_t i=CC;i<cols_;i++)
-            if (entry(rowList[CR],i) != 0)
-                rowNZlist.push_back(i);
-
-        // now the column operations
-        if (rowNZlist.size() == 0) {
-            // nothing to do.
-            CR++;
-        } else if (rowNZlist.size() == 1) {
-            // let's move this entry to be the leading entry.
-            if (rowNZlist[0]==CC) {
-                // step 1: ensure entry(CR,CC) is positive.
-                if (entry(rowList[CR],CC)<0) {
-                    negateCol(CC);
-                    R.negateCol(CC);
-                    Ri.negateRow(CC);
-                }
-                // step 2: reduce entries(CR,i) for i<CC
-                for (size_t i=0;i<CC;i++) {
-                    // write entry(CR,i) as d*entry(CR,CC) + r.
-                    auto [d, r] = entry(rowList[CR],i).divisionAlg(
-                        entry(rowList[CR],CC) );
-                    // reduce column i: subtract d * column CC from column i.
-                    addCol(CC, i, -d);
-                    R.addCol(CC, i, -d);
-                    // corresponding update for Ri: add d * row i to row CC
-                    Ri.addRow(i, CC, d);
-                }
-                // done, move on.
-                CC++;
-                CR++;
-            } else {
-                swapCols(CC, rowNZlist[0]);
-                R.swapCols(CC, rowNZlist[0]);
-                Ri.swapRows(CC, rowNZlist[0]);
-            }
-        } else {
-            // there is at least 2 non-zero entries to deal with. we go
-            // through them, one by one, a pair at a time.
-            while (rowNZlist.size()>1) {
-                // do column reduction on columns rowNZlist[0] and rowNZlist[1]
-                // first we need to find the approp modification matrix.
-                // This will be the matrix ( u -b ) where ua+vb = 1. We get
-                //                         ( v a  )
-                // a and b from entry(CR, r[0]) and entry(CR, r[1])
-                // by dividing by their GCD, found with
-                // rowNZlist[0].gcdWithCoeffs(rowNZlist[1],u,v)
-                T gcd = entry(rowList[CR], rowNZlist[0]).gcdWithCoeffs(
-                    entry(rowList[CR], rowNZlist[1]), u,v);
-                a = entry(rowList[CR], rowNZlist[0]).divExact(gcd);
-                b = entry(rowList[CR], rowNZlist[1]).divExact(gcd);
-                // so multiplication on the right by the above matrix
-                // corresponds to replacing column r[0] by u r[0] + v r[1]
-                // and column r[1] by -b r[0] + a r[1].
-                combCols(rowNZlist[0], rowNZlist[1], u, v, -b, a);
-                R.combCols(rowNZlist[0], rowNZlist[1], u, v, -b, a);
-                Ri.combRows(rowNZlist[0], rowNZlist[1], a, b, -v, u);
-                // modify rowNZlist by deleting the entry corresponding to
-                // rowNZlist[1]
-                rowNZlist.erase( rowNZlist.begin()+1 );
-            }
-        }
-    }
 }
 
 template <typename T>
@@ -1010,7 +1001,7 @@ Matrix<T> Matrix<T>::preimageOfLattice(const std::vector<T>& sublattice) const
 
     // so first put the free image part of it in column echelon form
 
-    homModL.makeColumnEchelonForRows(freeList, basis, basisi);
+    homModL.makeColumnEchelonCoB(freeList, basis, basisi);
 
     std::vector<size_t> torCol;
     bool zeroCol;
@@ -1042,7 +1033,7 @@ Matrix<T> Matrix<T>::preimageOfLattice(const std::vector<T>& sublattice) const
         for (size_t j=0;j<torCol.size();j++)
             tBasis.entry(i,j) = basis.entry(i, torCol[j]);
 
-    tHom.makeColumnEchelonForRows(torList, tBasis, dummy);
+    tHom.makeColumnEchelonCoB(torList, tBasis, dummy);
 
     // so now we have a primitive collection of vectors being sent to the
     // primitive subspace generated by the torsion lattice in the target.

@@ -2526,10 +2526,8 @@ class Matrix : public Output<Matrix<T>> {
          * in any order (though changing the order will change the resulting
          * column echelon form).  For a "classical" column echelon form, this
          * would be the list of all rows: `0,...,(rows()-1)`.
-         *
-         * \author Ryan Budney
          */
-        void makeColumnEchelonForRows(const std::vector<size_t>& rowList,
+        void makeColumnEchelonCoB(const std::vector<size_t>& rowList,
                 Matrix& R, Matrix& Ri) requires ReginaInteger<T>;
 
         /**

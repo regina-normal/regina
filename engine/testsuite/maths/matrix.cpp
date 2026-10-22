@@ -757,6 +757,31 @@ static void verifyEchelonForm(const MatrixInt& m) {
                 comb.entry(m.rows() + i, j) = res.first.entry(i, j);
         EXPECT_EQ(comb.rank(), res.second);
     }
+
+    #if 0
+    // Compare results with the more complex Matrix::makeColumnEchelonCoB().
+    // We disable this for now since Matrix::makeColumnEchelonCoB() is private.
+    {
+        MatrixInt copy(trans);
+        auto r = MatrixInt::identity(trans.columns());
+        auto ri = MatrixInt::identity(trans.columns());
+        std::vector<size_t> rowList;
+        for (size_t i = 0; i < trans.rows(); ++i)
+            rowList.push_back(i);
+
+        copy.makeColumnEchelonCoB(rowList, r, ri);
+        EXPECT_EQ(copy, resTrans.first);
+
+        EXPECT_EQ(r.rows(), trans.columns());
+        EXPECT_EQ(r.columns(), trans.columns());
+        EXPECT_EQ(ri.rows(), trans.columns());
+        EXPECT_EQ(ri.columns(), trans.columns());
+        EXPECT_EQ(trans * r, copy);
+        EXPECT_EQ(copy * ri, trans);
+        EXPECT_TRUE((r * ri).isIdentity());
+        EXPECT_TRUE((ri * r).isIdentity());
+    }
+    #endif
 }
 
 TEST_F(MatrixTest, echelonForm) {
