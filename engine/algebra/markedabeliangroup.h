@@ -758,7 +758,7 @@ void swap(MarkedAbelianGroup& lhs, MarkedAbelianGroup& rhs) noexcept;
  * inclusion.  IMO smarter to be a list because that way there's a more
  * pleasant way to make it empty.  Or we could have a variety of routines
  * among these themes.  Store some minimal data for efficient computations of
- * preImage, eventually replacing the internals of inverseHom() with a more
+ * preimage, eventually replacing the internals of inverseHom() with a more
  * flexible set of tools. Also add an isInImage() in various coordinates.
  *
  * \todo \optlong writeTextShort() have completely different set of
