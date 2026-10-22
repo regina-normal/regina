@@ -41,6 +41,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <memory>
+#include <tuple>
 #include "regina-core.h"
 #include "concepts/core.h"
 #include "concepts/io.h"
@@ -1890,6 +1891,121 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
+         * Transforms this matrix into column echelon form and returns
+         * change-of-basis matrices.  The transformation will perform only
+         * column operations.
+         *
+         * This routine is similar to makeColumnEchelon(); however, it also
+         * computes and returns change-of-basis matrices describing all of the
+         * column operations that were performed.  These change-of-basis
+         * matrices work as follows.  Let \a M denote the initial value of
+         * this matrix, let \a E denote the final column echelon form, and let
+         * the returned tuple be `(rowSpaceBasis, rowSpaceBasisInv, rank)`.
+         * Then:
+         *
+         * - this matrix will be converted from \a M into \a E;
+         * - the number of non-zero columns in \a E will be \a rank;
+         * - \a rowSpaceBasis will be square with side length `columns()`, and
+         *   \a rowSpaceBasisInv will be its inverse matrix;
+         * - `E = M * rowSpaceBasis`, and `M = E * rowSpaceBasisInv`;
+         *
+         * See makeColumnEchelon() for details on exactly what is meant by
+         * column echelon form.  This matrix will be modified directly, and its
+         * size will not change (even if the rank is less than the number of
+         * columns).
+         *
+         * \pre All entries in this matrix are finite.
+         *
+         * \headers This routine is implemented in a separate header
+         * (matrix-impl.h), which is not included automatically by this file.
+         * However, typical end users will not need this extra header, since
+         * Regina's calculation engine already includes explicit instantiations
+         * for `Matrix<Integer>`, which is where this routine is most commonly
+         * used.
+         *
+         * \return the tuple `(rowSpaceBasis, rowSpaceBasisInv, rank)`
+         * describing the change-of-basis matrices and rank, as explained above.
+         */
+        std::tuple<Matrix, Matrix, size_t> makeColumnEchelonCoB()
+                requires ReginaInteger<T>;
+
+        /**
+         * Returns the column echelon form of this matrix along with
+         * change-of-basis matrices.  This matrix itself will not be changed.
+         *
+         * The column echelon form will have the same dimensions as this matrix,
+         * and will be obtained from this matrix by performing only column
+         * operations.
+         *
+         * This routine is similar to columnEchelon(); however, it also
+         * computes and returns change-of-basis matrices describing all of the
+         * column operations that were performed.  These change-of-basis
+         * matrices work as follows.  Let \a M denote the initial value of
+         * this matrix, and let the returned tuple be
+         * `(E, rowSpaceBasis, rowSpaceBasisInv, rank)`.  Then:
+         *
+         * - \a E will be the column echelon form of the original matrix \a M;
+         * - the number of non-zero columns in \a E will be \a rank;
+         * - \a rowSpaceBasis will be square with side length `columns()`, and
+         *   \a rowSpaceBasisInv will be its inverse matrix;
+         * - `E = M * rowSpaceBasis`, and `M = E * rowSpaceBasisInv`;
+         *
+         * See columnEchelon() for details on exactly what is meant by
+         * column echelon form.
+         *
+         * \pre All entries in this matrix are finite.
+         *
+         * \headers This routine is implemented in a separate header
+         * (matrix-impl.h), which is not included automatically by this file.
+         * However, typical end users will not need this extra header, since
+         * Regina's calculation engine already includes explicit instantiations
+         * for `Matrix<Integer>`, which is where this routine is most commonly
+         * used.
+         *
+         * \return the tuple `(E, rowSpaceBasis, rowSpaceBasisInv, rank)`
+         * describing the column echelon form, change-of-basis matrices and
+         * rank, as explained above.
+         */
+        std::tuple<Matrix, Matrix, Matrix, size_t> columnEchelonCoB() const&
+                requires ReginaInteger<T> {
+            Matrix ans(*this);
+            auto cob = ans.makeColumnEchelonCoB();
+            return std::tuple_cat(std::make_tuple(std::move(ans)),
+                std::move(cob));
+        }
+
+        /**
+         * Returns the column echelon form of this matrix along with
+         * change-of-basis matrices.
+         *
+         * This rvalue variant of columnEchelonCoB() is faster than the const
+         * variant, because it reduces this matrix directly instead of working
+         * on a deep copy.
+         *
+         * See the const version of columnEchelonCoB() for further information
+         * on column echelon form and change-of-basis matrices.
+         *
+         * \pre All entries in this matrix are finite.
+         *
+         * \headers This routine is implemented in a separate header
+         * (matrix-impl.h), which is not included automatically by this file.
+         * However, typical end users will not need this extra header, since
+         * Regina's calculation engine already includes explicit instantiations
+         * for `Matrix<Integer>`, which is where this routine is most commonly
+         * used.
+         *
+         * \return the tuple `(E, rowSpaceBasis, rowSpaceBasisInv, rank)`
+         * describing the column echelon form, change-of-basis matrices and
+         * rank.
+         */
+        std::tuple<Matrix, Matrix, Matrix, size_t> columnEchelonCoB() &&
+                requires ReginaInteger<T> {
+            auto cob = makeColumnEchelonCoB();
+            return std::tuple_cat(std::make_tuple(std::move(*this)),
+                std::move(cob));
+        }
+
+        /**
          * Returns the rank of this matrix.
          *
          * \pre All entries in this matrix are finite.
@@ -2527,7 +2643,7 @@ class Matrix : public Output<Matrix<T>> {
          * column echelon form).  For a "classical" column echelon form, this
          * would be the list of all rows: `0,...,(rows()-1)`.
          */
-        void makeColumnEchelonCoB(const std::vector<size_t>& rowList,
+        void makeColumnEchelonPartial(const std::vector<size_t>& rowList,
                 Matrix& R, Matrix& Ri) requires ReginaInteger<T>;
 
         /**

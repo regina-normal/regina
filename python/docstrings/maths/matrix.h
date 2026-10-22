@@ -667,6 +667,42 @@ Returns:
     a pair consisting of the column echelon form *E*, and the rank of
     this matrix (i.e., the number of non-zero columns in *E*).)doc";
 
+// Docstring regina::python::doc::Matrix::columnEchelonCoB
+static constexpr const char columnEchelonCoB[] =
+R"doc(Returns the column echelon form of this matrix along with change-of-
+basis matrices. This matrix itself will not be changed.
+
+The column echelon form will have the same dimensions as this matrix,
+and will be obtained from this matrix by performing only column
+operations.
+
+This routine is similar to columnEchelon(); however, it also computes
+and returns change-of-basis matrices describing all of the column
+operations that were performed. These change-of-basis matrices work as
+follows. Let *M* denote the initial value of this matrix, and let the
+returned tuple be ``(E, rowSpaceBasis, rowSpaceBasisInv, rank)``.
+Then:
+
+* *E* will be the column echelon form of the original matrix *M*;
+
+* the number of non-zero columns in *E* will be *rank*;
+
+* *rowSpaceBasis* will be square with side length ``columns()``, and
+  *rowSpaceBasisInv* will be its inverse matrix;
+
+* ``E = M * rowSpaceBasis``, and ``M = E * rowSpaceBasisInv``;
+
+See columnEchelon() for details on exactly what is meant by column
+echelon form.
+
+Precondition:
+    All entries in this matrix are finite.
+
+Returns:
+    the tuple ``(E, rowSpaceBasis, rowSpaceBasisInv, rank)``
+    describing the column echelon form, change-of-basis matrices and
+    rank, as explained above.)doc";
+
 // Docstring regina::python::doc::Matrix::columns
 static constexpr const char columns[] =
 R"doc(Returns the number of columns in this matrix.
@@ -1037,6 +1073,39 @@ Precondition:
 Returns:
     the rank of this matrix, i.e., the number of non-zero columns
     remaining.)doc";
+
+// Docstring regina::python::doc::Matrix::makeColumnEchelonCoB
+static constexpr const char makeColumnEchelonCoB[] =
+R"doc(Transforms this matrix into column echelon form and returns change-of-
+basis matrices. The transformation will perform only column
+operations.
+
+This routine is similar to makeColumnEchelon(); however, it also
+computes and returns change-of-basis matrices describing all of the
+column operations that were performed. These change-of-basis matrices
+work as follows. Let *M* denote the initial value of this matrix, let
+*E* denote the final column echelon form, and let the returned tuple
+be ``(rowSpaceBasis, rowSpaceBasisInv, rank)``. Then:
+
+* this matrix will be converted from *M* into *E*;
+
+* the number of non-zero columns in *E* will be *rank*;
+
+* *rowSpaceBasis* will be square with side length ``columns()``, and
+  *rowSpaceBasisInv* will be its inverse matrix;
+
+* ``E = M * rowSpaceBasis``, and ``M = E * rowSpaceBasisInv``;
+
+See makeColumnEchelon() for details on exactly what is meant by column
+echelon form. This matrix will be modified directly, and its size will
+not change (even if the rank is less than the number of columns).
+
+Precondition:
+    All entries in this matrix are finite.
+
+Returns:
+    the tuple ``(rowSpaceBasis, rowSpaceBasisInv, rank)`` describing
+    the change-of-basis matrices and rank, as explained above.)doc";
 
 // Docstring regina::python::doc::Matrix::makeIdentity
 static constexpr const char makeIdentity[] =

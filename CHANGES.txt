@@ -489,7 +489,8 @@ Version 8.0  [ TODO ]
               makeRowEchelon() and makeColumnEchelon(), to better indicate
               that these routines modify the matrix in-place.  The old names
               have been removed completely.
-            - New routines rowEchelon() and columnEchelon().
+            - New routines rowEchelon(), columnEchelon(), makeColumnEchelonCoB()
+              and columnEchelonCoB().
             - Routine det() now takes an optional algorithm argument.
             - Routine swapRows() now takes an optional from-column argument.
             - Multiplying a matrix by a matrix or vector will now throw an

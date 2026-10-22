@@ -185,6 +185,12 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
                 static_cast<std::pair<Matrix, size_t> (Matrix::*)() const&>(
                     &Matrix::columnEchelon),
                 rdoc::columnEchelon)
+            .def("makeColumnEchelonCoB", &Matrix::makeColumnEchelonCoB,
+                rdoc::makeColumnEchelonCoB)
+            .def("columnEchelonCoB",
+                static_cast<std::tuple<Matrix, Matrix, Matrix, size_t>
+                    (Matrix::*)() const&>(&Matrix::columnEchelonCoB),
+                rdoc::columnEchelonCoB)
             .def("rank", static_cast<size_t (Matrix::*)() const&>(
                 &Matrix::rank), rdoc::rank)
             .def("makeRowBasis", &Matrix::makeRowBasis, rdoc::makeRowBasis)

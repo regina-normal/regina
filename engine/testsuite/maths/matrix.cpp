@@ -271,6 +271,16 @@ TEST_F(MatrixTest, empty) {
 
     EXPECT_EQ(m.makeColumnEchelon(), 0);
     validateEmpty(m);
+    {
+        auto res = m.columnEchelonCoB();
+        EXPECT_EQ(Matrix<Integer>(m).columnEchelonCoB(), res);
+
+        auto [e, r, ri, rank] = std::move(res);
+        validateEmpty(e);
+        validateEmpty(r);
+        validateEmpty(ri);
+        EXPECT_EQ(rank, 0);
+    }
 
     EXPECT_EQ(m.rank(), 0);
     EXPECT_EQ(Matrix<Integer>(m).rank(), 0);
@@ -466,6 +476,16 @@ TEST_F(MatrixTest, noRows) {
     validateNoRows(m, 3);
     EXPECT_EQ(m.rank(), 0);
     EXPECT_EQ(Matrix<Integer>(m).rank(), 0);
+    {
+        auto res = m.columnEchelonCoB();
+        EXPECT_EQ(Matrix<Integer>(m).columnEchelonCoB(), res);
+
+        auto [e, r, ri, rank] = std::move(res);
+        validateNoRows(e, 3);
+        validateIdentity(r, 3);
+        validateIdentity(ri, 3);
+        EXPECT_EQ(rank, 0);
+    }
 
     EXPECT_THROW({ m.inverse(); }, regina::FailedPrecondition);
     EXPECT_THROW({ Matrix<Integer>(m).inverse(); }, regina::FailedPrecondition);
@@ -663,6 +683,16 @@ TEST_F(MatrixTest, noColumns) {
     validateNoColumns(m, 3);
     EXPECT_EQ(m.rank(), 0);
     EXPECT_EQ(Matrix<Integer>(m).rank(), 0);
+    {
+        auto res = m.columnEchelonCoB();
+        EXPECT_EQ(Matrix<Integer>(m).columnEchelonCoB(), res);
+
+        auto [e, r, ri, rank] = std::move(res);
+        validateNoColumns(e, 3);
+        validateEmpty(r);
+        validateEmpty(ri);
+        EXPECT_EQ(rank, 0);
+    }
 
     EXPECT_THROW({ m.inverse(); }, regina::FailedPrecondition);
     EXPECT_THROW({ Matrix<Integer>(m).inverse(); }, regina::FailedPrecondition);
@@ -758,30 +788,24 @@ static void verifyEchelonForm(const MatrixInt& m) {
         EXPECT_EQ(comb.rank(), res.second);
     }
 
-    #if 0
-    // Compare results with the more complex Matrix::makeColumnEchelonCoB().
-    // We disable this for now since Matrix::makeColumnEchelonCoB() is private.
+    // Compare results with the change-of-basis variant for column echelon form.
     {
-        MatrixInt copy(trans);
-        auto r = MatrixInt::identity(trans.columns());
-        auto ri = MatrixInt::identity(trans.columns());
-        std::vector<size_t> rowList;
-        for (size_t i = 0; i < trans.rows(); ++i)
-            rowList.push_back(i);
+        auto cob = trans.columnEchelonCoB();
+        EXPECT_EQ(cob, MatrixInt(trans).columnEchelonCoB()); // rvalue variant
 
-        copy.makeColumnEchelonCoB(rowList, r, ri);
-        EXPECT_EQ(copy, resTrans.first);
+        auto [e, r, ri, rank] = std::move(cob);
+        EXPECT_EQ(e, resTrans.first);
+        EXPECT_EQ(rank, resTrans.second);
 
-        EXPECT_EQ(r.rows(), trans.columns());
-        EXPECT_EQ(r.columns(), trans.columns());
-        EXPECT_EQ(ri.rows(), trans.columns());
-        EXPECT_EQ(ri.columns(), trans.columns());
-        EXPECT_EQ(trans * r, copy);
-        EXPECT_EQ(copy * ri, trans);
+        ASSERT_EQ(r.rows(), trans.columns());
+        ASSERT_EQ(r.columns(), trans.columns());
+        ASSERT_EQ(ri.rows(), trans.columns());
+        ASSERT_EQ(ri.columns(), trans.columns());
+        EXPECT_EQ(trans * r, e);
+        EXPECT_EQ(e * ri, trans);
         EXPECT_TRUE((r * ri).isIdentity());
         EXPECT_TRUE((ri * r).isIdentity());
     }
-    #endif
 }
 
 TEST_F(MatrixTest, echelonForm) {
