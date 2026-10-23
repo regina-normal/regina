@@ -722,7 +722,7 @@ class Matrix : public Output<Matrix<T>> {
                 for (size_t i = 0; i < rows_; ++i) {
                     *dest = *src;
                     src += cols_;
-                    dest += cols_;
+                    dest += ans.cols_;
                 }
             }
             return ans;
@@ -758,12 +758,12 @@ class Matrix : public Output<Matrix<T>> {
             Matrix ans(rows_, endCols - beginCols);
             size_t col = 0;
             for (auto it = beginCols; it != endCols; ++it, ++col) {
-                const T* src = data_ + *it;
+                T* src = data_ + *it;
                 T* dest = ans.data_ + col;
                 for (size_t i = 0; i < rows_; ++i) {
                     *dest = std::move(*src);
                     src += cols_;
-                    dest += cols_;
+                    dest += ans.cols_;
                 }
             }
             return ans;
