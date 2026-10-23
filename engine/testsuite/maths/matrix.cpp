@@ -1161,3 +1161,16 @@ TEST_F(MatrixTest, smith) {
     verifySmithWithTranspose(fib2, { 1, 1, 1 });
 }
 
+TEST_F(MatrixTest, preimageOfLattice) {
+    // We begin with a small ad-hoc test with both free and torsion parts.
+    //
+    // The columns of the resulting matrix are not well-defined: any
+    // collection of linearly independent columns with the same span over the
+    // integers will do.
+    //
+    // The result shown here is what regina's (deterministic) algorithm
+    // currently produces, and this has been checked by hand for correctness.
+    EXPECT_EQ(MatrixInt({{0,3,0,2}, {0,0,5,0}}).preimageOfLattice({6,0}),
+        MatrixInt({{0,1,0}, {6,0,-2}, {0,0,0}, {-6,0,3}}));
+}
+
