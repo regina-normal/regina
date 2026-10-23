@@ -39,8 +39,6 @@ template size_t Matrix<Integer>::makeRowEchelon();
 template size_t Matrix<Integer>::makeColumnEchelon();
 template std::tuple<Matrix<Integer>, Matrix<Integer>, size_t>
     Matrix<Integer>::makeColumnEchelonCoB();
-template void Matrix<Integer>::makeColumnEchelonPartial(
-    const std::vector<size_t>&, Matrix<Integer>&, Matrix<Integer>&);
 template void Matrix<Integer>::makeRowBasis();
 template std::pair<Matrix<Integer>, Matrix<Integer>>
     Matrix<Integer>::rowBasisAndOrthComp() const;

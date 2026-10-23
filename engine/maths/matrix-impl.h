@@ -257,85 +257,6 @@ std::tuple<Matrix<T>, Matrix<T>, size_t> Matrix<T>::makeColumnEchelonCoB()
 
 template <typename T>
 requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
-void Matrix<T>::makeColumnEchelonPartial(const std::vector<size_t>& rowList,
-        Matrix& R, Matrix& Ri) requires ReginaInteger<T> {
-    if (R.columns() != cols_ || Ri.rows() != cols_)
-        throw InvalidArgument("M.makeColumnEchelonFoRows(rowList, R, Ri) "
-            "requires M.columns() == R.columns() == Ri.rows()");
-
-    size_t i;
-    T* pos;
-
-    // The current working row and column:
-    // The entries above currRow will not change, and to the left of
-    // currCol all that can happen is some reduction.
-    size_t currRowIdx = 0; // index into rowList
-    size_t currCol = 0;
-
-    // The algorithm works from top to bottom (with respect to rowList).
-    while (currRowIdx < rowList.size() && currCol < cols_) {
-        size_t currRow = rowList[currRowIdx];
-
-        // Find the first column with a non-zero entry in the current row.
-        // Identify the first non-zero entry in currRow.
-        for (i = currCol, pos = data_ + currRow * cols_ + currCol;
-                i < cols_; ++i, ++pos)
-            if (*pos != 0)
-                break;
-
-        if (i == cols_) {
-            // We found no non-zero entry.  Nothing to do.
-            ++currRowIdx;
-            continue;
-        }
-
-        if (i > currCol) {
-            // Swap columns so this first non-zero entry is currCol.
-            swapCols(currCol, i);
-            R.swapCols(currCol, i);
-            Ri.swapRows(currCol, i);
-        }
-
-        // Now our first non-zero entry is in currCol.
-        T* currPos = data_ + currRow * cols_ + currCol;
-
-        // Zero out all entries in currRow that appear right of currCol.
-        // TODO: I think we can just ++i instead of starting from currCol + 1.
-        for (i = currCol + 1, pos = currPos + 1; i < cols_; ++i, ++pos) {
-            // Now pos points to entry (currRow, i).
-            if (*pos != 0) {
-                auto [gcd, u, v] = currPos->gcdWithCoeffs(*pos);
-                T a = currPos->divExact(gcd);
-                T b = -(pos->divExact(gcd));
-                combCols(currCol, i, u, v, b, a);
-                R.combCols(currCol, i, u, v, b, a);
-                Ri.combRows(currCol, i, a, -b, -v, u);
-            }
-        }
-
-        // Ensure that our leading coefficient (currRow, currCol) is
-        // positive, and reduce the entries in currRow left of currCol.
-        if (*currPos < 0) {
-            negateCol(currCol);
-            R.negateCol(currCol);
-            Ri.negateRow(currCol);
-        }
-        for (i = 0, pos = data_ + currRow * cols_; pos != currPos; ++i, ++pos) {
-            auto [d, r] = pos->divisionAlg(*currPos);
-            if (d != 0) {
-                addCol(currCol, i, -d);
-                R.addCol(currCol, i, -d);
-                Ri.addRow(i, currCol, d);
-            }
-        }
-
-        ++currRowIdx;
-        ++currCol;
-    }
-}
-
-template <typename T>
-requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
 void Matrix<T>::makeRowBasis() requires ReginaInteger<T> {
     // Make a copy of this matrix to reduce to row echelon form.
     Matrix echelon(*this);
@@ -1059,15 +980,8 @@ Matrix<T> Matrix<T>::preimageOfLattice(const std::vector<T>& sublattice) const
     // step (2) starts with another application of column echelon form, but then
     // it finishes with a variation on it...
 
-    MatrixInt basis = MatrixInt::identity(cols_);
-    MatrixInt basisi = MatrixInt::identity(cols_);
-    // and we proceed to modify it solely via column operations.
-    // one for every column operation performed on homModL
-    MatrixInt homModL(*this);
-
     // set up two lists: the coordinates that correspond to free generators
     // of the range and coordinates corresponding to torsion generators.
-
     // these lists need to be built from L
     std::vector<size_t> freeList;
     std::vector<size_t> torList;
@@ -1079,39 +993,27 @@ Matrix<T> Matrix<T>::preimageOfLattice(const std::vector<T>& sublattice) const
 
     // so first put the free image part of it in column echelon form
 
-    homModL.makeColumnEchelonPartial(freeList, basis /* id */, basisi /* id */);
+    auto [free, basis, _tmpFI, _tmpFR] =
+        copyRows(freeList.begin(), freeList.end()).columnEchelonCoB();
 
     std::vector<size_t> torCol;
-    bool zeroCol;
-
-    for (size_t i=0; i<homModL.columns(); i++) {
-        zeroCol=true;
-        for (auto pos : freeList)
-            if (homModL.entry( pos, i) != 0)
-                zeroCol=false;
+    for (size_t c = 0; c < cols_; ++c) {
+        bool zeroCol = true;
+        for (size_t r = 0; r < free.rows(); ++r)
+            if (free.entry(r, c) != 0) {
+                zeroCol = false;
+                break;
+            }
         if (zeroCol)
-            torCol.push_back(i);
+            torCol.push_back(c);
     }
 
     // set up a new matrix consisting of columns being sent to the primitive
     // subspace generated by the torsion lattice.
 
-    MatrixInt tHom( homModL.rows(), torCol.size() );
-    MatrixInt tBasis( basis.rows(), torCol.size() ); // this will be the
-                                                     // eventual retval.
-    MatrixInt dummy( torCol.size(), 0 ); // needed when we compute
-    // column echelon form. choosing it to have 0 columns speeds up
-    // the algorithm.
-
-    for (size_t i=0;i<tHom.rows();i++)
-        for (size_t j=0;j<tHom.columns();j++)
-            tHom.entry(i,j) = homModL.entry(i, torCol[j]);
-
-    for (size_t i=0;i<basis.rows();i++)
-        for (size_t j=0;j<torCol.size();j++)
-            tBasis.entry(i,j) = basis.entry(i, torCol[j]);
-
-    tHom.makeColumnEchelonPartial(torList, tBasis, dummy);
+    MatrixInt tBasis = std::move(basis).moveCols(torCol.begin(), torCol.end());
+    auto [tHom, tOps, _tmpTI, _tmpTR] =
+        (copyRows(torList.begin(), torList.end()) * tBasis).columnEchelonCoB();
 
     // so now we have a primitive collection of vectors being sent to the
     // primitive subspace generated by the torsion lattice in the target.
@@ -1120,90 +1022,52 @@ Matrix<T> Matrix<T>::preimageOfLattice(const std::vector<T>& sublattice) const
     // multiply this column by the smallest factor so that it is in
     // the torsion lattice, repeat. etc.
 
-    size_t CR=0; // current row under consideration. The actual row index
-    // will of course be torList[CR] since all other rows are already zero.
+    size_t CR = 0; // current row under consideration.
 
     std::vector<size_t> rowNZlist; // in the current row, this is the list
     // of column coordinates for the non-zero entries.
 
-    T d,r; // given two integers a and b, we will represent
-    // a/b by d and a % b by r in the algorithm.
-    T u,v,gcd, a,b; // for column operations u,v,a,b represent
-    // a 2x2 matrix.
-    T tmp;
-
-    while (CR<torList.size()) {
+    while (CR < torList.size()) {
         // build rowNZlist
         rowNZlist.clear();
-
-        for (size_t i=0;i<tHom.columns();i++)
-            if (tHom.entry(torList[CR],i) != 0)
+        for (size_t i = 0; i < tHom.columns(); ++i)
+            if (tHom.entry(CR,i) != 0)
                 rowNZlist.push_back(i);
+
         // okay, so now we have a list of non-zero entries.
         // case 1: rowNZlist.size()==0, increment CR, continue;
-
         if (rowNZlist.empty()) {
             CR++;
             continue;
         }
+
         // case 2: rowNZlist.size()==1 multiply column only if neccessary,
         // increment CR, continue;
-
-        if (rowNZlist.size()==1) {
-            // check to see if tHom.entry(torList[CR], rowNZlist[0]) %
-            // L[torList[CR]] == 0 if not, find smallest positive integer
-            // s.t. when multiplied by it, above becomes true.
-            gcd = tHom.entry(torList[CR], rowNZlist[0]).gcd(
-                sublattice[torList[CR]]);
-            d = sublattice[torList[CR]].divExact(gcd);
-            // multiply column  rowNZlist[0] of tHom by d.
-            for (auto pos : torList)
-                tHom.entry( pos, rowNZlist[0] ) *= d;
-            // corresponding operation on tBasis.
-            for (size_t i=0;i<tBasis.rows();i++)
-                tBasis.entry( i, rowNZlist[0] ) *= d;
-            // done.
+        if (rowNZlist.size() == 1) {
+            // check to see if tHom.entry(CR, rowNZlist[0]) %
+            // sublattice[torList[CR]] == 0 if not, find smallest positive
+            // integer s.t. when multiplied by it, above becomes true.
+            T gcd = tHom.entry(CR, rowNZlist[0]).gcd(sublattice[torList[CR]]);
+            T d = sublattice[torList[CR]].divExact(gcd);
+            tHom.multCol(rowNZlist[0], d);
+            tOps.multCol(rowNZlist[0], d);
             CR++;
             continue;
         }
         // case 3: rowNZlist.size()>1.row ops to reduce rowNZlist.size().
         // then continue
-        while (rowNZlist.size()>1) {
-            // do column op on columns rowNZlist[0] and rowNZlist[1]
-            // first we need to find the approp modification matrix. This will
-            // be the matrix ( u -b ) where ua+vb = 1. We get a and b from
-            //               ( v a  ) from entry(torList[CR], r[0]) and
-            // entry(torlist[CR], r[1]) by dividing by their GCD, found with
-            // rowNZlist[0].gcdWithCoeffs(rowNZlist[1],u,v)
-            gcd = tHom.entry(torList[CR], rowNZlist[0]).gcdWithCoeffs(
-                        tHom.entry(torList[CR], rowNZlist[1]), u,v);
-            a = tHom.entry(torList[CR], rowNZlist[0]).divExact(gcd);
-            b = tHom.entry(torList[CR], rowNZlist[1]).divExact(gcd);
-            // so multiplication on the right by the above matrix corresponds
-            // to replacing column r[0] by u r[0] + v r[1] and column r[1] by
-            // -b r[0] + a r[1].
-            for (auto pos : torList) {
-                tmp = u * tHom.entry( pos, rowNZlist[0] ) +
-                    v * tHom.entry( pos, rowNZlist[1] );
-                tHom.entry( pos,rowNZlist[1]) =
-                    a * tHom.entry( pos, rowNZlist[1]) -
-                    b * tHom.entry( pos, rowNZlist[0]);
-                tHom.entry( pos,rowNZlist[0]) = tmp;
-            }
-            // modify tBasis
-            for (size_t i=0;i<tBasis.rows();i++) {
-                tmp = u * tBasis.entry( i, rowNZlist[0] ) +
-                    v * tBasis.entry(i, rowNZlist[1] );
-                tBasis.entry(i,rowNZlist[1]) =
-                    a * tBasis.entry( i, rowNZlist[1]) -
-                    b * tBasis.entry( i, rowNZlist[0]);
-                tBasis.entry(i,rowNZlist[0]) = tmp;
-            }
+        while (rowNZlist.size() > 1) {
+            auto [gcd, u, v] = tHom.entry(CR, rowNZlist[0]).gcdWithCoeffs(
+                tHom.entry(CR, rowNZlist[1]));
+            T a = tHom.entry(CR, rowNZlist[0]).divExact(gcd);
+            T b = tHom.entry(CR, rowNZlist[1]).divExact(gcd);
+            tHom.combCols(rowNZlist[0], rowNZlist[1], u, v, -b, a);
+            tOps.combCols(rowNZlist[0], rowNZlist[1], u, v, -b, a);
             // now rowNZlist[1] entry is zero, remove it from the list.
-            rowNZlist.erase( rowNZlist.begin()+1 );
+            rowNZlist.erase(rowNZlist.begin() + 1);
         }
     }
-    return tBasis;
+    return tBasis * tOps;
 }
 
 } // namespace regina
