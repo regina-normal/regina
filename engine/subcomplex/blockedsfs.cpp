@@ -252,7 +252,7 @@ std::unique_ptr<Manifold<3>> BlockedSFS::manifold() const {
         // If we have SFS(RP2/n2) with one exceptional fibre, rewrite it as
         // SFS(S2) with three exceptional fibres.
 
-        if (ans.baseClass() == SFSpace::Class::n2 &&
+        if (ans.bundleType() == SFSpace::BundleType::n2 &&
                 ans.baseGenus() == 1 &&
                 (! ans.baseOrientable()) &&
                 ans.punctures() == 0 &&

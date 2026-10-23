@@ -57,48 +57,195 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f) {
     return (out << '(' << f.alpha << ',' << f.beta << ')');
 }
 
+std::ostream& operator << (std::ostream& out, const SFSPartialReflector& p) {
+    return (out << '(' << (p.twisted ? '-' : '+') << ',' <<
+            p.reflectorArcs << ')');
+}
+
+SFSPartialReflector SFSpace::partialReflector(
+        bool twisted, size_t which ) const {
+    auto pos = ( twisted ? partialReflectorsTwisted_.begin() :
+            partialReflectors_.begin() );
+    advance(pos, which);
+    return *pos;
+}
+
 SFSFibre SFSpace::fibre(size_t which) const {
     auto pos = fibres_.begin();
     advance(pos, which);
     return *pos;
 }
 
+void SFSpace::checkPreconditionsAfterInitialisation() {
+    // Enforce preconditions on genus.
+    switch (bundleType_) {
+        // Bundle types o2, n, n1 and n2 require genus >= 1.
+        case BundleType::o2:
+        case BundleType::n:
+        case BundleType::n1:
+        case BundleType::n2:
+            if (genus_ < 1) {
+                throw regina::FailedPrecondition(
+                        "SFSpace::SFSpace() requires genus >= 1 for the "
+                        "given bundle type");
+            }
+            break;
+        // Bundle type n3 requires genus >= 2.
+        case BundleType::n3:
+            if (genus_ < 2) {
+                throw regina::FailedPrecondition(
+                        "SFSpace::SFSpace() requires genus >= 2 for "
+                        "BundleType::n3");
+            }
+            break;
+        // Bundle type n4 requires genus >= 3.
+        case BundleType::n4:
+            if (genus_ < 3) {
+                throw regina::FailedPrecondition(
+                        "SFSpace::SFSpace() requires genus >= 3 for "
+                        "BundleType::n4");
+            }
+            break;
+    }
+
+    // Enforce preconditions on twisted punctures, twisted reflector circles,
+    // and twisted partial reflectors.
+    size_t totalTwisted = (puncturesTwisted_ + reflectorsTwisted_ +
+            partialReflectorsTwisted_.size());
+    if (totalTwisted % 2 != 0) {
+        throw regina::FailedPrecondition(
+                "SFSpace::SFSpace() requires the total number of twisted "
+                "boundaries in the base orbifold to be even");
+    }
+    if (totalTwisted == 0) {
+        if (bundleType_ == BundleType::o || bundleType_ == BundleType::n) {
+            throw regina::FailedPrecondition(
+                    "SFSpace::SFSpace() requires that the bundle type is not "
+                    "BundleType::o or BundleType::n if the base orbifold has "
+                    "no twisted boundaries");
+        }
+    } else {
+        if (! (bundleType_ == BundleType::o || bundleType_ == BundleType::n)) {
+            throw regina::FailedPrecondition(
+                    "SFSpace::SFSpace() requires that the bundle type is "
+                    "BundleType::o or BundleType::n if the base orbifold "
+                    "has any twisted boundaries");
+        }
+    }
+}
+
+SFSpace::BundleType SFSpace::convertBaseClassToBundleType(
+        SFSpace::Class baseClass, bool hasUntwistedBdry, bool hasTwistedBdry) {
+    if (hasTwistedBdry) {
+        // Precondition specifies that baseClass is either \c bo2 or \c bn3.
+        switch (baseClass) {
+            case Class::bo2:
+                return BundleType::o;
+            case Class::bn3:
+                return BundleType::n;
+            default:
+                throw regina::FailedPrecondition(
+                        "SFSpace::SFSpace() requires baseClass to be "
+                        "either bo2 or bn3 if the base orbifold has any "
+                        "twisted boundaries");
+        }
+    }
+
+    // We have no twisted punctures and no twisted reflector circles. Thus,
+    // fibre-reversing paths can only arise from handle/crosscap generators.
+    if (hasUntwistedBdry) {
+        switch (baseClass) {
+            case Class::bo1:
+                return BundleType::o1;
+            case Class::bo2:
+                return BundleType::o2;
+            case Class::bn1:
+                return BundleType::n1;
+            case Class::bn2:
+                return BundleType::n2;
+            case Class::bn3:
+                // In this case, we cannot distinguish between BundleType::n3
+                // and BundleType::n4.
+                throw regina::UnsolvedCase(
+                        "SFSpace::SFSpace() could not convert Class::bn3 to a "
+                        "well-defined BundleType");
+            default:
+                throw regina::FailedPrecondition(
+                        "SFSpace::SFSpace() requires baseClass to be bo1, "
+                        "bo2, bn1, bn2 or bn3 if there are any punctures "
+                        "and/or reflectors");
+        }
+    } else {
+        switch (baseClass) {
+            case Class::o1:
+                return BundleType::o1;
+            case Class::o2:
+                return BundleType::o2;
+            case Class::n1:
+                return BundleType::n1;
+            case Class::n2:
+                return BundleType::n2;
+            case Class::n3:
+                return BundleType::n3;
+            case Class::n4:
+                return BundleType::n4;
+            default:
+                throw regina::FailedPrecondition(
+                        "SFSpace::SFSpace() requires baseClass to be o1, "
+                        "o2, n1, n2, n3 or n4 if there are no punctures "
+                        "and no reflectors");
+        }
+    }
+}
+
 void SFSpace::addHandle(bool fibreReversing) {
-    // First fix the class.
-    // The transitions between classes have been worked out on paper
-    // case by case (in particular, following how the generators of the
-    // handle relate to the new crosscap generators in the non-orientable
-    // case).
-    // Recall also that in the orientable case we can convert +/- to -/-,
-    // and in the non-orientable case we can convert +/+/+/- to +/-/-/-
-    // (where + and - correspond to fibre-preserving and fibre-reversing
-    // generators respectively).  See Orlik [1972], p89 for details.
+    // First fix the bundle type.
+    //
+    // Page 89 of Orlik [1972] includes additional details on some of the
+    // reasoning below.
     if (fibreReversing) {
         // Fibre-reversing.
-        switch (class_) {
-            case Class::o1:
-                class_ = Class::o2; break;
-            case Class::n1:
-                class_ = (genus_ % 2 == 0 ? Class::n4 : Class::n3); break;
-            case Class::n2:
-                class_ = Class::n4; break;
-            case Class::bo1:
-                class_ = Class::bo2; break;
-            case Class::bn1:
-            case Class::bn2:
-                class_ = Class::bn3; break;
+        switch (bundleType_) {
+            // For orientable base orbifold, if we have any fibre-reversing
+            // handle generators at all, then we can choose new generators so
+            // that *all* handle generators are fibre-reversing.
+            case BundleType::o1:
+                bundleType_ = BundleType::o2;
+                break;
+            // For non-orientable base orbifold, let P denote the number of
+            // fibre-preserving crosscap generators. After adding a handle
+            // with either one or both generators being fibre-reversing, we
+            // can always choose crosscap generators so that:
+            // - The parity of P is preserved.
+            // - There is at least one fibre-preserving crosscap generator,
+            //   and also at least one fibre-reversing crosscap generator.
+            // Moreover, whenever we have +/+/+/-, there is a change of basis
+            // which replaces this with +/-/-/-. It follows that after adding
+            // a handle, the bundle type becomes:
+            // - n3, if P was odd.
+            // - n4, if P was even.
+            case BundleType::n1:
+                // P is equal to the non-orientable genus.
+                bundleType_ = (genus_ % 2 == 0 ?
+                        BundleType::n4 :
+                        BundleType::n3);
+                break;
+            case BundleType::n2:
+                // P is zero.
+                bundleType_ = BundleType::n4;
+                break;
+            // No change to bundle types o, o2, n, n3 and n4.
             default:
-                // No change.
                 break;
         }
     } else {
         // Fibre-preserving.
-        // Never changes the class.
+        // Never changes the bundle type.
     }
 
     // Finally increment the genus (either orientable or non-orientable).
     if (baseOrientable())
-        genus_++;
+        ++genus_;
     else
         genus_ += 2;
 }
@@ -108,52 +255,89 @@ void SFSpace::addCrosscap(bool fibreReversing) {
     // Convert orientable genus to non-orientable genus if required.
     if (baseOrientable())
         genus_ *= 2;
-
-    // Now fix the class.
-    // The transitions between classes have been worked out on paper
-    // case by case (in particular, following how the generators of the
-    // original handles relate to the reformulated crosscap generators in
-    // the orientable case).
-    // Recall also that in the orientable case we can convert +/- to -/-,
-    // and in the non-orientable case we can convert +/+/+/- to +/-/-/-
-    // (where + and - correspond to fibre-preserving and fibre-reversing
-    // generators respectively).  See Orlik [1972], p89 for details.
+    
+    // Now fix the bundle type.
+    //
+    // Page 89 of Orlik [1972] includes additional details on some of the
+    // reasoning below.
+    //
+    // If the base orbifold was orientable, it will of course become
+    // non-orientable now. After a change of basis replacing all the handle
+    // generators with new crosscap generators, we have the following:
+    // - If no handle generator was fibre-reversing, then the new crosscap
+    //   generators will all have the same fibre-reversing/fibre-preserving
+    //   behaviour as the crosscap generator added by this routine.
+    // - On the other hand, if even one handle generator at all was
+    //   fibre-reversing, then no matter what type of crosscap we are adding,
+    //   the new crosscap generators will consist of a mix of fibre-reversing
+    //   and fibre-preserving ones. Moreover, the changes of basis for
+    //   replacing handle generators with crosscap generators, and for
+    //   replacing +/+/+/- with +/-/-/-, always preserve the parity of the
+    //   number of fibre-preserving crosscap generators.
     if (fibreReversing) {
         // Fibre-reversing.
-        switch(class_) {
-            case Class::o1:
-                class_ = Class::n2; break;
-            case Class::o2:
-                class_ = Class::n4; break;
-            case Class::n1:
-                class_ = (genus_ % 2 == 0 ? Class::n4 : Class::n3); break;
-            case Class::bo1:
-                class_ = Class::bn2; break;
-            case Class::bo2:
-            case Class::bn1:
-                class_ = Class::bn3; break;
+        switch (bundleType_) {
+            case BundleType::o:
+                // If we already had a fibre-reversing *boundary* generator,
+                // then adding a crosscap doesn't change that.
+                bundleType_ = BundleType::n;
+                break;
+            case BundleType::o1:
+                // All crosscap generators end up being fibre-reversing.
+                bundleType_ = BundleType::n2;
+                break;
+            case BundleType::o2:
+                // We end up with a mix of fibre-reversing and
+                // fibre-preserving crosscap generators and the total number
+                // of fibre-preserving crosscap generators is even.
+                bundleType_ = BundleType::n4;
+                break;
+            case BundleType::n1:
+                // In this case, genus_ counts the number of old crosscaps,
+                // all of which are fibre-preserving, so the parity of genus_
+                // tells us what the new bundle type will be.
+                bundleType_ = (genus_ % 2 == 0 ?
+                        BundleType::n4 :
+                        BundleType::n3);
+                break;
+            // No change to bundle types n, n2, n3 and n4.
             default:
-                // No change.
                 break;
         }
     } else {
         // Fibre-preserving.
-        switch(class_) {
-            case Class::o1:
-                class_ = Class::n1; break;
-            case Class::o2:
-            case Class::n2:
-            case Class::n4:
-                class_ = Class::n3; break;
-            case Class::n3:
-                class_ = Class::n4; break;
-            case Class::bo1:
-                class_ = Class::bn1; break;
-            case Class::bo2:
-            case Class::bn2:
-                class_ = Class::bn3; break;
+        switch (bundleType_) {
+            case BundleType::o:
+                // If we already had a fibre-reversing *boundary* generator,
+                // then adding a crosscap doesn't change that.
+                bundleType_ = BundleType::n;
+                break;
+            case BundleType::o1:
+                // All crosscap generators end up being fibre-preserving.
+                bundleType_ = BundleType::n1;
+                break;
+            // Now we have various ways to end up with a mix of
+            // fibre-reversing and fibre-preserving crosscap generators.
+            // This includes several possibilities where the total number P
+            // of fibre-preserving crosscaps generators ends up being odd.
+            // - For bundle type o2, converting all the handle generators to
+            //   crosscap generators preserves the parity of P.
+            // - For bundle type n2, the crosscap generator that we are
+            //   adding now becomes the unique fibre-preserving one.
+            // - For bundle type n4, the crosscap generator that we are
+            //   adding now changes P from even to odd.
+            case BundleType::o2:
+            case BundleType::n2:
+            case BundleType::n4:
+                bundleType_ = BundleType::n3;
+                break;
+            // For bundle type n3, the crosscap generator that we are adding
+            // now changes P from odd to even.
+            case BundleType::n3:
+                bundleType_ = BundleType::n4;
+                break;
+            // No change for bundle types n and n1.
             default:
-                // No change.
                 break;
         }
     }
@@ -163,63 +347,67 @@ void SFSpace::addCrosscap(bool fibreReversing) {
     genus_++;
 }
 
-void SFSpace::addPuncture(bool twisted, size_t nPunctures) {
+void SFSpace::addOrbifoldBoundaryInternal(
+        bool twisted, size_t nPunctures, size_t nReflectors) {
+    if (nPunctures == 0 && nReflectors == 0) {
+        // If we aren't actually adding any new boundaries, then exit right
+        // away to ensure that we don't inadvertently change the bundle type.
+        return;
+    }
     if (twisted) {
         puncturesTwisted_ += nPunctures;
+        reflectorsTwisted_ += nReflectors;
 
-        if (baseOrientable())
-            class_ = Class::bo2;
-        else
-            class_ = Class::bn3;
+        // Adding twisted boundaries to the base orbifold forces the bundle
+        // type to be either o or n.
+        if (baseOrientable()) {
+            bundleType_ = BundleType::o;
+        } else {
+            bundleType_ = BundleType::n;
+        }
     } else {
         punctures_ += nPunctures;
-
-        switch(class_) {
-            case Class::o1:
-                class_ = Class::bo1; break;
-            case Class::o2:
-                class_ = Class::bo2; break;
-            case Class::n1:
-                class_ = Class::bn1; break;
-            case Class::n2:
-                class_ = Class::bn2; break;
-            case Class::n3:
-            case Class::n4:
-                class_ = Class::bn3; break;
-            default:
-                // No change.
-                break;
-        }
+        reflectors_ += nReflectors;
+        // Adding untwisted boundaries to the base orbifold never changes the
+        // bundle type.
     }
 }
 
-void SFSpace::addReflector(bool twisted, size_t nReflectors) {
+void SFSpace::addOrbifoldBoundary(
+        bool twisted, size_t nPunctures, size_t nReflectors) {
+    // Enforce the condition which isn't checked by the internal routine.
     if (twisted) {
-        reflectorsTwisted_ += nReflectors;
-
-        if (baseOrientable())
-            class_ = Class::bo2;
-        else
-            class_ = Class::bn3;
-    } else {
-        reflectors_ += nReflectors;
-
-        switch(class_) {
-            case Class::o1:
-                class_ = Class::bo1; break;
-            case Class::o2:
-                class_ = Class::bo2; break;
-            case Class::n1:
-                class_ = Class::bn1; break;
-            case Class::n2:
-                class_ = Class::bn2; break;
-            case Class::n3:
-            case Class::n4:
-                class_ = Class::bn3; break;
-            default:
-                // No change.
-                break;
+        if ((nPunctures + nReflectors) % 2 != 0) {
+            throw InvalidArgument(
+                    "SFSpace requires that the total number of twisted "
+                    "boundaries in the base orbifold always remains even");
         }
+    }
+    addOrbifoldBoundaryInternal(twisted, nPunctures, nReflectors);
+}
+
+void SFSpace::insertPartialReflector(bool twisted, size_t reflectorArcs) {
+    // First handle the case where this is just a puncture with no reflector
+    // arcs.
+    if (reflectorArcs == 0) {
+        if (twisted) {
+            ++puncturesTwisted_;
+        } else {
+            ++punctures_;
+        }
+        return;
+    }
+
+    // OK, now we know that we have a proper partial reflector.
+    SFSPartialReflector parRef(twisted, reflectorArcs);
+    if (twisted) {
+        partialReflectorsTwisted_.insert(
+                std::ranges::lower_bound(partialReflectorsTwisted_, parRef),
+                parRef);
+    } else {
+        partialReflectors_.insert(
+                std::ranges::lower_bound(partialReflectors_, parRef),
+                parRef);
     }
 }
 
@@ -246,9 +434,8 @@ void SFSpace::insertFibre(long alpha, long beta) {
     }
 
     // Now we have 0 <= beta < alpha and alpha >= 2.
-    nFibres_++;
     SFSFibre f(alpha, beta);
-    fibres_.insert(lower_bound(fibres_.begin(), fibres_.end(), f), f);
+    fibres_.insert(std::ranges::lower_bound(fibres_, f), f);
 
     // We're done!
 }
@@ -258,13 +445,20 @@ void SFSpace::reduce(bool mayReflect) {
 
     // If the SFS is non-orientable, we can get rid of b completely and
     // convert most (if not all) exceptional fibres to beta <= alpha / 2.
-    if (reflectors_ || reflectorsTwisted_) {
+    //
+    // Also, if the base orbifold has any punctures at all (whether twisted
+    // or untwisted), regardless of whether the SFS is orientable or
+    // non-orientable, then we can likewise get rid of b completely.
+    bool canShiftObstructionIntoBoundary(false);
+    if (reflectors_ || reflectorsTwisted_ ||
+            punctures_ || puncturesTwisted_) {
         // (1,1) == (1,0).
+        canShiftObstructionIntoBoundary = true;
         b_ = 0;
     } else if (fibreNegating() && b_) {
         // (p,q) == (p,-q), and so (1,2) == (1,0).
         b_ = b_ % 2;
-        if (b_ && nFibres_) {
+        if (b_ && fibreCount()) {
             // We have b == ±1.
             // Merge this into the first exceptional fibre instead.
             // Instead of modifying the fibre directly, delete and reinsert
@@ -286,7 +480,7 @@ void SFSpace::reduce(bool mayReflect) {
     }
 
     // Completely finish off the case with no exceptional fibres.
-    if (! nFibres_) {
+    if (! fibreCount()) {
         // Not much more we can do.
         // Just reflect if it helps.
         if (mayReflect && b_ < 0)
@@ -435,10 +629,11 @@ void SFSpace::reduce(bool mayReflect) {
         // negative.
 
         if (mayReflect) {
-            if (b_ < (-b_ - static_cast<long>(nFibres_))) {
-                b_ = -b_ - static_cast<long>(nFibres_);
+            if (b_ < (-b_ - static_cast<long>(fibreCount()))) {
+                b_ = -b_ - static_cast<long>(fibreCount());
                 complementAllFibres();
-            } else if (b_ == (-b_ - static_cast<long>(nFibres_))) {
+            } else if ((canShiftObstructionIntoBoundary) ||
+                    (b_ == (-b_ - static_cast<long>(fibreCount())))) {
                 // Reflecting won't change b, but it will complement all
                 // fibres.  See whether this is worthwhile.
                 bool shouldReflect = false;
@@ -480,8 +675,12 @@ void SFSpace::reduce(bool mayReflect) {
                     it = next;
                 }
 
-                if (shouldReflect)
+                if (shouldReflect) {
                     complementAllFibres();
+                    if (canShiftObstructionIntoBoundary) {
+                        b_ = 0;
+                    }
+                }
             }
         }
     }
@@ -562,17 +761,19 @@ std::optional<LensSpace> SFSpace::isLensSpace() const {
         return std::nullopt;
     }
 
-    if (genus_ == 0 && class_ == Class::o1) {
+    // Having already ruled out boundary in the base orbifold, we just need
+    // to check the genus and bundle type.
+    if (genus_ == 0 && bundleType_ == BundleType::o1) {
         // Base orbifold is the sphere.
         if (fibres_.empty())
             return LensSpace(b_ >= 0 ? b_ : -b_, 1);
-        else if (nFibres_ == 1) {
+        else if (fibreCount() == 1) {
             long q = fibres_.front().alpha;
             long p = fibres_.front().beta + (b_ * q);
 
             // We have SFS [S2 : (q,p)].
             return LensSpace(p >= 0 ? p : -p, q >= 0 ? q : -q);
-        } else if (nFibres_ == 2) {
+        } else if (fibreCount() == 2) {
             // Precisely two fibres.
             long q = fibres_.back().alpha;
             long p = fibres_.back().beta + (b_ * q);
@@ -595,9 +796,9 @@ std::optional<LensSpace> SFSpace::isLensSpace() const {
 
         // Not a lens space.
         return std::nullopt;
-    } else if (genus_ == 1 && class_ == Class::n2) {
+    } else if (genus_ == 1 && bundleType_ == BundleType::n2) {
         // Base orbifold is the projective plane.
-        if (nFibres_ == 1) {
+        if (fibreCount() == 1) {
             // We have precisely one exceptional fibre.
             long a = fibres_.front().alpha;
             long n = b_ * a + fibres_.front().beta;
@@ -614,7 +815,7 @@ std::optional<LensSpace> SFSpace::isLensSpace() const {
 }
 
 bool SFSpace::operator == (const SFSpace& compare) const {
-    if (class_ != compare.class_)
+    if (bundleType_ != compare.bundleType_)
         return false;
     if (genus_ != compare.genus_)
         return false;
@@ -626,7 +827,9 @@ bool SFSpace::operator == (const SFSpace& compare) const {
         return false;
     if (reflectorsTwisted_ != compare.reflectorsTwisted_)
         return false;
-    if (nFibres_ != compare.nFibres_)
+    if (! (partialReflectors_ == compare.partialReflectors_))
+        return false;
+    if (! (partialReflectorsTwisted_ == compare.partialReflectorsTwisted_))
         return false;
     if (! (fibres_ == compare.fibres_))
         return false;
@@ -642,6 +845,25 @@ std::strong_ordering SFSpace::operator <=> (const SFSpace& rhs) const {
     // with Klein bottles, etc.
     size_t adjGenus1 = (baseOrientable() ? genus_ * 2 : genus_);
     size_t adjGenus2 = (rhs.baseOrientable() ? rhs.genus_ * 2 : rhs.genus_);
+
+    // At least for now, we will sort first according to the partial
+    // reflectors. If these are the same, then we proceed according to the
+    // ordering that was used before SFSpace supported partial reflectors.
+    if (auto c = partialReflectorCount() <=> rhs.partialReflectorCount();
+            c != 0) {
+        return c;
+    }
+    if (auto c = partialReflectorsTwisted_.size() <=>
+            rhs.partialReflectorsTwisted_.size(); c != 0) {
+        return c;
+    }
+    if (auto c = partialReflectorsTwisted_ <=> rhs.partialReflectorsTwisted_;
+            c != 0) {
+        return c;
+    }
+    if (auto c = partialReflectors_ <=> rhs.partialReflectors_; c != 0) {
+        return c;
+    }
 
     // Too many punctures is worse than anything.
     if (auto c = punctures_ + puncturesTwisted_ <=>
@@ -662,15 +884,13 @@ std::strong_ordering SFSpace::operator <=> (const SFSpace& rhs) const {
     // If we reach this point, we must have adjGenus1 == adjGenus2.
     // Down to more mundane comparisons.
 
-    // Comparing class will catch orientability also (placing orientable
+    // Comparing bundle type will catch orientability also (placing orientable
     // before non-orientable).
-    if (auto c = class_ <=> rhs.class_; c != 0)
+    if (auto c = bundleType_ <=> rhs.bundleType_; c != 0)
         return c;
     if (auto c = reflectorsTwisted_ <=> rhs.reflectorsTwisted_; c != 0)
         return c;
     if (auto c = puncturesTwisted_ <=> rhs.puncturesTwisted_; c != 0)
-        return c;
-    if (auto c = nFibres_ <=> rhs.nFibres_; c != 0)
         return c;
     if (auto c = fibres_ <=> rhs.fibres_; c != 0)
         return c;
@@ -683,17 +903,21 @@ std::strong_ordering SFSpace::operator <=> (const SFSpace& rhs) const {
 
 Triangulation<3> SFSpace::construct() const {
     // Things that we don't deal with just yet.
-    if (punctures_ || puncturesTwisted_ || reflectors_ || reflectorsTwisted_)
+    if (punctures_ || puncturesTwisted_ ||
+            reflectors_ || reflectorsTwisted_ || partialReflectorCount()) {
         throw NotImplemented("SFSpace::construct() is currently not "
-            "implemented for spaces whose base orbifolds have punctures "
-            "or reflector boundaries");
+            "implemented for spaces whose base orbifolds have punctures, "
+            "reflector circles, or reflector arcs");
+    }
 
     // We already know how to construct lens spaces.
     if (auto lens = isLensSpace())
         return lens->construct();
 
     // Currently we work over the 2-sphere only.
-    if (genus_ != 0 || class_ != Class::o1)
+    // Since we already ruled out boundary in the base orbifold, we just need
+    // to check the genus and bundle type.
+    if (genus_ != 0 || bundleType_ != BundleType::o1)
         throw NotImplemented("SFSpace::construct() is currently not "
             "implemented for spaces whose base orbifold is not the 2-sphere");
 
@@ -752,10 +976,11 @@ Triangulation<3> SFSpace::construct() const {
 }
 
 AbelianGroup SFSpace::homology() const {
-    if (punctures_ || puncturesTwisted_) {
+    if (punctures_ || puncturesTwisted_ || partialReflectorCount()) {
         // Not just now.
         throw NotImplemented("SFSpace::homology() is currently not "
-            "implemented for spaces whose base orbifolds have punctures");
+            "implemented for spaces whose base orbifolds have punctures "
+            "or reflector arcs");
     }
 
     // Construct the presentation of the fundamental group and
@@ -778,14 +1003,14 @@ AbelianGroup SFSpace::homology() const {
         // We ignore a_i and b_i, and just add extra rank 2g at the end.
         // Generators in the matrix are q_1, ..., q_r, h, z_1, ..., z_t,
         //                              y_1, ..., y_t.
-        MatrixInt pres(nFibres_ + nRef + (twisted ? 2 : 1),
-            nFibres_ + 1 + 2 * nRef);
+        MatrixInt pres(fibreCount() + nRef + (twisted ? 2 : 1),
+            fibreCount() + 1 + 2 * nRef);
 
         size_t which = 0;
         for (const auto& f : fibres_) {
-            pres.entry(nFibres_ + nRef, which) = 1;
+            pres.entry(fibreCount() + nRef, which) = 1;
 
-            pres.entry(which, nFibres_) = f.beta;
+            pres.entry(which, fibreCount()) = f.beta;
             pres.entry(which, which) = f.alpha;
 
             ++which;
@@ -793,17 +1018,17 @@ AbelianGroup SFSpace::homology() const {
 
         size_t ref;
         for (ref = 0; ref < nRef; ref++) {
-            pres.entry(nFibres_ + ref, nFibres_) = -1;
-            pres.entry(nFibres_ + ref, nFibres_ + 1 + ref) = 2;
-            pres.entry(nFibres_ + nRef, nFibres_ + 1 + nRef + ref) = 1;
+            pres.entry(fibreCount() + ref, fibreCount()) = -1;
+            pres.entry(fibreCount() + ref, fibreCount() + 1 + ref) = 2;
+            pres.entry(fibreCount() + nRef, fibreCount() + 1 + nRef + ref) = 1;
         }
 
-        pres.entry(nFibres_ + nRef, nFibres_) = -b_;
+        pres.entry(fibreCount() + nRef, fibreCount()) = -b_;
 
         if (reflectorsTwisted_)
-            pres.entry(nFibres_ + nRef + 1, nFibres_) = 1;
+            pres.entry(fibreCount() + nRef + 1, fibreCount()) = 1;
         else if (twisted)
-            pres.entry(nFibres_ + nRef + 1, nFibres_) = 2;
+            pres.entry(fibreCount() + nRef + 1, fibreCount()) = 2;
 
         AbelianGroup ans(std::move(pres));
         ans.addRank(2 * genus_);
@@ -820,14 +1045,14 @@ AbelianGroup SFSpace::homology() const {
         //
         // Generators in the matrix are q_1, ..., q_r, v_1, ..., v_g, h,
         //                              z_1, ..., z_t, y_1, ..., y_t.
-        MatrixInt pres(nFibres_ + nRef + (twisted ? 2 : 1),
-            nFibres_ + genus_ + 1 + 2 * nRef);
+        MatrixInt pres(fibreCount() + nRef + (twisted ? 2 : 1),
+            fibreCount() + genus_ + 1 + 2 * nRef);
 
         size_t which = 0;
         for (const auto& f : fibres_) {
-            pres.entry(nFibres_ + nRef, which) = 1;
+            pres.entry(fibreCount() + nRef, which) = 1;
 
-            pres.entry(which, nFibres_ + genus_) = f.beta;
+            pres.entry(which, fibreCount() + genus_) = f.beta;
             pres.entry(which, which) = f.alpha;
 
             ++which;
@@ -835,19 +1060,19 @@ AbelianGroup SFSpace::homology() const {
 
         size_t ref;
         for (ref = 0; ref < nRef; ref++) {
-            pres.entry(nFibres_ + ref, nFibres_ + genus_) = -1;
-            pres.entry(nFibres_ + ref, nFibres_ + genus_ + 1 + ref) = 2;
-            pres.entry(nFibres_ + nRef, nFibres_ + genus_ + 1 + nRef + ref) = 1;
+            pres.entry(fibreCount() + ref, fibreCount() + genus_) = -1;
+            pres.entry(fibreCount() + ref, fibreCount() + genus_ + 1 + ref) = 2;
+            pres.entry(fibreCount() + nRef, fibreCount() + genus_ + 1 + nRef + ref) = 1;
         }
 
         for (which = 0; which < genus_; which++)
-            pres.entry(nFibres_ + nRef, nFibres_ + which) = 2;
-        pres.entry(nFibres_ + nRef, nFibres_ + genus_) = -b_;
+            pres.entry(fibreCount() + nRef, fibreCount() + which) = 2;
+        pres.entry(fibreCount() + nRef, fibreCount() + genus_) = -b_;
 
         if (reflectorsTwisted_)
-            pres.entry(nFibres_ + nRef + 1, nFibres_ + genus_) = 1;
+            pres.entry(fibreCount() + nRef + 1, fibreCount() + genus_) = 1;
         else if (twisted)
-            pres.entry(nFibres_ + nRef + 1, nFibres_ + genus_) = 2;
+            pres.entry(fibreCount() + nRef + 1, fibreCount() + genus_) = 2;
 
         return AbelianGroup(std::move(pres));
     }
@@ -869,9 +1094,13 @@ std::ostream& SFSpace::writeCommonBase(std::ostream& out, bool tex) const {
     // components to be named.  Otherwise this messes up the reflector
     // boundary output.
     size_t totRef = reflectors_ + reflectorsTwisted_;
-    size_t totBdries = totRef + punctures_ + puncturesTwisted_;
+    size_t totParRef = partialReflectorCount();
+    size_t totBdries = totRef + totParRef + punctures_ + puncturesTwisted_;
 
-    if (baseOrientable()) {
+    if (totParRef > 0) {
+        // At least for now, we do not allow spaces with partial reflectors
+        // (i.e., boundaries with one or more reflector arcs) to be named.
+    } else if (baseOrientable()) {
         // Orientable base surface.
         if (genus_ == 0 && totBdries == 0) {
             out << (tex ? "S^2" : "S2");
@@ -943,16 +1172,37 @@ std::ostream& SFSpace::writeCommonBase(std::ostream& out, bool tex) const {
         if (reflectorsTwisted_)
             writeBaseExtraCount(out, reflectorsTwisted_,
                 "twisted reflector", tex);
+
+        if (totParRef) {
+            out << " + partial reflector";
+            if (totParRef != 1) {
+                out << 's';
+            }
+
+            // Now write all the partial reflectors.
+            for (const auto& parRef : partialReflectors_) {
+                out << ' ' << parRef;
+            }
+            for (const auto& parRef : partialReflectorsTwisted_) {
+                out << ' ' << parRef;
+            }
+        }
     }
 
-    if (class_ == Class::o2 || class_ == Class::bo2)
-        out << (tex ? "/o_2" : "/o2");
-    else if (class_ == Class::n2 || class_ == Class::bn2)
-        out << (tex ? "/n_2" : "/n2");
-    else if (class_ == Class::n3 || class_ == Class::bn3)
-        out << (tex ? "/n_3" : "/n3");
-    else if (class_ == Class::n4)
-        out << (tex ? "/n_4" : "/n4");
+    switch (bundleType_) {
+        case BundleType::o:
+            out << "/o"; break;
+        case BundleType::n:
+            out << "/n"; break;
+        case BundleType::o2:
+            out << (tex ? "/o_2" : "/o2"); break;
+        case BundleType::n2:
+            out << (tex ? "/n_2" : "/n2"); break;
+        case BundleType::n3:
+            out << (tex ? "/n_3" : "/n3"); break;
+        case BundleType::n4:
+            out << (tex ? "/n_4" : "/n4"); break;
+    }
 
     return out;
 }
@@ -998,12 +1248,14 @@ std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
     // Things we don't deal with just yet.
     if (fibreNegating())
         return writeStructure(out);
-    if (reflectors_ || reflectorsTwisted_ || punctures_ || puncturesTwisted_)
+    if (reflectors_ || reflectorsTwisted_ ||
+            punctures_ || puncturesTwisted_ || partialReflectorCount()) {
         return writeStructure(out);
+    }
 
     // We're looking at an orientable SFS (with either orientable or
     // non-orientable base orbifold), where the base orbifold has no
-    // punctures or reflector boundaries.
+    // punctures, no reflector circles, and no reflector arcs.
 
     // Take out the lens spaces first.
     if (auto lens = isLensSpace()) {
@@ -1016,7 +1268,7 @@ std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
 
     // Pull off the number of fibres we're capable of dealing with.
     // At this moment this is four.
-    if (nFibres_ > 4)
+    if (fibreCount() > 4)
         return writeStructure(out);
 
     SFSFibre fibre[4];
@@ -1028,13 +1280,14 @@ std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
     // TODO: The four non-orientable flat manifolds are on Orlik p140.
 
     // SFS over the 2-sphere:
-    if (genus_ == 0 && class_ == Class::o1) {
-        if (nFibres_ == 4 && fibre[0] == two && fibre[1] == two &&
+    if (genus_ == 0 && bundleType_ == BundleType::o1 &&
+            punctures() == 0 && reflectors() == 0) {
+        if (fibreCount() == 4 && fibre[0] == two && fibre[1] == two &&
                 fibre[2] == two && fibre[3] == two && b_ == -2) {
             // [ S2 : (2,1), (2,1), (2,-1), (2,-1) ]
             // Orlik, p138, case M2.
             return out << (tex ? "K^2/n2 \\twisted S^1" : "KB/n2 x~ S1");
-        } else if (nFibres_ == 3 && fibre[0] == two &&
+        } else if (fibreCount() == 3 && fibre[0] == two &&
                 std::gcd(fibre[2].alpha, fibre[2].beta) == 1 && b_ >= -1) {
             // [ S2 : (2,1), (...), (...) ]
 
@@ -1182,7 +1435,7 @@ std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
                 else
                     return out << "T x I / [ 0,1 | -1,0 ]";
             }
-        } else if (nFibres_ == 3 && fibre[0] == three && fibre[1] == three
+        } else if (fibreCount() == 3 && fibre[0] == three && fibre[1] == three
                 && fibre[2] == three && b_ == -1) {
             // [ S2 : (3,1), (3,1), (3,-2) ]
             // Orlik, p138, case M3.
@@ -1194,8 +1447,9 @@ std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
     }
 
     // SFS over the real projective plane:
-    if (genus_ == 1 && class_ == Class::n2) {
-        if (nFibres_ == 0) {
+    if (genus_ == 1 && bundleType_ == BundleType::n2 &&
+            punctures() == 0 && reflectors() == 0) {
+        if (fibreCount() == 0) {
             // No exceptional fibres.
             if (b_ == 0) {
                 // [ RP2 ]
@@ -1207,7 +1461,7 @@ std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
                 // Is this Orlik, p112, case (vi)?  What is this?
                 // ans << "S3/Q" << (4 * (b > 0 ? b : -b));
             }
-        } else if (nFibres_ == 1 && fibre[0].alpha > 1) {
+        } else if (fibreCount() == 1 && fibre[0].alpha > 1) {
             // Just one exceptional fibre.
             long a = fibre[0].alpha;
             long n = b_ * a + fibre[0].beta;
