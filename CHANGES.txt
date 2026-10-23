@@ -478,7 +478,7 @@ Version 8.0  [ TODO ]
               no longer makes sense and has been removed completely.
             - New scalar multiplication operators * and *=.
             - New in-place addition and subtractions operators += and -=.
-            - New routines copyRows() and moveRows().
+            - New routines copyRows(), moveRows(), copyCols() and moveCols().
             - New routine negate().
             - New routines trace(), adjugate() and inverse().
             - New routines makeRowBasis(), rowBasis() and rowBasisAndOrthComp().

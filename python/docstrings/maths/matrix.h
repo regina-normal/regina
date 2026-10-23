@@ -808,6 +808,36 @@ Parameter ``fromCol``:
     the starting point in the rows from which the operation will be
     performed.)doc";
 
+// Docstring regina::python::doc::Matrix::copyCols
+static constexpr const char copyCols[] =
+R"doc(Copies the given collection of columns from this matrix. This original
+matrix will not be changed.
+
+The columns are given as a sequence of integer column indices (passed
+as an iterator pair). You may request the same column multiple times
+(i.e., the sequence of indices may contain duplicate entries).
+
+Precondition:
+    All column indices in the given sequence are integers in the range
+    ``0,...,columns()-1`` inclusive.
+
+Python:
+    Instead of an iterator pair, this routine takes a Python list of
+    integers.
+
+Parameter ``beginCols``:
+    the beginning of the sequence of column indices.
+
+Parameter ``endCols``:
+    a past-the-end iterator indicating the end of the sequence of
+    column indices.
+
+Returns:
+    a matrix containing only the requested columns, in the order in
+    which they appear in the given sequence. This matrix will have
+    dimensions ``rows() × S``, where *S* is the length of the given
+    sequence.)doc";
+
 // Docstring regina::python::doc::Matrix::copyRows
 static constexpr const char copyRows[] =
 R"doc(Copies the given collection of rows from this matrix. This original
@@ -835,7 +865,8 @@ Parameter ``endRows``:
 Returns:
     a matrix containing only the requested rows, in the order in which
     they appear in the given sequence. This matrix will have
-    dimensions ``rows.size() × columns()``.)doc";
+    dimensions ``S × columns()``, where *S* is the length of the given
+    sequence.)doc";
 
 // Docstring regina::python::doc::Matrix::det
 static constexpr const char det[] =

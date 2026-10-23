@@ -112,6 +112,9 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
         .def("copyRows", [](Matrix& m, const std::vector<size_t>& rows) {
             return m.copyRows(rows.begin(), rows.end());
         }, "rows"_a, rdoc::copyRows)
+        .def("copyCols", [](Matrix& m, const std::vector<size_t>& cols) {
+            return m.copyCols(cols.begin(), cols.end());
+        }, "cols"_a, rdoc::copyCols)
         .def("validate", &Matrix::validate, rdoc::validate)
     ;
     if constexpr (regina::Ring<Element>) {

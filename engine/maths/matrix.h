@@ -640,7 +640,8 @@ class Matrix : public Output<Matrix<T>> {
          * sequence of row indices.
          * \return a matrix containing only the requested rows, in the order
          * in which they appear in the given sequence.  This matrix will have
-         * dimensions `rows.size() × columns()`.
+         * dimensions `S × columns()`, where \a S is the length of the given
+         * sequence.
          */
         template <RandomAccessIteratorFor<size_t> Iterator>
         Matrix copyRows(Iterator beginRows, Iterator endRows) const {
@@ -675,7 +676,8 @@ class Matrix : public Output<Matrix<T>> {
          * sequence of row indices.
          * \return a matrix containing only the requested rows, in the order
          * in which they appear in the given sequence.  This matrix will have
-         * dimensions `rows.size() × columns()`.
+         * dimensions `S × columns()`, where \a S is the length of the given
+         * sequence.
          */
         template <RandomAccessIteratorFor<size_t> Iterator>
         Matrix moveRows(Iterator beginRows, Iterator endRows) && {
@@ -684,6 +686,85 @@ class Matrix : public Output<Matrix<T>> {
             for (auto it = beginRows; it != endRows; ++it, pos += cols_) {
                 auto row = data_ + (*it) * cols_;
                 std::move(row, row + cols_, pos);
+            }
+            return ans;
+        }
+
+        /**
+         * Copies the given collection of columns from this matrix.
+         * This original matrix will not be changed.
+         *
+         * The columns are given as a sequence of integer column indices (passed
+         * as an iterator pair).  You may request the same column multiple times
+         * (i.e., the sequence of indices may contain duplicate entries).
+         *
+         * \pre All column indices in the given sequence are integers in the
+         * range `0,...,columns()-1` inclusive.
+         *
+         * \python Instead of an iterator pair, this routine takes a Python
+         * list of integers.
+         *
+         * \param beginCols the beginning of the sequence of column indices.
+         * \param endCols a past-the-end iterator indicating the end of the
+         * sequence of column indices.
+         * \return a matrix containing only the requested columns, in the order
+         * in which they appear in the given sequence.  This matrix will have
+         * dimensions `rows() × S`, where \a S is the length of the given
+         * sequence.
+         */
+        template <RandomAccessIteratorFor<size_t> Iterator>
+        Matrix copyCols(Iterator beginCols, Iterator endCols) const {
+            Matrix ans(rows_, endCols - beginCols);
+            size_t col = 0;
+            for (auto it = beginCols; it != endCols; ++it, ++col) {
+                const T* src = data_ + *it;
+                T* dest = ans.data_ + col;
+                for (size_t i = 0; i < rows_; ++i) {
+                    *dest = *src;
+                    src += cols_;
+                    dest += cols_;
+                }
+            }
+            return ans;
+        }
+
+        /**
+         * Moves the given collection of columns out of this matrix.
+         *
+         * The columns are given as a sequence of integer column indices (passed
+         * as an iterator pair).  Unlike copyCols(), each column may be
+         * requested at most once (i.e., the sequence of indices must not
+         * contain duplicate entries).
+         *
+         * Typically an object cannot be used after you call an rvalue member
+         * function.  There is an exception here: it is safe to make several
+         * successive calls to moveCols() as long as the sequences of column
+         * indices are disjoint (i.e., each individual column is extracted at
+         * most once).
+         *
+         * \pre All column indices in the given sequence are _distinct_ integers
+         * in the range `0,...,columns()-1` inclusive.
+         *
+         * \param beginCols the beginning of the sequence of column indices.
+         * \param endCols a past-the-end iterator indicating the end of the
+         * sequence of column indices.
+         * \return a matrix containing only the requested columns, in the order
+         * in which they appear in the given sequence.  This matrix will have
+         * dimensions `rows() × S`, where \a S is the length of the given
+         * sequence.
+         */
+        template <RandomAccessIteratorFor<size_t> Iterator>
+        Matrix moveCols(Iterator beginCols, Iterator endCols) && {
+            Matrix ans(rows_, endCols - beginCols);
+            size_t col = 0;
+            for (auto it = beginCols; it != endCols; ++it, ++col) {
+                const T* src = data_ + *it;
+                T* dest = ans.data_ + col;
+                for (size_t i = 0; i < rows_; ++i) {
+                    *dest = std::move(*src);
+                    src += cols_;
+                    dest += cols_;
+                }
             }
             return ans;
         }
