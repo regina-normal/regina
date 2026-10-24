@@ -174,8 +174,9 @@ enum class AdjugateAlgorithm {
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
- * even when passing or returning objects by value.  If a matrix is moved from,
- * it can later be reused by assigning it a new value.
+ * even when passing or returning objects by value.  If a matrix is moved from
+ * (via move construction or move assignment), it can later be reused by
+ * assigning it a new value.
  *
  * \headers Some routines in this template class are implemented in a separate
  * header (matrix-impl.h), which is not included automatically by this file.

@@ -144,6 +144,79 @@ void validateZero(const Matrix<T>& m, size_t rows, size_t columns) {
             EXPECT_EQ(m.entry(i, j), 0);
 }
 
+template <regina::CommutativeRing T>
+void validate(const Matrix<T>& m, const Matrix<T>& expect) {
+    EXPECT_NO_THROW({ m.validate(); });
+    ASSERT_EQ(m.rows(), expect.rows());
+    ASSERT_EQ(m.columns(), expect.columns());
+    for (size_t i = 0; i < m.rows(); ++i)
+        for (size_t j = 0; j < m.columns(); ++j)
+            EXPECT_EQ(m.entry(i, j), expect.entry(i, j));
+}
+
+// MARK: - Core operations
+
+TEST_F(MatrixTest, moveThenAssign) {
+    for (const MatrixInt& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+
+        // Here *junk indicates the initial value of y.  The point of this is
+        // to ensure that, when moving x into y, we don't end up with unwanted
+        // residue from this junk living within x.
+        //
+        // We also allow junk to be cases.end() which means that y should be
+        // default constructed (hence the awkward structure of this loop).
+        auto junk = cases.begin();
+        while (true) {
+            for (const MatrixInt& d : cases) {
+                SCOPED_TRACE_REGINA(d);
+                {
+                    MatrixInt x(c);
+                    validate(x, c);
+                    MatrixInt y;
+                    if (junk != cases.end()) {
+                        y = *junk;
+                        validate(y, junk->get());
+                    } else {
+                        validateEmpty(y);
+                    }
+
+                    y = std::move(x);
+                    x = d;
+                    validate(x, d);
+                    validate(y, c);
+                }
+            }
+
+            if (junk == cases.end())
+                break;
+            ++junk;
+        }
+    }
+}
+
+TEST_F(MatrixTest, comparison) {
+    for (const MatrixInt& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+
+        EXPECT_TRUE(c == c);
+        EXPECT_TRUE(c == MatrixInt(c));
+        EXPECT_FALSE(c != c);
+        EXPECT_FALSE(c != MatrixInt(c));
+
+        for (const MatrixInt& d : cases) {
+            if (std::addressof(c) == std::addressof(d))
+                continue;
+
+            SCOPED_TRACE_REGINA(d);
+            EXPECT_FALSE(c == d);
+            EXPECT_TRUE(c != d);
+        }
+    }
+}
+
+// MARK: - Empty matrices
+
 TEST_F(MatrixTest, empty) {
     // Test everything that we are allowed to do with an empty matrix.
     validateEmpty(Matrix<Integer>());
@@ -284,6 +357,13 @@ TEST_F(MatrixTest, empty) {
 
     EXPECT_EQ(m.rank(), 0);
     EXPECT_EQ(Matrix<Integer>(m).rank(), 0);
+
+    EXPECT_EQ(m.rowBasis(), 0);
+    {
+        auto [b, c] = m.rowBasisAndOrthComp();
+        validateEmpty(b);
+        validateEmpty(c);
+    }
 
     EXPECT_NO_THROW({ validateEmpty(m.inverse()); });
     EXPECT_NO_THROW({ validateEmpty(Matrix<Integer>(m).inverse()); });
@@ -485,6 +565,17 @@ TEST_F(MatrixTest, noRows) {
         validateIdentity(r, 3);
         validateIdentity(ri, 3);
         EXPECT_EQ(rank, 0);
+    }
+
+    validateNoRows(m.rowBasis(), 3);
+    {
+        auto [b, c] = m.rowBasisAndOrthComp();
+        validateNoRows(b, 3);
+        // All the API promises is that the rows of c form a basis for R^3.
+        // However, the current algorithm gives c = -I(3) and so for now we
+        // explicitly test for that.
+        c.negate();
+        validateIdentity(c, 3);
     }
 
     EXPECT_THROW({ m.inverse(); }, regina::FailedPrecondition);
@@ -694,6 +785,13 @@ TEST_F(MatrixTest, noColumns) {
         EXPECT_EQ(rank, 0);
     }
 
+    EXPECT_EQ(m.rowBasis(), 0);
+    {
+        auto [b, c] = m.rowBasisAndOrthComp();
+        validateEmpty(b);
+        validateEmpty(c);
+    }
+
     EXPECT_THROW({ m.inverse(); }, regina::FailedPrecondition);
     EXPECT_THROW({ Matrix<Integer>(m).inverse(); }, regina::FailedPrecondition);
 
@@ -715,6 +813,159 @@ TEST_F(MatrixTest, noColumns) {
     validateEmpty(m.preimageOfLattice({ 2, 3, 5 }));
     validateEmpty(m.preimageOfLattice({ 0, 0, 0 }));
 }
+
+// MARK: - General rings or integral domains
+
+template <regina::CommutativeRing T>
+void verifyAdjugate(const Matrix<T>& m, const T& determinant,
+        AdjugateAlgorithm alg) {
+    // We have already verified that the matrix is square through the variant
+    // of verifyAdjugate() that does not take an algorithm as input.
+
+    EXPECT_EQ(m.det(alg), determinant);
+
+    if (m.rows() > 1 && alg == AdjugateAlgorithm::MahajanVinay) {
+        EXPECT_THROW({ m.adjugate(alg); }, regina::InvalidArgument);
+    } else {
+        auto adj = m.adjugate(alg);
+        EXPECT_EQ(adj.first.rows(), m.rows());
+        EXPECT_EQ(adj.first.columns(), m.columns());
+        EXPECT_EQ(adj.second, determinant);
+        if (m.rows() != 0)
+            EXPECT_EQ(m * adj.first,
+                Matrix<T>::identity(m.rows()) * determinant);
+    }
+}
+
+template <regina::CommutativeRing T>
+void verifyAdjugate(const Matrix<T>& m, const T& determinant) {
+    // We use this if we already have an expcted value for the determinant.
+    ASSERT_EQ(m.rows(), m.columns());
+
+    verifyAdjugate(m, determinant, AdjugateAlgorithm::FaddeevLeverrier);
+    verifyAdjugate(m, determinant, AdjugateAlgorithm::PreparataSarwate);
+    verifyAdjugate(m, determinant, AdjugateAlgorithm::MahajanVinay);
+}
+
+template <regina::CommutativeRing T>
+void verifyAdjugate(const Matrix<T>& m) {
+    // We use this if we do not know the determinant in advance.
+    ASSERT_EQ(m.rows(), m.columns());
+
+    auto det = m.det(AdjugateAlgorithm::MahajanVinay);
+    verifyAdjugate(m, det, AdjugateAlgorithm::FaddeevLeverrier);
+    verifyAdjugate(m, det, AdjugateAlgorithm::PreparataSarwate);
+}
+
+TEST_F(MatrixTest, determinantAdjugate) {
+    // We include here several simple tests with different (non-integer)
+    // element types.
+    using P = Polynomial<Integer>;
+    using L = Laurent<Integer>;
+    using L2 = Laurent2<Integer>;
+
+    // Empty matrices:
+    verifyAdjugate<Integer>({0}, 1);
+    verifyAdjugate<Rational>({0}, 1);
+
+    // Some matrices filled with zeroes:
+    for (size_t size = 1; size < 5; ++size) {
+        verifyAdjugate<Integer>({size}, 0);
+        verifyAdjugate<Rational>({size}, 0);
+        verifyAdjugate<Polynomial<Integer>>({size}, {});
+        verifyAdjugate<Laurent<Integer>>({size}, {});
+        verifyAdjugate<Laurent2<Integer>>({size}, {});
+    }
+
+    // Some ad-hoc 1x1 cases:
+    verifyAdjugate<Integer>({ { -3 } }, {-3});
+    verifyAdjugate<Rational>({ { {2,5} } }, {2,5});
+    verifyAdjugate<Polynomial<Integer>>({ { {3,-1} } }, {3,-1});
+    verifyAdjugate<Laurent<Integer>>({ { {-2, {-1,0,3,2}} } },
+        {-2, {-1,0,3,2}});
+    verifyAdjugate<Laurent2<Integer>>({ { {{-3,2,5}} } }, {{-3,2,5}});
+
+    // Some ad-hoc 2x2 cases:
+    // [ 1, 2, -3, 4 ] -> 10
+    verifyAdjugate<Integer>({ { 1, 2 }, { -3, 4 } }, 10);
+    // [ 1, 1/4 | 2, -1 ] -> -3/2
+    verifyAdjugate<Rational>({ { 1, {1,4} }, { 2, -1 } }, {-3, 2});
+    // [ 1, x | -x, 1 ] -> x^2 + 1
+    verifyAdjugate<Polynomial<Integer>>(
+        { { {1}, {0,1} }, { {0,-1}, {1} } },
+        {1,0,1});
+    // [ 1, x | x^-1, 1 ] -> 0
+    verifyAdjugate<Laurent<Integer>>(
+        { { {0, {1}}, {1, {1}} }, { {-1, {1}}, {0, {1}} } },
+        {});
+    // [ 1, x + x^-1 | x - x^-1, -1 ] -> x^-2 - 1 - x^2
+    verifyAdjugate<Laurent<Integer>>(
+        { { {0, {1}}, {-1, {1,0,1}} }, { {-1, {-1,0,1}}, {0, {-1}} } },
+        {-2, {1,0,-1,0,-1}});
+    // [ xy, y^-1 | -y^2x, x^-1 ] -> y + xy
+    verifyAdjugate<Laurent2<Integer>>(
+        { { {{1,1,1}}, {{0,-1,1}} }, { {{1,2,-1}}, {{-1,0,1}} } },
+        {{ {0, 1, 1}, {1, 1, 1} }});
+
+    // Some slightly larger cases, now just using integers:
+    for (size_t size = 3; size <= 10; ++size) {
+        Matrix<Integer> diagonal(size);
+        Matrix<Integer> antidiagonal(size);
+        Integer factorial = 1;
+        for (size_t i = 0; i < size; ++i) {
+            diagonal.entry(i, i) = i + 1;
+            antidiagonal.entry(size - i - 1, i) = i + 1;
+            factorial *= (i + 1);
+        }
+        verifyAdjugate<Integer>(diagonal, factorial);
+        switch (size & 3) {
+            case 0:
+            case 1:
+                // size == 0 or 1 mod 4
+                verifyAdjugate<Integer>(antidiagonal, factorial);
+                break;
+            default:
+                // size == 2 or 3 mod 4
+                verifyAdjugate<Integer>(antidiagonal, -factorial);
+                break;
+        }
+
+        for (int attempt = 0; attempt < 5; ++attempt) {
+            Matrix<Integer> random(size);
+            for (size_t i = 0; i < size; ++i)
+                for (size_t j = 0; j < size; ++j)
+                    random.entry(i, j) = Integer::randomBinary(8);
+            verifyAdjugate<Integer>(random);
+        }
+    }
+
+    // Work through all of our usual square Matrix cases, and just a couple of
+    // our usual non-square cases.
+    using Alg = AdjugateAlgorithm;
+    for (auto alg : { Alg::Default, Alg::FaddeevLeverrier,
+            Alg::PreparataSarwate, Alg::MahajanVinay }) {
+        EXPECT_THROW({ rect34.det(alg); }, regina::FailedPrecondition);
+        EXPECT_THROW({ rect43.det(alg); }, regina::FailedPrecondition);
+        EXPECT_THROW({ rect34.adjugate(alg); }, regina::FailedPrecondition);
+        EXPECT_THROW({ rect43.adjugate(alg); }, regina::FailedPrecondition);
+    }
+    verifyAdjugate<Integer>(identity3, 1); // self-transpose
+    verifyAdjugate<Integer>(one, 1); // self-transpose
+    verifyAdjugate<Integer>(minusOne, -1); // self-transpose
+    verifyAdjugate<Integer>(two, 2); // self-transpose
+    verifyAdjugate<Integer>(shear2, 1);
+    verifyAdjugate<Integer>(shear2.transpose(), 1);
+    verifyAdjugate<Integer>(square3, -144);
+    verifyAdjugate<Integer>(square3.transpose(), -144);
+    verifyAdjugate<Integer>(perm4, -1);
+    verifyAdjugate<Integer>(perm4.transpose(), -1);
+    verifyAdjugate<Integer>(fib1, 1);
+    verifyAdjugate<Integer>(fib1.transpose(), 1);
+    verifyAdjugate<Integer>(fib2, 1);
+    verifyAdjugate<Integer>(fib2.transpose(), 1);
+}
+
+// MARK: - Specific to ReginaInteger
 
 static void verifyHermite(const MatrixInt& m) {
     SCOPED_TRACE_REGINA(m);
@@ -908,155 +1159,6 @@ TEST_F(MatrixTest, rowBasis) {
         { 5, 0, 2 },
         { 3, 6, 9 }  // redundant via row 0
     });
-}
-
-template <regina::CommutativeRing T>
-void verifyAdjugate(const Matrix<T>& m, const T& determinant,
-        AdjugateAlgorithm alg) {
-    // We have already verified that the matrix is square through the variant
-    // of verifyAdjugate() that does not take an algorithm as input.
-
-    EXPECT_EQ(m.det(alg), determinant);
-
-    if (m.rows() > 1 && alg == AdjugateAlgorithm::MahajanVinay) {
-        EXPECT_THROW({ m.adjugate(alg); }, regina::InvalidArgument);
-    } else {
-        auto adj = m.adjugate(alg);
-        EXPECT_EQ(adj.first.rows(), m.rows());
-        EXPECT_EQ(adj.first.columns(), m.columns());
-        EXPECT_EQ(adj.second, determinant);
-        if (m.rows() != 0)
-            EXPECT_EQ(m * adj.first,
-                Matrix<T>::identity(m.rows()) * determinant);
-    }
-}
-
-template <regina::CommutativeRing T>
-void verifyAdjugate(const Matrix<T>& m, const T& determinant) {
-    // We use this if we already have an expcted value for the determinant.
-    ASSERT_EQ(m.rows(), m.columns());
-
-    verifyAdjugate(m, determinant, AdjugateAlgorithm::FaddeevLeverrier);
-    verifyAdjugate(m, determinant, AdjugateAlgorithm::PreparataSarwate);
-    verifyAdjugate(m, determinant, AdjugateAlgorithm::MahajanVinay);
-}
-
-template <regina::CommutativeRing T>
-void verifyAdjugate(const Matrix<T>& m) {
-    // We use this if we do not know the determinant in advance.
-    ASSERT_EQ(m.rows(), m.columns());
-
-    auto det = m.det(AdjugateAlgorithm::MahajanVinay);
-    verifyAdjugate(m, det, AdjugateAlgorithm::FaddeevLeverrier);
-    verifyAdjugate(m, det, AdjugateAlgorithm::PreparataSarwate);
-}
-
-TEST_F(MatrixTest, determinantAdjugate) {
-    // We include here several simple tests with different (non-integer)
-    // element types.
-    using P = Polynomial<Integer>;
-    using L = Laurent<Integer>;
-    using L2 = Laurent2<Integer>;
-
-    // Empty matrices:
-    verifyAdjugate<Integer>({0}, 1);
-    verifyAdjugate<Rational>({0}, 1);
-
-    // Some matrices filled with zeroes:
-    for (size_t size = 1; size < 5; ++size) {
-        verifyAdjugate<Integer>({size}, 0);
-        verifyAdjugate<Rational>({size}, 0);
-        verifyAdjugate<Polynomial<Integer>>({size}, {});
-        verifyAdjugate<Laurent<Integer>>({size}, {});
-        verifyAdjugate<Laurent2<Integer>>({size}, {});
-    }
-
-    // Some ad-hoc 1x1 cases:
-    verifyAdjugate<Integer>({ { -3 } }, {-3});
-    verifyAdjugate<Rational>({ { {2,5} } }, {2,5});
-    verifyAdjugate<Polynomial<Integer>>({ { {3,-1} } }, {3,-1});
-    verifyAdjugate<Laurent<Integer>>({ { {-2, {-1,0,3,2}} } },
-        {-2, {-1,0,3,2}});
-    verifyAdjugate<Laurent2<Integer>>({ { {{-3,2,5}} } }, {{-3,2,5}});
-
-    // Some ad-hoc 2x2 cases:
-    // [ 1, 2, -3, 4 ] -> 10
-    verifyAdjugate<Integer>({ { 1, 2 }, { -3, 4 } }, 10);
-    // [ 1, 1/4 | 2, -1 ] -> -3/2
-    verifyAdjugate<Rational>({ { 1, {1,4} }, { 2, -1 } }, {-3, 2});
-    // [ 1, x | -x, 1 ] -> x^2 + 1
-    verifyAdjugate<Polynomial<Integer>>(
-        { { {1}, {0,1} }, { {0,-1}, {1} } },
-        {1,0,1});
-    // [ 1, x | x^-1, 1 ] -> 0
-    verifyAdjugate<Laurent<Integer>>(
-        { { {0, {1}}, {1, {1}} }, { {-1, {1}}, {0, {1}} } },
-        {});
-    // [ 1, x + x^-1 | x - x^-1, -1 ] -> x^-2 - 1 - x^2
-    verifyAdjugate<Laurent<Integer>>(
-        { { {0, {1}}, {-1, {1,0,1}} }, { {-1, {-1,0,1}}, {0, {-1}} } },
-        {-2, {1,0,-1,0,-1}});
-    // [ xy, y^-1 | -y^2x, x^-1 ] -> y + xy
-    verifyAdjugate<Laurent2<Integer>>(
-        { { {{1,1,1}}, {{0,-1,1}} }, { {{1,2,-1}}, {{-1,0,1}} } },
-        {{ {0, 1, 1}, {1, 1, 1} }});
-
-    // Some slightly larger cases, now just using integers:
-    for (size_t size = 3; size <= 10; ++size) {
-        Matrix<Integer> diagonal(size);
-        Matrix<Integer> antidiagonal(size);
-        Integer factorial = 1;
-        for (size_t i = 0; i < size; ++i) {
-            diagonal.entry(i, i) = i + 1;
-            antidiagonal.entry(size - i - 1, i) = i + 1;
-            factorial *= (i + 1);
-        }
-        verifyAdjugate<Integer>(diagonal, factorial);
-        switch (size & 3) {
-            case 0:
-            case 1:
-                // size == 0 or 1 mod 4
-                verifyAdjugate<Integer>(antidiagonal, factorial);
-                break;
-            default:
-                // size == 2 or 3 mod 4
-                verifyAdjugate<Integer>(antidiagonal, -factorial);
-                break;
-        }
-
-        for (int attempt = 0; attempt < 5; ++attempt) {
-            Matrix<Integer> random(size);
-            for (size_t i = 0; i < size; ++i)
-                for (size_t j = 0; j < size; ++j)
-                    random.entry(i, j) = Integer::randomBinary(8);
-            verifyAdjugate<Integer>(random);
-        }
-    }
-
-    // Work through all of our usual square Matrix cases, and just a couple of
-    // our usual non-square cases.
-    using Alg = AdjugateAlgorithm;
-    for (auto alg : { Alg::Default, Alg::FaddeevLeverrier,
-            Alg::PreparataSarwate, Alg::MahajanVinay }) {
-        EXPECT_THROW({ rect34.det(alg); }, regina::FailedPrecondition);
-        EXPECT_THROW({ rect43.det(alg); }, regina::FailedPrecondition);
-        EXPECT_THROW({ rect34.adjugate(alg); }, regina::FailedPrecondition);
-        EXPECT_THROW({ rect43.adjugate(alg); }, regina::FailedPrecondition);
-    }
-    verifyAdjugate<Integer>(identity3, 1); // self-transpose
-    verifyAdjugate<Integer>(one, 1); // self-transpose
-    verifyAdjugate<Integer>(minusOne, -1); // self-transpose
-    verifyAdjugate<Integer>(two, 2); // self-transpose
-    verifyAdjugate<Integer>(shear2, 1);
-    verifyAdjugate<Integer>(shear2.transpose(), 1);
-    verifyAdjugate<Integer>(square3, -144);
-    verifyAdjugate<Integer>(square3.transpose(), -144);
-    verifyAdjugate<Integer>(perm4, -1);
-    verifyAdjugate<Integer>(perm4.transpose(), -1);
-    verifyAdjugate<Integer>(fib1, 1);
-    verifyAdjugate<Integer>(fib1.transpose(), 1);
-    verifyAdjugate<Integer>(fib2, 1);
-    verifyAdjugate<Integer>(fib2.transpose(), 1);
 }
 
 static void verifyInverse(const MatrixInt& m) {
