@@ -54,6 +54,9 @@ class MatrixTest : public testing::Test {
         // Several test cases for working with integers:
         const MatrixInt zero34 { 3, 4 };
         const MatrixInt identity3 { MatrixInt::identity(3) };
+        const MatrixInt identity34 {{ 1, 0, 0, 0 },
+                                    { 0, 1, 0, 0 },
+                                    { 0, 0, 1, 0 }};
         const MatrixInt one {{ 1 }};
         const MatrixInt minusOne {{ -1 }};
         const MatrixInt two {{ 2 }};
@@ -90,8 +93,8 @@ class MatrixTest : public testing::Test {
                               { 1054, 8, 21 },
                               { 1665, 13, 34 }};
 
-        const std::array<std::reference_wrapper<const MatrixInt>, 15> cases {
-            std::cref(zero34), std::cref(identity3),
+        const std::array<std::reference_wrapper<const MatrixInt>, 16> cases {
+            std::cref(zero34), std::cref(identity3), std::cref(identity34),
             std::cref(one), std::cref(minusOne), std::cref(two),
             std::cref(vector), std::cref(shear2), std::cref(square3),
             std::cref(rect34), std::cref(rect43),
@@ -152,6 +155,18 @@ void validate(const Matrix<T>& m, const Matrix<T>& expect) {
     for (size_t i = 0; i < m.rows(); ++i)
         for (size_t j = 0; j < m.columns(); ++j)
             EXPECT_EQ(m.entry(i, j), expect.entry(i, j));
+}
+
+template <regina::CommutativeRing T,
+    std::regular_invocable<size_t, size_t> ComputeEntry>
+void validate(const Matrix<T>& m, size_t rows, size_t columns,
+        ComputeEntry&& expectedEntry) {
+    EXPECT_NO_THROW({ m.validate(); });
+    ASSERT_EQ(m.rows(), rows);
+    ASSERT_EQ(m.columns(), columns);
+    for (size_t i = 0; i < rows; ++i)
+        for (size_t j = 0; j < columns; ++j)
+            EXPECT_EQ(m.entry(i, j), expectedEntry(i, j));
 }
 
 // MARK: - Core operations
@@ -967,6 +982,136 @@ TEST_F(MatrixTest, determinantAdjugate) {
 
 // MARK: - Specific to ReginaInteger
 
+static void verifyGcdDivReduce(const MatrixInt& m) {
+    // This tests gcdRow(), gcdCol(), reduceRow(), reduceCol(),
+    // divRowExact(), and divColExact().
+
+    SCOPED_TRACE_REGINA(m);
+
+    for (size_t i = 0; i < m.rows(); ++i) {
+        Integer gcd = m.gcdRow(i);
+
+        bool allZero = true;
+        for (size_t j = 0; j < m.columns(); ++j)
+            if (m.entry(i, j) != 0) {
+                allZero = false;
+                break;
+            }
+
+        if (allZero) {
+            EXPECT_EQ(gcd, 0);
+
+            MatrixInt alt(m);
+            alt.divRowExact(i, 317);
+            validate(alt, m);
+            alt.divRowExact(i, -1);
+            validate(alt, m);
+            alt.reduceRow(i);
+            validate(alt, m);
+            continue;
+        }
+
+        ASSERT_GT(gcd, 0);
+        for (size_t j = 0; j < m.columns(); ++j) {
+            EXPECT_EQ(m.entry(i, j) % gcd, 0);
+        }
+
+        MatrixInt alt(m);
+        alt.divRowExact(i, gcd);
+        validate(alt, m.rows(), m.columns(), [&m, i, &gcd](size_t r, size_t c) {
+            return (r == i ? m.entry(r, c).divExact(gcd) : m.entry(r, c));
+        });
+        EXPECT_EQ(alt.gcdRow(i), 1);
+
+        MatrixInt red(m);
+        red.reduceRow(i);
+        validate(red, alt);
+
+        alt.multRow(i, gcd);
+        validate(alt, m);
+
+        alt.divRowExact(i, -1);
+        validate(alt, m.rows(), m.columns(), [&m, i](size_t r, size_t c) {
+            return (r == i ? -m.entry(r, c) : m.entry(r, c));
+        });
+        EXPECT_EQ(alt.gcdRow(i), gcd);
+
+        alt.negateRow(i);
+        validate(alt, m);
+
+        alt.multRow(i, -2);
+        validate(alt, m.rows(), m.columns(), [&m, i](size_t r, size_t c) {
+            return (r == i ? -2 * m.entry(r, c) : m.entry(r, c));
+        });
+        EXPECT_EQ(alt.gcdRow(i), 2 * gcd);
+    }
+
+    for (size_t i = 0; i < m.columns(); ++i) {
+        Integer gcd = m.gcdCol(i);
+
+        bool allZero = true;
+        for (size_t j = 0; j < m.rows(); ++j)
+            if (m.entry(j, i) != 0) {
+                allZero = false;
+                break;
+            }
+
+        if (allZero) {
+            EXPECT_EQ(gcd, 0);
+
+            MatrixInt alt(m);
+            alt.divColExact(i, 317);
+            validate(alt, m);
+            alt.divColExact(i, -1);
+            validate(alt, m);
+            alt.reduceCol(i);
+            validate(alt, m);
+            continue;
+        }
+
+        ASSERT_GT(gcd, 0);
+        for (size_t j = 0; j < m.rows(); ++j) {
+            EXPECT_EQ(m.entry(j, i) % gcd, 0);
+        }
+
+        MatrixInt alt(m);
+        alt.divColExact(i, gcd);
+        validate(alt, m.rows(), m.columns(), [&m, i, &gcd](size_t r, size_t c) {
+            return (c == i ? m.entry(r, c).divExact(gcd) : m.entry(r, c));
+        });
+        EXPECT_EQ(alt.gcdCol(i), 1);
+
+        MatrixInt red(m);
+        red.reduceCol(i);
+        validate(red, alt);
+
+        alt.multCol(i, gcd);
+        validate(alt, m);
+
+        alt.divColExact(i, -1);
+        validate(alt, m.rows(), m.columns(), [&m, i](size_t r, size_t c) {
+            return (c == i ? -m.entry(r, c) : m.entry(r, c));
+        });
+        EXPECT_EQ(alt.gcdCol(i), gcd);
+
+        alt.negateCol(i);
+        validate(alt, m);
+
+        alt.multCol(i, -2);
+        validate(alt, m.rows(), m.columns(), [&m, i](size_t r, size_t c) {
+            return (c == i ? -2 * m.entry(r, c) : m.entry(r, c));
+        });
+        EXPECT_EQ(alt.gcdCol(i), 2 * gcd);
+    }
+}
+
+TEST_F(MatrixTest, gcdDivReduce) {
+    for (const MatrixInt& m : cases) {
+        verifyGcdDivReduce(m);
+        verifyGcdDivReduce(m.transpose());
+    }
+}
+
 static void verifyHermite(const MatrixInt& m) {
     SCOPED_TRACE_REGINA(m);
 
@@ -1249,6 +1394,7 @@ static void verifySmithWithTranspose(const MatrixInt& m,
 TEST_F(MatrixTest, smith) {
     verifySmithWithTranspose(zero34, { });
     verifySmithWithTranspose(identity3, { 1, 1, 1 });
+    verifySmithWithTranspose(identity34, { 1, 1, 1 });
     verifySmithWithTranspose(one, { 1 });
     verifySmithWithTranspose(minusOne, { 1 });
     verifySmithWithTranspose(two, { 2 });

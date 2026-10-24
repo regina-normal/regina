@@ -1773,7 +1773,7 @@ class Matrix : public Output<Matrix<T>> {
          * \param row the index of the row whose gcd should be computed.
          * \return the greatest common divisor of all elements of this row.
          */
-        T gcdRow(size_t row) requires ReginaInteger<T> {
+        T gcdRow(size_t row) const requires ReginaInteger<T> {
             if (cols_ == 0)
                 return {}; // zero
 
@@ -1800,7 +1800,7 @@ class Matrix : public Output<Matrix<T>> {
          * \param col the index of the column whose gcd should be computed.
          * \return the greatest common divisor of all elements of this column.
          */
-        T gcdCol(size_t col) requires ReginaInteger<T> {
+        T gcdCol(size_t col) const requires ReginaInteger<T> {
             if (rows_ == 0)
                 return {}; // zero
 
