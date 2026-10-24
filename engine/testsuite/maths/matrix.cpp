@@ -180,9 +180,10 @@ void validate(const Matrix<T>& m, size_t rows, size_t columns,
 
 // MARK: - Core operations
 
-TEST(MatrixTest, moveThenAssign) {
-    const MatrixTests<Integer> tests;
-    for (const MatrixInt& c : tests.cases) {
+template <regina::AnyInteger T>
+void verifyMoveThenAssign() {
+    const MatrixTests<T> tests;
+    for (const Matrix<T>& c : tests.cases) {
         SCOPED_TRACE_REGINA(c);
 
         // Here *junk indicates the initial value of y.  The point of this is
@@ -193,12 +194,12 @@ TEST(MatrixTest, moveThenAssign) {
         // default constructed (hence the awkward structure of this loop).
         auto junk = tests.cases.begin();
         while (true) {
-            for (const MatrixInt& d : tests.cases) {
+            for (const Matrix<T>& d : tests.cases) {
                 SCOPED_TRACE_REGINA(d);
                 {
-                    MatrixInt x(c);
+                    Matrix<T> x(c);
                     validate(x, c);
-                    MatrixInt y;
+                    Matrix<T> y;
                     if (junk != tests.cases.end()) {
                         y = *junk;
                         validate(y, junk->get());
@@ -220,17 +221,23 @@ TEST(MatrixTest, moveThenAssign) {
     }
 }
 
-TEST(MatrixTest, comparison) {
-    const MatrixTests<Integer> tests;
-    for (const MatrixInt& c : tests.cases) {
+TEST(MatrixTest, moveThenAssign) {
+    verifyMoveThenAssign<int>();
+    verifyMoveThenAssign<Integer>();
+}
+
+template <regina::AnyInteger T>
+void verifyComparison() {
+    const MatrixTests<T> tests;
+    for (const Matrix<T>& c : tests.cases) {
         SCOPED_TRACE_REGINA(c);
 
         EXPECT_TRUE(c == c);
-        EXPECT_TRUE(c == MatrixInt(c));
+        EXPECT_TRUE(c == Matrix<T>(c));
         EXPECT_FALSE(c != c);
-        EXPECT_FALSE(c != MatrixInt(c));
+        EXPECT_FALSE(c != Matrix<T>(c));
 
-        for (const MatrixInt& d : tests.cases) {
+        for (const Matrix<T>& d : tests.cases) {
             if (std::addressof(c) == std::addressof(d))
                 continue;
 
@@ -241,9 +248,15 @@ TEST(MatrixTest, comparison) {
     }
 }
 
+TEST(MatrixTest, comparison) {
+    verifyComparison<int>();
+    verifyComparison<Integer>();
+}
+
 // MARK: - Empty matrices
 
-TEST(MatrixTest, empty) {
+template <regina::AnyInteger T>
+void verifyEmpty() {
     // Test everything that we are allowed to do with an empty matrix.
     validateEmpty(Matrix<Integer>());
     validateEmpty(Matrix<Integer>(0));
@@ -409,7 +422,13 @@ TEST(MatrixTest, empty) {
     validateEmpty(m.preimageOfLattice({}));
 }
 
-TEST(MatrixTest, noRows) {
+TEST(MatrixTest, empty) {
+    verifyEmpty<int>();
+    verifyEmpty<Integer>();
+}
+
+template <regina::AnyInteger T>
+void verifyNoRows() {
     // Test everything that we are allowed to do with a 0 x k matrix.
     validateNoRows(Matrix<Integer>(0, 3), 3);
 
@@ -625,7 +644,13 @@ TEST(MatrixTest, noRows) {
     validateIdentity(m.preimageOfLattice({}), 3);
 }
 
-TEST(MatrixTest, noColumns) {
+TEST(MatrixTest, noRows) {
+    verifyNoRows<int>();
+    verifyNoRows<Integer>();
+}
+
+template <regina::AnyInteger T>
+void verifyNoColumns() {
     // Test everything that we are allowed to do with a k x 0 matrix.
     validateNoColumns(Matrix<Integer>(3, 0), 3);
     validateNoColumns(Matrix<Integer>({ {}, {}, {} }), 3);
@@ -840,6 +865,11 @@ TEST(MatrixTest, noColumns) {
     validateEmpty(m.preimageOfLattice({ 0, 0, 0 }));
 }
 
+TEST(MatrixTest, noColumns) {
+    verifyNoColumns<int>();
+    verifyNoColumns<Integer>();
+}
+
 // MARK: - General rings or integral domains
 
 template <regina::IntegralDomain T>
@@ -884,6 +914,10 @@ void verifyAdjugate(const Matrix<T>& m) {
 }
 
 TEST(MatrixTest, determinantAdjugate) {
+    // Note: we cannot test determinant/adjugate with Matrix<T> for any native
+    // C++ integer type T, because these types do not adhere to IntegralDomain
+    // (since they have zero divisors).
+
     // We include here several simple tests with different (non-integer)
     // element types.
     using P = Polynomial<Integer>;
