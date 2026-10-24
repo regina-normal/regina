@@ -61,7 +61,7 @@ requires Writeable<T> && IntegerCompatible<T>
 class Vector;
 
 template <typename T>
-requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
+requires std::semiregular<T> && Writeable<T>
 class Matrix;
 
 } // namespace regina

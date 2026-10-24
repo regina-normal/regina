@@ -51,7 +51,7 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 namespace regina {
 
 template <typename T>
-requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
+requires std::semiregular<T> && Writeable<T>
 size_t Matrix<T>::makeRowHermite() requires ReginaInteger<T> {
     size_t i;
     T* pos;
@@ -115,7 +115,7 @@ size_t Matrix<T>::makeRowHermite() requires ReginaInteger<T> {
 }
 
 template <typename T>
-requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
+requires std::semiregular<T> && Writeable<T>
 size_t Matrix<T>::makeColumnHermite() requires ReginaInteger<T> {
     size_t i;
     T* pos;
@@ -178,7 +178,7 @@ size_t Matrix<T>::makeColumnHermite() requires ReginaInteger<T> {
 }
 
 template <typename T>
-requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
+requires std::semiregular<T> && Writeable<T>
 std::tuple<Matrix<T>, Matrix<T>, size_t> Matrix<T>::makeColumnHermiteCoB()
         requires ReginaInteger<T> {
     size_t i;
@@ -256,7 +256,7 @@ std::tuple<Matrix<T>, Matrix<T>, size_t> Matrix<T>::makeColumnHermiteCoB()
 }
 
 template <typename T>
-requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
+requires std::semiregular<T> && Writeable<T>
 void Matrix<T>::makeRowBasis() requires ReginaInteger<T> {
     // Make a copy of this matrix to reduce to row echelon form.
     Matrix echelon(*this);
@@ -328,7 +328,7 @@ void Matrix<T>::makeRowBasis() requires ReginaInteger<T> {
 }
 
 template <typename T>
-requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
+requires std::semiregular<T> && Writeable<T>
 std::pair<Matrix<T>, Matrix<T>> Matrix<T>::rowBasisAndOrthComp() const
         requires ReginaInteger<T> {
     std::pair<Matrix<T>, Matrix<T>> ans(*this, cols_);
@@ -416,7 +416,7 @@ std::pair<Matrix<T>, Matrix<T>> Matrix<T>::rowBasisAndOrthComp() const
 }
 
 template <typename T>
-requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
+requires std::semiregular<T> && Writeable<T>
 Matrix<T> Matrix<T>::inverse() && requires ReginaInteger<T> {
     if (rows_ != cols_)
         throw FailedPrecondition("Inverses can only be "
@@ -491,7 +491,7 @@ Matrix<T> Matrix<T>::inverse() && requires ReginaInteger<T> {
 }
 
 template <typename T>
-requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
+requires std::semiregular<T> && Writeable<T>
 void Matrix<T>::makeSmith() requires ReginaInteger<T> {
     size_t currStage = 0;
     size_t nonEmptyRows = rows();
@@ -592,7 +592,7 @@ void Matrix<T>::makeSmith() requires ReginaInteger<T> {
 }
 
 template <typename T>
-requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
+requires std::semiregular<T> && Writeable<T>
 std::array<Matrix<T>, 4> Matrix<T>::makeSmithHafnerMcCurley()
         requires ReginaInteger<T> {
     size_t currStage = 0;
@@ -849,7 +849,7 @@ void metricRowOp(size_t currStage, size_t i, size_t j, Matrix<T>& matrix,
 } // namespace detail
 
 template <typename T>
-requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
+requires std::semiregular<T> && Writeable<T>
 std::array<Matrix<T>, 4> Matrix<T>::makeSmithMetrical()
         requires ReginaInteger<T> {
     // This routine uses a first-order technique to intelligently choose the
@@ -963,7 +963,7 @@ rowMuckerLoop:
 }
 
 template <typename T>
-requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
+requires std::semiregular<T> && Writeable<T>
 Matrix<T> Matrix<T>::preimageOfLattice(const std::vector<T>& sublattice) const
         requires ReginaInteger<T> {
     if (sublattice.size() != rows_)

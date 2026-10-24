@@ -191,7 +191,7 @@ enum class AdjugateAlgorithm {
  * \ingroup maths
  */
 template <typename T>
-requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
+requires std::semiregular<T> && Writeable<T>
 class Matrix : public Output<Matrix<T>> {
     public:
         /**
@@ -2761,7 +2761,7 @@ class Matrix : public Output<Matrix<T>> {
 
     // Give internal access to Matrix<U> for conversion construction/assignment:
     template <typename U>
-    requires std::default_initializable<U> && std::copyable<U> && Writeable<U>
+    requires std::semiregular<U> && Writeable<U>
     friend class Matrix;
 };
 

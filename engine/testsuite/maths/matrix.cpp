@@ -49,61 +49,67 @@ using regina::Rational;
 using regina::SNFAlgorithm;
 using regina::Vector;
 
-class MatrixTest : public testing::Test {
-    protected:
-        // Several test cases for working with integers:
-        const MatrixInt zero34 { 3, 4 };
-        const MatrixInt identity3 { MatrixInt::identity(3) };
-        const MatrixInt identity34 {{ 1, 0, 0, 0 },
-                                    { 0, 1, 0, 0 },
-                                    { 0, 0, 1, 0 }};
-        const MatrixInt one {{ 1 }};
-        const MatrixInt minusOne {{ -1 }};
-        const MatrixInt two {{ 2 }};
-        const MatrixInt vector {{ 12, -8, 18 }};
-        const MatrixInt shear2 {{ 1, 5 },
-                                { 0, 1 }};
-        const MatrixInt square3 {{ 2, 4, 4 },
-                                 { -6, 6, 12 },
-                                 { 10, -4, -16 }};
-        const MatrixInt rect34 {{ 4, -17, 0, 6 },
-                                { -2, 4, 9, 0 },
-                                { 6, -3, -2, 10 }};
-        const MatrixInt rect43 {{ 4, -17, 0 },
-                                { 6, -2, 4 },
-                                { 9, 0, 6 },
-                                { -3, -2, 10 }};
-        const MatrixInt redundant34 {{ 3, 8, 11, -5 },
-                                     { 1, 4, 5, -3 },
-                                     { 2, 8, 10, -6 }};
-        const MatrixInt duplicate34 {{ 1, 1, 1, 1 },
-                                     { 0, 0, 2, 3 },
-                                     { 0, 0, 3, 5 }};
-        const MatrixInt perm4 {{ 0, 1, 0, 0 },
-                               { 0, 0, 0, 1 },
-                               { 1, 0, 0, 0 },
-                               { 0, 0, 1, 0 }};
+/**
+ * Holds several test cases for working with integer matrices.
+ *
+ * These cases are deliberately non-static, so that the programmer has the
+ * option to decide if/when they are rebuilt from scratch.
+ */
+template <regina::AnyInteger T>
+struct IntegerMatrices {
+    const Matrix<T> zero34 { 3, 4 };
+    const Matrix<T> identity3 { Matrix<T>::identity(3) };
+    const Matrix<T> identity34 {{ 1, 0, 0, 0 },
+                                { 0, 1, 0, 0 },
+                                { 0, 0, 1, 0 }};
+    const Matrix<T> one {{ 1 }};
+    const Matrix<T> minusOne {{ -1 }};
+    const Matrix<T> two {{ 2 }};
+    const Matrix<T> vector {{ 12, -8, 18 }};
+    const Matrix<T> shear2 {{ 1, 5 },
+                            { 0, 1 }};
+    const Matrix<T> square3 {{ 2, 4, 4 },
+                             { -6, 6, 12 },
+                             { 10, -4, -16 }};
+    const Matrix<T> rect34 {{ 4, -17, 0, 6 },
+                            { -2, 4, 9, 0 },
+                            { 6, -3, -2, 10 }};
+    const Matrix<T> rect43 {{ 4, -17, 0 },
+                            { 6, -2, 4 },
+                            { 9, 0, 6 },
+                            { -3, -2, 10 }};
+    const Matrix<T> redundant34 {{ 3, 8, 11, -5 },
+                                 { 1, 4, 5, -3 },
+                                 { 2, 8, 10, -6 }};
+    const Matrix<T> duplicate34 {{ 1, 1, 1, 1 },
+                                 { 0, 0, 2, 3 },
+                                 { 0, 0, 3, 5 }};
+    const Matrix<T> perm4 {{ 0, 1, 0, 0 },
+                           { 0, 0, 0, 1 },
+                           { 1, 0, 0, 0 },
+                           { 0, 0, 1, 0 }};
 
-        // Some cases with determinant 1 from problem F28 in Richard K. Guy,
-        // "Unsolved Problems in Number Theory", 3rd ed., Springer, 2004.
-        const MatrixInt fib1 {{ 1167, 2, 5 },
-                              { 1698, 3, 8 },
-                              { 2866, 5, 13 }};
-        const MatrixInt fib2 {{ 610, 5, 13 },
-                              { 1054, 8, 21 },
-                              { 1665, 13, 34 }};
+    // Some cases with determinant 1 from problem F28 in Richard K. Guy,
+    // "Unsolved Problems in Number Theory", 3rd ed., Springer, 2004.
+    const Matrix<T> fib1 {{ 1167, 2, 5 },
+                          { 1698, 3, 8 },
+                          { 2866, 5, 13 }};
+    const Matrix<T> fib2 {{ 610, 5, 13 },
+                          { 1054, 8, 21 },
+                          { 1665, 13, 34 }};
 
-        const std::array<std::reference_wrapper<const MatrixInt>, 16> cases {
-            std::cref(zero34), std::cref(identity3), std::cref(identity34),
-            std::cref(one), std::cref(minusOne), std::cref(two),
-            std::cref(vector), std::cref(shear2), std::cref(square3),
-            std::cref(rect34), std::cref(rect43),
-            std::cref(redundant34), std::cref(duplicate34),
-            std::cref(perm4), std::cref(fib1), std::cref(fib2)
-        };
+    const std::array<std::reference_wrapper<const Matrix<T>>, 16> cases {
+        std::cref(zero34), std::cref(identity3), std::cref(identity34),
+        std::cref(one), std::cref(minusOne), std::cref(two),
+        std::cref(vector), std::cref(shear2), std::cref(square3),
+        std::cref(rect34), std::cref(rect43),
+        std::cref(redundant34), std::cref(duplicate34),
+        std::cref(perm4), std::cref(fib1), std::cref(fib2)
+    };
 };
 
-template <regina::CommutativeRing T>
+template <typename T>
+requires std::semiregular<T> && regina::Writeable<T>
 void validateEmpty(const Matrix<T>& m) {
     EXPECT_NO_THROW({ m.validate(); });
     EXPECT_EQ(m.rows(), 0);
@@ -111,7 +117,8 @@ void validateEmpty(const Matrix<T>& m) {
     EXPECT_EQ(m, Matrix<T>());
 }
 
-template <regina::CommutativeRing T>
+template <typename T>
+requires std::semiregular<T> && regina::Writeable<T>
 void validateNoRows(const Matrix<T>& m, size_t columns) {
     EXPECT_NO_THROW({ m.validate(); });
     EXPECT_EQ(m.rows(), 0);
@@ -119,7 +126,8 @@ void validateNoRows(const Matrix<T>& m, size_t columns) {
     EXPECT_EQ(m, Matrix<T>(0, columns));
 }
 
-template <regina::CommutativeRing T>
+template <typename T>
+requires std::semiregular<T> && regina::Writeable<T>
 void validateNoColumns(const Matrix<T>& m, size_t rows) {
     EXPECT_NO_THROW({ m.validate(); });
     EXPECT_EQ(m.rows(), rows);
@@ -127,7 +135,7 @@ void validateNoColumns(const Matrix<T>& m, size_t rows) {
     EXPECT_EQ(m, Matrix<T>(rows, 0));
 }
 
-template <regina::CommutativeRing T>
+template <regina::CoefficientDomain T>
 void validateIdentity(const Matrix<T>& m, size_t size) {
     EXPECT_NO_THROW({ m.validate(); });
     ASSERT_EQ(m.rows(), size);
@@ -137,7 +145,7 @@ void validateIdentity(const Matrix<T>& m, size_t size) {
             EXPECT_EQ(m.entry(i, j), i == j ? 1 : 0);
 }
 
-template <regina::CommutativeRing T>
+template <regina::CoefficientDomain T>
 void validateZero(const Matrix<T>& m, size_t rows, size_t columns) {
     EXPECT_NO_THROW({ m.validate(); });
     ASSERT_EQ(m.rows(), rows);
@@ -147,7 +155,8 @@ void validateZero(const Matrix<T>& m, size_t rows, size_t columns) {
             EXPECT_EQ(m.entry(i, j), 0);
 }
 
-template <regina::CommutativeRing T>
+template <typename T>
+requires std::regular<T> && regina::Writeable<T>
 void validate(const Matrix<T>& m, const Matrix<T>& expect) {
     EXPECT_NO_THROW({ m.validate(); });
     ASSERT_EQ(m.rows(), expect.rows());
@@ -157,8 +166,8 @@ void validate(const Matrix<T>& m, const Matrix<T>& expect) {
             EXPECT_EQ(m.entry(i, j), expect.entry(i, j));
 }
 
-template <regina::CommutativeRing T,
-    std::regular_invocable<size_t, size_t> ComputeEntry>
+template <typename T, std::regular_invocable<size_t, size_t> ComputeEntry>
+requires std::regular<T> && regina::Writeable<T>
 void validate(const Matrix<T>& m, size_t rows, size_t columns,
         ComputeEntry&& expectedEntry) {
     EXPECT_NO_THROW({ m.validate(); });
@@ -171,8 +180,9 @@ void validate(const Matrix<T>& m, size_t rows, size_t columns,
 
 // MARK: - Core operations
 
-TEST_F(MatrixTest, moveThenAssign) {
-    for (const MatrixInt& c : cases) {
+TEST(MatrixTest, moveThenAssign) {
+    const IntegerMatrices<Integer> tests;
+    for (const MatrixInt& c : tests.cases) {
         SCOPED_TRACE_REGINA(c);
 
         // Here *junk indicates the initial value of y.  The point of this is
@@ -181,15 +191,15 @@ TEST_F(MatrixTest, moveThenAssign) {
         //
         // We also allow junk to be cases.end() which means that y should be
         // default constructed (hence the awkward structure of this loop).
-        auto junk = cases.begin();
+        auto junk = tests.cases.begin();
         while (true) {
-            for (const MatrixInt& d : cases) {
+            for (const MatrixInt& d : tests.cases) {
                 SCOPED_TRACE_REGINA(d);
                 {
                     MatrixInt x(c);
                     validate(x, c);
                     MatrixInt y;
-                    if (junk != cases.end()) {
+                    if (junk != tests.cases.end()) {
                         y = *junk;
                         validate(y, junk->get());
                     } else {
@@ -203,15 +213,16 @@ TEST_F(MatrixTest, moveThenAssign) {
                 }
             }
 
-            if (junk == cases.end())
+            if (junk == tests.cases.end())
                 break;
             ++junk;
         }
     }
 }
 
-TEST_F(MatrixTest, comparison) {
-    for (const MatrixInt& c : cases) {
+TEST(MatrixTest, comparison) {
+    const IntegerMatrices<Integer> tests;
+    for (const MatrixInt& c : tests.cases) {
         SCOPED_TRACE_REGINA(c);
 
         EXPECT_TRUE(c == c);
@@ -219,7 +230,7 @@ TEST_F(MatrixTest, comparison) {
         EXPECT_FALSE(c != c);
         EXPECT_FALSE(c != MatrixInt(c));
 
-        for (const MatrixInt& d : cases) {
+        for (const MatrixInt& d : tests.cases) {
             if (std::addressof(c) == std::addressof(d))
                 continue;
 
@@ -232,7 +243,7 @@ TEST_F(MatrixTest, comparison) {
 
 // MARK: - Empty matrices
 
-TEST_F(MatrixTest, empty) {
+TEST(MatrixTest, empty) {
     // Test everything that we are allowed to do with an empty matrix.
     validateEmpty(Matrix<Integer>());
     validateEmpty(Matrix<Integer>(0));
@@ -398,7 +409,7 @@ TEST_F(MatrixTest, empty) {
     validateEmpty(m.preimageOfLattice({}));
 }
 
-TEST_F(MatrixTest, noRows) {
+TEST(MatrixTest, noRows) {
     // Test everything that we are allowed to do with a 0 x k matrix.
     validateNoRows(Matrix<Integer>(0, 3), 3);
 
@@ -513,7 +524,7 @@ TEST_F(MatrixTest, noRows) {
     validateNoRows(m * 2, 3);
     validateNoRows(Matrix<Integer>(m) * 2, 3);
     EXPECT_NO_THROW({
-        validateNoRows(m * rect34, 4);
+        validateNoRows(m * IntegerMatrices<Integer>().rect34, 4);
         validateEmpty(m * Matrix<Integer>(3, 0));
         validateNoRows(Matrix<Integer>() * m, 3);
         validateZero(Matrix<Integer>(4, 0) * m, 4, 3);
@@ -614,7 +625,7 @@ TEST_F(MatrixTest, noRows) {
     validateIdentity(m.preimageOfLattice({}), 3);
 }
 
-TEST_F(MatrixTest, noColumns) {
+TEST(MatrixTest, noColumns) {
     // Test everything that we are allowed to do with a k x 0 matrix.
     validateNoColumns(Matrix<Integer>(3, 0), 3);
     validateNoColumns(Matrix<Integer>({ {}, {}, {} }), 3);
@@ -730,7 +741,7 @@ TEST_F(MatrixTest, noColumns) {
     validateNoColumns(m * 2, 3);
     validateNoColumns(Matrix<Integer>(m) * 2, 3);
     EXPECT_NO_THROW({
-        validateNoColumns(rect43 * m, 4);
+        validateNoColumns(IntegerMatrices<Integer>().rect43 * m, 4);
         validateEmpty(Matrix<Integer>(0, 3) * m);
         validateNoColumns(m * Matrix<Integer>(), 3);
         validateZero(m * Matrix<Integer>(0, 4), 3, 4);
@@ -831,7 +842,7 @@ TEST_F(MatrixTest, noColumns) {
 
 // MARK: - General rings or integral domains
 
-template <regina::CommutativeRing T>
+template <regina::IntegralDomain T>
 void verifyAdjugate(const Matrix<T>& m, const T& determinant,
         AdjugateAlgorithm alg) {
     // We have already verified that the matrix is square through the variant
@@ -852,7 +863,7 @@ void verifyAdjugate(const Matrix<T>& m, const T& determinant,
     }
 }
 
-template <regina::CommutativeRing T>
+template <regina::IntegralDomain T>
 void verifyAdjugate(const Matrix<T>& m, const T& determinant) {
     // We use this if we already have an expcted value for the determinant.
     ASSERT_EQ(m.rows(), m.columns());
@@ -862,7 +873,7 @@ void verifyAdjugate(const Matrix<T>& m, const T& determinant) {
     verifyAdjugate(m, determinant, AdjugateAlgorithm::MahajanVinay);
 }
 
-template <regina::CommutativeRing T>
+template <regina::IntegralDomain T>
 void verifyAdjugate(const Matrix<T>& m) {
     // We use this if we do not know the determinant in advance.
     ASSERT_EQ(m.rows(), m.columns());
@@ -872,7 +883,7 @@ void verifyAdjugate(const Matrix<T>& m) {
     verifyAdjugate(m, det, AdjugateAlgorithm::PreparataSarwate);
 }
 
-TEST_F(MatrixTest, determinantAdjugate) {
+TEST(MatrixTest, determinantAdjugate) {
     // We include here several simple tests with different (non-integer)
     // element types.
     using P = Polynomial<Integer>;
@@ -957,27 +968,30 @@ TEST_F(MatrixTest, determinantAdjugate) {
     // Work through all of our usual square Matrix cases, and just a couple of
     // our usual non-square cases.
     using Alg = AdjugateAlgorithm;
+    const IntegerMatrices<Integer> tests;
     for (auto alg : { Alg::Default, Alg::FaddeevLeverrier,
             Alg::PreparataSarwate, Alg::MahajanVinay }) {
-        EXPECT_THROW({ rect34.det(alg); }, regina::FailedPrecondition);
-        EXPECT_THROW({ rect43.det(alg); }, regina::FailedPrecondition);
-        EXPECT_THROW({ rect34.adjugate(alg); }, regina::FailedPrecondition);
-        EXPECT_THROW({ rect43.adjugate(alg); }, regina::FailedPrecondition);
+        EXPECT_THROW({ tests.rect34.det(alg); }, regina::FailedPrecondition);
+        EXPECT_THROW({ tests.rect43.det(alg); }, regina::FailedPrecondition);
+        EXPECT_THROW({ tests.rect34.adjugate(alg); },
+            regina::FailedPrecondition);
+        EXPECT_THROW({ tests.rect43.adjugate(alg); },
+            regina::FailedPrecondition);
     }
-    verifyAdjugate<Integer>(identity3, 1); // self-transpose
-    verifyAdjugate<Integer>(one, 1); // self-transpose
-    verifyAdjugate<Integer>(minusOne, -1); // self-transpose
-    verifyAdjugate<Integer>(two, 2); // self-transpose
-    verifyAdjugate<Integer>(shear2, 1);
-    verifyAdjugate<Integer>(shear2.transpose(), 1);
-    verifyAdjugate<Integer>(square3, -144);
-    verifyAdjugate<Integer>(square3.transpose(), -144);
-    verifyAdjugate<Integer>(perm4, -1);
-    verifyAdjugate<Integer>(perm4.transpose(), -1);
-    verifyAdjugate<Integer>(fib1, 1);
-    verifyAdjugate<Integer>(fib1.transpose(), 1);
-    verifyAdjugate<Integer>(fib2, 1);
-    verifyAdjugate<Integer>(fib2.transpose(), 1);
+    verifyAdjugate<Integer>(tests.identity3, 1); // self-transpose
+    verifyAdjugate<Integer>(tests.one, 1); // self-transpose
+    verifyAdjugate<Integer>(tests.minusOne, -1); // self-transpose
+    verifyAdjugate<Integer>(tests.two, 2); // self-transpose
+    verifyAdjugate<Integer>(tests.shear2, 1);
+    verifyAdjugate<Integer>(tests.shear2.transpose(), 1);
+    verifyAdjugate<Integer>(tests.square3, -144);
+    verifyAdjugate<Integer>(tests.square3.transpose(), -144);
+    verifyAdjugate<Integer>(tests.perm4, -1);
+    verifyAdjugate<Integer>(tests.perm4.transpose(), -1);
+    verifyAdjugate<Integer>(tests.fib1, 1);
+    verifyAdjugate<Integer>(tests.fib1.transpose(), 1);
+    verifyAdjugate<Integer>(tests.fib2, 1);
+    verifyAdjugate<Integer>(tests.fib2.transpose(), 1);
 }
 
 // MARK: - Specific to ReginaInteger
@@ -1105,8 +1119,9 @@ static void verifyGcdDivReduce(const MatrixInt& m) {
     }
 }
 
-TEST_F(MatrixTest, gcdDivReduce) {
-    for (const MatrixInt& m : cases) {
+TEST(MatrixTest, gcdDivReduce) {
+    const IntegerMatrices<Integer> tests;
+    for (const MatrixInt& m : tests.cases) {
         verifyGcdDivReduce(m);
         verifyGcdDivReduce(m.transpose());
     }
@@ -1205,8 +1220,9 @@ static void verifyHermite(const MatrixInt& m) {
     }
 }
 
-TEST_F(MatrixTest, hermite) {
-    for (const MatrixInt& m : cases) {
+TEST(MatrixTest, hermite) {
+    const IntegerMatrices<Integer> tests;
+    for (const MatrixInt& m : tests.cases) {
         verifyHermite(m);
         verifyHermite(m.transpose());
     }
@@ -1273,8 +1289,9 @@ static void verifyRowBasis(const MatrixInt& m) {
     }
 }
 
-TEST_F(MatrixTest, rowBasis) {
-    for (const MatrixInt& m : cases) {
+TEST(MatrixTest, rowBasis) {
+    const IntegerMatrices<Integer> tests;
+    for (const MatrixInt& m : tests.cases) {
         verifyRowBasis(m);
         verifyRowBasis(m.transpose());
     }
@@ -1331,8 +1348,9 @@ static void verifyInverse(const MatrixInt& m) {
     EXPECT_TRUE((inv * m).isIdentity());
 }
 
-TEST_F(MatrixTest, inverse) {
-    for (const MatrixInt& m : cases) {
+TEST(MatrixTest, inverse) {
+    const IntegerMatrices<Integer> tests;
+    for (const MatrixInt& m : tests.cases) {
         verifyInverse(m);
         verifyInverse(m.transpose());
     }
@@ -1391,23 +1409,24 @@ static void verifySmithWithTranspose(const MatrixInt& m,
     verifySmith(m.transpose(), diag);
 }
 
-TEST_F(MatrixTest, smith) {
-    verifySmithWithTranspose(zero34, { });
-    verifySmithWithTranspose(identity3, { 1, 1, 1 });
-    verifySmithWithTranspose(identity34, { 1, 1, 1 });
-    verifySmithWithTranspose(one, { 1 });
-    verifySmithWithTranspose(minusOne, { 1 });
-    verifySmithWithTranspose(two, { 2 });
-    verifySmithWithTranspose(vector, { 2 });
-    verifySmithWithTranspose(shear2, { 1, 1 });
-    verifySmithWithTranspose(square3, { 2, 6, 12 });
-    verifySmithWithTranspose(rect34, { 1, 1, 6 });
-    verifySmithWithTranspose(rect43, { 1, 1, 12 });
-    verifySmithWithTranspose(redundant34, { 1, 4 });
-    verifySmithWithTranspose(duplicate34, { 1, 1, 1 });
-    verifySmithWithTranspose(perm4, { 1, 1, 1, 1 });
-    verifySmithWithTranspose(fib1, { 1, 1, 1 });
-    verifySmithWithTranspose(fib2, { 1, 1, 1 });
+TEST(MatrixTest, smith) {
+    const IntegerMatrices<Integer> tests;
+    verifySmithWithTranspose(tests.zero34, { });
+    verifySmithWithTranspose(tests.identity3, { 1, 1, 1 });
+    verifySmithWithTranspose(tests.identity34, { 1, 1, 1 });
+    verifySmithWithTranspose(tests.one, { 1 });
+    verifySmithWithTranspose(tests.minusOne, { 1 });
+    verifySmithWithTranspose(tests.two, { 2 });
+    verifySmithWithTranspose(tests.vector, { 2 });
+    verifySmithWithTranspose(tests.shear2, { 1, 1 });
+    verifySmithWithTranspose(tests.square3, { 2, 6, 12 });
+    verifySmithWithTranspose(tests.rect34, { 1, 1, 6 });
+    verifySmithWithTranspose(tests.rect43, { 1, 1, 12 });
+    verifySmithWithTranspose(tests.redundant34, { 1, 4 });
+    verifySmithWithTranspose(tests.duplicate34, { 1, 1, 1 });
+    verifySmithWithTranspose(tests.perm4, { 1, 1, 1, 1 });
+    verifySmithWithTranspose(tests.fib1, { 1, 1, 1 });
+    verifySmithWithTranspose(tests.fib2, { 1, 1, 1 });
 }
 
 /**
@@ -1537,7 +1556,7 @@ static void verifyPreimageOfLattice(const MatrixInt& m,
     }
 }
 
-TEST_F(MatrixTest, preimageOfLattice) {
+TEST(MatrixTest, preimageOfLattice) {
     // We begin with a small ad-hoc test with both free and torsion parts.
     //
     // The columns of the resulting matrix are not well-defined: any
@@ -1551,7 +1570,8 @@ TEST_F(MatrixTest, preimageOfLattice) {
     verifyPreimageOfLattice({{0,3,0,2}, {0,0,5,0}}, {6,0});
 
     using Sublattice = std::vector<Integer>;
-    for (const MatrixInt& m : cases) {
+    const IntegerMatrices<Integer> tests;
+    for (const MatrixInt& m : tests.cases) {
         verifyPreimageOfLattice(m, Sublattice(m.rows(), 0));
         EXPECT_THROW({ m.preimageOfLattice(Sublattice(m.rows() + 1)); },
             regina::InvalidArgument);
