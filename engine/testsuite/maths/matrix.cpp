@@ -56,7 +56,7 @@ using regina::Vector;
  * option to decide if/when they are rebuilt from scratch.
  */
 template <regina::AnyInteger T>
-struct IntegerMatrices {
+struct MatrixTests {
     const Matrix<T> zero34 { 3, 4 };
     const Matrix<T> identity3 { Matrix<T>::identity(3) };
     const Matrix<T> identity34 {{ 1, 0, 0, 0 },
@@ -181,7 +181,7 @@ void validate(const Matrix<T>& m, size_t rows, size_t columns,
 // MARK: - Core operations
 
 TEST(MatrixTest, moveThenAssign) {
-    const IntegerMatrices<Integer> tests;
+    const MatrixTests<Integer> tests;
     for (const MatrixInt& c : tests.cases) {
         SCOPED_TRACE_REGINA(c);
 
@@ -221,7 +221,7 @@ TEST(MatrixTest, moveThenAssign) {
 }
 
 TEST(MatrixTest, comparison) {
-    const IntegerMatrices<Integer> tests;
+    const MatrixTests<Integer> tests;
     for (const MatrixInt& c : tests.cases) {
         SCOPED_TRACE_REGINA(c);
 
@@ -524,7 +524,7 @@ TEST(MatrixTest, noRows) {
     validateNoRows(m * 2, 3);
     validateNoRows(Matrix<Integer>(m) * 2, 3);
     EXPECT_NO_THROW({
-        validateNoRows(m * IntegerMatrices<Integer>().rect34, 4);
+        validateNoRows(m * MatrixTests<Integer>().rect34, 4);
         validateEmpty(m * Matrix<Integer>(3, 0));
         validateNoRows(Matrix<Integer>() * m, 3);
         validateZero(Matrix<Integer>(4, 0) * m, 4, 3);
@@ -741,7 +741,7 @@ TEST(MatrixTest, noColumns) {
     validateNoColumns(m * 2, 3);
     validateNoColumns(Matrix<Integer>(m) * 2, 3);
     EXPECT_NO_THROW({
-        validateNoColumns(IntegerMatrices<Integer>().rect43 * m, 4);
+        validateNoColumns(MatrixTests<Integer>().rect43 * m, 4);
         validateEmpty(Matrix<Integer>(0, 3) * m);
         validateNoColumns(m * Matrix<Integer>(), 3);
         validateZero(m * Matrix<Integer>(0, 4), 3, 4);
@@ -968,7 +968,7 @@ TEST(MatrixTest, determinantAdjugate) {
     // Work through all of our usual square Matrix cases, and just a couple of
     // our usual non-square cases.
     using Alg = AdjugateAlgorithm;
-    const IntegerMatrices<Integer> tests;
+    const MatrixTests<Integer> tests;
     for (auto alg : { Alg::Default, Alg::FaddeevLeverrier,
             Alg::PreparataSarwate, Alg::MahajanVinay }) {
         EXPECT_THROW({ tests.rect34.det(alg); }, regina::FailedPrecondition);
@@ -1120,7 +1120,7 @@ static void verifyGcdDivReduce(const MatrixInt& m) {
 }
 
 TEST(MatrixTest, gcdDivReduce) {
-    const IntegerMatrices<Integer> tests;
+    const MatrixTests<Integer> tests;
     for (const MatrixInt& m : tests.cases) {
         verifyGcdDivReduce(m);
         verifyGcdDivReduce(m.transpose());
@@ -1221,7 +1221,7 @@ static void verifyHermite(const MatrixInt& m) {
 }
 
 TEST(MatrixTest, hermite) {
-    const IntegerMatrices<Integer> tests;
+    const MatrixTests<Integer> tests;
     for (const MatrixInt& m : tests.cases) {
         verifyHermite(m);
         verifyHermite(m.transpose());
@@ -1290,7 +1290,7 @@ static void verifyRowBasis(const MatrixInt& m) {
 }
 
 TEST(MatrixTest, rowBasis) {
-    const IntegerMatrices<Integer> tests;
+    const MatrixTests<Integer> tests;
     for (const MatrixInt& m : tests.cases) {
         verifyRowBasis(m);
         verifyRowBasis(m.transpose());
@@ -1349,7 +1349,7 @@ static void verifyInverse(const MatrixInt& m) {
 }
 
 TEST(MatrixTest, inverse) {
-    const IntegerMatrices<Integer> tests;
+    const MatrixTests<Integer> tests;
     for (const MatrixInt& m : tests.cases) {
         verifyInverse(m);
         verifyInverse(m.transpose());
@@ -1410,7 +1410,7 @@ static void verifySmithWithTranspose(const MatrixInt& m,
 }
 
 TEST(MatrixTest, smith) {
-    const IntegerMatrices<Integer> tests;
+    const MatrixTests<Integer> tests;
     verifySmithWithTranspose(tests.zero34, { });
     verifySmithWithTranspose(tests.identity3, { 1, 1, 1 });
     verifySmithWithTranspose(tests.identity34, { 1, 1, 1 });
@@ -1570,7 +1570,7 @@ TEST(MatrixTest, preimageOfLattice) {
     verifyPreimageOfLattice({{0,3,0,2}, {0,0,5,0}}, {6,0});
 
     using Sublattice = std::vector<Integer>;
-    const IntegerMatrices<Integer> tests;
+    const MatrixTests<Integer> tests;
     for (const MatrixInt& m : tests.cases) {
         verifyPreimageOfLattice(m, Sublattice(m.rows(), 0));
         EXPECT_THROW({ m.preimageOfLattice(Sublattice(m.rows() + 1)); },
