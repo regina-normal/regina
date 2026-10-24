@@ -35,10 +35,10 @@ namespace regina {
 
 // Instantiate routines in matrix-impl.h for the common case Matrix<Integer>:
 
-template size_t Matrix<Integer>::makeRowEchelon();
-template size_t Matrix<Integer>::makeColumnEchelon();
+template size_t Matrix<Integer>::makeRowHermite();
+template size_t Matrix<Integer>::makeColumnHermite();
 template std::tuple<Matrix<Integer>, Matrix<Integer>, size_t>
-    Matrix<Integer>::makeColumnEchelonCoB();
+    Matrix<Integer>::makeColumnHermiteCoB();
 template void Matrix<Integer>::makeRowBasis();
 template std::pair<Matrix<Integer>, Matrix<Integer>>
     Matrix<Integer>::rowBasisAndOrthComp() const;

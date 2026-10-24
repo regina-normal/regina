@@ -179,24 +179,24 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
             .def("gcdCol", &Matrix::gcdCol, rdoc::gcdCol)
             .def("reduceRow", &Matrix::reduceRow, rdoc::reduceRow)
             .def("reduceCol", &Matrix::reduceCol, rdoc::reduceCol)
-            .def("makeRowEchelon", &Matrix::makeRowEchelon,
-                rdoc::makeRowEchelon)
-            .def("makeColumnEchelon", &Matrix::makeColumnEchelon,
-                rdoc::makeColumnEchelon)
-            .def("rowEchelon",
+            .def("makeRowHermite", &Matrix::makeRowHermite,
+                rdoc::makeRowHermite)
+            .def("makeColumnHermite", &Matrix::makeColumnHermite,
+                rdoc::makeColumnHermite)
+            .def("rowHermite",
                 static_cast<std::pair<Matrix, size_t> (Matrix::*)() const&>(
-                    &Matrix::rowEchelon),
-                rdoc::rowEchelon)
-            .def("columnEchelon",
+                    &Matrix::rowHermite),
+                rdoc::rowHermite)
+            .def("columnHermite",
                 static_cast<std::pair<Matrix, size_t> (Matrix::*)() const&>(
-                    &Matrix::columnEchelon),
-                rdoc::columnEchelon)
-            .def("makeColumnEchelonCoB", &Matrix::makeColumnEchelonCoB,
-                rdoc::makeColumnEchelonCoB)
-            .def("columnEchelonCoB",
+                    &Matrix::columnHermite),
+                rdoc::columnHermite)
+            .def("makeColumnHermiteCoB", &Matrix::makeColumnHermiteCoB,
+                rdoc::makeColumnHermiteCoB)
+            .def("columnHermiteCoB",
                 static_cast<std::tuple<Matrix, Matrix, Matrix, size_t>
-                    (Matrix::*)() const&>(&Matrix::columnEchelonCoB),
-                rdoc::columnEchelonCoB)
+                    (Matrix::*)() const&>(&Matrix::columnHermiteCoB),
+                rdoc::columnHermiteCoB)
             .def("rank", static_cast<size_t (Matrix::*)() const&>(
                 &Matrix::rank), rdoc::rank)
             .def("makeRowBasis", &Matrix::makeRowBasis, rdoc::makeRowBasis)

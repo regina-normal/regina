@@ -74,6 +74,11 @@ this homomorphism.
     You should now call ``hom.preimageOfLattice(sublattice)`` instead
     (note also the change of case in the function name).
 
+Precondition:
+    The given sublattice actually lies within the range of the
+    homomorphism from ``Z^n`` to ``Z^k`` described by the matrix
+    *hom*.
+
 Exception ``InvalidArgument``:
     The length of *sublattice* is different from the number of rows of
     *hom*. Note that the _contents_ of *sublattice* (specifically, the
@@ -637,16 +642,16 @@ Parameter ``alg``:
 Returns:
     a pair containing the adjugate matrix and the determinant.)doc";
 
-// Docstring regina::python::doc::Matrix::columnEchelon
-static constexpr const char columnEchelon[] =
-R"doc(Returns the column echelon form of this matrix along with the rank.
-This matrix itself will not be changed.
+// Docstring regina::python::doc::Matrix::columnHermite
+static constexpr const char columnHermite[] =
+R"doc(Returns the column Hermite normal form of this matrix along with the
+rank. This matrix itself will not be changed.
 
-The column echelon form will have the same dimensions as this matrix,
-and will be obtained from this matrix by performing only column
-operations.
+The column Hermite normal form will have the same dimensions as this
+matrix, and will be obtained from this matrix by performing only
+unimodular column operations.
 
-Our convention is that a matrix is in column echelon form if:
+Our convention is that a matrix is in column Hermite normal form if:
 
 * each column is either zero or there is a first non-zero entry which
   is positive;
@@ -664,44 +669,45 @@ Precondition:
     All entries in this matrix are finite.
 
 Returns:
-    a pair consisting of the column echelon form *E*, and the rank of
-    this matrix (i.e., the number of non-zero columns in *E*).)doc";
+    a pair consisting of the column Hermite normal form *H*, and the
+    rank of this matrix (i.e., the number of non-zero columns in *H*).)doc";
 
-// Docstring regina::python::doc::Matrix::columnEchelonCoB
-static constexpr const char columnEchelonCoB[] =
-R"doc(Returns the column echelon form of this matrix along with change-of-
-basis matrices. This matrix itself will not be changed.
+// Docstring regina::python::doc::Matrix::columnHermiteCoB
+static constexpr const char columnHermiteCoB[] =
+R"doc(Returns the column Hermite normal form of this matrix along with
+change-of-basis matrices. This matrix itself will not be changed.
 
-The column echelon form will have the same dimensions as this matrix,
-and will be obtained from this matrix by performing only column
-operations.
+The column Hermite normal form will have the same dimensions as this
+matrix, and will be obtained from this matrix by performing only
+unimodular column operations.
 
-This routine is similar to columnEchelon(); however, it also computes
+This routine is similar to columnHermite(); however, it also computes
 and returns change-of-basis matrices describing all of the column
 operations that were performed. These change-of-basis matrices work as
 follows. Let *M* denote the initial value of this matrix, and let the
-returned tuple be ``(E, rowSpaceBasis, rowSpaceBasisInv, rank)``.
+returned tuple be ``(H, rowSpaceBasis, rowSpaceBasisInv, rank)``.
 Then:
 
-* *E* will be the column echelon form of the original matrix *M*;
+* *H* will be the column Hermite normal form of the original matrix
+  *M*;
 
-* the number of non-zero columns in *E* will be *rank*;
+* the number of non-zero columns in *H* will be *rank*;
 
 * *rowSpaceBasis* will be square with side length ``columns()``, and
   *rowSpaceBasisInv* will be its inverse matrix;
 
-* ``E = M * rowSpaceBasis``, and ``M = E * rowSpaceBasisInv``;
+* ``H = M * rowSpaceBasis``, and ``M = H * rowSpaceBasisInv``;
 
-See columnEchelon() for details on exactly what is meant by column
-echelon form.
+See columnHermite() for details on exactly what is meant by column
+Hermite normal form.
 
 Precondition:
     All entries in this matrix are finite.
 
 Returns:
-    the tuple ``(E, rowSpaceBasis, rowSpaceBasisInv, rank)``
-    describing the column echelon form, change-of-basis matrices and
-    rank, as explained above.)doc";
+    the tuple ``(H, rowSpaceBasis, rowSpaceBasisInv, rank)``
+    describing the column Hermite normal form, change-of-basis
+    matrices and rank, as explained above.)doc";
 
 // Docstring regina::python::doc::Matrix::columns
 static constexpr const char columns[] =
@@ -1105,15 +1111,15 @@ R"doc(Determines whether this is the zero matrix.
 Returns:
     ``True`` if and only if all entries in the matrix are zero.)doc";
 
-// Docstring regina::python::doc::Matrix::makeColumnEchelon
-static constexpr const char makeColumnEchelon[] =
-R"doc(Transforms this matrix into column echelon form. The transformation
-will perform only column operations.
+// Docstring regina::python::doc::Matrix::makeColumnHermite
+static constexpr const char makeColumnHermite[] =
+R"doc(Transforms this matrix into column Hermite normal form. The
+transformation will perform only unimodular column operations.
 
 This matrix will be modified directly, and its size will not change
 (even if the rank is less than the number of columns).
 
-Our convention is that a matrix is in column echelon form if:
+Our convention is that a matrix is in column Hermite normal form if:
 
 * each column is either zero or there is a first non-zero entry which
   is positive;
@@ -1134,31 +1140,32 @@ Returns:
     the rank of this matrix, i.e., the number of non-zero columns
     remaining.)doc";
 
-// Docstring regina::python::doc::Matrix::makeColumnEchelonCoB
-static constexpr const char makeColumnEchelonCoB[] =
-R"doc(Transforms this matrix into column echelon form and returns change-of-
-basis matrices. The transformation will perform only column
-operations.
+// Docstring regina::python::doc::Matrix::makeColumnHermiteCoB
+static constexpr const char makeColumnHermiteCoB[] =
+R"doc(Transforms this matrix into column Hermite normal form and returns
+change-of-basis matrices. The transformation will perform only
+unimodular column operations.
 
-This routine is similar to makeColumnEchelon(); however, it also
+This routine is similar to makeColumnHermite(); however, it also
 computes and returns change-of-basis matrices describing all of the
 column operations that were performed. These change-of-basis matrices
 work as follows. Let *M* denote the initial value of this matrix, let
-*E* denote the final column echelon form, and let the returned tuple
-be ``(rowSpaceBasis, rowSpaceBasisInv, rank)``. Then:
+*H* denote the final column Hermite normal form, and let the returned
+tuple be ``(rowSpaceBasis, rowSpaceBasisInv, rank)``. Then:
 
-* this matrix will be converted from *M* into *E*;
+* this matrix will be converted from *M* into *H*;
 
-* the number of non-zero columns in *E* will be *rank*;
+* the number of non-zero columns in *H* will be *rank*;
 
 * *rowSpaceBasis* will be square with side length ``columns()``, and
   *rowSpaceBasisInv* will be its inverse matrix;
 
-* ``E = M * rowSpaceBasis``, and ``M = E * rowSpaceBasisInv``;
+* ``H = M * rowSpaceBasis``, and ``M = H * rowSpaceBasisInv``;
 
-See makeColumnEchelon() for details on exactly what is meant by column
-echelon form. This matrix will be modified directly, and its size will
-not change (even if the rank is less than the number of columns).
+See makeColumnHermite() for details on exactly what is meant by column
+Hermite normal form. This matrix will be modified directly, and its
+size will not change (even if the rank is less than the number of
+columns).
 
 Precondition:
     All entries in this matrix are finite.
@@ -1189,15 +1196,15 @@ matrix will be linearly independent, and will together form a basis
 Precondition:
     All entries in this matrix are finite.)doc";
 
-// Docstring regina::python::doc::Matrix::makeRowEchelon
-static constexpr const char makeRowEchelon[] =
-R"doc(Transforms this matrix into row echelon form. The transformation will
-perform only row operations.
+// Docstring regina::python::doc::Matrix::makeRowHermite
+static constexpr const char makeRowHermite[] =
+R"doc(Transforms this matrix into row Hermite normal form. The
+transformation will perform only unimodular row operations.
 
 This matrix will be modified directly, and its size will not change
 (even if the rank is less than the number of rows).
 
-Our convention is that a matrix is in row echelon form if:
+Our convention is that a matrix is in row Hermite normal form if:
 
 * each row is either zero or there is a first non-zero entry which is
   positive;
@@ -1386,6 +1393,10 @@ kernel of this homomorphism.
 Precondition:
     All entries in this matrix are finite.
 
+Precondition:
+    The given sublattice actually lies within the range of the
+    homomorphism from ``Z^n`` to ``Z^k`` described by this matrix.
+
 Exception ``InvalidArgument``:
     The length of *sublattice* is different from the number of rows in
     this matrix. Note that the _contents_ of *sublattice*
@@ -1491,15 +1502,16 @@ Returns:
     the basis of the row space and the "incremental" basis for its
     orthogonal complement, as described above.)doc";
 
-// Docstring regina::python::doc::Matrix::rowEchelon
-static constexpr const char rowEchelon[] =
-R"doc(Returns the row echelon form of this matrix along with the rank. This
-matrix itself will not be changed.
+// Docstring regina::python::doc::Matrix::rowHermite
+static constexpr const char rowHermite[] =
+R"doc(Returns the row Hermite normal form of this matrix along with the
+rank. This matrix itself will not be changed.
 
-The row echelon form will have the same dimensions as this matrix, and
-will be obtained from this matrix by performing only row operations.
+The row Hermite normal form will have the same dimensions as this
+matrix, and will be obtained from this matrix by performing only
+unimodular row operations.
 
-Our convention is that a matrix is in row echelon form if:
+Our convention is that a matrix is in row Hermite normal form if:
 
 * each row is either zero or there is a first non-zero entry which is
   positive;
@@ -1517,8 +1529,8 @@ Precondition:
     All entries in this matrix are finite.
 
 Returns:
-    a pair consisting of the row echelon form *E*, and the rank of
-    this matrix (i.e., the number of non-zero rows in *E*).)doc";
+    a pair consisting of the row Hermite normal form *H*, and the rank
+    of this matrix (i.e., the number of non-zero rows in *H*).)doc";
 
 // Docstring regina::python::doc::Matrix::rows
 static constexpr const char rows[] =

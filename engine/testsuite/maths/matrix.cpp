@@ -266,14 +266,14 @@ TEST_F(MatrixTest, empty) {
     m.negate();
     validateEmpty(m);
 
-    EXPECT_EQ(m.makeRowEchelon(), 0);
+    EXPECT_EQ(m.makeRowHermite(), 0);
     validateEmpty(m);
 
-    EXPECT_EQ(m.makeColumnEchelon(), 0);
+    EXPECT_EQ(m.makeColumnHermite(), 0);
     validateEmpty(m);
     {
-        auto res = m.columnEchelonCoB();
-        EXPECT_EQ(Matrix<Integer>(m).columnEchelonCoB(), res);
+        auto res = m.columnHermiteCoB();
+        EXPECT_EQ(Matrix<Integer>(m).columnHermiteCoB(), res);
 
         auto [e, r, ri, rank] = std::move(res);
         validateEmpty(e);
@@ -470,15 +470,15 @@ TEST_F(MatrixTest, noRows) {
     m.reduceCol(m.columns() - 1);
     validateNoRows(m, 3);
 
-    EXPECT_EQ(m.makeRowEchelon(), 0);
+    EXPECT_EQ(m.makeRowHermite(), 0);
     validateNoRows(m, 3);
-    EXPECT_EQ(m.makeColumnEchelon(), 0);
+    EXPECT_EQ(m.makeColumnHermite(), 0);
     validateNoRows(m, 3);
     EXPECT_EQ(m.rank(), 0);
     EXPECT_EQ(Matrix<Integer>(m).rank(), 0);
     {
-        auto res = m.columnEchelonCoB();
-        EXPECT_EQ(Matrix<Integer>(m).columnEchelonCoB(), res);
+        auto res = m.columnHermiteCoB();
+        EXPECT_EQ(Matrix<Integer>(m).columnHermiteCoB(), res);
 
         auto [e, r, ri, rank] = std::move(res);
         validateNoRows(e, 3);
@@ -677,15 +677,15 @@ TEST_F(MatrixTest, noColumns) {
     m.reduceRow(m.rows() - 1);
     validateNoColumns(m, 3);
 
-    EXPECT_EQ(m.makeRowEchelon(), 0);
+    EXPECT_EQ(m.makeRowHermite(), 0);
     validateNoColumns(m, 3);
-    EXPECT_EQ(m.makeColumnEchelon(), 0);
+    EXPECT_EQ(m.makeColumnHermite(), 0);
     validateNoColumns(m, 3);
     EXPECT_EQ(m.rank(), 0);
     EXPECT_EQ(Matrix<Integer>(m).rank(), 0);
     {
-        auto res = m.columnEchelonCoB();
-        EXPECT_EQ(Matrix<Integer>(m).columnEchelonCoB(), res);
+        auto res = m.columnHermiteCoB();
+        EXPECT_EQ(Matrix<Integer>(m).columnHermiteCoB(), res);
 
         auto [e, r, ri, rank] = std::move(res);
         validateNoColumns(e, 3);
@@ -716,19 +716,19 @@ TEST_F(MatrixTest, noColumns) {
     validateEmpty(m.preimageOfLattice({ 0, 0, 0 }));
 }
 
-static void verifyEchelonForm(const MatrixInt& m) {
+static void verifyHermite(const MatrixInt& m) {
     SCOPED_TRACE_REGINA(m);
 
     MatrixInt trans = m.transpose();
 
-    // We test row echelon form of m, and column echelon form of trans.
-    // The assumption is that verifyEchelonForm() will be called on both m and
-    // m.transpose(), thereby leading to the testing of all four variants.
+    // We test row Hermite normal form of m, and column Hermite normal form of
+    // trans.  The assumption is that verifyHermite() will be called on both m
+    // and m.transpose(), thereby leading to the testing of all four variants.
 
-    auto res = m.rowEchelon();
-    auto resTrans = trans.columnEchelon();
-    EXPECT_EQ(MatrixInt(m).rowEchelon(), res); // rvalue variant
-    EXPECT_EQ(MatrixInt(trans).columnEchelon(), resTrans); // rvalue variant
+    auto res = m.rowHermite();
+    auto resTrans = trans.columnHermite();
+    EXPECT_EQ(MatrixInt(m).rowHermite(), res); // rvalue variant
+    EXPECT_EQ(MatrixInt(trans).columnHermite(), resTrans); // rvalue variant
 
     EXPECT_EQ(res.first, resTrans.first.transpose()); // compare matrices
     EXPECT_EQ(res.second, resTrans.second); // compare ranks
@@ -739,7 +739,7 @@ static void verifyEchelonForm(const MatrixInt& m) {
     EXPECT_EQ(res.first.rows(), m.rows());
     EXPECT_EQ(res.first.columns(), m.columns());
 
-    // Verify that res.first is actually in row echelon form.
+    // Verify that res.first is actually in row Hermite normal form.
     {
         size_t fromCol = 0;
         for (size_t r = 0; r < m.rows(); ++r) {
@@ -788,10 +788,11 @@ static void verifyEchelonForm(const MatrixInt& m) {
         EXPECT_EQ(comb.rank(), res.second);
     }
 
-    // Compare results with the change-of-basis variant for column echelon form.
+    // Compare results with the change-of-basis variant for column Hermite
+    // normal form.
     {
-        auto cob = trans.columnEchelonCoB();
-        EXPECT_EQ(cob, MatrixInt(trans).columnEchelonCoB()); // rvalue variant
+        auto cob = trans.columnHermiteCoB();
+        EXPECT_EQ(cob, MatrixInt(trans).columnHermiteCoB()); // rvalue variant
 
         auto [e, r, ri, rank] = std::move(cob);
         EXPECT_EQ(e, resTrans.first);
@@ -808,10 +809,10 @@ static void verifyEchelonForm(const MatrixInt& m) {
     }
 }
 
-TEST_F(MatrixTest, echelonForm) {
+TEST_F(MatrixTest, hermite) {
     for (const MatrixInt& m : cases) {
-        verifyEchelonForm(m);
-        verifyEchelonForm(m.transpose());
+        verifyHermite(m);
+        verifyHermite(m.transpose());
     }
 }
 
@@ -1171,15 +1172,15 @@ TEST_F(MatrixTest, smith) {
 static Integer latticeAxisIntersection(const MatrixInt& m, size_t axis) {
     // We solve for m'v = 0, where m' is the matrix obtained by removing
     // row #axis from m.
-    // We will put m' in column echelon form e, with change-of-basis matrices
-    // r, ri for which e = m' * r and m' = e * ri.
+    // We will put m' in column Hermite normal form e, with change-of-basis
+    // matrices r, ri for which e = m' * r and m' = e * ri.
     regina::FixedArray<size_t> rows(m.rows() - 1);
     for (size_t i = 0; i < axis; ++i)
         rows[i] = i;
     for (size_t i = axis + 1; i < m.rows(); ++i)
         rows[i - 1] = i;
     auto [e, r, ri, rank] = m.copyRows(rows.begin(), rows.end()).
-        columnEchelonCoB();
+        columnHermiteCoB();
 
     // Compute the number of empty columns in e.
     size_t dim = e.columns() - rank;
@@ -1226,15 +1227,15 @@ static void verifyPreimageOfLattice(const MatrixInt& m,
     }
 
     // At this point we have verified that m(ans) lives within the sublattice.
-    // An application of column echelon form should show us that m(ans) is
-    // precisely equal to the sublattice.
+    // An application of column Hermite normal form should show us that m(ans)
+    // is precisely equal to the sublattice.
     size_t sublatticeRank = 0;
     for (const auto& i : sublattice)
         if (i != 0)
             ++sublatticeRank;
 
     {
-        auto [e, rank] = image.columnEchelon();
+        auto [e, rank] = image.columnHermite();
         size_t c = 0;
         for (size_t r = 0; r < m.rows(); ++r) {
             if (sublattice[r] != 0) {

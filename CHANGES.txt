@@ -487,11 +487,11 @@ Version 8.0  [ TODO ]
               and metricalSmithNormalForm().
             - New routine preimageOfLattice().
             - Renamed rowEchelonForm() and columnEchelonForm() to
-              makeRowEchelon() and makeColumnEchelon(), to better indicate
-              that these routines modify the matrix in-place.  The old names
-              have been removed completely.
-            - New routines rowEchelon(), columnEchelon(), makeColumnEchelonCoB()
-              and columnEchelonCoB().
+              makeRowHermite() and makeColumnHermite(), to better indicate that
+              these routines modify the matrix in-place and only use unimodular
+              operations.  The old names have been removed completely.
+            - New routines rowHermite(), columnHermite(), makeColumnHermiteCoB()
+              and columnHermiteCoB().
             - Routine det() now takes an optional algorithm argument.
             - Routine swapRows() now takes an optional from-column argument.
             - Multiplying a matrix by a matrix or vector will now throw an
@@ -733,11 +733,11 @@ Version 8.0  [ TODO ]
         Class Vector3D<Real>:
             - New assignment operator that takes a std::array<Real, 3>.
         Function columnEchelonForm():
-            - Removed from Regina's public interface.  This function is specific
-              to the implementation of Matrix::preimageOfLattice(), and so it is
-              now hidden away as a private member function of Matrix.  If you
-              were using this function to compute inverses of integer matrices,
-              you can use the new routine Matrix<Integer>::inverse() instead.
+            - Removed completely.  You can achieve the same functionality by
+              combining the new functions Matrix::makeColumnHermiteCoB() and
+              Matrix::copyRows().  If you were using this function to compute
+              inverses of integer matrices, you can use the new (and more
+              streamlined) routine Matrix::inverse() instead.
         Functions forall_constexpr():
             - New routine to support tests over a compile-time range of
               integers (like for_constexpr(), but with a boolean return value).

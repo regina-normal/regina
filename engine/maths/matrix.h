@@ -1845,13 +1845,13 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
-         * Transforms this matrix into row echelon form.  The transformation
-         * will perform only row operations.
+         * Transforms this matrix into row Hermite normal form.
+         * The transformation will perform only unimodular row operations.
          *
          * This matrix will be modified directly, and its size will not change
          * (even if the rank is less than the number of rows).
          *
-         * Our convention is that a matrix is in row echelon form if:
+         * Our convention is that a matrix is in row Hermite normal form if:
          *
          * - each row is either zero or there is a first non-zero entry which
          *   is positive;
@@ -1874,16 +1874,16 @@ class Matrix : public Output<Matrix<T>> {
          * \return the rank of this matrix, i.e., the number of non-zero rows
          * remaining.
          */
-        size_t makeRowEchelon() requires ReginaInteger<T>;
+        size_t makeRowHermite() requires ReginaInteger<T>;
 
         /**
-         * Transforms this matrix into column echelon form.  The transformation
-         * will perform only column operations.
+         * Transforms this matrix into column Hermite normal form.
+         * The transformation will perform only unimodular column operations.
          *
          * This matrix will be modified directly, and its size will not change
          * (even if the rank is less than the number of columns).
          *
-         * Our convention is that a matrix is in column echelon form if:
+         * Our convention is that a matrix is in column Hermite normal form if:
          *
          * - each column is either zero or there is a first non-zero entry
          *   which is positive;
@@ -1906,17 +1906,17 @@ class Matrix : public Output<Matrix<T>> {
          * \return the rank of this matrix, i.e., the number of non-zero
          * columns remaining.
          */
-        size_t makeColumnEchelon() requires ReginaInteger<T>;
+        size_t makeColumnHermite() requires ReginaInteger<T>;
 
         /**
-         * Returns the row echelon form of this matrix along with the rank.
-         * This matrix itself will not be changed.
+         * Returns the row Hermite normal form of this matrix along with the
+         * rank.  This matrix itself will not be changed.
          *
-         * The row echelon form will have the same dimensions as this matrix,
-         * and will be obtained from this matrix by performing only row
-         * operations.
+         * The row Hermite normal form will have the same dimensions as this
+         * matrix, and will be obtained from this matrix by performing only
+         * unimodular row operations.
          *
-         * Our convention is that a matrix is in row echelon form if:
+         * Our convention is that a matrix is in row Hermite normal form if:
          *
          * - each row is either zero or there is a first non-zero entry which
          *   is positive;
@@ -1936,25 +1936,26 @@ class Matrix : public Output<Matrix<T>> {
          * for `Matrix<Integer>`, which is where this routine is most commonly
          * used.
          *
-         * \return a pair consisting of the row echelon form \a E, and the
-         * rank of this matrix (i.e., the number of non-zero rows in \a E).
+         * \return a pair consisting of the row Hermite normal form \a H, and
+         * the rank of this matrix (i.e., the number of non-zero rows in \a H).
          */
-        std::pair<Matrix, size_t> rowEchelon() const&
+        std::pair<Matrix, size_t> rowHermite() const&
                 requires ReginaInteger<T> {
             Matrix ans(*this);
-            size_t rank = ans.makeRowEchelon();
+            size_t rank = ans.makeRowHermite();
             return { std::move(ans), rank };
         }
 
         /**
-         * Returns the row echelon form of this matrix along with the rank.
+         * Returns the row Hermite normal form of this matrix along with the
+         * rank.
          *
-         * This rvalue variant of rowEchelon() is faster than the const
+         * This rvalue variant of rowHermite() is faster than the const
          * variant, because it reduces this matrix directly instead of
          * working on a deep copy.
          *
-         * See the const version of rowEchelon() for further information on
-         * row echelon form.
+         * See the const version of rowHermite() for further information on
+         * row Hermite normal form.
          *
          * \pre All entries in this matrix are finite.
          *
@@ -1965,23 +1966,23 @@ class Matrix : public Output<Matrix<T>> {
          * for `Matrix<Integer>`, which is where this routine is most commonly
          * used.
          *
-         * \return a pair consisting of the row echelon form \a E, and the
-         * rank of this matrix (i.e., the number of non-zero rows in \a E).
+         * \return a pair consisting of the row Hermite normal form \a H, and
+         * the rank of this matrix (i.e., the number of non-zero rows in \a H).
          */
-        std::pair<Matrix, size_t> rowEchelon() && requires ReginaInteger<T> {
-            size_t rank = makeRowEchelon();
+        std::pair<Matrix, size_t> rowHermite() && requires ReginaInteger<T> {
+            size_t rank = makeRowHermite();
             return { std::move(*this), rank };
         }
 
         /**
-         * Returns the column echelon form of this matrix along with the rank.
-         * This matrix itself will not be changed.
+         * Returns the column Hermite normal form of this matrix along with the
+         * rank.  This matrix itself will not be changed.
          *
-         * The column echelon form will have the same dimensions as this matrix,
-         * and will be obtained from this matrix by performing only column
-         * operations.
+         * The column Hermite normal form will have the same dimensions as this
+         * matrix, and will be obtained from this matrix by performing only
+         * unimodular column operations.
          *
-         * Our convention is that a matrix is in column echelon form if:
+         * Our convention is that a matrix is in column Hermite normal form if:
          *
          * - each column is either zero or there is a first non-zero entry
          *   which is positive;
@@ -2001,25 +2002,27 @@ class Matrix : public Output<Matrix<T>> {
          * for `Matrix<Integer>`, which is where this routine is most commonly
          * used.
          *
-         * \return a pair consisting of the column echelon form \a E, and the
-         * rank of this matrix (i.e., the number of non-zero columns in \a E).
+         * \return a pair consisting of the column Hermite normal form \a H,
+         * and the rank of this matrix (i.e., the number of non-zero columns
+         * in \a H).
          */
-        std::pair<Matrix, size_t> columnEchelon() const&
+        std::pair<Matrix, size_t> columnHermite() const&
                 requires ReginaInteger<T> {
             Matrix ans(*this);
-            size_t rank = ans.makeColumnEchelon();
+            size_t rank = ans.makeColumnHermite();
             return { std::move(ans), rank };
         }
 
         /**
-         * Returns the column echelon form of this matrix along with the rank.
+         * Returns the column Hermite normal form of this matrix along with the
+         * rank.
          *
-         * This rvalue variant of columnEchelon() is faster than the const
+         * This rvalue variant of columnHermite() is faster than the const
          * variant, because it reduces this matrix directly instead of
          * working on a deep copy.
          *
-         * See the const version of columnEchelon() for further information on
-         * column echelon form.
+         * See the const version of columnHermite() for further information on
+         * column Hermite normal form.
          *
          * \pre All entries in this matrix are finite.
          *
@@ -2030,37 +2033,38 @@ class Matrix : public Output<Matrix<T>> {
          * for `Matrix<Integer>`, which is where this routine is most commonly
          * used.
          *
-         * \return a pair consisting of the column echelon form \a E, and the
-         * rank of this matrix (i.e., the number of non-zero columns in \a E).
+         * \return a pair consisting of the column Hermite normal form \a H,
+         * and the rank of this matrix (i.e., the number of non-zero columns
+         * in \a H).
          */
-        std::pair<Matrix, size_t> columnEchelon() && requires ReginaInteger<T> {
-            size_t rank = makeColumnEchelon();
+        std::pair<Matrix, size_t> columnHermite() && requires ReginaInteger<T> {
+            size_t rank = makeColumnHermite();
             return { std::move(*this), rank };
         }
 
         /**
-         * Transforms this matrix into column echelon form and returns
+         * Transforms this matrix into column Hermite normal form and returns
          * change-of-basis matrices.  The transformation will perform only
-         * column operations.
+         * unimodular column operations.
          *
-         * This routine is similar to makeColumnEchelon(); however, it also
+         * This routine is similar to makeColumnHermite(); however, it also
          * computes and returns change-of-basis matrices describing all of the
          * column operations that were performed.  These change-of-basis
-         * matrices work as follows.  Let \a M denote the initial value of
-         * this matrix, let \a E denote the final column echelon form, and let
-         * the returned tuple be `(rowSpaceBasis, rowSpaceBasisInv, rank)`.
+         * matrices work as follows.  Let \a M denote the initial value of this
+         * matrix, let \a H denote the final column Hermite normal form, and
+         * let the returned tuple be `(rowSpaceBasis, rowSpaceBasisInv, rank)`.
          * Then:
          *
-         * - this matrix will be converted from \a M into \a E;
-         * - the number of non-zero columns in \a E will be \a rank;
+         * - this matrix will be converted from \a M into \a H;
+         * - the number of non-zero columns in \a H will be \a rank;
          * - \a rowSpaceBasis will be square with side length `columns()`, and
          *   \a rowSpaceBasisInv will be its inverse matrix;
-         * - `E = M * rowSpaceBasis`, and `M = E * rowSpaceBasisInv`;
+         * - `H = M * rowSpaceBasis`, and `M = H * rowSpaceBasisInv`;
          *
-         * See makeColumnEchelon() for details on exactly what is meant by
-         * column echelon form.  This matrix will be modified directly, and its
-         * size will not change (even if the rank is less than the number of
-         * columns).
+         * See makeColumnHermite() for details on exactly what is meant by
+         * column Hermite normal form.  This matrix will be modified directly,
+         * and its size will not change (even if the rank is less than the
+         * number of columns).
          *
          * \pre All entries in this matrix are finite.
          *
@@ -2074,32 +2078,33 @@ class Matrix : public Output<Matrix<T>> {
          * \return the tuple `(rowSpaceBasis, rowSpaceBasisInv, rank)`
          * describing the change-of-basis matrices and rank, as explained above.
          */
-        std::tuple<Matrix, Matrix, size_t> makeColumnEchelonCoB()
+        std::tuple<Matrix, Matrix, size_t> makeColumnHermiteCoB()
                 requires ReginaInteger<T>;
 
         /**
-         * Returns the column echelon form of this matrix along with
+         * Returns the column Hermite normal form of this matrix along with
          * change-of-basis matrices.  This matrix itself will not be changed.
          *
-         * The column echelon form will have the same dimensions as this matrix,
-         * and will be obtained from this matrix by performing only column
-         * operations.
+         * The column Hermite normal form will have the same dimensions as this
+         * matrix, and will be obtained from this matrix by performing only
+         * unimodular column operations.
          *
-         * This routine is similar to columnEchelon(); however, it also
+         * This routine is similar to columnHermite(); however, it also
          * computes and returns change-of-basis matrices describing all of the
          * column operations that were performed.  These change-of-basis
          * matrices work as follows.  Let \a M denote the initial value of
          * this matrix, and let the returned tuple be
-         * `(E, rowSpaceBasis, rowSpaceBasisInv, rank)`.  Then:
+         * `(H, rowSpaceBasis, rowSpaceBasisInv, rank)`.  Then:
          *
-         * - \a E will be the column echelon form of the original matrix \a M;
-         * - the number of non-zero columns in \a E will be \a rank;
+         * - \a H will be the column Hermite normal form of the original
+         *   matrix \a M;
+         * - the number of non-zero columns in \a H will be \a rank;
          * - \a rowSpaceBasis will be square with side length `columns()`, and
          *   \a rowSpaceBasisInv will be its inverse matrix;
-         * - `E = M * rowSpaceBasis`, and `M = E * rowSpaceBasisInv`;
+         * - `H = M * rowSpaceBasis`, and `M = H * rowSpaceBasisInv`;
          *
-         * See columnEchelon() for details on exactly what is meant by
-         * column echelon form.
+         * See columnHermite() for details on exactly what is meant by
+         * column Hermite normal form.
          *
          * \pre All entries in this matrix are finite.
          *
@@ -2110,28 +2115,28 @@ class Matrix : public Output<Matrix<T>> {
          * for `Matrix<Integer>`, which is where this routine is most commonly
          * used.
          *
-         * \return the tuple `(E, rowSpaceBasis, rowSpaceBasisInv, rank)`
-         * describing the column echelon form, change-of-basis matrices and
-         * rank, as explained above.
+         * \return the tuple `(H, rowSpaceBasis, rowSpaceBasisInv, rank)`
+         * describing the column Hermite normal form, change-of-basis matrices
+         * and rank, as explained above.
          */
-        std::tuple<Matrix, Matrix, Matrix, size_t> columnEchelonCoB() const&
+        std::tuple<Matrix, Matrix, Matrix, size_t> columnHermiteCoB() const&
                 requires ReginaInteger<T> {
             Matrix ans(*this);
-            auto cob = ans.makeColumnEchelonCoB();
+            auto cob = ans.makeColumnHermiteCoB();
             return std::tuple_cat(std::make_tuple(std::move(ans)),
                 std::move(cob));
         }
 
         /**
-         * Returns the column echelon form of this matrix along with
+         * Returns the column Hermite normal form of this matrix along with
          * change-of-basis matrices.
          *
-         * This rvalue variant of columnEchelonCoB() is faster than the const
+         * This rvalue variant of columnHermiteCoB() is faster than the const
          * variant, because it reduces this matrix directly instead of working
          * on a deep copy.
          *
-         * See the const version of columnEchelonCoB() for further information
-         * on column echelon form and change-of-basis matrices.
+         * See the const version of columnHermiteCoB() for further information
+         * on column Hermite normal form and change-of-basis matrices.
          *
          * \pre All entries in this matrix are finite.
          *
@@ -2142,13 +2147,13 @@ class Matrix : public Output<Matrix<T>> {
          * for `Matrix<Integer>`, which is where this routine is most commonly
          * used.
          *
-         * \return the tuple `(E, rowSpaceBasis, rowSpaceBasisInv, rank)`
-         * describing the column echelon form, change-of-basis matrices and
-         * rank.
+         * \return the tuple `(H, rowSpaceBasis, rowSpaceBasisInv, rank)`
+         * describing the column Hermite normal form, change-of-basis matrices
+         * and rank.
          */
-        std::tuple<Matrix, Matrix, Matrix, size_t> columnEchelonCoB() &&
+        std::tuple<Matrix, Matrix, Matrix, size_t> columnHermiteCoB() &&
                 requires ReginaInteger<T> {
-            auto cob = makeColumnEchelonCoB();
+            auto cob = makeColumnHermiteCoB();
             return std::tuple_cat(std::make_tuple(std::move(*this)),
                 std::move(cob));
         }
@@ -2169,14 +2174,14 @@ class Matrix : public Output<Matrix<T>> {
          */
         size_t rank() const& requires ReginaInteger<T> {
             // Make a deep copy, which we can modify as we compute rank.
-            return Matrix(*this).makeRowEchelon();
+            return Matrix(*this).makeRowHermite();
         }
 
         /**
          * Returns the rank of this matrix.
          *
          * A typical rank computation involves modifying the matrix (e.g., by
-         * converting it to row echelon form).  This rvalue variant of rank()
+         * converting it to Hermite normal form).  This rvalue variant of rank()
          * is faster than the const variant, because it modifies this matrix
          * directly instead of working on a temporary copy.
          *
@@ -2192,7 +2197,7 @@ class Matrix : public Output<Matrix<T>> {
          * \return the rank of this matrix.
          */
         size_t rank() && requires ReginaInteger<T> {
-            return makeRowEchelon();
+            return makeRowHermite();
         }
 
         /**
@@ -2362,7 +2367,7 @@ class Matrix : public Output<Matrix<T>> {
          * calling adjugate() instead.
          *
          * A typical inverse computation involves modifying the matrix (e.g., by
-         * converting it to row/column echelon form).  This rvalue variant of
+         * converting it to Hermite normal form).  This rvalue variant of
          * inverse() is faster than the const variant, because it modifies this
          * matrix directly instead of working on a temporary copy.
          *

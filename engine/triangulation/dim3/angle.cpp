@@ -133,11 +133,11 @@ bool Triangulation<3>::hasGeneralAngleStructure() const {
 
     // We want *any* solution to the homogeneous angle structure equations
     // where the final coordinate (representing the scaling factor) is non-zero.
-    // We can use row echelon form for this: if there is any solution where the
-    // final coordinate is non-zero, then the final column will not appear as a
-    // leading coefficient in row echelon form.
+    // We can use row Hermite normal form for this: if there is any solution
+    // where the final coordinate is non-zero, then the final column will not
+    // appear as a leading coefficient in row Hermite normal form.
 
-    auto [eqns, rank] = regina::makeAngleEquations(*this).rowEchelon();
+    auto [eqns, rank] = regina::makeAngleEquations(*this).rowHermite();
 
     // Note: the rank is always positive, since the triangulation is
     // non-empty and so we always have tetrahedron equations present.
@@ -183,7 +183,7 @@ bool Triangulation<3>::hasGeneralAngleStructure() const {
             if (eqns.entry(row, col) != 0)
                 num.addProduct(eqns.entry(row, col), v[col]);
 
-        // Our row echelon form guarantees that den > 0.
+        // Our row Hermite normal form guarantees that den > 0.
         // We need to set v[leading[row]] = -num/den.
         if (den == 1) {
             v[leading[row]] = -num;
