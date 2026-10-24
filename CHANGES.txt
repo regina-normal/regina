@@ -767,6 +767,8 @@ Version 8.0  [ TODO ]
             - New function for computing polynomial products using a specific
               algorithm.
         Function preImageOfLattice():
+            - Added a precondition that the given sublattice actually lies
+              within the range of the given homomorphism.
             - This routine has been moved into the class Matrix<Integer> under
               the name preimageOfLattice (note the case change).  The old global
               function is kept but deprecated.

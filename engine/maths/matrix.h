@@ -2632,6 +2632,8 @@ class Matrix : public Output<Matrix<T>> {
          * of this homomorphism.
          *
          * \pre All entries in this matrix are finite.
+         * \pre The given sublattice actually lies within the range of the
+         * homomorphism from `Z^n` to `Z^k` described by this matrix.
          *
          * \headers This routine is implemented in a separate header
          * (matrix-impl.h), which is not included automatically by this file.
@@ -2915,6 +2917,9 @@ using MatrixBool = Matrix<bool>;
  *
  * \deprecated You should now call `hom.preimageOfLattice(sublattice)` instead
  * (note also the change of case in the function name).
+ *
+ * \pre The given sublattice actually lies within the range of the homomorphism
+ * from `Z^n` to `Z^k` described by the matrix \a hom.
  *
  * \exception InvalidArgument The length of \a sublattice is different from
  * the number of rows of \a hom.  Note that the _contents_ of \a sublattice
