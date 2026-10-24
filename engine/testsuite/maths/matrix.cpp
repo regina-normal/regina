@@ -1250,6 +1250,42 @@ static void verifyPreimageOfLattice(const MatrixInt& m,
     // We can begin here by checking ranks.
     // (Note: we have already verified that ans.rank() == ans.columns().)
     EXPECT_EQ(ans.columns(), sublatticeRank + m.columns() - m.rank());
+
+    // Finally, verify that any attempt to scale down one or more columns of
+    // our answer will strictly increase the image m(ans) (and thereby exceed
+    // the element of the target sublattice).
+    //
+    // Note that, if scaling down some combination of columns of ans _preserves_
+    // the sublattice m(ans), then there is a _single_ column that we can scale
+    // down whilst preserving m(ans).  This means we can just verify columns
+    // of ans independently, one at a time.
+    for (size_t c = 0; c < ans.columns(); ++c) {
+        // First, identify the greatest factor by which we _could_ potentially
+        // scale down this column.
+        Integer maxScaleCol = ans.gcdCol(c);
+        ASSERT_NE(maxScaleCol, 0); // columns of ans should not be all zero
+        if (maxScaleCol == 1)
+            continue; // we cannot scale the column down at all
+
+        // Next, identify the greatest factor by which we can scale down the
+        // _image_ of this column without leaving the sublattice.
+        Integer maxScaleImage;
+        for (size_t i = 0; i < m.rows(); ++i) {
+            Integer sum;
+            for (size_t j = 0; j < m.columns(); ++j)
+                sum.addProduct(m.entry(i, j), ans.entry(j, c));
+            if (sublattice[i] == 0)
+                EXPECT_EQ(sum, 0);
+            else {
+                EXPECT_EQ(sum % sublattice[i], 0);
+                maxScaleImage.gcdWith(sum.divExact(sublattice[i]));
+            }
+        }
+
+        // Now we just need to ensure there is no non-trivial factor that can be
+        // used to scale the column of ans _and_ will not exit the sublattice.
+        EXPECT_EQ(maxScaleCol.gcd(maxScaleImage), 1);
+    }
 }
 
 TEST_F(MatrixTest, preimageOfLattice) {
