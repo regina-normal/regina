@@ -577,6 +577,9 @@ class Matrix : public Output<Matrix<T>> {
          * operation will only be performed for the elements from that
          * column to the rightmost end of each row (inclusive).
          *
+         * It is safe to have `first == second` (in which case this routine
+         * will do nothing).
+         *
          * \pre The two given rows are between 0 and `rows()-1` inclusive.
          * \pre If passed, \a fromCol is between 0 and columns() inclusive.
          *
@@ -600,6 +603,9 @@ class Matrix : public Output<Matrix<T>> {
          * If the optional argument \a fromRow is passed, then the
          * operation will only be performed for the elements from that
          * row down to the bottom of each column (inclusive).
+         *
+         * It is safe to have `first == second` (in which case this routine
+         * will do nothing).
          *
          * \pre The two given columns are between 0 and `columns()-1` inclusive.
          * \pre If passed, \a fromRow is between 0 and rows() inclusive.
