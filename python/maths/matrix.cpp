@@ -123,6 +123,8 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
             .def("isZero", &Matrix::isZero, rdoc::isZero)
             .def_static("identity", &Matrix::identity, rdoc::identity)
             .def("makeIdentity", &Matrix::makeIdentity, rdoc::makeIdentity)
+            .def("rowVector", &Matrix::rowVector, rdoc::rowVector)
+            .def("columnVector", &Matrix::columnVector, rdoc::columnVector)
             .def("negate", &Matrix::negate, rdoc::negate)
             .def("negateRow", &Matrix::negateRow, rdoc::negateRow)
             .def("negateCol", &Matrix::negateCol, rdoc::negateCol)
@@ -208,12 +210,6 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
             .def("inverse",
                 static_cast<Matrix (Matrix::*)() const&>(&Matrix::inverse),
                 rdoc::inverse)
-            .def("__mul__", [](const Matrix& m, const regina::VectorInt& v){
-                return m * v;
-            }, rdoc::__mul_3)
-            .def("__mul__", [](const Matrix& m, const regina::VectorLarge& v){
-                return m * v;
-            }, rdoc::__mul_3)
             .def("makeSmith", &Matrix::makeSmith, rdoc::makeSmith)
             .def("makeSmithCoB", &Matrix::makeSmithCoB,
                 "alg"_a = regina::SNFAlgorithm::Default, rdoc::makeSmithCoB)
@@ -227,6 +223,22 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
                 "alg"_a = regina::SNFAlgorithm::Default, rdoc::smithCoB)
             .def("preimageOfLattice", &Matrix::preimageOfLattice,
                 rdoc::preimageOfLattice)
+            .def("__mul__", [](const Matrix& m, const regina::VectorInt& v){
+                return m * v;
+            }, pybind11::is_operator(),
+                regina::python::doc::__mul_matrix_vector)
+            .def("__mul__", [](const Matrix& m, const regina::VectorLarge& v){
+                return m * v;
+            }, pybind11::is_operator(),
+                regina::python::doc::__mul_matrix_vector)
+            .def("__rmul__", [](const Matrix& m, regina::VectorInt& v){
+                return v * m;
+            }, pybind11::is_operator(),
+                regina::python::doc::__mul_vector_matrix)
+            .def("__rmul__", [](const Matrix& m, regina::VectorLarge& v){
+                return v * m;
+            }, pybind11::is_operator(),
+                regina::python::doc::__mul_vector_matrix)
         ;
     }
     regina::python::add_output_rich(c);

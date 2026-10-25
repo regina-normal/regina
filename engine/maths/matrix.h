@@ -777,6 +777,49 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
+         * Returns the given row of this matrix as a row vector.
+         * The row will be copied, and this matrix will not be changed.
+         *
+         * The return type is marked `auto`, since this type is only defined
+         * for some element types \a T; it is guaranteed that this return type
+         * will be `Vector<T>`.
+         *
+         * \param row the index of the row to return; this must be an integer
+         * between 0 and `rows()-1` inclusive.
+         * \return the requested row as a row vector.
+         */
+        auto rowVector(size_t row) const
+                requires Ring<T> && IntegerCompatible<T> {
+            const T* begin = data_ + row * cols_;
+            return Vector<T>(begin, begin + cols_);
+        }
+
+        /**
+         * Returns the given column of this matrix as a column vector.
+         * The column will be copied, and this matrix will not be changed.
+         *
+         * The return type is marked `auto`, since this type is only defined
+         * for some element types \a T; it is guaranteed that this return type
+         * will be `Vector<T>`.
+         *
+         * \param column the index of the column to return; this must be an
+         * integer between 0 and `columns()-1` inclusive.
+         * \return the requested column as a column vector.
+         */
+        auto columnVector(size_t column) const
+                requires Ring<T> && IntegerCompatible<T> {
+            // With C++23, this will become simpler via
+            // std::ranges::views::stride.
+            Vector<T> ans(rows_);
+            const T* pos = data_ + column;
+            for (auto& elt : ans) {
+                elt = *pos;
+                pos += cols_;
+            }
+            return ans;
+        }
+
+        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -1344,55 +1387,6 @@ class Matrix : public Output<Matrix<T>> {
                         }
                     ++dest;
                 }
-
-            return ans;
-        }
-
-        /**
-         * Multiplies this matrix by the given vector, and returns the result.
-         * The given vector is treated as a column vector.
-         *
-         * The matrix and vector may use different underlying types
-         * (e.g., you can multiply a matrix of LargeInteger objects with a
-         * vector of native C++ long integers).  The type of object that is
-         * stored in the resulting vector will be deduced accordingly
-         * (specifically, it will be the type obtained by multiplying objects
-         * of types \a T and \a U using the binary multiplication operator).
-         *
-         * \pre The length of the given vector is precisely the number of
-         * columns in this matrix.
-         *
-         * \exception InvalidArgument The matrix and vector dimensions are
-         * incompatible; that is, `columns() ≠ rhs.size()`.
-         *
-         * \param rhs the vector to multiply this matrix by.
-         * \return the product `this * rhs`, which will be a
-         * vector whose length is the number of rows in this matrix.
-         */
-        template <typename U>
-        Vector<decltype(T() * U())> operator * (const Vector<U>& rhs) const
-                requires Ring<T> && Ring<U> && Ring<decltype(T() * U())> {
-            if (cols_ != rhs.size())
-                throw InvalidArgument("Incompatible matrix/vector dimensions");
-
-            using Ans = decltype(T() * U());
-            Vector<Ans> ans(rows_);
-
-            const T* lhsPos = data_;
-            for (auto& dest : ans) {
-                if constexpr (! RingTraits<Ans>::zeroInitialised)
-                    dest = RingTraits<Ans>::zero;
-                for (const auto& rhsElt : rhs) {
-                    if constexpr (HasAddProduct<Ans>) {
-                        dest.addProduct(*lhsPos++, rhsElt);
-                    } else {
-                        if (*lhsPos != RingTraits<T>::zero &&
-                                rhsElt != RingTraits<U>::zero)
-                            dest += *lhsPos * rhsElt;
-                        ++lhsPos;
-                    }
-                }
-            }
 
             return ans;
         }
@@ -2769,6 +2763,19 @@ class Matrix : public Output<Matrix<T>> {
     template <typename U>
     requires std::semiregular<U> && Writeable<U>
     friend class Matrix;
+
+    // In these friend declarations the matrix element type should be T.
+    // However, I cannot work out how to get that to compile (specifically,
+    // how to make these friend declarations connect to the implementations of
+    // these global operators), due to the extra requires clauses this would
+    // place on T.
+    template <Ring U, Ring V>
+    friend Vector<decltype(U() * V())> operator * (
+        const Matrix<U>&, const Vector<V>&) requires Ring<decltype(U() * V())>;
+
+    template <Ring U, Ring V>
+    friend Vector<decltype(U() * V())> operator * (
+        const Vector<U>&, const Matrix<V>&) requires Ring<decltype(U() * V())>;
 };
 
 /**
@@ -2785,6 +2792,110 @@ class Matrix : public Output<Matrix<T>> {
 template <typename T>
 inline void swap(Matrix<T>& a, Matrix<T>& b) noexcept {
     a.swap(b);
+}
+
+/**
+ * Multiplies the given matrix by the given column vector, and returns the
+ * result.
+ *
+ * The matrix and vector may use different underlying types (e.g., you can
+ * multiply a matrix of LargeInteger objects with a vector of native C++ long
+ * integers).  The type of object that is stored in the resulting vector will
+ * be deduced accordingly (specifically, it will be the type obtained by
+ * multiplying objects of types \a T and \a U using the binary multiplication
+ * operator).
+ *
+ * \pre The length of the vector \a v is precisely the number of columns in the
+ * matrix \a m.
+ *
+ * \pydocname{__mul_matrix_vector}
+ *
+ * \exception InvalidArgument The matrix and vector dimensions are incompatible;
+ * that is, `m.columns() ≠ v.size()`.
+ *
+ * \param m the matrix to multiply the given vector by.
+ * \param v the vector to multiply the given matrix by.
+ * \return the product `m * v`, which will be a column vector whose length is
+ * precisely `m.rows()`.
+ */
+template <Ring T, Ring U>
+Vector<decltype(T() * U())> operator * (const Matrix<T>& m, const Vector<U>& v)
+        requires Ring<decltype(T() * U())> {
+    if (m.cols_ != v.size())
+        throw InvalidArgument("Incompatible matrix/vector dimensions");
+
+    using Ans = decltype(T() * U());
+    Vector<Ans> ans(m.rows_);
+
+    const T* mPos = m.data_;
+    for (auto& dest : ans) {
+        if constexpr (! RingTraits<Ans>::zeroInitialised)
+            dest = RingTraits<Ans>::zero;
+        for (const auto& vElt : v) {
+            if constexpr (HasAddProduct<Ans>) {
+                dest.addProduct(*mPos++, vElt);
+            } else {
+                if (*mPos != RingTraits<T>::zero &&
+                        vElt != RingTraits<U>::zero)
+                    dest += *mPos * vElt;
+                ++mPos;
+            }
+        }
+    }
+
+    return ans;
+}
+
+/**
+ * Multiplies the given row vector by the given matrix, and returns the result.
+ *
+ * The vector and matrix may use different underlying types (e.g., you can
+ * multiply a vector of LargeInteger objects with a matrix of native C++ long
+ * integers).  The type of object that is stored in the resulting vector will
+ * be deduced accordingly (specifically, it will be the type obtained by
+ * multiplying objects of types \a T and \a U using the binary multiplication
+ * operator).
+ *
+ * \pre The length of the vector \a v is precisely the number of rows in the
+ * matrix \a m.
+ *
+ * \pydocname{__mul_vector_matrix}
+ *
+ * \exception InvalidArgument The vector and matrix dimensions are incompatible;
+ * that is, `v.size() ≠ m.rows()`.
+ *
+ * \param v the vector to multiply the given matrix by.
+ * \param m the matrix to multiply the given vector by.
+ * \return the product `v * m`, which will be a row vector whose length is
+ * precisely `m.columns()`.
+ */
+template <Ring T, Ring U>
+Vector<decltype(T() * U())> operator * (const Vector<T>& v, const Matrix<U>& m)
+        requires Ring<decltype(T() * U())> {
+    if (v.size() != m.rows_)
+        throw InvalidArgument("Incompatible vector/matrix dimensions");
+
+    using Ans = decltype(T() * U());
+    Vector<Ans> ans(m.cols_);
+
+    const U* colPos = m.data_;
+    for (auto& dest : ans) {
+        if constexpr (! RingTraits<Ans>::zeroInitialised)
+            dest = RingTraits<Ans>::zero;
+        const U* mPos = colPos++;
+        for (const auto& vElt : v) {
+            if constexpr (HasAddProduct<Ans>) {
+                dest.addProduct(*mPos, vElt);
+            } else {
+                if (*mPos != RingTraits<T>::zero &&
+                        vElt != RingTraits<U>::zero)
+                    dest += *mPos * vElt;
+            }
+            mPos += m.cols_;
+        }
+    }
+
+    return ans;
 }
 
 /**

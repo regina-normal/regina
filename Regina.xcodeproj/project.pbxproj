@@ -3448,6 +3448,8 @@
 		056F7469276754CC00F7EAC9 /* linkalgebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = linkalgebra.h; sourceTree = "<group>"; };
 		056F746A276754CC00F7EAC9 /* linkalgebra.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = linkalgebra.cpp; sourceTree = "<group>"; };
 		05717DCB3088A22B000319C5 /* integer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = integer.cpp; sourceTree = "<group>"; };
+		05717DCD308EC8A2000319C5 /* matrix.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = matrix.out; sourceTree = "<group>"; };
+		05717DCE308EC8A2000319C5 /* matrix.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = matrix.test; sourceTree = "<group>"; };
 		05721ECE1F97153C00A83FFC /* jenkins.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jenkins.cpp; sourceTree = "<group>"; };
 		05721ECF1F97153C00A83FFC /* data-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "data-impl.h"; sourceTree = "<group>"; };
 		05721ED01F97153C00A83FFC /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
@@ -5426,6 +5428,8 @@
 				05CAE6852746878C007C93F3 /* lookup.test */,
 				0553FB9B2AF2117200BE89A7 /* lst.out */,
 				0553FB9D2AF2117300BE89A7 /* lst.test */,
+				05717DCD308EC8A2000319C5 /* matrix.out */,
+				05717DCE308EC8A2000319C5 /* matrix.test */,
 				0577E6E11F97087B00CBDF15 /* memory1.out */,
 				0577E6E21F97087B00CBDF15 /* memory1.test */,
 				0577E6EC1F97088100CBDF15 /* memory2.out */,

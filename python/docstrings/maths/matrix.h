@@ -11,6 +11,66 @@
 namespace regina::python::doc {
 
 
+// Docstring regina::python::doc::__mul_matrix_vector
+inline constexpr const char __mul_matrix_vector[] =
+R"doc(Multiplies the given matrix by the given column vector, and returns
+the result.
+
+The matrix and vector may use different underlying types (e.g., you
+can multiply a matrix of LargeInteger objects with a vector of native
+C++ long integers). The type of object that is stored in the resulting
+vector will be deduced accordingly (specifically, it will be the type
+obtained by multiplying objects of types *T* and *U* using the binary
+multiplication operator).
+
+Precondition:
+    The length of the vector *v* is precisely the number of columns in
+    the matrix *m*.
+
+Exception ``InvalidArgument``:
+    The matrix and vector dimensions are incompatible; that is,
+    ``m.columns() ≠ v.size()``.
+
+Parameter ``m``:
+    the matrix to multiply the given vector by.
+
+Parameter ``v``:
+    the vector to multiply the given matrix by.
+
+Returns:
+    the product ``m * v``, which will be a column vector whose length
+    is precisely ``m.rows()``.)doc";
+
+// Docstring regina::python::doc::__mul_vector_matrix
+inline constexpr const char __mul_vector_matrix[] =
+R"doc(Multiplies the given row vector by the given matrix, and returns the
+result.
+
+The vector and matrix may use different underlying types (e.g., you
+can multiply a vector of LargeInteger objects with a matrix of native
+C++ long integers). The type of object that is stored in the resulting
+vector will be deduced accordingly (specifically, it will be the type
+obtained by multiplying objects of types *T* and *U* using the binary
+multiplication operator).
+
+Precondition:
+    The length of the vector *v* is precisely the number of rows in
+    the matrix *m*.
+
+Exception ``InvalidArgument``:
+    The vector and matrix dimensions are incompatible; that is,
+    ``v.size() ≠ m.rows()``.
+
+Parameter ``v``:
+    the vector to multiply the given matrix by.
+
+Parameter ``m``:
+    the matrix to multiply the given vector by.
+
+Returns:
+    the product ``v * m``, which will be a row vector whose length is
+    precisely ``m.columns()``.)doc";
+
 // Docstring regina::python::doc::metricalSmithNormalForm
 inline constexpr const char metricalSmithNormalForm[] =
 R"doc(Deprecated alternative Smith normal form routine that may be
@@ -236,7 +296,8 @@ dimensions are zero) are explicitly supported.
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value. If a matrix
-is moved from, it can later be reused by assigning it a new value.
+is moved from (via move construction or move assignment), it can later
+be reused by assigning it a new value.
 
 Python:
     The C++ types ``Matrix<Integer>``, ``Matrix<bool>`` and
@@ -430,33 +491,6 @@ Parameter ``rhs``:
 
 Returns:
     the product matrix ``this * rhs``.)doc";
-
-// Docstring regina::python::doc::Matrix::__mul_3
-static constexpr const char __mul_3[] =
-R"doc(Multiplies this matrix by the given vector, and returns the result.
-The given vector is treated as a column vector.
-
-The matrix and vector may use different underlying types (e.g., you
-can multiply a matrix of LargeInteger objects with a vector of native
-C++ long integers). The type of object that is stored in the resulting
-vector will be deduced accordingly (specifically, it will be the type
-obtained by multiplying objects of types *T* and *U* using the binary
-multiplication operator).
-
-Precondition:
-    The length of the given vector is precisely the number of columns
-    in this matrix.
-
-Exception ``InvalidArgument``:
-    The matrix and vector dimensions are incompatible; that is,
-    ``columns() ≠ rhs.size()``.
-
-Parameter ``rhs``:
-    the vector to multiply this matrix by.
-
-Returns:
-    the product ``this * rhs``, which will be a vector whose length is
-    the number of rows in this matrix.)doc";
 
 // Docstring regina::python::doc::Matrix::addCol
 static constexpr const char addCol[] =
@@ -708,6 +742,22 @@ Returns:
     the tuple ``(H, rowSpaceBasis, rowSpaceBasisInv, rank)``
     describing the column Hermite normal form, change-of-basis
     matrices and rank, as explained above.)doc";
+
+// Docstring regina::python::doc::Matrix::columnVector
+static constexpr const char columnVector[] =
+R"doc(Returns the given column of this matrix as a column vector. The column
+will be copied, and this matrix will not be changed.
+
+The return type is marked ``auto``, since this type is only defined
+for some element types *T*; it is guaranteed that this return type
+will be ``Vector<T>``.
+
+Parameter ``column``:
+    the index of the column to return; this must be an integer between
+    0 and ``columns()-1`` inclusive.
+
+Returns:
+    the requested column as a column vector.)doc";
 
 // Docstring regina::python::doc::Matrix::columns
 static constexpr const char columns[] =
@@ -1532,6 +1582,22 @@ Returns:
     a pair consisting of the row Hermite normal form *H*, and the rank
     of this matrix (i.e., the number of non-zero rows in *H*).)doc";
 
+// Docstring regina::python::doc::Matrix::rowVector
+static constexpr const char rowVector[] =
+R"doc(Returns the given row of this matrix as a row vector. The row will be
+copied, and this matrix will not be changed.
+
+The return type is marked ``auto``, since this type is only defined
+for some element types *T*; it is guaranteed that this return type
+will be ``Vector<T>``.
+
+Parameter ``row``:
+    the index of the row to return; this must be an integer between 0
+    and ``rows()-1`` inclusive.
+
+Returns:
+    the requested row as a row vector.)doc";
+
 // Docstring regina::python::doc::Matrix::rows
 static constexpr const char rows[] =
 R"doc(Returns the number of rows in this matrix.
@@ -1650,6 +1716,9 @@ If the optional argument *fromRow* is passed, then the operation will
 only be performed for the elements from that row down to the bottom of
 each column (inclusive).
 
+It is safe to have ``first == second`` (in which case this routine
+will do nothing).
+
 Precondition:
     The two given columns are between 0 and ``columns()-1`` inclusive.
 
@@ -1675,6 +1744,9 @@ As of Regina 8.0, this operation is linear time (not constant time).
 If the optional argument *fromCol* is passed, then the operation will
 only be performed for the elements from that column to the rightmost
 end of each row (inclusive).
+
+It is safe to have ``first == second`` (in which case this routine
+will do nothing).
 
 Precondition:
     The two given rows are between 0 and ``rows()-1`` inclusive.

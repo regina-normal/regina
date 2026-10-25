@@ -1,0 +1,71 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2026, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Provides tests for working with matrices and vectors.
+#
+# This file is a single component of Regina's Python test suite.  To run
+# the Python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+# Verify that the matrix-matrix, matrix-vector and vector-matrix product
+# operators are all bound correctly.
+
+m = MatrixInt([[1,2,3], [4,5,6]])
+v2 = VectorInt([2,-1])
+v3 = VectorInt([3,-2,1])
+v2l = VectorLarge([2,-1])
+v3l = VectorLarge([3,-2,1])
+
+print(m * m.transpose())
+print(m.transpose() * m)
+print(m * v3)
+print(m * v3l)
+print(v2 * m)
+print(v2l * m)
+
+try:
+    print(m * m)
+except InvalidArgument:
+    print('Caught exception')
+
+try:
+    print(m * v2)
+except InvalidArgument:
+    print('Caught exception')
+
+try:
+    print(m * v2l)
+except InvalidArgument:
+    print('Caught exception')
+
+try:
+    print(v3 * m)
+except InvalidArgument:
+    print('Caught exception')
+
+try:
+    print(v3l * m)
+except InvalidArgument:
+    print('Caught exception')
