@@ -57,6 +57,9 @@ using regina::Vector;
  */
 template <regina::AnyInteger T>
 struct MatrixTests {
+    const Matrix<T> empty;
+    const Matrix<T> noRows { 0, 3 };
+    const Matrix<T> noCols { 3, 0 };
     // Note: the default constructor will initialise the matrix to zero for
     // Matrix<Integer>, but not for Matrix<int>.
     const Matrix<T> zero3 {{ 0, 0, 0 },
@@ -105,7 +108,8 @@ struct MatrixTests {
                           { 1054, 8, 21 },
                           { 1665, 13, 34 }};
 
-    const std::array<std::reference_wrapper<const Matrix<T>>, 17> cases {
+    const std::array<std::reference_wrapper<const Matrix<T>>, 20> cases {
+        std::cref(empty), std::cref(noRows), std::cref(noCols),
         std::cref(zero3), std::cref(zero34),
         std::cref(identity3), std::cref(identity34),
         std::cref(one), std::cref(minusOne), std::cref(two),
@@ -118,37 +122,37 @@ struct MatrixTests {
 
 template <typename T>
 requires std::semiregular<T> && regina::Writeable<T>
-void validateEmpty(const Matrix<T>& m) {
+void validate(const Matrix<T>& m, size_t rows, size_t columns) {
     EXPECT_NO_THROW({ m.validate(); });
-    EXPECT_EQ(m.rows(), 0);
-    EXPECT_EQ(m.columns(), 0);
+    ASSERT_EQ(m.rows(), rows);
+    ASSERT_EQ(m.columns(), columns);
+}
+
+template <typename T>
+requires std::semiregular<T> && regina::Writeable<T>
+void validateEmpty(const Matrix<T>& m) {
+    validate(m, 0, 0);
     EXPECT_EQ(m, Matrix<T>());
 }
 
 template <typename T>
 requires std::semiregular<T> && regina::Writeable<T>
 void validateNoRows(const Matrix<T>& m, size_t columns) {
-    EXPECT_NO_THROW({ m.validate(); });
-    EXPECT_EQ(m.rows(), 0);
-    EXPECT_EQ(m.columns(), columns);
+    validate(m, 0, columns);
     EXPECT_EQ(m, Matrix<T>(0, columns));
 }
 
 template <typename T>
 requires std::semiregular<T> && regina::Writeable<T>
 void validateNoColumns(const Matrix<T>& m, size_t rows) {
-    EXPECT_NO_THROW({ m.validate(); });
-    EXPECT_EQ(m.rows(), rows);
-    EXPECT_EQ(m.columns(), 0);
+    validate(m, rows, 0);
     EXPECT_EQ(m, Matrix<T>(rows, 0));
 }
 
 template <typename T>
 requires std::regular<T> && regina::Writeable<T> && regina::IntegerCompatible<T>
 void validateIdentity(const Matrix<T>& m, size_t size) {
-    EXPECT_NO_THROW({ m.validate(); });
-    ASSERT_EQ(m.rows(), size);
-    ASSERT_EQ(m.columns(), size);
+    validate(m, size, size);
     for (size_t i = 0; i < size; ++i)
         for (size_t j = 0; j < size; ++j)
             EXPECT_EQ(m.entry(i, j), i == j ? 1 : 0);
@@ -157,9 +161,7 @@ void validateIdentity(const Matrix<T>& m, size_t size) {
 template <typename T>
 requires std::regular<T> && regina::Writeable<T> && regina::IntegerCompatible<T>
 void validateZero(const Matrix<T>& m, size_t rows, size_t columns) {
-    EXPECT_NO_THROW({ m.validate(); });
-    ASSERT_EQ(m.rows(), rows);
-    ASSERT_EQ(m.columns(), columns);
+    validate(m, rows, columns);
     for (size_t i = 0; i < rows; ++i)
         for (size_t j = 0; j < columns; ++j)
             EXPECT_EQ(m.entry(i, j), 0);
@@ -168,9 +170,7 @@ void validateZero(const Matrix<T>& m, size_t rows, size_t columns) {
 template <typename T>
 requires std::regular<T> && regina::Writeable<T>
 void validate(const Matrix<T>& m, const Matrix<T>& expect) {
-    EXPECT_NO_THROW({ m.validate(); });
-    ASSERT_EQ(m.rows(), expect.rows());
-    ASSERT_EQ(m.columns(), expect.columns());
+    validate(m, expect.rows(), expect.columns());
     for (size_t i = 0; i < m.rows(); ++i)
         for (size_t j = 0; j < m.columns(); ++j)
             EXPECT_EQ(m.entry(i, j), expect.entry(i, j));
@@ -180,9 +180,7 @@ template <typename T, std::regular_invocable<size_t, size_t> ComputeEntry>
 requires std::regular<T> && regina::Writeable<T>
 void validate(const Matrix<T>& m, size_t rows, size_t columns,
         ComputeEntry&& expectedEntry) {
-    EXPECT_NO_THROW({ m.validate(); });
-    ASSERT_EQ(m.rows(), rows);
-    ASSERT_EQ(m.columns(), columns);
+    validate(m, rows, columns);
     for (size_t i = 0; i < rows; ++i)
         for (size_t j = 0; j < columns; ++j)
             EXPECT_EQ(m.entry(i, j), expectedEntry(i, j));
@@ -192,11 +190,18 @@ void validate(const Matrix<T>& m, size_t rows, size_t columns,
 
 template <regina::AnyInteger T>
 void verifyConstruct() {
-    // Do not test the initialiser list constructor - this is effectively
-    // tested already in setting up MatrixTests<T>::cases.
-    // Also, do not test 0x0, 0xk or kx0 matrices - these are already tested
-    // elsewhere.
     validateEmpty(Matrix<T>());
+
+    // Only test the initialiser list constructor for empty matrices.
+    // This constructor is already tested thoroughly for non-empty matrices
+    // in the setup for MatrixTests<T>::cases.
+    validateEmpty(Matrix<T>({}));
+    validateNoColumns(Matrix<T>({ {}, {}, {} }), 3);
+
+    validateEmpty(Matrix<T>(0));
+    validateEmpty(Matrix<T>(0, 0));
+    validateNoRows(Matrix<T>(0, 3), 3);
+    validateNoColumns(Matrix<T>(3, 0), 3);
 
     if constexpr (regina::ReginaInteger<T>) {
         static_assert(regina::RingTraits<T>::zeroInitialised);
@@ -205,30 +210,10 @@ void verifyConstruct() {
         validateZero(Matrix<T>(3, 4), 3, 4);
         validateZero(Matrix<T>(4, 3), 4, 3);
     } else {
-        {
-            Matrix<T> m(1);
-            EXPECT_NO_THROW({ m.validate(); });
-            EXPECT_EQ(m.rows(), 1);
-            EXPECT_EQ(m.columns(), 1);
-        }
-        {
-            Matrix<T> m(3);
-            EXPECT_NO_THROW({ m.validate(); });
-            EXPECT_EQ(m.rows(), 3);
-            EXPECT_EQ(m.columns(), 3);
-        }
-        {
-            Matrix<T> m(3, 4);
-            EXPECT_NO_THROW({ m.validate(); });
-            EXPECT_EQ(m.rows(), 3);
-            EXPECT_EQ(m.columns(), 4);
-        }
-        {
-            Matrix<T> m(4, 3);
-            EXPECT_NO_THROW({ m.validate(); });
-            EXPECT_EQ(m.rows(), 4);
-            EXPECT_EQ(m.columns(), 3);
-        }
+        validate(Matrix<T>(1), 1, 1);
+        validate(Matrix<T>(3), 3, 3);
+        validate(Matrix<T>(3, 4), 3, 4);
+        validate(Matrix<T>(4, 3), 4, 3);
     }
 
     const MatrixTests<T> tests;
@@ -319,33 +304,31 @@ TEST(MatrixTest, fill) {
 }
 
 template <regina::AnyInteger T>
-void verifyDimensions(const Matrix<T>& m,
-        size_t expectRows, size_t expectColumns) {
-    EXPECT_EQ(m.rows(), expectRows);
-    EXPECT_EQ(m.columns(), expectColumns);
-}
-
-template <regina::AnyInteger T>
 void verifyDimensions() {
+    // This test is where we also perform basic validation on all of our
+    // standard test cases.
     const MatrixTests<T> tests;
 
-    verifyDimensions(tests.zero3, 3, 3);
-    verifyDimensions(tests.zero34, 3, 4);
-    verifyDimensions(tests.identity3, 3, 3);
-    verifyDimensions(tests.identity34, 3, 4);
-    verifyDimensions(tests.one, 1, 1);
-    verifyDimensions(tests.minusOne, 1, 1);
-    verifyDimensions(tests.two, 1, 1);
-    verifyDimensions(tests.vector, 1, 3);
-    verifyDimensions(tests.shear2, 2, 2);
-    verifyDimensions(tests.square3, 3, 3);
-    verifyDimensions(tests.rect34, 3, 4);
-    verifyDimensions(tests.rect43, 4, 3);
-    verifyDimensions(tests.redundant34, 3, 4);
-    verifyDimensions(tests.duplicate34, 3, 4);
-    verifyDimensions(tests.perm4, 4, 4);
-    verifyDimensions(tests.fib1, 3, 3);
-    verifyDimensions(tests.fib2, 3, 3);
+    validate(tests.empty, 0, 0);
+    validate(tests.noRows, 0, 3);
+    validate(tests.noCols, 3, 0);
+    validate(tests.zero3, 3, 3);
+    validate(tests.zero34, 3, 4);
+    validate(tests.identity3, 3, 3);
+    validate(tests.identity34, 3, 4);
+    validate(tests.one, 1, 1);
+    validate(tests.minusOne, 1, 1);
+    validate(tests.two, 1, 1);
+    validate(tests.vector, 1, 3);
+    validate(tests.shear2, 2, 2);
+    validate(tests.square3, 3, 3);
+    validate(tests.rect34, 3, 4);
+    validate(tests.rect43, 4, 3);
+    validate(tests.redundant34, 3, 4);
+    validate(tests.duplicate34, 3, 4);
+    validate(tests.perm4, 4, 4);
+    validate(tests.fib1, 3, 3);
+    validate(tests.fib2, 3, 3);
 }
 
 TEST(MatrixTest, dimensions) {
@@ -748,6 +731,9 @@ void verifyOutput() {
     // Note that 0x0, 0xk and kx0 matrices are already tested elsewhere.
     const MatrixTests<T> tests;
 
+    EXPECT_EQ(tests.empty.str(), "(empty 0x0 matrix)");
+    EXPECT_EQ(tests.noRows.str(), "(empty 0x3 matrix)");
+    EXPECT_EQ(tests.noCols.str(), "(empty 3x0 matrix)");
     EXPECT_EQ(tests.zero3.str(), "[[ 0 0 0 ] [ 0 0 0 ] [ 0 0 0 ]]");
     EXPECT_EQ(tests.zero34.str(), "[[ 0 0 0 0 ] [ 0 0 0 0 ] [ 0 0 0 0 ]]");
     EXPECT_EQ(tests.identity3.str(), "[[ 1 0 0 ] [ 0 1 0 ] [ 0 0 1 ]]");
@@ -759,6 +745,9 @@ void verifyOutput() {
     EXPECT_EQ(tests.rect34.str(),
         "[[ 4 -17 0 6 ] [ -2 4 9 0 ] [ 6 -3 -2 10 ]]");
 
+    EXPECT_EQ(tests.empty.detail(), "(empty 0x0 matrix)\n");
+    EXPECT_EQ(tests.noRows.detail(), "(empty 0x3 matrix)\n");
+    EXPECT_EQ(tests.noCols.detail(), "(empty 3x0 matrix)\n");
     EXPECT_EQ(tests.zero3.detail(), "0 0 0\n0 0 0\n0 0 0\n");
     EXPECT_EQ(tests.zero34.detail(), "0 0 0 0\n0 0 0 0\n0 0 0 0\n");
     EXPECT_EQ(tests.identity3.detail(), "1 0 0\n0 1 0\n0 0 1\n");
@@ -773,718 +762,6 @@ void verifyOutput() {
 TEST(MatrixTest, output) {
     verifyOutput<int>();
     verifyOutput<Integer>();
-}
-
-// MARK: - Empty matrices
-
-template <regina::AnyInteger T>
-void verifyEmpty() {
-    // Test everything that we are allowed to do with an empty matrix.
-    validateEmpty(Matrix<T>());
-    validateEmpty(Matrix<T>(0));
-    validateEmpty(Matrix<T>(0, 0));
-    validateEmpty(Matrix<T>({}));
-
-    Matrix<T> empty;
-    auto m = Matrix<T>::identity(3);
-    EXPECT_EQ(m.rows(), 3);
-    EXPECT_EQ(m.columns(), 3);
-
-    m = empty;
-    validateEmpty(m);
-    validateEmpty(Matrix<T>(m));
-    validateEmpty(Matrix<T>(std::move(m)));
-
-    m = Matrix<T>::identity(4); // assignment after move-out
-    EXPECT_NO_THROW({ m.validate(); });
-    EXPECT_EQ(m.rows(), 4);
-    EXPECT_EQ(m.columns(), 4);
-    EXPECT_TRUE(m.isIdentity());
-
-    m = std::move(empty);
-    validateEmpty(m);
-
-    {
-        auto tmp = Matrix<T>::identity(3);
-        EXPECT_NO_THROW({ tmp.validate(); });
-        EXPECT_EQ(tmp.rows(), 3);
-        EXPECT_EQ(tmp.columns(), 3);
-
-        m.swap(tmp);
-        validateEmpty(tmp);
-        EXPECT_NO_THROW({ m.validate(); });
-        EXPECT_EQ(m.rows(), 3);
-        EXPECT_EQ(m.columns(), 3);
-
-        swap(m, tmp);
-        validateEmpty(m);
-        EXPECT_NO_THROW({ tmp.validate(); });
-        EXPECT_EQ(tmp.rows(), 3);
-        EXPECT_EQ(tmp.columns(), 3);
-    }
-
-    m.fill(3);
-    validateEmpty(m);
-
-    EXPECT_EQ(m, Matrix<T>());
-    EXPECT_EQ(m, m);
-
-    validateEmpty(m.transpose());
-    EXPECT_EQ(m.str(), "(empty 0x0 matrix)");
-    EXPECT_EQ(m.detail(), "(empty 0x0 matrix)\n");
-
-    {
-        const size_t* idx = nullptr;
-        validateEmpty(m.copyRows(idx, idx));
-        validateEmpty(Matrix<T>(m).moveRows(idx, idx));
-        validateEmpty(m.copyCols(idx, idx));
-        validateEmpty(Matrix<T>(m).moveCols(idx, idx));
-    }
-
-    validateEmpty(Matrix<T>::identity(0));
-    m.makeIdentity();
-    validateEmpty(m);
-    EXPECT_TRUE(m.isIdentity());
-    EXPECT_TRUE(m.isZero());
-
-    m += Matrix<T>();
-    validateEmpty(m);
-    m += m;
-    validateEmpty(m);
-    m -= Matrix<T>();
-    validateEmpty(m);
-    m -= m;
-    validateEmpty(m);
-    validateEmpty(m + m);
-    validateEmpty(m + Matrix<T>());
-    validateEmpty(Matrix<T>() + m);
-    validateEmpty(Matrix<T>() + Matrix<T>());
-    validateEmpty(m - m);
-    validateEmpty(m - Matrix<T>());
-    validateEmpty(Matrix<T>() - m);
-    validateEmpty(Matrix<T>() - Matrix<T>());
-    m *= 3;
-    validateEmpty(m);
-    m *= T(3);
-    validateEmpty(m);
-    validateEmpty(m * 3);
-    validateEmpty(Matrix<T>(m) * 3);
-    EXPECT_NO_THROW({
-        validateEmpty(m * Matrix<T>());
-        validateEmpty(m * m);
-        validateNoRows(m * Matrix<T>(0, 4), 4);
-        validateNoColumns(Matrix<T>(3, 0) * m, 3);
-    });
-    EXPECT_THROW({ m * Matrix<T>(3, 4); }, regina::InvalidArgument);
-    EXPECT_THROW({ Matrix<T>(3, 4) * m; }, regina::InvalidArgument);
-    EXPECT_THROW({ m * Matrix<T>(3, 0); }, regina::InvalidArgument);
-    EXPECT_THROW({ Matrix<T>(0, 4) * m; }, regina::InvalidArgument);
-    {
-        auto ans = m * Vector<T>(0);
-        EXPECT_EQ(ans.size(), 0);
-    }
-    EXPECT_THROW({ m * Vector<T>(3); }, regina::InvalidArgument);
-    EXPECT_EQ(m.trace(), 0);
-
-    m.negate();
-    validateEmpty(m);
-    validateEmpty(-m);
-    validateEmpty(-Matrix<T>(m));
-
-    if constexpr (regina::ReginaInteger<T>) {
-        EXPECT_EQ(m.det(), 1);
-        EXPECT_EQ(m.det(AdjugateAlgorithm::Default), 1);
-        EXPECT_EQ(m.det(AdjugateAlgorithm::FaddeevLeverrier), 1);
-        EXPECT_EQ(m.det(AdjugateAlgorithm::PreparataSarwate), 1);
-        EXPECT_EQ(m.det(AdjugateAlgorithm::MahajanVinay), 1);
-        {
-            auto [adj, det] = m.adjugate(AdjugateAlgorithm::Default);
-            validateEmpty(adj);
-            EXPECT_EQ(det, 1);
-        }
-        {
-            auto [adj, det] = m.adjugate(AdjugateAlgorithm::FaddeevLeverrier);
-            validateEmpty(adj);
-            EXPECT_EQ(det, 1);
-        }
-        {
-            auto [adj, det] = m.adjugate(AdjugateAlgorithm::PreparataSarwate);
-            validateEmpty(adj);
-            EXPECT_EQ(det, 1);
-        }
-        {
-            // The empty matrix is special-cased here, and works even though
-            // Mahajan-Vinay cannot be used to compute adjugates in general.
-            auto [adj, det] = m.adjugate(AdjugateAlgorithm::MahajanVinay);
-            validateEmpty(adj);
-            EXPECT_EQ(det, 1);
-        }
-
-        EXPECT_EQ(m.makeRowHermite(), 0);
-        validateEmpty(m);
-
-        EXPECT_EQ(m.makeColumnHermite(), 0);
-        validateEmpty(m);
-        {
-            auto res = m.columnHermiteCoB();
-            EXPECT_EQ(Matrix<T>(m).columnHermiteCoB(), res);
-
-            auto [e, r, ri, rank] = std::move(res);
-            validateEmpty(e);
-            validateEmpty(r);
-            validateEmpty(ri);
-            EXPECT_EQ(rank, 0);
-        }
-
-        EXPECT_EQ(m.rank(), 0);
-        EXPECT_EQ(Matrix<T>(m).rank(), 0);
-
-        EXPECT_EQ(m.rowBasis(), 0);
-        {
-            auto [b, c] = m.rowBasisAndOrthComp();
-            validateEmpty(b);
-            validateEmpty(c);
-        }
-
-        EXPECT_NO_THROW({ validateEmpty(m.inverse()); });
-        EXPECT_NO_THROW({ validateEmpty(Matrix<T>(m).inverse()); });
-
-        validateEmpty(m.smith());
-        validateEmpty(Matrix<T>(m).smith());
-        {
-            auto res = m.smithCoB();
-            EXPECT_EQ(Matrix<T>(m).smithCoB(), res);
-            EXPECT_EQ(m.smithCoB(SNFAlgorithm::Metrical), res);
-            EXPECT_EQ(Matrix<T>(m).smithCoB(SNFAlgorithm::Metrical), res);
-
-            for (const auto& bit : res)
-                validateEmpty(bit);
-        }
-
-        validateEmpty(m.preimageOfLattice({}));
-    }
-}
-
-TEST(MatrixTest, empty) {
-    verifyEmpty<int>();
-    verifyEmpty<Integer>();
-}
-
-template <regina::AnyInteger T>
-void verifyNoRows() {
-    // Test everything that we are allowed to do with a 0 x k matrix.
-    validateNoRows(Matrix<T>(0, 3), 3);
-
-    Matrix<T> noRows(0, 3);
-    auto m = Matrix<T>::identity(4);
-    EXPECT_EQ(m.rows(), 4);
-    EXPECT_EQ(m.columns(), 4);
-
-    m = noRows;
-    validateNoRows(m, 3);
-    validateNoRows(Matrix<T>(m), 3);
-    validateNoRows(Matrix<T>(std::move(m)), 3);
-
-    m = Matrix<T>::identity(4); // assignment after move-out
-    EXPECT_NO_THROW({ m.validate(); });
-    EXPECT_EQ(m.rows(), 4);
-    EXPECT_EQ(m.columns(), 4);
-    EXPECT_TRUE(m.isIdentity());
-
-    m = std::move(noRows);
-    validateNoRows(m, 3);
-
-    {
-        auto tmp = Matrix<T>::identity(4);
-        EXPECT_NO_THROW({ tmp.validate(); });
-        EXPECT_EQ(tmp.rows(), 4);
-        EXPECT_EQ(tmp.columns(), 4);
-
-        m.swap(tmp);
-        validateNoRows(tmp, 3);
-        EXPECT_NO_THROW({ m.validate(); });
-        EXPECT_EQ(m.rows(), 4);
-        EXPECT_EQ(m.columns(), 4);
-
-        swap(m, tmp);
-        validateNoRows(m, 3);
-        EXPECT_NO_THROW({ tmp.validate(); });
-        EXPECT_EQ(tmp.rows(), 4);
-        EXPECT_EQ(tmp.columns(), 4);
-    }
-
-    m.fill(2);
-    validateNoRows(m, 3);
-
-    EXPECT_EQ(m, Matrix<T>(0, 3));
-    EXPECT_EQ(m, m);
-
-    validateNoColumns(m.transpose(), 3);
-
-    m.swapCols(0, 1);
-    validateNoRows(m, 3);
-    m.swapCols(m.columns() - 2, m.columns() - 1);
-    validateNoRows(m, 3);
-
-    EXPECT_EQ(m.str(), "(empty 0x3 matrix)");
-    EXPECT_EQ(m.detail(), "(empty 0x3 matrix)\n");
-
-    {
-        const size_t* idx = nullptr;
-        validateNoRows(m.copyRows(idx, idx), 3);
-        validateNoRows(Matrix<T>(m).moveRows(idx, idx), 3);
-        validateEmpty(m.copyCols(idx, idx));
-        validateEmpty(Matrix<T>(m).copyCols(idx, idx));
-    }
-    {
-        const size_t idx[3] = { 0, 1, 2 };
-        validateNoRows(m.copyCols(idx, idx + 3), 3);
-        validateNoRows(Matrix<T>(m).moveCols(idx, idx + 3), 3);
-        for (size_t i = 0; i < 3; ++i) {
-            validateNoRows(m.copyCols(idx + i, idx + i + 1), 1);
-            validateNoRows(Matrix<T>(m).moveCols(idx + i, idx + i + 1), 1);
-        }
-    }
-    {
-        const size_t idx[3] = { 2, 1, 0 };
-        validateNoRows(m.copyCols(idx, idx + 3), 3);
-        validateNoRows(Matrix<T>(m).moveCols(idx, idx + 3), 3);
-    }
-
-    m.makeIdentity();
-    validateNoRows(m, 3);
-    EXPECT_FALSE(m.isIdentity());
-    EXPECT_TRUE(m.isZero());
-
-    m.addCol(0, 1);
-    validateNoRows(m, 3);
-    m.addCol(1, 0);
-    validateNoRows(m, 3);
-    m.addCol(m.columns() - 2, m.columns() - 1);
-    validateNoRows(m, 3);
-    m.addCol(m.columns() - 1, m.columns() - 2);
-    validateNoRows(m, 3);
-    m.addColFrom(0, 1, 0);
-    validateNoRows(m, 3);
-    m.addColFrom(1, 0, 0);
-    validateNoRows(m, 3);
-    m.addColFrom(m.columns() - 2, m.columns() - 1, 0);
-    validateNoRows(m, 3);
-    m.addColFrom(m.columns() - 1, m.columns() - 2, 0);
-    validateNoRows(m, 3);
-    m.addCol(0, 1, 5);
-    validateNoRows(m, 3);
-    m.addCol(1, 0, 5);
-    validateNoRows(m, 3);
-    m.addCol(m.columns() - 2, m.columns() - 1, 5);
-    validateNoRows(m, 3);
-    m.addCol(m.columns() - 1, m.columns() - 2, 5);
-    validateNoRows(m, 3);
-    m.multCol(0, 5);
-    validateNoRows(m, 3);
-    m.multCol(m.columns() - 1, 5);
-    validateNoRows(m, 3);
-    m.combCols(0, 1, 4, 5, 6, 7);
-    validateNoRows(m, 3);
-    m.combCols(1, 0, 4, 5, 6, 7);
-    validateNoRows(m, 3);
-    m.combCols(m.columns() - 2, m.columns() - 1, 4, 5, 6, 7);
-    validateNoRows(m, 3);
-    m.combCols(m.columns() - 1, m.columns() - 2, 4, 5, 6, 7);
-    validateNoRows(m, 3);
-
-    m += Matrix<T>(0, 3);
-    validateNoRows(m, 3);
-    m += m;
-    validateNoRows(m, 3);
-    m -= Matrix<T>(0, 3);
-    validateNoRows(m, 3);
-    m -= m;
-    validateNoRows(m, 3);
-    validateNoRows(m + m, 3);
-    validateNoRows(m + Matrix<T>(0, 3), 3);
-    validateNoRows(Matrix<T>(0, 3) + m, 3);
-    validateNoRows(Matrix<T>(0, 3) + Matrix<T>(0, 3), 3);
-    validateNoRows(m - m, 3);
-    validateNoRows(m - Matrix<T>(0, 3), 3);
-    validateNoRows(Matrix<T>(0, 3) - m, 3);
-    validateNoRows(Matrix<T>(0, 3) - Matrix<T>(0, 3), 3);
-    m *= 2;
-    validateNoRows(m, 3);
-    m *= T(2);
-    validateNoRows(m, 3);
-    validateNoRows(m * 2, 3);
-    validateNoRows(Matrix<T>(m) * 2, 3);
-    EXPECT_NO_THROW({
-        validateNoRows(m * MatrixTests<T>().rect34, 4);
-        validateEmpty(m * Matrix<T>(3, 0));
-        validateNoRows(Matrix<T>() * m, 3);
-        validateZero(Matrix<T>(4, 0) * m, 4, 3);
-    });
-    EXPECT_THROW({ m * Matrix<T>(4, 3); }, regina::InvalidArgument);
-    EXPECT_THROW({ m * Matrix<T>(0, 3); }, regina::InvalidArgument);
-    EXPECT_THROW({ m * Matrix<T>(); }, regina::InvalidArgument);
-    EXPECT_THROW({ Matrix<T>(4, 3) * m; }, regina::InvalidArgument);
-    EXPECT_THROW({ Matrix<T>(0, 3) * m; }, regina::InvalidArgument);
-    {
-        auto ans = m * Vector<T>(3);
-        EXPECT_EQ(ans.size(), 0);
-    }
-    EXPECT_THROW({ m * Vector<T>(0); }, regina::InvalidArgument);
-
-    EXPECT_THROW({ m.trace(); }, regina::FailedPrecondition);
-
-    m.negate();
-    validateNoRows(m, 3);
-    validateNoRows(-m, 3);
-    validateNoRows(-Matrix<T>(m), 3);
-
-    m.negateCol(0);
-    validateNoRows(m, 3);
-    m.negateCol(m.columns() - 1);
-    validateNoRows(m, 3);
-
-    if constexpr (regina::ReginaInteger<T>) {
-        m.divColExact(0, 17);
-        validateNoRows(m, 3);
-        m.divColExact(m.columns() - 1, 17);
-        validateNoRows(m, 3);
-
-        EXPECT_EQ(m.gcdCol(0), 0);
-        EXPECT_EQ(m.gcdCol(m.columns() - 1), 0);
-        m.reduceCol(0);
-        validateNoRows(m, 3);
-        m.reduceCol(m.columns() - 1);
-        validateNoRows(m, 3);
-
-        EXPECT_THROW({ m.det(AdjugateAlgorithm::Default); },
-            regina::FailedPrecondition);
-        EXPECT_THROW({ m.det(AdjugateAlgorithm::FaddeevLeverrier); },
-            regina::FailedPrecondition);
-        EXPECT_THROW({ m.det(AdjugateAlgorithm::PreparataSarwate); },
-            regina::FailedPrecondition);
-        EXPECT_THROW({ m.det(AdjugateAlgorithm::MahajanVinay); },
-            regina::FailedPrecondition);
-        EXPECT_THROW({ m.adjugate(AdjugateAlgorithm::Default); },
-            regina::FailedPrecondition);
-        EXPECT_THROW({ m.adjugate(AdjugateAlgorithm::FaddeevLeverrier); },
-            regina::FailedPrecondition);
-        EXPECT_THROW({ m.adjugate(AdjugateAlgorithm::PreparataSarwate); },
-            regina::FailedPrecondition);
-        EXPECT_THROW({ m.adjugate(AdjugateAlgorithm::MahajanVinay); },
-            regina::FailedPrecondition);
-
-        EXPECT_EQ(m.makeRowHermite(), 0);
-        validateNoRows(m, 3);
-        EXPECT_EQ(m.makeColumnHermite(), 0);
-        validateNoRows(m, 3);
-        EXPECT_EQ(m.rank(), 0);
-        EXPECT_EQ(Matrix<T>(m).rank(), 0);
-        {
-            auto res = m.columnHermiteCoB();
-            EXPECT_EQ(Matrix<T>(m).columnHermiteCoB(), res);
-
-            auto [e, r, ri, rank] = std::move(res);
-            validateNoRows(e, 3);
-            validateIdentity(r, 3);
-            validateIdentity(ri, 3);
-            EXPECT_EQ(rank, 0);
-        }
-
-        validateNoRows(m.rowBasis(), 3);
-        {
-            auto [b, c] = m.rowBasisAndOrthComp();
-            validateNoRows(b, 3);
-            // All the API promises is that the rows of c form a basis for R^3.
-            // However, the current algorithm gives c = -I(3) and so for now we
-            // explicitly test for that.
-            c.negate();
-            validateIdentity(c, 3);
-        }
-
-        EXPECT_THROW({ m.inverse(); }, regina::FailedPrecondition);
-        EXPECT_THROW({ Matrix<T>(m).inverse(); }, regina::FailedPrecondition);
-
-        validateNoRows(m.smith(), 3);
-        validateNoRows(Matrix<T>(m).smith(), 3);
-        {
-            auto res = m.smithCoB();
-            EXPECT_EQ(Matrix<T>(m).smithCoB(), res);
-            EXPECT_EQ(m.smithCoB(SNFAlgorithm::Metrical), res);
-            EXPECT_EQ(Matrix<T>(m).smithCoB(SNFAlgorithm::Metrical), res);
-
-            validateNoRows(res[0], 3);
-            validateIdentity(res[1], 3);
-            validateIdentity(res[2], 3);
-            validateEmpty(res[3]);
-            validateEmpty(res[4]);
-        }
-
-        validateIdentity(m.preimageOfLattice({}), 3);
-    }
-}
-
-TEST(MatrixTest, noRows) {
-    verifyNoRows<int>();
-    verifyNoRows<Integer>();
-}
-
-template <regina::AnyInteger T>
-void verifyNoColumns() {
-    // Test everything that we are allowed to do with a k x 0 matrix.
-    validateNoColumns(Matrix<T>(3, 0), 3);
-    validateNoColumns(Matrix<T>({ {}, {}, {} }), 3);
-
-    Matrix<T> noColumns(3, 0);
-    auto m = Matrix<T>::identity(4);
-    EXPECT_EQ(m.rows(), 4);
-    EXPECT_EQ(m.columns(), 4);
-
-    m = noColumns;
-    validateNoColumns(m, 3);
-    validateNoColumns(Matrix<T>(m), 3);
-    validateNoColumns(Matrix<T>(std::move(m)), 3);
-
-    m = Matrix<T>::identity(4); // assignment after move-out
-    EXPECT_NO_THROW({ m.validate(); });
-    EXPECT_EQ(m.rows(), 4);
-    EXPECT_EQ(m.columns(), 4);
-    EXPECT_TRUE(m.isIdentity());
-
-    m = std::move(noColumns);
-    validateNoColumns(m, 3);
-
-    {
-        auto tmp = Matrix<T>::identity(4);
-        EXPECT_NO_THROW({ tmp.validate(); });
-        EXPECT_EQ(tmp.rows(), 4);
-        EXPECT_EQ(tmp.columns(), 4);
-
-        m.swap(tmp);
-        validateNoColumns(tmp, 3);
-        EXPECT_NO_THROW({ m.validate(); });
-        EXPECT_EQ(m.rows(), 4);
-        EXPECT_EQ(m.columns(), 4);
-
-        swap(m, tmp);
-        validateNoColumns(m, 3);
-        EXPECT_NO_THROW({ tmp.validate(); });
-        EXPECT_EQ(tmp.rows(), 4);
-        EXPECT_EQ(tmp.columns(), 4);
-    }
-
-    m.fill(2);
-    validateNoColumns(m, 3);
-
-    EXPECT_EQ(m, Matrix<T>(3, 0));
-    EXPECT_EQ(m, m);
-
-    validateNoRows(m.transpose(), 3);
-
-    m.swapRows(0, 1);
-    validateNoColumns(m, 3);
-    m.swapRows(m.rows() - 2, m.rows() - 1);
-    validateNoColumns(m, 3);
-
-    EXPECT_EQ(m.str(), "(empty 3x0 matrix)");
-    EXPECT_EQ(m.detail(), "(empty 3x0 matrix)\n");
-
-    {
-        const size_t* idx = nullptr;
-        validateNoColumns(m.copyCols(idx, idx), 3);
-        validateNoColumns(Matrix<T>(m).moveCols(idx, idx), 3);
-        validateEmpty(m.copyRows(idx, idx));
-        validateEmpty(Matrix<T>(m).copyRows(idx, idx));
-    }
-    {
-        const size_t idx[3] = { 0, 1, 2 };
-        validateNoColumns(m.copyRows(idx, idx + 3), 3);
-        validateNoColumns(Matrix<T>(m).moveRows(idx, idx + 3), 3);
-        for (size_t i = 0; i < 3; ++i) {
-            validateNoColumns(m.copyRows(idx + i, idx + i + 1), 1);
-            validateNoColumns(Matrix<T>(m).moveRows(idx + i, idx + i + 1), 1);
-        }
-    }
-    {
-        const size_t idx[3] = { 2, 1, 0 };
-        validateNoColumns(m.copyRows(idx, idx + 3), 3);
-        validateNoColumns(Matrix<T>(m).moveRows(idx, idx + 3), 3);
-    }
-
-    m.makeIdentity();
-    validateNoColumns(m, 3);
-    EXPECT_FALSE(m.isIdentity());
-    EXPECT_TRUE(m.isZero());
-
-    m.addRow(0, 1);
-    validateNoColumns(m, 3);
-    m.addRow(1, 0);
-    validateNoColumns(m, 3);
-    m.addRow(m.rows() - 2, m.rows() - 1);
-    validateNoColumns(m, 3);
-    m.addRow(m.rows() - 1, m.rows() - 2);
-    validateNoColumns(m, 3);
-    m.addRowFrom(0, 1, 0);
-    validateNoColumns(m, 3);
-    m.addRowFrom(1, 0, 0);
-    validateNoColumns(m, 3);
-    m.addRowFrom(m.rows() - 2, m.rows() - 1, 0);
-    validateNoColumns(m, 3);
-    m.addRowFrom(m.rows() - 1, m.rows() - 2, 0);
-    validateNoColumns(m, 3);
-    m.addRow(0, 1, 5);
-    validateNoColumns(m, 3);
-    m.addRow(1, 0, 5);
-    validateNoColumns(m, 3);
-    m.addRow(m.rows() - 2, m.rows() - 1, 5);
-    validateNoColumns(m, 3);
-    m.addRow(m.rows() - 1, m.rows() - 2, 5);
-    validateNoColumns(m, 3);
-    m.multRow(0, 5);
-    validateNoColumns(m, 3);
-    m.multRow(m.rows() - 1, 5);
-    validateNoColumns(m, 3);
-    m.combRows(0, 1, 4, 5, 6, 7);
-    validateNoColumns(m, 3);
-    m.combRows(1, 0, 4, 5, 6, 7);
-    validateNoColumns(m, 3);
-    m.combRows(m.rows() - 2, m.rows() - 1, 4, 5, 6, 7);
-    validateNoColumns(m, 3);
-    m.combRows(m.rows() - 1, m.rows() - 2, 4, 5, 6, 7);
-    validateNoColumns(m, 3);
-
-    m += Matrix<T>(3, 0);
-    validateNoColumns(m, 3);
-    m += m;
-    validateNoColumns(m, 3);
-    m -= Matrix<T>(3, 0);
-    validateNoColumns(m, 3);
-    m -= m;
-    validateNoColumns(m, 3);
-    validateNoColumns(m + m, 3);
-    validateNoColumns(m + Matrix<T>(3, 0), 3);
-    validateNoColumns(Matrix<T>(3, 0) + m, 3);
-    validateNoColumns(Matrix<T>(3, 0) + Matrix<T>(3, 0), 3);
-    validateNoColumns(m - m, 3);
-    validateNoColumns(m - Matrix<T>(3, 0), 3);
-    validateNoColumns(Matrix<T>(3, 0) - m, 3);
-    validateNoColumns(Matrix<T>(3, 0) - Matrix<T>(3, 0), 3);
-    m *= 2;
-    validateNoColumns(m, 3);
-    m *= T(2);
-    validateNoColumns(m, 3);
-    validateNoColumns(m * 2, 3);
-    validateNoColumns(Matrix<T>(m) * 2, 3);
-    EXPECT_NO_THROW({
-        validateNoColumns(MatrixTests<T>().rect43 * m, 4);
-        validateEmpty(Matrix<T>(0, 3) * m);
-        validateNoColumns(m * Matrix<T>(), 3);
-        validateZero(m * Matrix<T>(0, 4), 3, 4);
-    });
-    EXPECT_THROW({ m * Matrix<T>(3, 4); }, regina::InvalidArgument);
-    EXPECT_THROW({ m * Matrix<T>(3, 0); }, regina::InvalidArgument);
-    EXPECT_THROW({ Matrix<T>() * m; }, regina::InvalidArgument);
-    EXPECT_THROW({ Matrix<T>(3, 4) * m; }, regina::InvalidArgument);
-    EXPECT_THROW({ Matrix<T>(3, 0) * m; }, regina::InvalidArgument);
-    {
-        auto ans = m * Vector<T>(0);
-        EXPECT_EQ(ans.size(), 3);
-        EXPECT_TRUE(ans.isZero());
-    }
-    EXPECT_THROW({ m * Vector<T>(3); }, regina::InvalidArgument);
-
-    EXPECT_THROW({ m.trace(); }, regina::FailedPrecondition);
-
-    m.negate();
-    validateNoColumns(m, 3);
-    validateNoColumns(-m, 3);
-    validateNoColumns(-Matrix<T>(m), 3);
-
-    m.negateRow(0);
-    validateNoColumns(m, 3);
-    m.negateRow(m.rows() - 1);
-    validateNoColumns(m, 3);
-
-    if constexpr (regina::ReginaInteger<T>) {
-        m.divRowExact(0, 17);
-        validateNoColumns(m, 3);
-        m.divRowExact(m.rows() - 1, 17);
-        validateNoColumns(m, 3);
-
-        EXPECT_EQ(m.gcdRow(0), 0);
-        EXPECT_EQ(m.gcdRow(m.rows() - 1), 0);
-        m.reduceRow(0);
-        validateNoColumns(m, 3);
-        m.reduceRow(m.rows() - 1);
-        validateNoColumns(m, 3);
-
-        EXPECT_THROW({ m.det(AdjugateAlgorithm::Default); },
-            regina::FailedPrecondition);
-        EXPECT_THROW({ m.det(AdjugateAlgorithm::FaddeevLeverrier); },
-            regina::FailedPrecondition);
-        EXPECT_THROW({ m.det(AdjugateAlgorithm::PreparataSarwate); },
-            regina::FailedPrecondition);
-        EXPECT_THROW({ m.det(AdjugateAlgorithm::MahajanVinay); },
-            regina::FailedPrecondition);
-        EXPECT_THROW({ m.adjugate(AdjugateAlgorithm::Default); },
-            regina::FailedPrecondition);
-        EXPECT_THROW({ m.adjugate(AdjugateAlgorithm::FaddeevLeverrier); },
-            regina::FailedPrecondition);
-        EXPECT_THROW({ m.adjugate(AdjugateAlgorithm::PreparataSarwate); },
-            regina::FailedPrecondition);
-        EXPECT_THROW({ m.adjugate(AdjugateAlgorithm::MahajanVinay); },
-            regina::FailedPrecondition);
-
-        EXPECT_EQ(m.makeRowHermite(), 0);
-        validateNoColumns(m, 3);
-        EXPECT_EQ(m.makeColumnHermite(), 0);
-        validateNoColumns(m, 3);
-        EXPECT_EQ(m.rank(), 0);
-        EXPECT_EQ(Matrix<T>(m).rank(), 0);
-        {
-            auto res = m.columnHermiteCoB();
-            EXPECT_EQ(Matrix<T>(m).columnHermiteCoB(), res);
-
-            auto [e, r, ri, rank] = std::move(res);
-            validateNoColumns(e, 3);
-            validateEmpty(r);
-            validateEmpty(ri);
-            EXPECT_EQ(rank, 0);
-        }
-
-        EXPECT_EQ(m.rowBasis(), 0);
-        {
-            auto [b, c] = m.rowBasisAndOrthComp();
-            validateEmpty(b);
-            validateEmpty(c);
-        }
-
-        EXPECT_THROW({ m.inverse(); }, regina::FailedPrecondition);
-        EXPECT_THROW({ Matrix<T>(m).inverse(); }, regina::FailedPrecondition);
-
-        validateNoColumns(m.smith(), 3);
-        validateNoColumns(Matrix<T>(m).smith(), 3);
-        {
-            auto res = m.smithCoB();
-            EXPECT_EQ(Matrix<T>(m).smithCoB(), res);
-            EXPECT_EQ(m.smithCoB(SNFAlgorithm::Metrical), res);
-            EXPECT_EQ(Matrix<T>(m).smithCoB(SNFAlgorithm::Metrical), res);
-
-            validateNoColumns(res[0], 3);
-            validateEmpty(res[1]);
-            validateEmpty(res[2]);
-            validateIdentity(res[3], 3);
-            validateIdentity(res[4], 3);
-        }
-
-        validateEmpty(m.preimageOfLattice({ 2, 3, 5 }));
-        validateEmpty(m.preimageOfLattice({ 0, 0, 0 }));
-    }
-}
-
-TEST(MatrixTest, noColumns) {
-    verifyNoColumns<int>();
-    verifyNoColumns<Integer>();
 }
 
 // MARK: - General rings or integral domains
@@ -1523,12 +800,13 @@ void verifyIdentityZero(size_t rows, size_t columns) {
     {
         Matrix<T> id(rows, columns);
         id.fill(2); // ensure all entries are overwritten by makeIdentity()
-        EXPECT_FALSE(id.isIdentity());
+        EXPECT_EQ(id.isIdentity(), rows == 0 && columns == 0);
         id.makeIdentity();
         validate(id, rows, columns, [](size_t r, size_t c) {
             return r == c ? 1 : 0;
         });
         EXPECT_EQ(id.isIdentity(), rows == columns);
+        EXPECT_EQ(id.isZero(), rows == 0 || columns == 0);
 
         Matrix<T> alt(rows, columns); // leave entries unininitialised
         alt.makeIdentity();
@@ -1537,7 +815,13 @@ void verifyIdentityZero(size_t rows, size_t columns) {
 }
 
 TEST(MatrixTest, identityZero) {
-    // Note that 0x0, 0xk and kx0 matrices are already tested elsewhere.
+    verifyIdentityZero<int>(0, 0);
+    verifyIdentityZero<int>(0, 3);
+    verifyIdentityZero<int>(3, 0);
+    verifyIdentityZero<Integer>(0, 0);
+    verifyIdentityZero<Integer>(0, 3);
+    verifyIdentityZero<Integer>(3, 0);
+
     for (size_t i = 1; i <= 5; ++i) {
         // The case i == 3 is square (i == 6 - i).
         verifyIdentityZero<int>(i, 6 - i);
@@ -2015,13 +1299,33 @@ void verifyProduct(const Matrix<T>& lhs, const Matrix<T>& rhs) {
     });
 
     // Test vector * matrix, matrix * vector, and vector * vector.
-    for (size_t r = 0; r < lhs.rows(); ++r)
-        EXPECT_EQ(prod.rowVector(r), lhs.rowVector(r) * rhs);
-    for (size_t c = 0; c < rhs.columns(); ++c)
-        EXPECT_EQ(prod.columnVector(c), lhs * rhs.columnVector(c));
+    {
+        auto ans = Vector<T>(rhs.rows(), 0) * rhs;
+        EXPECT_EQ(ans.size(), rhs.columns());
+        EXPECT_TRUE(ans.isZero());
+    }
+    {
+        auto ans = lhs * Vector<T>(lhs.columns(), 0);
+        EXPECT_EQ(ans.size(), lhs.rows());
+        EXPECT_TRUE(ans.isZero());
+    }
+    for (size_t r = 0; r < lhs.rows(); ++r) {
+        auto ans = lhs.rowVector(r) * rhs;
+        EXPECT_EQ(ans.size(), rhs.columns());
+        EXPECT_EQ(ans, prod.rowVector(r));
+    }
+    for (size_t c = 0; c < rhs.columns(); ++c) {
+        auto ans = lhs * rhs.columnVector(c);
+        EXPECT_EQ(ans.size(), lhs.rows());
+        EXPECT_EQ(ans, prod.columnVector(c));
+    }
     for (size_t r = 0; r < lhs.rows(); ++r)
         for (size_t c = 0; c < rhs.columns(); ++c)
             EXPECT_EQ(prod.entry(r, c), lhs.rowVector(r) * rhs.columnVector(c));
+
+    EXPECT_THROW({ lhs * Vector<T>(lhs.columns() + 1); },
+        regina::InvalidArgument);
+    EXPECT_THROW({ Vector<T>(rhs.rows() + 1) * rhs; }, regina::InvalidArgument);
 }
 
 template <regina::Ring T>
@@ -2084,9 +1388,12 @@ void verifyTrace() {
     // our usual non-square cases.
     const MatrixTests<Integer> tests;
 
+    EXPECT_THROW({ tests.noRows.trace(); }, regina::FailedPrecondition);
+    EXPECT_THROW({ tests.noCols.trace(); }, regina::FailedPrecondition);
     EXPECT_THROW({ tests.rect34.trace(); }, regina::FailedPrecondition);
     EXPECT_THROW({ tests.rect43.trace(); }, regina::FailedPrecondition);
 
+    EXPECT_EQ(tests.empty.trace(), 0); // self-transpose
     EXPECT_EQ(tests.zero3.trace(), 0); // self-transpose
     EXPECT_EQ(tests.identity3.trace(), 3); // self-transpose
     EXPECT_EQ(tests.one.trace(), 1); // self-transpose
@@ -2121,8 +1428,7 @@ void verifyAdjugate(const Matrix<T>& m, const T& determinant,
         EXPECT_THROW({ m.adjugate(alg); }, regina::InvalidArgument);
     } else {
         auto adj = m.adjugate(alg);
-        EXPECT_EQ(adj.first.rows(), m.rows());
-        EXPECT_EQ(adj.first.columns(), m.columns());
+        validate(adj.first, m.rows(), m.columns());
         EXPECT_EQ(adj.second, determinant);
         if (m.rows() != 0)
             EXPECT_EQ(m * adj.first,
@@ -2242,13 +1548,20 @@ TEST(MatrixTest, determinantAdjugate) {
     const MatrixTests<Integer> tests;
     for (auto alg : { Alg::Default, Alg::FaddeevLeverrier,
             Alg::PreparataSarwate, Alg::MahajanVinay }) {
+        EXPECT_THROW({ tests.noRows.det(alg); }, regina::FailedPrecondition);
+        EXPECT_THROW({ tests.noCols.det(alg); }, regina::FailedPrecondition);
         EXPECT_THROW({ tests.rect34.det(alg); }, regina::FailedPrecondition);
         EXPECT_THROW({ tests.rect43.det(alg); }, regina::FailedPrecondition);
+        EXPECT_THROW({ tests.noRows.adjugate(alg); },
+            regina::FailedPrecondition);
+        EXPECT_THROW({ tests.noCols.adjugate(alg); },
+            regina::FailedPrecondition);
         EXPECT_THROW({ tests.rect34.adjugate(alg); },
             regina::FailedPrecondition);
         EXPECT_THROW({ tests.rect43.adjugate(alg); },
             regina::FailedPrecondition);
     }
+    verifyAdjugate<Integer>(tests.empty, 1); // self-transpose
     verifyAdjugate<Integer>(tests.zero3, 0); // self-transpose
     verifyAdjugate<Integer>(tests.identity3, 1); // self-transpose
     verifyAdjugate<Integer>(tests.one, 1); // self-transpose
@@ -2410,8 +1723,18 @@ static void verifyHermite(const MatrixInt& m) {
 
     auto res = m.rowHermite();
     auto resTrans = trans.columnHermite();
-    EXPECT_EQ(MatrixInt(m).rowHermite(), res); // rvalue variant
-    EXPECT_EQ(MatrixInt(trans).columnHermite(), resTrans); // rvalue variant
+    validate(res.first, m.rows(), m.columns());
+    validate(resTrans.first, m.columns(), m.rows());
+    {
+        auto alt = MatrixInt(m).rowHermite(); // rvalue variant
+        validate(alt.first, res.first);
+        EXPECT_EQ(alt.second, res.second);
+    }
+    {
+        auto alt = MatrixInt(trans).columnHermite(); // rvalue variant
+        validate(alt.first, resTrans.first);
+        EXPECT_EQ(alt.second, resTrans.second);
+    }
 
     EXPECT_EQ(res.first, resTrans.first.transpose()); // compare matrices
     EXPECT_EQ(res.second, resTrans.second); // compare ranks
@@ -2419,11 +1742,14 @@ static void verifyHermite(const MatrixInt& m) {
     EXPECT_EQ(m.rank(), res.second);
     EXPECT_EQ(MatrixInt(m).rank(), res.second); // rvalue variant
 
-    EXPECT_EQ(res.first.rows(), m.rows());
-    EXPECT_EQ(res.first.columns(), m.columns());
+    // Verify that the rank is within the expected range.
+    ASSERT_LE(res.second, m.rows());
+    ASSERT_LE(res.second, m.columns());
 
     // Verify that res.first is actually in row Hermite normal form.
-    {
+    if (m.columns() == 0) {
+        validateNoColumns(res.first, m.rows());
+    } else {
         size_t fromCol = 0;
         for (size_t r = 0; r < m.rows(); ++r) {
             // The initial non-zero entry in this row must appear in
@@ -2474,21 +1800,31 @@ static void verifyHermite(const MatrixInt& m) {
     // Compare results with the change-of-basis variant for column Hermite
     // normal form.
     {
-        auto cob = trans.columnHermiteCoB();
-        EXPECT_EQ(cob, MatrixInt(trans).columnHermiteCoB()); // rvalue variant
-
-        auto [e, r, ri, rank] = std::move(cob);
-        EXPECT_EQ(e, resTrans.first);
+        auto [e, r, ri, rank] = trans.columnHermiteCoB();
+        validate(e, resTrans.first);
+        validate(r, trans.columns(), trans.columns());
+        validate(ri, trans.columns(), trans.columns());
         EXPECT_EQ(rank, resTrans.second);
 
-        ASSERT_EQ(r.rows(), trans.columns());
-        ASSERT_EQ(r.columns(), trans.columns());
-        ASSERT_EQ(ri.rows(), trans.columns());
-        ASSERT_EQ(ri.columns(), trans.columns());
+        // Validate the rvalue variant:
+        {
+            auto [e2, r2, ri2, rank2] = MatrixInt(trans).columnHermiteCoB();
+            validate(e2, e);
+            validate(r2, r);
+            validate(ri2, ri);
+            EXPECT_EQ(rank2, rank);
+        }
+
         EXPECT_EQ(trans * r, e);
         EXPECT_EQ(e * ri, trans);
         EXPECT_TRUE((r * ri).isIdentity());
         EXPECT_TRUE((ri * r).isIdentity());
+
+        if (trans.rows() == 0) {
+            // We can be more precise about what the CoB matrices should be.
+            validateIdentity(r, trans.columns());
+            validateIdentity(ri, trans.columns());
+        }
     }
 }
 
@@ -2503,36 +1839,38 @@ TEST(MatrixTest, hermite) {
 static void verifyRowBasis(const MatrixInt& m) {
     SCOPED_TRACE_REGINA(m);
 
-    MatrixInt copy(m);
-    copy.makeRowBasis();
-    EXPECT_EQ(m.rowBasis(), copy);
-    EXPECT_EQ(MatrixInt(m).rowBasis(), copy); // rvalue variant
-
     size_t rank = m.rank();
-    ASSERT_EQ(copy.rows(), rank);
-    ASSERT_EQ(copy.columns(), m.columns());
-    EXPECT_EQ(copy.rank(), rank);
-
-    // Ensure that copy spans the same row space as m.
+    MatrixInt basis = m.rowBasis();
+    validate(basis, rank, m.columns());
+    validate(MatrixInt(m).rowBasis(), basis); // rvalue variant
     {
-        MatrixInt comb(m.rows() + copy.rows(), m.columns());
+        MatrixInt tmp(m);
+        tmp.makeRowBasis();
+        validate(tmp, basis);
+    }
+
+    EXPECT_EQ(basis.rank(), rank);
+
+    // Ensure that basis spans the same row space as m.
+    {
+        MatrixInt comb(m.rows() + basis.rows(), m.columns());
         for (size_t i = 0; i < m.rows(); ++i)
             for (size_t j = 0; j < m.columns(); ++j)
                 comb.entry(i, j) = m.entry(i, j);
-        for (size_t i = 0; i < copy.rows(); ++i)
+        for (size_t i = 0; i < basis.rows(); ++i)
             for (size_t j = 0; j < m.columns(); ++j)
-                comb.entry(m.rows() + i, j) = copy.entry(i, j);
+                comb.entry(m.rows() + i, j) = basis.entry(i, j);
         EXPECT_EQ(comb.rank(), rank);
     }
 
-    // Ensure that every row of copy matches some row of m.
+    // Ensure that every row of basis matches some row of m.
     // (There are faster ways of doing this, but our tests are not large.)
-    for (size_t i = 0; i < copy.rows(); ++i) {
+    for (size_t i = 0; i < basis.rows(); ++i) {
         bool found = false;
         for (size_t j = 0; j < m.rows(); ++j) {
             bool equal = true;
             for (size_t c = 0; c < m.columns(); ++c)
-                if (copy.entry(i, c) != m.entry(j, c)) {
+                if (basis.entry(i, c) != m.entry(j, c)) {
                     equal = false;
                     break;
                 }
@@ -2545,19 +1883,27 @@ static void verifyRowBasis(const MatrixInt& m) {
     }
 
     // Now verify the incremental basis for the orthogonal complement.
-    auto [basis, comp] = m.rowBasisAndOrthComp();
-    EXPECT_EQ(basis, copy);
+    auto [altBasis, comp] = m.rowBasisAndOrthComp();
+    validate(altBasis, basis);
     ASSERT_EQ(comp.rows(), m.columns());
     ASSERT_EQ(comp.columns(), m.columns());
     EXPECT_EQ(comp.rank(), m.columns());
-    for (size_t i = 0; i < basis.rows(); ++i) {
-        // Row i of basis should be orthogonal to all rows > i of comp.
+    for (size_t i = 0; i < altBasis.rows(); ++i) {
+        // Row i of altBasis should be orthogonal to all rows > i of comp.
         for (size_t j = i + 1; j < comp.rows(); ++j) {
             Integer sum;
             for (size_t k = 0; k < m.columns(); ++k)
-                sum.addProduct(basis.entry(i, k), comp.entry(j, k));
+                sum.addProduct(altBasis.entry(i, k), comp.entry(j, k));
             EXPECT_EQ(sum, 0);
         }
+    }
+
+    if (m.rows() == 0) {
+        // The API just promises that the rows of comp form a basis for R^cols.
+        // However, the current algorithm gives c = -I(cols) and so for now we
+        // explicitly test for that.
+        comp.negate();
+        validateIdentity(comp, m.columns());
     }
 }
 
@@ -2604,6 +1950,12 @@ static void verifyInverse(const MatrixInt& m) {
         return;
     }
 
+    if (m.rows() == 0) {
+        EXPECT_NO_THROW({ validateEmpty(m.inverse()); });
+        EXPECT_NO_THROW({ validateEmpty(MatrixInt(m).inverse()); });
+        return;
+    }
+
     auto det = m.det();
     if (det != 1 && det != -1) {
         EXPECT_THROW({ m.inverse(); }, regina::NoSolution);
@@ -2632,10 +1984,8 @@ static void verifySmith(const MatrixInt& m, std::initializer_list<long> diag) {
     SCOPED_TRACE_REGINA(m);
 
     MatrixInt snf = m.smith();
-    ASSERT_EQ(MatrixInt(m).smith(), snf); // rvalue variant
-
-    ASSERT_EQ(snf.rows(), m.rows());
-    ASSERT_EQ(snf.columns(), m.columns());
+    validate(snf, m.rows(), m.columns());
+    validate(MatrixInt(m).smith(), snf); // rvalue variant
 
     for (size_t r = 0; r < snf.rows(); ++r)
         for (size_t c = 0; c < snf.columns(); ++c) {
@@ -2650,28 +2000,37 @@ static void verifySmith(const MatrixInt& m, std::initializer_list<long> diag) {
     }
 
     for (auto alg : { SNFAlgorithm::HafnerMcCurley, SNFAlgorithm::Metrical }) {
-        auto cobResult = m.smithCoB(alg);
-        EXPECT_EQ(MatrixInt(m).smithCoB(alg), cobResult); // rvalue variant
+        auto [snfAlt, R, invR, C, invC] = m.smithCoB(alg);
+        validate(snfAlt, snf);
+        validate(R, m.columns(), m.columns());
+        validate(invR, m.columns(), m.columns());
+        validate(C, m.rows(), m.rows());
+        validate(invC, m.rows(), m.rows());
 
-        auto [snfAlt, R, invR, C, invC] = std::move(cobResult);
+        // Validate the rvalue variant:
+        {
+            auto [snfAlt2, R2, invR2, C2, invC2] = MatrixInt(m).smithCoB(alg);
+            validate(snfAlt2, snfAlt);
+            validate(R2, R);
+            validate(invR2, invR);
+            validate(C2, C);
+            validate(invC2, invC);
+        }
 
         // Note: different algorithms could use different row/column moves and
         // thereby give different change-of-basis matrices.
-        EXPECT_EQ(snf, snfAlt);
-
-        ASSERT_EQ(R.rows(), m.columns());
-        ASSERT_EQ(R.columns(), m.columns());
-        ASSERT_EQ(invR.rows(), m.columns());
-        ASSERT_EQ(invR.columns(), m.columns());
-        ASSERT_EQ(C.rows(), m.rows());
-        ASSERT_EQ(C.columns(), m.rows());
-        ASSERT_EQ(invC.rows(), m.rows());
-        ASSERT_EQ(invC.columns(), m.rows());
-
         EXPECT_TRUE((R * invR).isIdentity());
         EXPECT_TRUE((C * invC).isIdentity());
         EXPECT_EQ((C * m * R), snfAlt);
         EXPECT_EQ((invC * snfAlt * invR), m);
+
+        if (m.rows() == 0 || m.columns() == 0) {
+            // We can be more precise about what the CoB matrices should be.
+            validateIdentity(R, m.columns());
+            validateIdentity(invR, m.columns());
+            validateIdentity(C, m.rows());
+            validateIdentity(invC, m.rows());
+        }
     }
 }
 
@@ -2683,6 +2042,9 @@ static void verifySmithWithTranspose(const MatrixInt& m,
 
 TEST(MatrixTest, smith) {
     const MatrixTests<Integer> tests;
+    verifySmithWithTranspose(tests.empty, { });
+    verifySmithWithTranspose(tests.noRows, { });
+    verifySmithWithTranspose(tests.noCols, { });
     verifySmithWithTranspose(tests.zero3, { });
     verifySmithWithTranspose(tests.zero34, { });
     verifySmithWithTranspose(tests.identity3, { 1, 1, 1 });
@@ -2830,7 +2192,15 @@ static void verifyPreimageOfLattice(const MatrixInt& m,
 }
 
 TEST(MatrixTest, preimageOfLattice) {
-    // We begin with a small ad-hoc test with both free and torsion parts.
+    // Begin with tests on empty matrices.
+    // For the 0xk matrix, any matrix whose columns span Z^n is fine; we test
+    // for the identiy matrix because that's what our algorithm produces.
+    validateEmpty(MatrixInt().preimageOfLattice({}));
+    validateIdentity(MatrixInt(0, 3).preimageOfLattice({}), 3);
+    validateEmpty(MatrixInt(3, 0).preimageOfLattice({ 2, 3, 5 }));
+    validateEmpty(MatrixInt(3, 0).preimageOfLattice({ 0, 0, 0 }));
+
+    // Next: a small ad-hoc test with both free and torsion parts.
     //
     // The columns of the resulting matrix are not well-defined: any
     // collection of linearly independent columns with the same span over the
