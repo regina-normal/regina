@@ -1235,10 +1235,16 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \pre The given matrix has the same dimensions as this matrix.
          *
+         * \exception InvalidArgument This and the given matrix do not have
+         * the same dimensions.
+         *
          * \param rhs the matrix to add to this.
          * \return a reference to this matrix.
          */
         Matrix& operator += (const Matrix& rhs) requires Ring<T> {
+            if (rows_ != rhs.rows_ || cols_ != rhs.cols_)
+                throw InvalidArgument("Incompatible matrix dimensions");
+
             size_t size = rows_ * cols_;
             const T* src = rhs.data_;
             T* dest = data_;
@@ -1252,10 +1258,16 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \pre The given matrix has the same dimensions as this matrix.
          *
+         * \exception InvalidArgument This and the given matrix do not have
+         * the same dimensions.
+         *
          * \param rhs the matrix to subtract from this.
          * \return a reference to this matrix.
          */
         Matrix& operator -= (const Matrix& rhs) requires Ring<T> {
+            if (rows_ != rhs.rows_ || cols_ != rhs.cols_)
+                throw InvalidArgument("Incompatible matrix dimensions");
+
             size_t size = rows_ * cols_;
             const T* src = rhs.data_;
             T* dest = data_;

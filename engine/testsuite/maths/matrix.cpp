@@ -265,7 +265,8 @@ TEST(MatrixTest, comparison) {
 
 template <regina::AnyInteger T>
 void verifyExtractRowsCols(const Matrix<T>& m) {
-    // This tests copyRows(), moveRows(), copyCols(), and moveCols().
+    // This tests copyRows(), moveRows(), copyCols(), moveCols(),
+    // rowVector(), and columnVector().
 
     SCOPED_TRACE_REGINA(m);
 
@@ -289,6 +290,11 @@ void verifyExtractRowsCols(const Matrix<T>& m) {
                 return m.entry(i, c);
             });
             validate(std::move(tmp).moveRows(idx, idx + 1), row);
+
+            Vector<T> vec = m.rowVector(i);
+            EXPECT_EQ(vec.size(), m.columns());
+            for (size_t j = 0; j < vec.size(); ++j)
+                EXPECT_EQ(vec[j], m.entry(i, j));
         }
     }
     {
@@ -301,6 +307,11 @@ void verifyExtractRowsCols(const Matrix<T>& m) {
                 return m.entry(r, i);
             });
             validate(std::move(tmp).moveCols(idx, idx + 1), col);
+
+            Vector<T> vec = m.columnVector(i);
+            EXPECT_EQ(vec.size(), m.rows());
+            for (size_t j = 0; j < vec.size(); ++j)
+                EXPECT_EQ(vec[j], m.entry(j, i));
         }
     }
 
@@ -1582,6 +1593,197 @@ TEST(MatrixTest, negateRowColMatrix) {
         verifyNegateRowColMatrix(m);
         verifyNegateRowColMatrix(m.transpose());
     }
+}
+
+template <regina::Ring T>
+void verifyAddSubtract(const Matrix<T>& lhs, const Matrix<T>& rhs) {
+    Matrix<T> sum(lhs);
+    sum += rhs;
+    validate(sum, lhs.rows(), lhs.columns(), [&lhs, &rhs](size_t r, size_t c) {
+        return lhs.entry(r, c) + rhs.entry(r, c);
+    });
+
+    Matrix<T> diff(lhs);
+    diff -= rhs;
+    validate(diff, lhs.rows(), lhs.columns(), [&lhs, &rhs](size_t r, size_t c) {
+        return lhs.entry(r, c) - rhs.entry(r, c);
+    });
+}
+
+template <regina::Ring T>
+void verifyAddSubtract() {
+    for (const Matrix<T>& m : MatrixTests<T>().cases) {
+        for (const Matrix<T>& n : MatrixTests<T>().cases) {
+            Matrix<T> mt = m.transpose();
+            Matrix<T> nt = n.transpose();
+
+            if (m.rows() == n.rows() && m.columns() == n.columns()) {
+                EXPECT_NO_THROW({ verifyAddSubtract(m, n); });
+                EXPECT_NO_THROW({ verifyAddSubtract(mt, nt); });
+            } else {
+                Matrix<T> tmp(m);
+                EXPECT_THROW({ tmp += n; }, regina::InvalidArgument);
+                EXPECT_THROW({ tmp -= n; }, regina::InvalidArgument);
+                EXPECT_THROW({ mt += nt; }, regina::InvalidArgument);
+                EXPECT_THROW({ mt -= nt; }, regina::InvalidArgument);
+            }
+
+            if (m.rows() == n.columns() && m.columns() == n.rows()) {
+                EXPECT_NO_THROW({ verifyAddSubtract(mt, n); });
+                EXPECT_NO_THROW({ verifyAddSubtract(m, nt); });
+            } else {
+                Matrix<T> tmp(m);
+                EXPECT_THROW({ mt += n; }, regina::InvalidArgument);
+                EXPECT_THROW({ mt -= n; }, regina::InvalidArgument);
+                EXPECT_THROW({ tmp += nt; }, regina::InvalidArgument);
+                EXPECT_THROW({ tmp -= nt; }, regina::InvalidArgument);
+            }
+        }
+
+        // Test self-operations (we won't worry about transposes here):
+        {
+            Matrix<T> tmp(m);
+            tmp += m;
+            validate(tmp, m.rows(), m.columns(), [&m](size_t r, size_t c) {
+                return m.entry(r, c) * 2;
+            });
+        }
+        {
+            Matrix<T> tmp(m);
+            tmp -= m;
+            validateZero(tmp, m.rows(), m.columns());
+        }
+    }
+}
+
+TEST(MatrixTest, addSubtract) {
+    verifyAddSubtract<int>();
+    verifyAddSubtract<Integer>();
+}
+
+template <regina::Ring T>
+void verifyScalarProduct(const Matrix<T>& m) {
+    SCOPED_TRACE_REGINA(m);
+
+    for (int scalar : { -2, -1, 0, 1, 2 }) {
+        Matrix<T> prod = m * scalar;
+        validate(prod, m.rows(), m.columns(), [&m, scalar](size_t r, size_t c) {
+            return m.entry(r, c) * scalar;
+        });
+
+        validate(Matrix<T>(m) * scalar, prod); // rvalue variant
+        {
+            Matrix<T> tmp(m);
+            tmp *= scalar;
+            validate(tmp, prod);
+        }
+
+        if (scalar == 0 || m.isZero()) {
+            EXPECT_TRUE(prod.isZero());
+        } else {
+            EXPECT_FALSE(prod.isZero());
+            if (scalar == 1) {
+                EXPECT_EQ(prod, m);
+            } else {
+                EXPECT_NE(prod, m);
+                if (scalar > 1) {
+                    for (int i = 1; i < scalar; ++i)
+                        prod -= m;
+                    EXPECT_EQ(prod, m);
+                } else {
+                    // scalar < 0
+                    prod.negate();
+                    for (int i = 1; i < -scalar; ++i)
+                        prod -= m;
+                    EXPECT_EQ(prod, m);
+                }
+            }
+        }
+    }
+}
+
+TEST(MatrixTest, scalarProduct) {
+    for (const Matrix<int>& m : MatrixTests<int>().cases) {
+        verifyScalarProduct(m);
+        verifyScalarProduct(m.transpose());
+    }
+    for (const Matrix<Integer>& m : MatrixTests<Integer>().cases) {
+        verifyScalarProduct(m);
+        verifyScalarProduct(m.transpose());
+    }
+}
+
+template <regina::Ring T>
+void verifyProduct(const Matrix<T>& lhs, const Matrix<T>& rhs) {
+    // This tests matrix-matrix and matrix-vector products.
+    // It is assumed that lhs ans rhs have compatible dimensions.
+
+    // We already test matrix products in several places elsewhere, including
+    // row/column operations, bulk row/column extraction, adjugates, inverses,
+    // change-of-basis matrices for Hermite/Smith normal forms, lattice
+    // image/preimage verification, and 0x0, 0xk and kx0 matrices.
+    //
+    // We therefore keeps things reasonably simple here, and focus mainly on
+    // the interactions between matrices and vectors.
+
+    Matrix<T> prod = lhs * rhs;
+    validate(prod, lhs.rows(), rhs.columns(), [&lhs, &rhs](size_t r, size_t c) {
+        // Although type T might have addProduct(), and might automatically
+        // initialise to zero, we keep things very manual here.
+        T sum = 0;
+        for (size_t i = 0; i < lhs.columns(); ++i)
+            sum += lhs.entry(r, i) * rhs.entry(i, c);
+        return sum;
+    });
+
+    // Test vector * matrix, matrix * vector, and vector * vector.
+    for (size_t r = 0; r < lhs.rows(); ++r)
+        EXPECT_EQ(prod.rowVector(r), lhs.rowVector(r) * rhs);
+    for (size_t c = 0; c < rhs.columns(); ++c)
+        EXPECT_EQ(prod.columnVector(c), lhs * rhs.columnVector(c));
+    for (size_t r = 0; r < lhs.rows(); ++r)
+        for (size_t c = 0; c < rhs.columns(); ++c)
+            EXPECT_EQ(prod.entry(r, c), lhs.rowVector(r) * rhs.columnVector(c));
+}
+
+template <regina::Ring T>
+void verifyProduct() {
+    for (const Matrix<T>& m : MatrixTests<T>().cases) {
+        for (const Matrix<T>& n : MatrixTests<T>().cases) {
+            if (m.columns() == n.rows()) {
+                // This case captures self-operation (m * m) for
+                // square matrices.
+                EXPECT_NO_THROW({ verifyProduct(m, n); });
+            } else {
+                EXPECT_THROW({ m * n; }, regina::InvalidArgument);
+            }
+
+            if (m.columns() == n.columns()) {
+                EXPECT_NO_THROW({ verifyProduct(m, n.transpose()); });
+            } else {
+                EXPECT_THROW({ m * n.transpose(); }, regina::InvalidArgument);
+            }
+
+            if (m.rows() == n.rows()) {
+                EXPECT_NO_THROW({ verifyProduct(m.transpose(), n); });
+            } else {
+                EXPECT_THROW({ m.transpose() * n; }, regina::InvalidArgument);
+            }
+
+            if (m.rows() == n.columns()) {
+                EXPECT_NO_THROW({ verifyProduct(m.transpose(),
+                    n.transpose()); });
+            } else {
+                EXPECT_THROW({ m.transpose() * n.transpose(); },
+                    regina::InvalidArgument);
+            }
+        }
+    }
+}
+
+TEST(MatrixTest, product) {
+    verifyProduct<int>();
+    verifyProduct<Integer>();
 }
 
 template <regina::Ring T>

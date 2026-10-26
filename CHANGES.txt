@@ -497,8 +497,9 @@ Version 8.0  [ TODO ]
               and columnHermiteCoB().
             - Routine det() now takes an optional algorithm argument.
             - Routine swapRows() now takes an optional from-column argument.
-            - Multiplying a matrix by a matrix or vector will now throw an
-              exception if the matrix/vector dimensions are incompatible.
+            - Matrix addition, subtraction and multiplication (by either a
+              matrix or a vector) will now throw an exception if the
+              matrix/vector dimensions are incompatible.
             - Changed the underlying data storage method.  This should make
               many operations faster; however, swapRows() is now linear time
               instead of constant time.
