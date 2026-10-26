@@ -331,7 +331,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \param src the matrix to clone.
          */
-        template <AssignableTo<T> U>
+        template <AssignableTo<T&> U>
         explicit Matrix(const Matrix<U>& src) :
                 rows_(src.rows_), cols_(src.cols_) {
             if (size_t size = src.rows_ * src.cols_) {

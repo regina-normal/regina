@@ -191,6 +191,223 @@ void validate(const Matrix<T>& m, size_t rows, size_t columns,
 // MARK: - Core operations
 
 template <regina::AnyInteger T>
+void verifyConstruct() {
+    // Do not test the initialiser list constructor - this is effectively
+    // tested already in setting up MatrixTests<T>::cases.
+    // Also, do not test 0x0, 0xk or kx0 matrices - these are already tested
+    // elsewhere.
+    validateEmpty(Matrix<T>());
+
+    if constexpr (regina::ReginaInteger<T>) {
+        static_assert(regina::RingTraits<T>::zeroInitialised);
+        validateZero(Matrix<T>(1), 1, 1);
+        validateZero(Matrix<T>(3), 3, 3);
+        validateZero(Matrix<T>(3, 4), 3, 4);
+        validateZero(Matrix<T>(4, 3), 4, 3);
+    } else {
+        {
+            Matrix<T> m(1);
+            EXPECT_NO_THROW({ m.validate(); });
+            EXPECT_EQ(m.rows(), 1);
+            EXPECT_EQ(m.columns(), 1);
+        }
+        {
+            Matrix<T> m(3);
+            EXPECT_NO_THROW({ m.validate(); });
+            EXPECT_EQ(m.rows(), 3);
+            EXPECT_EQ(m.columns(), 3);
+        }
+        {
+            Matrix<T> m(3, 4);
+            EXPECT_NO_THROW({ m.validate(); });
+            EXPECT_EQ(m.rows(), 3);
+            EXPECT_EQ(m.columns(), 4);
+        }
+        {
+            Matrix<T> m(4, 3);
+            EXPECT_NO_THROW({ m.validate(); });
+            EXPECT_EQ(m.rows(), 4);
+            EXPECT_EQ(m.columns(), 3);
+        }
+    }
+
+    const MatrixTests<T> tests;
+    for (const Matrix<T>& c : tests.cases) {
+        SCOPED_TRACE_REGINA(c);
+        {
+            Matrix<T> x(c);
+            validate(x, c);
+            Matrix<T> y(std::move(x));
+            validate(y, c);
+        }
+    }
+}
+
+TEST(MatrixTest, construct) {
+    verifyConstruct<int>();
+    verifyConstruct<Integer>();
+
+    // Test copy construction between different matrix types.
+    const MatrixTests<int> tests;
+    for (const Matrix<int>& m : tests.cases) {
+        SCOPED_TRACE_REGINA(m);
+        {
+            Matrix<Integer> x(m);
+            validate(x, m.rows(), m.columns(), [&m](size_t r, size_t c) {
+                return m.entry(r, c);
+            });
+            Matrix<Integer> y(std::move(x));
+            validate(y, m.rows(), m.columns(), [&m](size_t r, size_t c) {
+                return m.entry(r, c);
+            });
+        }
+    }
+}
+
+template <regina::AnyInteger T>
+void verifyAssign() {
+    const MatrixTests<T> tests;
+    for (const Matrix<T>& c : tests.cases) {
+        SCOPED_TRACE_REGINA(c);
+        for (const Matrix<T>& d : tests.cases) {
+            SCOPED_TRACE_REGINA(d);
+            {
+                Matrix<T> x(c);
+                validate(x, c);
+                x = d;
+                validate(x, d);
+            }
+            {
+                Matrix<T> x(c), y(d);
+                validate(x, c);
+                validate(y, d);
+                x = std::move(y);
+                validate(x, d);
+            }
+        }
+    }
+}
+
+TEST(MatrixTest, assign) {
+    verifyAssign<int>();
+    verifyAssign<Integer>();
+}
+
+template <regina::AnyInteger T>
+void verifyFill() {
+    const MatrixTests<T> tests;
+    for (const Matrix<T>& c : tests.cases) {
+        SCOPED_TRACE_REGINA(c);
+        {
+            Matrix<T> x(c);
+            x.fill(0);
+            validateZero(x, c.rows(), c.columns());
+        }
+        {
+            Matrix<T> x(c);
+            x.fill(-2);
+            validate(x, c.rows(), c.columns(), [](size_t, size_t) {
+                return -2;
+            });
+        }
+    }
+}
+
+TEST(MatrixTest, fill) {
+    verifyFill<int>();
+    verifyFill<Integer>();
+}
+
+template <regina::AnyInteger T>
+void verifyDimensions(const Matrix<T>& m,
+        size_t expectRows, size_t expectColumns) {
+    EXPECT_EQ(m.rows(), expectRows);
+    EXPECT_EQ(m.columns(), expectColumns);
+}
+
+template <regina::AnyInteger T>
+void verifyDimensions() {
+    const MatrixTests<T> tests;
+
+    verifyDimensions(tests.zero3, 3, 3);
+    verifyDimensions(tests.zero34, 3, 4);
+    verifyDimensions(tests.identity3, 3, 3);
+    verifyDimensions(tests.identity34, 3, 4);
+    verifyDimensions(tests.one, 1, 1);
+    verifyDimensions(tests.minusOne, 1, 1);
+    verifyDimensions(tests.two, 1, 1);
+    verifyDimensions(tests.vector, 1, 3);
+    verifyDimensions(tests.shear2, 2, 2);
+    verifyDimensions(tests.square3, 3, 3);
+    verifyDimensions(tests.rect34, 3, 4);
+    verifyDimensions(tests.rect43, 4, 3);
+    verifyDimensions(tests.redundant34, 3, 4);
+    verifyDimensions(tests.duplicate34, 3, 4);
+    verifyDimensions(tests.perm4, 4, 4);
+    verifyDimensions(tests.fib1, 3, 3);
+    verifyDimensions(tests.fib2, 3, 3);
+}
+
+TEST(MatrixTest, dimensions) {
+    verifyDimensions<int>();
+    verifyDimensions<Integer>();
+}
+
+template <regina::AnyInteger T>
+void verifyEntry(size_t rows, size_t columns) {
+    // This tests both read and write variants of entry().
+    // We do not work very hard here, since entry() is already being verified
+    // through many other tests in this suite.
+    // We just verify that we can read and write from/to every cell in the
+    // matrix.
+    Matrix<T> m(rows, columns);
+    for (size_t r = 0; r < rows; ++r)
+        for (size_t c = 0; c < columns; ++c)
+            m.entry(r, c) = 3 * r + 173 * c + 2;
+    const Matrix<T>& mRef(m);
+    for (size_t r = 0; r < rows; ++r)
+        for (size_t c = 0; c < columns; ++c)
+            EXPECT_EQ(mRef.entry(r, c), 3 * r + 173 * c + 2);
+}
+
+TEST(MatrixTest, entry) {
+    verifyEntry<int>(3, 4);
+    verifyEntry<int>(4, 3);
+    verifyEntry<Integer>(3, 4);
+    verifyEntry<Integer>(4, 3);
+}
+
+template <regina::AnyInteger T>
+void verifySwap() {
+    const MatrixTests<T> tests;
+    for (const Matrix<T>& c : tests.cases) {
+        SCOPED_TRACE_REGINA(c);
+        for (const Matrix<T>& d : tests.cases) {
+            SCOPED_TRACE_REGINA(d);
+            {
+                Matrix<T> x(c);
+                Matrix<T> y(d);
+                x.swap(y);
+                validate(x, d);
+                validate(y, c);
+            }
+            {
+                Matrix<T> x(c);
+                Matrix<T> y(d);
+                swap(x, y);
+                validate(x, d);
+                validate(y, c);
+            }
+        }
+    }
+}
+
+TEST(MatrixTest, swap) {
+    verifySwap<int>();
+    verifySwap<Integer>();
+}
+
+template <regina::AnyInteger T>
 void verifyMoveThenAssign() {
     const MatrixTests<T> tests;
     for (const Matrix<T>& c : tests.cases) {
