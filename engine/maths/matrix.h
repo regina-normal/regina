@@ -1254,6 +1254,29 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
+         * Adds the given matrix to this matrix in-place.
+         *
+         * \pre The given matrix has the same dimensions as this matrix.
+         *
+         * \exception InvalidArgument This and the given matrix do not have
+         * the same dimensions.
+         *
+         * \param rhs the matrix to add to this.
+         * \return a reference to this matrix.
+         */
+        Matrix& operator += (Matrix&& rhs) requires Ring<T> {
+            if (rows_ != rhs.rows_ || cols_ != rhs.cols_)
+                throw InvalidArgument("Incompatible matrix dimensions");
+
+            size_t size = rows_ * cols_;
+            const T* src = rhs.data_;
+            T* dest = data_;
+            for (size_t i = 0; i < size; ++i, ++src, ++dest)
+                *dest += std::move(*src);
+            return *this;
+        }
+
+        /**
          * Subtracts the given matrix from this matrix in-place.
          *
          * \pre The given matrix has the same dimensions as this matrix.
@@ -1274,6 +1297,184 @@ class Matrix : public Output<Matrix<T>> {
             for (size_t i = 0; i < size; ++i)
                 *dest++ -= *src++;
             return *this;
+        }
+
+        /**
+         * Subtracts the given matrix from this matrix in-place.
+         *
+         * \pre The given matrix has the same dimensions as this matrix.
+         *
+         * \exception InvalidArgument This and the given matrix do not have
+         * the same dimensions.
+         *
+         * \param rhs the matrix to subtract from this.
+         * \return a reference to this matrix.
+         */
+        Matrix& operator -= (Matrix&& rhs) requires Ring<T> {
+            if (rows_ != rhs.rows_ || cols_ != rhs.cols_)
+                throw InvalidArgument("Incompatible matrix dimensions");
+
+            size_t size = rows_ * cols_;
+            const T* src = rhs.data_;
+            T* dest = data_;
+            for (size_t i = 0; i < size; ++i, ++src, ++dest)
+                *dest -= std::move(*src);
+            return *this;
+        }
+
+        /**
+         * Adds the given matrix to this matrix and returns the result.
+         *
+         * \pre The given matrix has the same dimensions as this matrix.
+         *
+         * \exception InvalidArgument This and the given matrix do not have
+         * the same dimensions.
+         *
+         * \param rhs the matrix to add to this.
+         * \return the sum of this and the given matrix.
+         */
+        Matrix operator + (const Matrix& rhs) const& requires Ring<T> {
+            if (rows_ != rhs.rows_ || cols_ != rhs.cols_)
+                throw InvalidArgument("Incompatible matrix dimensions");
+
+            Matrix ans(rows_, cols_);
+            if (size_t size = rows_ * cols_) {
+                const T* srcL = data_;
+                const T* srcR = rhs.data_;
+                T* dest = ans.data_;
+                while (srcL != data_ + size)
+                    *dest++ = *srcL++ + *srcR++;
+            }
+            return ans;
+        }
+
+        /**
+         * Adds the given matrix to this matrix and returns the result.
+         *
+         * \pre The given matrix has the same dimensions as this matrix.
+         *
+         * \exception InvalidArgument This and the given matrix do not have
+         * the same dimensions.
+         *
+         * \param rhs the matrix to add to this.
+         * \return the sum of this and the given matrix.
+         */
+        Matrix operator + (Matrix&& rhs) const& requires Ring<T> {
+            rhs += *this;
+            return std::move(rhs);
+        }
+
+        /**
+         * Adds the given matrix to this matrix and returns the result.
+         *
+         * \pre The given matrix has the same dimensions as this matrix.
+         *
+         * \exception InvalidArgument This and the given matrix do not have
+         * the same dimensions.
+         *
+         * \param rhs the matrix to add to this.
+         * \return the sum of this and the given matrix.
+         */
+        Matrix operator + (const Matrix& rhs) && requires Ring<T> {
+            *this += rhs;
+            return std::move(*this);
+        }
+
+        /**
+         * Adds the given matrix to this matrix and returns the result.
+         *
+         * \pre The given matrix has the same dimensions as this matrix.
+         *
+         * \exception InvalidArgument This and the given matrix do not have
+         * the same dimensions.
+         *
+         * \param rhs the matrix to add to this.
+         * \return the sum of this and the given matrix.
+         */
+        Matrix operator + (Matrix&& rhs) && requires Ring<T> {
+            *this += std::move(rhs);
+            return std::move(*this);
+        }
+
+        /**
+         * Subtracts the given matrix from this matrix and returns the result.
+         *
+         * \pre The given matrix has the same dimensions as this matrix.
+         *
+         * \exception InvalidArgument This and the given matrix do not have
+         * the same dimensions.
+         *
+         * \param rhs the matrix to subtract from this.
+         * \return a difference between this and the given matrix.
+         */
+        Matrix operator - (const Matrix& rhs) const& requires Ring<T> {
+            if (rows_ != rhs.rows_ || cols_ != rhs.cols_)
+                throw InvalidArgument("Incompatible matrix dimensions");
+
+            Matrix ans(rows_, cols_);
+            if (size_t size = rows_ * cols_) {
+                const T* srcL = data_;
+                const T* srcR = rhs.data_;
+                T* dest = ans.data_;
+                while (srcL != data_ + size)
+                    *dest++ = *srcL++ - *srcR++;
+            }
+            return ans;
+        }
+
+        /**
+         * Subtracts the given matrix from this matrix and returns the result.
+         *
+         * \pre The given matrix has the same dimensions as this matrix.
+         *
+         * \exception InvalidArgument This and the given matrix do not have
+         * the same dimensions.
+         *
+         * \param rhs the matrix to subtract from this.
+         * \return a difference between this and the given matrix.
+         */
+        Matrix operator - (Matrix&& rhs) const& requires Ring<T> {
+            if (rows_ != rhs.rows_ || cols_ != rhs.cols_)
+                throw InvalidArgument("Incompatible matrix dimensions");
+
+            size_t size = rows_ * cols_;
+            const T* src = data_;
+            T* dest = rhs.data_;
+            for (size_t i = 0; i < size; ++i, ++src, ++dest)
+                *dest = *src - *dest;
+            return std::move(rhs);
+        }
+
+        /**
+         * Subtracts the given matrix from this matrix and returns the result.
+         *
+         * \pre The given matrix has the same dimensions as this matrix.
+         *
+         * \exception InvalidArgument This and the given matrix do not have
+         * the same dimensions.
+         *
+         * \param rhs the matrix to subtract from this.
+         * \return a difference between this and the given matrix.
+         */
+        Matrix operator - (const Matrix& rhs) && requires Ring<T> {
+            *this -= rhs;
+            return std::move(*this);
+        }
+
+        /**
+         * Subtracts the given matrix from this matrix and returns the result.
+         *
+         * \pre The given matrix has the same dimensions as this matrix.
+         *
+         * \exception InvalidArgument This and the given matrix do not have
+         * the same dimensions.
+         *
+         * \param rhs the matrix to subtract from this.
+         * \return a difference between this and the given matrix.
+         */
+        Matrix operator - (Matrix&& rhs) && requires Ring<T> {
+            *this -= std::move(rhs);
+            return std::move(*this);
         }
 
         /**
@@ -1693,6 +1894,32 @@ class Matrix : public Output<Matrix<T>> {
                     pos->negate();
                 else
                     *pos = -*pos;
+        }
+
+        /**
+         * Returns the negative of this matrix.
+         *
+         * \return the negative of this matrix.
+         */
+        Matrix operator - () const& requires Ring<T> {
+            Matrix ans(rows_, cols_);
+            if (size_t size = rows_ * cols_) {
+                const T* src = data_;
+                T* dest = ans.data_;
+                while (src != data_ + size)
+                    *dest++ = -*src++;
+            }
+            return ans;
+        }
+
+        /**
+         * Returns the negative of this matrix.
+         *
+         * \return the negative of this matrix.
+         */
+        Matrix operator - () && requires Ring<T> {
+            negate();
+            return std::move(*this);
         }
 
         /**

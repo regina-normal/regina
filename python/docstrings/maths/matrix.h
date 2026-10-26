@@ -281,6 +281,22 @@ matrix, and ω denotes the time complexity of matrix multiplication
 
 struct Matrix {
 
+// Docstring regina::python::doc::Matrix::__add
+static constexpr const char __add[] =
+R"doc(Adds the given matrix to this matrix and returns the result.
+
+Precondition:
+    The given matrix has the same dimensions as this matrix.
+
+Exception ``InvalidArgument``:
+    This and the given matrix do not have the same dimensions.
+
+Parameter ``rhs``:
+    the matrix to add to this.
+
+Returns:
+    the sum of this and the given matrix.)doc";
+
 // Docstring regina::python::doc::Matrix::__class
 static constexpr const char __class[] =
 R"doc(Represents a matrix of elements of the given type *T*.
@@ -342,6 +358,9 @@ R"doc(Adds the given matrix to this matrix in-place.
 
 Precondition:
     The given matrix has the same dimensions as this matrix.
+
+Exception ``InvalidArgument``:
+    This and the given matrix do not have the same dimensions.
 
 Parameter ``rhs``:
     the matrix to add to this.
@@ -440,6 +459,9 @@ R"doc(Subtracts the given matrix from this matrix in-place.
 Precondition:
     The given matrix has the same dimensions as this matrix.
 
+Exception ``InvalidArgument``:
+    This and the given matrix do not have the same dimensions.
+
 Parameter ``rhs``:
     the matrix to subtract from this.
 
@@ -491,6 +513,29 @@ Parameter ``rhs``:
 
 Returns:
     the product matrix ``this * rhs``.)doc";
+
+// Docstring regina::python::doc::Matrix::__sub
+static constexpr const char __sub[] =
+R"doc(Subtracts the given matrix from this matrix and returns the result.
+
+Precondition:
+    The given matrix has the same dimensions as this matrix.
+
+Exception ``InvalidArgument``:
+    This and the given matrix do not have the same dimensions.
+
+Parameter ``rhs``:
+    the matrix to subtract from this.
+
+Returns:
+    a difference between this and the given matrix.)doc";
+
+// Docstring regina::python::doc::Matrix::__sub_2
+static constexpr const char __sub_2[] =
+R"doc(Returns the negative of this matrix.
+
+Returns:
+    the negative of this matrix.)doc";
 
 // Docstring regina::python::doc::Matrix::addCol
 static constexpr const char addCol[] =

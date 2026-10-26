@@ -1796,6 +1796,9 @@ void verifyNegateRowColMatrix(const Matrix<T>& m) {
             return -m.entry(r, c);
         });
 
+        validate(-m, alt);
+        validate(-Matrix<T>(m), alt); // rvalue variant
+
         alt += m;
         EXPECT_TRUE(alt.isZero());
     }
@@ -1819,12 +1822,28 @@ void verifyAddSubtract(const Matrix<T>& lhs, const Matrix<T>& rhs) {
     validate(sum, lhs.rows(), lhs.columns(), [&lhs, &rhs](size_t r, size_t c) {
         return lhs.entry(r, c) + rhs.entry(r, c);
     });
+    {
+        Matrix<T> tmp(lhs);
+        validate(tmp += Matrix<T>(rhs), sum);
+    }
+    validate(lhs + rhs, sum);
+    validate(lhs + Matrix<T>(rhs), sum);
+    validate(Matrix<T>(lhs) + rhs, sum);
+    validate(Matrix<T>(lhs) + Matrix<T>(rhs), sum);
 
     Matrix<T> diff(lhs);
     diff -= rhs;
     validate(diff, lhs.rows(), lhs.columns(), [&lhs, &rhs](size_t r, size_t c) {
         return lhs.entry(r, c) - rhs.entry(r, c);
     });
+    {
+        Matrix<T> tmp(lhs);
+        validate(tmp -= Matrix<T>(rhs), diff);
+    }
+    validate(lhs - rhs, diff);
+    validate(lhs - Matrix<T>(rhs), diff);
+    validate(Matrix<T>(lhs) - rhs, diff);
+    validate(Matrix<T>(lhs) - Matrix<T>(rhs), diff);
 }
 
 template <regina::Ring T>
@@ -1864,11 +1883,21 @@ void verifyAddSubtract() {
             validate(tmp, m.rows(), m.columns(), [&m](size_t r, size_t c) {
                 return m.entry(r, c) * 2;
             });
+
+            validate(m + m, tmp);
+            validate(m + Matrix<T>(m), tmp);
+            validate(Matrix<T>(m) + m, tmp);
+            validate(Matrix<T>(m) + Matrix<T>(m), tmp);
         }
         {
             Matrix<T> tmp(m);
             tmp -= m;
             validateZero(tmp, m.rows(), m.columns());
+
+            validateZero(m - m, m.rows(), m.columns());
+            validateZero(m - Matrix<T>(m), m.rows(), m.columns());
+            validateZero(Matrix<T>(m) - m, m.rows(), m.columns());
+            validateZero(Matrix<T>(m) - Matrix<T>(m), m.rows(), m.columns());
         }
     }
 }
