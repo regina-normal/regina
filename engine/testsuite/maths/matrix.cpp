@@ -855,6 +855,14 @@ void verifyEmpty() {
     validateEmpty(m);
     m -= m;
     validateEmpty(m);
+    validateEmpty(m + m);
+    validateEmpty(m + Matrix<T>());
+    validateEmpty(Matrix<T>() + m);
+    validateEmpty(Matrix<T>() + Matrix<T>());
+    validateEmpty(m - m);
+    validateEmpty(m - Matrix<T>());
+    validateEmpty(Matrix<T>() - m);
+    validateEmpty(Matrix<T>() - Matrix<T>());
     m *= 3;
     validateEmpty(m);
     m *= T(3);
@@ -880,6 +888,8 @@ void verifyEmpty() {
 
     m.negate();
     validateEmpty(m);
+    validateEmpty(-m);
+    validateEmpty(-Matrix<T>(m));
 
     if constexpr (regina::ReginaInteger<T>) {
         EXPECT_EQ(m.det(), 1);
@@ -1091,6 +1101,14 @@ void verifyNoRows() {
     validateNoRows(m, 3);
     m -= m;
     validateNoRows(m, 3);
+    validateNoRows(m + m, 3);
+    validateNoRows(m + Matrix<T>(0, 3), 3);
+    validateNoRows(Matrix<T>(0, 3) + m, 3);
+    validateNoRows(Matrix<T>(0, 3) + Matrix<T>(0, 3), 3);
+    validateNoRows(m - m, 3);
+    validateNoRows(m - Matrix<T>(0, 3), 3);
+    validateNoRows(Matrix<T>(0, 3) - m, 3);
+    validateNoRows(Matrix<T>(0, 3) - Matrix<T>(0, 3), 3);
     m *= 2;
     validateNoRows(m, 3);
     m *= T(2);
@@ -1118,6 +1136,9 @@ void verifyNoRows() {
 
     m.negate();
     validateNoRows(m, 3);
+    validateNoRows(-m, 3);
+    validateNoRows(-Matrix<T>(m), 3);
+
     m.negateCol(0);
     validateNoRows(m, 3);
     m.negateCol(m.columns() - 1);
@@ -1340,6 +1361,14 @@ void verifyNoColumns() {
     validateNoColumns(m, 3);
     m -= m;
     validateNoColumns(m, 3);
+    validateNoColumns(m + m, 3);
+    validateNoColumns(m + Matrix<T>(3, 0), 3);
+    validateNoColumns(Matrix<T>(3, 0) + m, 3);
+    validateNoColumns(Matrix<T>(3, 0) + Matrix<T>(3, 0), 3);
+    validateNoColumns(m - m, 3);
+    validateNoColumns(m - Matrix<T>(3, 0), 3);
+    validateNoColumns(Matrix<T>(3, 0) - m, 3);
+    validateNoColumns(Matrix<T>(3, 0) - Matrix<T>(3, 0), 3);
     m *= 2;
     validateNoColumns(m, 3);
     m *= T(2);
@@ -1368,6 +1397,9 @@ void verifyNoColumns() {
 
     m.negate();
     validateNoColumns(m, 3);
+    validateNoColumns(-m, 3);
+    validateNoColumns(-Matrix<T>(m), 3);
+
     m.negateRow(0);
     validateNoColumns(m, 3);
     m.negateRow(m.rows() - 1);
