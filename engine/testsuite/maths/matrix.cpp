@@ -122,7 +122,7 @@ struct MatrixTests {
 
 template <typename T>
 requires std::semiregular<T> && regina::Writeable<T>
-void validate(const Matrix<T>& m, size_t rows, size_t columns) {
+static void validate(const Matrix<T>& m, size_t rows, size_t columns) {
     EXPECT_NO_THROW({ m.validate(); });
     ASSERT_EQ(m.rows(), rows);
     ASSERT_EQ(m.columns(), columns);
@@ -130,28 +130,28 @@ void validate(const Matrix<T>& m, size_t rows, size_t columns) {
 
 template <typename T>
 requires std::semiregular<T> && regina::Writeable<T>
-void validateEmpty(const Matrix<T>& m) {
+static void validateEmpty(const Matrix<T>& m) {
     validate(m, 0, 0);
     EXPECT_EQ(m, Matrix<T>());
 }
 
 template <typename T>
 requires std::semiregular<T> && regina::Writeable<T>
-void validateNoRows(const Matrix<T>& m, size_t columns) {
+static void validateNoRows(const Matrix<T>& m, size_t columns) {
     validate(m, 0, columns);
     EXPECT_EQ(m, Matrix<T>(0, columns));
 }
 
 template <typename T>
 requires std::semiregular<T> && regina::Writeable<T>
-void validateNoColumns(const Matrix<T>& m, size_t rows) {
+static void validateNoColumns(const Matrix<T>& m, size_t rows) {
     validate(m, rows, 0);
     EXPECT_EQ(m, Matrix<T>(rows, 0));
 }
 
 template <typename T>
 requires std::regular<T> && regina::Writeable<T> && regina::IntegerCompatible<T>
-void validateIdentity(const Matrix<T>& m, size_t size) {
+static void validateIdentity(const Matrix<T>& m, size_t size) {
     validate(m, size, size);
     for (size_t i = 0; i < size; ++i)
         for (size_t j = 0; j < size; ++j)
@@ -160,7 +160,7 @@ void validateIdentity(const Matrix<T>& m, size_t size) {
 
 template <typename T>
 requires std::regular<T> && regina::Writeable<T> && regina::IntegerCompatible<T>
-void validateZero(const Matrix<T>& m, size_t rows, size_t columns) {
+static void validateZero(const Matrix<T>& m, size_t rows, size_t columns) {
     validate(m, rows, columns);
     for (size_t i = 0; i < rows; ++i)
         for (size_t j = 0; j < columns; ++j)
@@ -169,7 +169,7 @@ void validateZero(const Matrix<T>& m, size_t rows, size_t columns) {
 
 template <typename T>
 requires std::regular<T> && regina::Writeable<T>
-void validate(const Matrix<T>& m, const Matrix<T>& expect) {
+static void validate(const Matrix<T>& m, const Matrix<T>& expect) {
     validate(m, expect.rows(), expect.columns());
     for (size_t i = 0; i < m.rows(); ++i)
         for (size_t j = 0; j < m.columns(); ++j)
@@ -178,7 +178,7 @@ void validate(const Matrix<T>& m, const Matrix<T>& expect) {
 
 template <typename T, std::regular_invocable<size_t, size_t> ComputeEntry>
 requires std::regular<T> && regina::Writeable<T>
-void validate(const Matrix<T>& m, size_t rows, size_t columns,
+static void validate(const Matrix<T>& m, size_t rows, size_t columns,
         ComputeEntry&& expectedEntry) {
     validate(m, rows, columns);
     for (size_t i = 0; i < rows; ++i)
@@ -189,7 +189,7 @@ void validate(const Matrix<T>& m, size_t rows, size_t columns,
 // MARK: - Core operations
 
 template <regina::AnyInteger T>
-void verifyConstruct() {
+static void verifyConstruct() {
     validateEmpty(Matrix<T>());
 
     // Only test the initialiser list constructor for empty matrices.
@@ -250,7 +250,7 @@ TEST(MatrixTest, construct) {
 }
 
 template <regina::AnyInteger T>
-void verifyAssign() {
+static void verifyAssign() {
     const MatrixTests<T> tests;
     for (const Matrix<T>& c : tests.cases) {
         SCOPED_TRACE_REGINA(c);
@@ -279,7 +279,7 @@ TEST(MatrixTest, assign) {
 }
 
 template <regina::AnyInteger T>
-void verifyFill() {
+static void verifyFill() {
     const MatrixTests<T> tests;
     for (const Matrix<T>& c : tests.cases) {
         SCOPED_TRACE_REGINA(c);
@@ -304,7 +304,7 @@ TEST(MatrixTest, fill) {
 }
 
 template <regina::AnyInteger T>
-void verifyDimensions() {
+static void verifyDimensions() {
     // This test is where we also perform basic validation on all of our
     // standard test cases.
     const MatrixTests<T> tests;
@@ -337,7 +337,7 @@ TEST(MatrixTest, dimensions) {
 }
 
 template <regina::AnyInteger T>
-void verifyEntry(size_t rows, size_t columns) {
+static void verifyEntry(size_t rows, size_t columns) {
     // This tests both read and write variants of entry().
     // We do not work very hard here, since entry() is already being verified
     // through many other tests in this suite.
@@ -361,7 +361,7 @@ TEST(MatrixTest, entry) {
 }
 
 template <regina::AnyInteger T>
-void verifySwap() {
+static void verifySwap() {
     const MatrixTests<T> tests;
     for (const Matrix<T>& c : tests.cases) {
         SCOPED_TRACE_REGINA(c);
@@ -391,7 +391,7 @@ TEST(MatrixTest, swap) {
 }
 
 template <regina::AnyInteger T>
-void verifyMoveThenAssign() {
+static void verifyMoveThenAssign() {
     const MatrixTests<T> tests;
     for (const Matrix<T>& c : tests.cases) {
         SCOPED_TRACE_REGINA(c);
@@ -453,7 +453,7 @@ TEST(MatrixTest, moveThenAssign) {
 }
 
 template <regina::AnyInteger T>
-void verifyComparison() {
+static void verifyComparison() {
     const MatrixTests<T> tests;
     for (const Matrix<T>& c : tests.cases) {
         SCOPED_TRACE_REGINA(c);
@@ -480,7 +480,7 @@ TEST(MatrixTest, comparison) {
 }
 
 template <regina::AnyInteger T>
-void verifyExtractRowsCols(const Matrix<T>& m) {
+static void verifyExtractRowsCols(const Matrix<T>& m) {
     // This tests copyRows(), moveRows(), copyCols(), moveCols(),
     // rowVector(), and columnVector().
 
@@ -667,7 +667,7 @@ TEST(MatrixTest, extractRowsCols) {
 
 template <typename T>
 requires std::regular<T> && regina::Writeable<T>
-void verifyTranspose(const Matrix<T>& m) {
+static void verifyTranspose(const Matrix<T>& m) {
     SCOPED_TRACE_REGINA(m);
 
     Matrix<T> trans = m.transpose();
@@ -686,7 +686,7 @@ TEST(MatrixTest, transpose) {
 }
 
 template <regina::AnyInteger T>
-void verifySwapRowsCols(const Matrix<T>& m) {
+static void verifySwapRowsCols(const Matrix<T>& m) {
     SCOPED_TRACE_REGINA(m);
 
     for (size_t i = 0; i < m.rows(); ++i)
@@ -742,7 +742,7 @@ TEST(MatrixTest, swapRowsCols) {
 }
 
 template <regina::AnyInteger T>
-void verifyOutput() {
+static void verifyOutput() {
     // Just test a handful of cases, to verify that things look ok.
     // Note that 0x0, 0xk and kx0 matrices are already tested elsewhere.
     const MatrixTests<T> tests;
@@ -783,7 +783,7 @@ TEST(MatrixTest, output) {
 // MARK: - General rings or integral domains
 
 template <regina::Ring T>
-void verifyIdentityZero(size_t rows, size_t columns) {
+static void verifyIdentityZero(size_t rows, size_t columns) {
     // This tests makeIdentity(), identity(), isIdentity(), and isZero().
 
     {
@@ -846,7 +846,7 @@ TEST(MatrixTest, identityZero) {
 }
 
 template <regina::Ring T>
-void verifyAddRowCol(const Matrix<T>& m) {
+static void verifyAddRowCol(const Matrix<T>& m) {
     SCOPED_TRACE_REGINA(m);
 
     for (size_t src = 0; src < m.rows(); ++src)
@@ -958,7 +958,7 @@ TEST(MatrixTest, addRowCol) {
 }
 
 template <regina::Ring T>
-void verifyMultRowCol(const Matrix<T>& m) {
+static void verifyMultRowCol(const Matrix<T>& m) {
     SCOPED_TRACE_REGINA(m);
 
     for (size_t i = 0; i < m.rows(); ++i) {
@@ -1016,7 +1016,7 @@ TEST(MatrixTest, multRowCol) {
 }
 
 template <regina::Ring T>
-void verifyCombRowsCols(const Matrix<T>& m) {
+static void verifyCombRowsCols(const Matrix<T>& m) {
     SCOPED_TRACE_REGINA(m);
 
     // For now we just test with one hard-coded set of coefficients.
@@ -1092,7 +1092,7 @@ TEST(MatrixTest, combRowsCols) {
 }
 
 template <regina::Ring T>
-void verifyNegateRowColMatrix(const Matrix<T>& m) {
+static void verifyNegateRowColMatrix(const Matrix<T>& m) {
     // This tests negateRow(), negateCol(), and negate().
 
     SCOPED_TRACE_REGINA(m);
@@ -1148,7 +1148,7 @@ TEST(MatrixTest, negateRowColMatrix) {
 }
 
 template <regina::Ring T>
-void verifyAddSubtract(const Matrix<T>& lhs, const Matrix<T>& rhs) {
+static void verifyAddSubtract(const Matrix<T>& lhs, const Matrix<T>& rhs) {
     Matrix<T> sum(lhs);
     sum += rhs;
     validate(sum, lhs.rows(), lhs.columns(), [&lhs, &rhs](size_t r, size_t c) {
@@ -1179,7 +1179,7 @@ void verifyAddSubtract(const Matrix<T>& lhs, const Matrix<T>& rhs) {
 }
 
 template <regina::Ring T>
-void verifyAddSubtract() {
+static void verifyAddSubtract() {
     for (const Matrix<T>& m : MatrixTests<T>().cases) {
         for (const Matrix<T>& n : MatrixTests<T>().cases) {
             Matrix<T> mt = m.transpose();
@@ -1240,7 +1240,7 @@ TEST(MatrixTest, addSubtract) {
 }
 
 template <regina::Ring T>
-void verifyScalarProduct(const Matrix<T>& m) {
+static void verifyScalarProduct(const Matrix<T>& m) {
     SCOPED_TRACE_REGINA(m);
 
     for (int scalar : { -2, -1, 0, 1, 2 }) {
@@ -1292,7 +1292,7 @@ TEST(MatrixTest, scalarProduct) {
 }
 
 template <regina::Ring T>
-void verifyProduct(const Matrix<T>& lhs, const Matrix<T>& rhs) {
+static void verifyProduct(const Matrix<T>& lhs, const Matrix<T>& rhs) {
     // This tests matrix-matrix and matrix-vector products.
     // It is assumed that lhs ans rhs have compatible dimensions.
 
@@ -1345,7 +1345,7 @@ void verifyProduct(const Matrix<T>& lhs, const Matrix<T>& rhs) {
 }
 
 template <regina::Ring T>
-void verifyProduct() {
+static void verifyProduct() {
     for (const Matrix<T>& m : MatrixTests<T>().cases) {
         for (const Matrix<T>& n : MatrixTests<T>().cases) {
             if (m.columns() == n.rows()) {
@@ -1385,7 +1385,7 @@ TEST(MatrixTest, product) {
 }
 
 template <regina::Ring T>
-void verifyTrace() {
+static void verifyTrace() {
     // Start with some simple examples.
     {
         Matrix<T> zero(3);
@@ -1433,7 +1433,7 @@ TEST(MatrixTest, trace) {
 }
 
 template <regina::IntegralDomain T>
-void verifyAdjugate(const Matrix<T>& m, const T& determinant,
+static void verifyAdjugate(const Matrix<T>& m, const T& determinant,
         AdjugateAlgorithm alg) {
     // We have already verified that the matrix is square through the variant
     // of verifyAdjugate() that does not take an algorithm as input.
@@ -1453,7 +1453,7 @@ void verifyAdjugate(const Matrix<T>& m, const T& determinant,
 }
 
 template <regina::IntegralDomain T>
-void verifyAdjugate(const Matrix<T>& m, const T& determinant) {
+static void verifyAdjugate(const Matrix<T>& m, const T& determinant) {
     // We use this if we already have an expcted value for the determinant.
     ASSERT_EQ(m.rows(), m.columns());
 
@@ -1463,7 +1463,7 @@ void verifyAdjugate(const Matrix<T>& m, const T& determinant) {
 }
 
 template <regina::IntegralDomain T>
-void verifyAdjugate(const Matrix<T>& m) {
+static void verifyAdjugate(const Matrix<T>& m) {
     // We use this if we do not know the determinant in advance.
     ASSERT_EQ(m.rows(), m.columns());
 

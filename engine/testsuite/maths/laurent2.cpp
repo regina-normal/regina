@@ -68,11 +68,11 @@ class Laurent2Test : public testing::Test {
             std::cref(a), std::cref(b) };
 };
 
-void validate(const L& poly) {
+static void validate(const L& poly) {
     EXPECT_NO_THROW({ poly.validate(); });
 }
 
-void validate(const L& poly,
+static void validate(const L& poly,
         std::initializer_list<std::tuple<long, long, Integer>> coeffs) {
     // We assume here that coeffs only contains non-zero coefficients, and
     // does not contain any duplicate exponent pairs.
@@ -88,14 +88,14 @@ void validate(const L& poly,
     }
 }
 
-void validateZero(const L& poly) {
+static void validateZero(const L& poly) {
     EXPECT_NO_THROW({ poly.validate(); });
     EXPECT_TRUE(poly.isZero());
     EXPECT_EQ(poly.countTerms(), 0);
     EXPECT_EQ(poly.begin(), poly.end());
 }
 
-void validate(const L& poly, const L& expect) {
+static void validate(const L& poly, const L& expect) {
     if (expect.isZero())
         validateZero(poly);
     else {
@@ -119,7 +119,7 @@ template <std::regular_invocable<const Term&> TranslateTerm>
 requires requires(TranslateTerm trans, const Term t) {
     { trans(t) } -> std::convertible_to<Term>;
 }
-void validate(const L& poly, const L& from, TranslateTerm&& translate) {
+static void validate(const L& poly, const L& from, TranslateTerm&& translate) {
     // It is assumed that translate preserves the order of terms, and does not
     // create any zero terms.
     if (from.isZero())
@@ -314,7 +314,7 @@ TEST_F(Laurent2Test, negate) {
 }
 
 template <regina::CppInteger Native>
-void verifyNativeProduct(const L& poly, const Integer& scalar,
+static void verifyNativeProduct(const L& poly, const Integer& scalar,
         const L& product) {
     SCOPED_TRACE_TYPE(Native);
 
@@ -338,7 +338,7 @@ void verifyNativeProduct(const L& poly, const Integer& scalar,
 }
 
 template <regina::CppInteger Native>
-void verifyNativeQuotient(const L& poly, const Integer& scalar,
+static void verifyNativeQuotient(const L& poly, const Integer& scalar,
         const L& quotient) {
     SCOPED_TRACE_TYPE(Native);
 
@@ -359,7 +359,7 @@ void verifyNativeQuotient(const L& poly, const Integer& scalar,
     }
 }
 
-void verifyScalarMultiplyDivide(const L& poly, const Integer& scalar) {
+static void verifyScalarMultiplyDivide(const L& poly, const Integer& scalar) {
     SCOPED_TRACE_REGINA(scalar);
 
     const L product = poly * scalar;
