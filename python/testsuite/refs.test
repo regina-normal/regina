@@ -47,6 +47,13 @@ print()
 
 m = MatrixInt([[1,2], [3,4]])
 print(m.detail())
+m[0,1].negate()
+print(m.detail())
+m[1,1] = 5
+print(m.detail())
+
+m = MatrixInt([[1,2], [3,4]])
+print(m.detail())
 m.entry(0,1).negate()
 print(m.detail())
 # The following line does not even compile:

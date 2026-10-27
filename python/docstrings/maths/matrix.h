@@ -297,6 +297,29 @@ Parameter ``rhs``:
 Returns:
     the sum of this and the given matrix.)doc";
 
+// Docstring regina::python::doc::Matrix::__call
+static constexpr const char __call[] =
+R"doc(Returns a read-write reference to the entry at the given row and
+column. Rows and columns are numbered beginning at zero.
+
+Python:
+    In Python, this is the square bracket operator, not the round
+    bracket operator; that is, Python users can access entries through
+    the syntax ``matrix[row, column]``. Moreover (unlike the old
+    entry() routine from Regina 7.x), this operator can also _set_
+    entries; that is, you can write ``matrix[row, column] = value``.
+
+Parameter ``row``:
+    the row of the desired entry; this must be between 0 and
+    ``rows()-1`` inclusive.
+
+Parameter ``column``:
+    the column of the desired entry; this must be between 0 and
+    ``columns()-1`` inclusive.
+
+Returns:
+    a reference to the entry in the given row and column.)doc";
+
 // Docstring regina::python::doc::Matrix::__class
 static constexpr const char __class[] =
 R"doc(Represents a matrix of elements of the given type *T*.
@@ -1040,17 +1063,20 @@ Parameter ``divBy``:
 
 // Docstring regina::python::doc::Matrix::entry
 static constexpr const char entry[] =
-R"doc(Returns a read-write reference to the entry at the given row and
-column. Rows and columns are numbered beginning at zero.
+R"doc(Deprecated function that returns a read-write reference to the entry
+at the given row and column.
+
+.. deprecated::
+    You can now use the syntax ``matrix(row, column)`` in C++ or
+    ``matrix[row, column]`` in Python.
 
 Python:
-    In general, to assign values to matrix elements you should use the
-    Python-only set() routine. This entry() routine does give read-
-    write access to matrix elements in Python, but it does not allow
-    them to be set using the assignment operator. In other words, code
-    such as ``matrix.entry(r, c).negate()`` will work, but
-    ``matrix.entry(r, c) = value`` will not; instead you will need to
-    call ``matrix.set(r, c, value)``.
+    The square bracket operator is more robust, and supports reading,
+    writing and in-place modification. This deprecated entry()
+    function is more limited: it can be used to read values or modify
+    them in-place (e.g., ``matrix.entry(r, c).negate()``), but it
+    cannot be used to assign values to entries (e.g.,
+    ``matrix.entry(r, c) = 1``).
 
 Parameter ``row``:
     the row of the desired entry; this must be between 0 and
@@ -1065,8 +1091,12 @@ Returns:
 
 // Docstring regina::python::doc::Matrix::entry_2
 static constexpr const char entry_2[] =
-R"doc(Returns a read-only reference to the entry at the given row and
-column. Rows and columns are numbered beginning at zero.
+R"doc(Deprecated function that returns a read-only reference to the entry at
+the given row and column.
+
+.. deprecated::
+    You can now use the syntax ``matrix(row, column)`` instead of this
+    deprecated syntax ``matrix.entry(row, column)``.
 
 Parameter ``row``:
     the row of the desired entry; this must be between 0 and
@@ -1652,16 +1682,12 @@ Returns:
 
 // Docstring regina::python::doc::Matrix::set
 static constexpr const char set[] =
-R"doc(Python-only routine that sets the entry at the given row and column.
-Rows and columns are numbered beginning at zero.
+R"doc(Deprecated Python-only routine that sets the entry at the given row
+and column.
 
-Python:
-    In general, to assign values to matrix elements you should use the
-    syntax ``matrix.set(row, column, value)``. The entry() routine
-    does give read-write access to matrix elements in Python, but it
-    does not allow them to be set using the assignment operator. In
-    other words, code such as ``matrix.entry(r, c).negate()`` will
-    work, but ``matrix.entry(r, c) = value`` will not.
+.. deprecated::
+    Python users can now assign values to matrix entries using the
+    more intuitive syntax ``matrix[row, column] = value``.
 
 Parameter ``row``:
     the row of the entry to set; this must be between 0 and

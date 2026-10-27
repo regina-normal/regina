@@ -157,7 +157,7 @@ namespace {
         validate(m, size, size);
         for (size_t i = 0; i < size; ++i)
             for (size_t j = 0; j < size; ++j)
-                EXPECT_EQ(m.entry(i, j), i == j ? 1 : 0);
+                EXPECT_EQ(m(i, j), i == j ? 1 : 0);
     }
 
     template <typename T>
@@ -167,7 +167,7 @@ namespace {
         validate(m, rows, columns);
         for (size_t i = 0; i < rows; ++i)
             for (size_t j = 0; j < columns; ++j)
-                EXPECT_EQ(m.entry(i, j), 0);
+                EXPECT_EQ(m(i, j), 0);
     }
 
     template <typename T>
@@ -176,7 +176,7 @@ namespace {
         validate(m, expect.rows(), expect.columns());
         for (size_t i = 0; i < m.rows(); ++i)
             for (size_t j = 0; j < m.columns(); ++j)
-                EXPECT_EQ(m.entry(i, j), expect.entry(i, j));
+                EXPECT_EQ(m(i, j), expect(i, j));
     }
 
     template <typename T, std::regular_invocable<size_t, size_t> ComputeEntry>
@@ -186,7 +186,7 @@ namespace {
         validate(m, rows, columns);
         for (size_t i = 0; i < rows; ++i)
             for (size_t j = 0; j < columns; ++j)
-                EXPECT_EQ(m.entry(i, j), expectedEntry(i, j));
+                EXPECT_EQ(m(i, j), expectedEntry(i, j));
     }
 } // anonymous namespace
 
@@ -245,11 +245,11 @@ TEST(MatrixTest, construct) {
         {
             Matrix<Integer> x(m);
             validate(x, m.rows(), m.columns(), [&m](size_t r, size_t c) {
-                return m.entry(r, c);
+                return m(r, c);
             });
             Matrix<Integer> y(std::move(x));
             validate(y, m.rows(), m.columns(), [&m](size_t r, size_t c) {
-                return m.entry(r, c);
+                return m(r, c);
             });
         }
     }
@@ -359,11 +359,11 @@ namespace {
         Matrix<T> m(rows, columns);
         for (size_t r = 0; r < rows; ++r)
             for (size_t c = 0; c < columns; ++c)
-                m.entry(r, c) = 3 * r + 173 * c + 2;
+                m(r, c) = 3 * r + 173 * c + 2;
         const Matrix<T>& mRef(m);
         for (size_t r = 0; r < rows; ++r)
             for (size_t c = 0; c < columns; ++c)
-                EXPECT_EQ(mRef.entry(r, c), 3 * r + 173 * c + 2);
+                EXPECT_EQ(mRef(r, c), 3 * r + 173 * c + 2);
     }
 } // anonymous namespace
 
@@ -524,14 +524,14 @@ namespace {
                 *idx = i;
                 Matrix<T> row = m.copyRows(idx, idx + 1);
                 validate(row, 1, m.columns(), [&m, i](size_t, size_t c) {
-                    return m.entry(i, c);
+                    return m(i, c);
                 });
                 validate(std::move(tmp).moveRows(idx, idx + 1), row);
 
                 Vector<T> vec = m.rowVector(i);
                 EXPECT_EQ(vec.size(), m.columns());
                 for (size_t j = 0; j < vec.size(); ++j)
-                    EXPECT_EQ(vec[j], m.entry(i, j));
+                    EXPECT_EQ(vec[j], m(i, j));
             }
         }
         {
@@ -541,14 +541,14 @@ namespace {
                 *idx = i;
                 Matrix<T> col = m.copyCols(idx, idx + 1);
                 validate(col, m.rows(), 1, [&m, i](size_t r, size_t) {
-                    return m.entry(r, i);
+                    return m(r, i);
                 });
                 validate(std::move(tmp).moveCols(idx, idx + 1), col);
 
                 Vector<T> vec = m.columnVector(i);
                 EXPECT_EQ(vec.size(), m.rows());
                 for (size_t j = 0; j < vec.size(); ++j)
-                    EXPECT_EQ(vec[j], m.entry(j, i));
+                    EXPECT_EQ(vec[j], m(j, i));
             }
         }
 
@@ -569,10 +569,10 @@ namespace {
             Matrix<T> even = m.copyRows(idxEven.begin(), idxEven.end());
             Matrix<T> odd = m.copyRows(idxOdd.begin(), idxOdd.end());
             validate(even, nEven, m.columns(), [&m](size_t r, size_t c) {
-                return m.entry(2 * r, c);
+                return m(2 * r, c);
             });
             validate(odd, nOdd, m.columns(), [&m](size_t r, size_t c) {
-                return m.entry(2 * r + 1, c);
+                return m(2 * r + 1, c);
             });
             validate(std::move(tmp).moveRows(idxEven.begin(), idxEven.end()),
                 even);
@@ -585,9 +585,9 @@ namespace {
                 opsOdd.fill(0);
             }
             for (size_t i = 0; i < opsEven.columns(); ++i)
-                opsEven.entry(2 * i, i) = 1;
+                opsEven(2 * i, i) = 1;
             for (size_t i = 0; i < opsOdd.columns(); ++i)
-                opsOdd.entry(2 * i + 1, i) = 1;
+                opsOdd(2 * i + 1, i) = 1;
 
             Matrix<T> collect = opsEven * even;
             collect += opsOdd * odd;
@@ -609,10 +609,10 @@ namespace {
             Matrix<T> even = m.copyCols(idxEven.begin(), idxEven.end());
             Matrix<T> odd = m.copyCols(idxOdd.begin(), idxOdd.end());
             validate(even, m.rows(), nEven, [&m](size_t r, size_t c) {
-                return m.entry(r, 2 * c);
+                return m(r, 2 * c);
             });
             validate(odd, m.rows(), nOdd, [&m](size_t r, size_t c) {
-                return m.entry(r, 2 * c + 1);
+                return m(r, 2 * c + 1);
             });
             validate(std::move(tmp).moveCols(idxEven.begin(), idxEven.end()),
                 even);
@@ -625,9 +625,9 @@ namespace {
                 opsOdd.fill(0);
             }
             for (size_t i = 0; i < opsEven.rows(); ++i)
-                opsEven.entry(i, 2 * i) = 1;
+                opsEven(i, 2 * i) = 1;
             for (size_t i = 0; i < opsOdd.rows(); ++i)
-                opsOdd.entry(i, 2 * i + 1) = 1;
+                opsOdd(i, 2 * i + 1) = 1;
 
             Matrix<T> collect = even * opsEven;
             collect += odd * opsOdd;
@@ -645,7 +645,7 @@ namespace {
             std::reverse(idx.begin(), idx.end());
             Matrix<T> alt = m.copyRows(idx.begin(), idx.end());
             validate(alt, m.rows(), m.columns(), [&m](size_t r, size_t c) {
-                return m.entry(m.rows() - 1 - r, c);
+                return m(m.rows() - 1 - r, c);
             });
             validate(Matrix<T>(m).moveRows(idx.begin(), idx.end()), alt);
 
@@ -653,7 +653,7 @@ namespace {
             if constexpr (! regina::ReginaInteger<T>)
                 ops.fill(0);
             for (size_t i = 0; i < m.rows(); ++i)
-                ops.entry(i, m.rows() - 1 - i) = 1;
+                ops(i, m.rows() - 1 - i) = 1;
             validate(ops * alt, m);
         }
         {
@@ -666,7 +666,7 @@ namespace {
             std::reverse(idx.begin(), idx.end());
             Matrix<T> alt = m.copyCols(idx.begin(), idx.end());
             validate(alt, m.rows(), m.columns(), [&m](size_t r, size_t c) {
-                return m.entry(r, m.columns() - 1 - c);
+                return m(r, m.columns() - 1 - c);
             });
             validate(Matrix<T>(m).moveCols(idx.begin(), idx.end()), alt);
 
@@ -674,7 +674,7 @@ namespace {
             if constexpr (! regina::ReginaInteger<T>)
                 ops.fill(0);
             for (size_t i = 0; i < m.columns(); ++i)
-                ops.entry(i, m.columns() - 1 - i) = 1;
+                ops(i, m.columns() - 1 - i) = 1;
             validate(alt * ops, m);
         }
     }
@@ -699,7 +699,7 @@ namespace {
 
         Matrix<T> trans = m.transpose();
         validate(trans, m.columns(), m.rows(), [&m](size_t r, size_t c) {
-            return m.entry(c, r);
+            return m(c, r);
         });
 
         validate(trans.transpose(), m);
@@ -725,15 +725,15 @@ namespace {
                     alt.swapRows(i, j, from);
                     validate(alt, m.rows(), m.columns(), [&m, i, j, from](
                             size_t r, size_t c) {
-                        return (r == i && c >= from ? m.entry(j, c) :
-                            r == j && c >= from ? m.entry(i, c) :
-                            m.entry(r, c));
+                        return (r == i && c >= from ? m(j, c) :
+                            r == j && c >= from ? m(i, c) :
+                            m(r, c));
                     });
 
                     if (from == 0) {
                         Matrix<T> op = Matrix<T>::identity(m.rows());
-                        op.entry(i, i) = op.entry(j, j) = 0;
-                        op.entry(i, j) = op.entry(j, i) = 1;
+                        op(i, i) = op(j, j) = 0;
+                        op(i, j) = op(j, i) = 1;
                         validate(op * alt, m);
                     }
                 }
@@ -745,15 +745,15 @@ namespace {
                     alt.swapCols(i, j, from);
                     validate(alt, m.rows(), m.columns(), [&m, i, j, from](
                             size_t r, size_t c) {
-                        return (c == i && r >= from ? m.entry(r, j) :
-                            c == j && r >= from ? m.entry(r, i) :
-                            m.entry(r, c));
+                        return (c == i && r >= from ? m(r, j) :
+                            c == j && r >= from ? m(r, i) :
+                            m(r, c));
                     });
 
                     if (from == 0) {
                         Matrix<T> op = Matrix<T>::identity(m.columns());
-                        op.entry(i, i) = op.entry(j, j) = 0;
-                        op.entry(i, j) = op.entry(j, i) = 1;
+                        op(i, i) = op(j, j) = 0;
+                        op(i, j) = op(j, i) = 1;
                         validate(alt * op, m);
                     }
                 }
@@ -826,9 +826,9 @@ namespace {
             EXPECT_TRUE(idSquare.isIdentity());
             for (size_t i = 0; i < rows; ++i)
                 for (size_t j = 0; j < rows; ++j) {
-                    idSquare.entry(i, j) = (i == j ? 0 : 1);
+                    idSquare(i, j) = (i == j ? 0 : 1);
                     EXPECT_FALSE(idSquare.isIdentity());
-                    idSquare.entry(i, j) = (i == j ? 1 : 0);
+                    idSquare(i, j) = (i == j ? 1 : 0);
                     EXPECT_TRUE(idSquare.isIdentity());
                 }
         }
@@ -840,9 +840,9 @@ namespace {
             EXPECT_TRUE(zero.isZero());
             for (size_t i = 0; i < rows; ++i)
                 for (size_t j = 0; j < columns; ++j) {
-                    zero.entry(i, j) = 1;
+                    zero(i, j) = 1;
                     EXPECT_FALSE(zero.isZero());
-                    zero.entry(i, j) = 0;
+                    zero(i, j) = 0;
                     EXPECT_TRUE(zero.isZero());
                 }
         }
@@ -895,8 +895,7 @@ namespace {
                     validate(alt, m.rows(), m.columns(), [&m, src, dest, from](
                             size_t r, size_t c) {
                         return (r == dest && c >= from ?
-                            m.entry(src, c) + m.entry(dest, c) :
-                            m.entry(r, c));
+                            m(src, c) + m(dest, c) : m(r, c));
                     });
 
                     if (from == 0) {
@@ -905,7 +904,7 @@ namespace {
                         validate(alt2, alt);
 
                         Matrix<T> op = Matrix<T>::identity(m.rows());
-                        op.entry(dest, src) = -1;
+                        op(dest, src) = -1;
                         validate(op * alt, m);
                     }
 
@@ -915,8 +914,7 @@ namespace {
                         validate(alt2, m.rows(), m.columns(), [&m, src, dest,
                                 mult, from](size_t r, size_t c) {
                             return (r == dest && c >= from ?
-                                m.entry(src, c) * mult + m.entry(dest, c) :
-                                m.entry(r, c));
+                                m(src, c) * mult + m(dest, c) : m(r, c));
                         });
 
                         if (mult == 0)
@@ -926,7 +924,7 @@ namespace {
 
                         if (from == 0) {
                             Matrix<T> op = Matrix<T>::identity(m.rows());
-                            op.entry(dest, src) = -mult;
+                            op(dest, src) = -mult;
                             validate(op * alt2, m);
                         }
                     }
@@ -943,8 +941,7 @@ namespace {
                     validate(alt, m.rows(), m.columns(), [&m, src, dest, from](
                             size_t r, size_t c) {
                         return (c == dest && r >= from ?
-                            m.entry(r, src) + m.entry(r, dest) :
-                            m.entry(r, c));
+                            m(r, src) + m(r, dest) : m(r, c));
                     });
 
                     if (from == 0) {
@@ -953,7 +950,7 @@ namespace {
                         validate(alt2, alt);
 
                         Matrix<T> op = Matrix<T>::identity(m.columns());
-                        op.entry(src, dest) = -1;
+                        op(src, dest) = -1;
                         validate(alt * op, m);
                     }
 
@@ -963,8 +960,7 @@ namespace {
                         validate(alt2, m.rows(), m.columns(), [&m, src, dest,
                                 mult, from](size_t r, size_t c) {
                             return (c == dest && r >= from ?
-                                m.entry(r, src) * mult + m.entry(r, dest) :
-                                m.entry(r, c));
+                                m(r, src) * mult + m(r, dest) : m(r, c));
                         });
 
                         if (mult == 0)
@@ -974,7 +970,7 @@ namespace {
 
                         if (from == 0) {
                             Matrix<T> op = Matrix<T>::identity(m.columns());
-                            op.entry(src, dest) = -mult;
+                            op(src, dest) = -mult;
                             validate(alt2 * op, m);
                         }
                     }
@@ -1006,8 +1002,7 @@ namespace {
                     alt.multRow(i, mult, from);
                     validate(alt, m.rows(), m.columns(), [&m, i, mult, from](
                             size_t r, size_t c) {
-                        return (r == i && c >= from ? m.entry(i, c) * mult :
-                            m.entry(r, c));
+                        return (r == i && c >= from ? m(i, c) * mult : m(r, c));
                     });
 
                     if (mult == 1)
@@ -1027,8 +1022,7 @@ namespace {
                     alt.multCol(i, mult, from);
                     validate(alt, m.rows(), m.columns(), [&m, i, mult, from](
                             size_t r, size_t c) {
-                        return (c == i && r >= from ? m.entry(r, i) * mult :
-                            m.entry(r, c));
+                        return (c == i && r >= from ? m(r, i) * mult : m(r, c));
                     });
 
                     if (mult == 1)
@@ -1074,20 +1068,18 @@ namespace {
                     validate(alt, m.rows(), m.columns(), [&m, i, j, from](
                             size_t r, size_t c) {
                         return (r == i && c >= from ?
-                            m.entry(i, c) * coeff[0] +
-                                m.entry(j, c) * coeff[1] :
+                            m(i, c) * coeff[0] + m(j, c) * coeff[1] :
                             r == j && c >= from ?
-                            m.entry(i, c) * coeff[2] +
-                                m.entry(j, c) * coeff[3] :
-                            m.entry(r, c));
+                            m(i, c) * coeff[2] + m(j, c) * coeff[3] :
+                            m(r, c));
                     });
 
                     if (from == 0) {
                         Matrix<T> op = Matrix<T>::identity(m.rows());
-                        op.entry(i, i) = inv[0];
-                        op.entry(i, j) = inv[1];
-                        op.entry(j, i) = inv[2];
-                        op.entry(j, j) = inv[3];
+                        op(i, i) = inv[0];
+                        op(i, j) = inv[1];
+                        op(j, i) = inv[2];
+                        op(j, j) = inv[3];
                         validate(op * alt, m);
                     }
                 }
@@ -1104,20 +1096,18 @@ namespace {
                     validate(alt, m.rows(), m.columns(), [&m, i, j, from](
                             size_t r, size_t c) {
                         return (c == i && r >= from ?
-                            m.entry(r, i) * coeff[0] +
-                                m.entry(r, j) * coeff[1] :
+                            m(r, i) * coeff[0] + m(r, j) * coeff[1] :
                             c == j && r >= from ?
-                            m.entry(r, i) * coeff[2] +
-                                m.entry(r, j) * coeff[3] :
-                            m.entry(r, c));
+                            m(r, i) * coeff[2] + m(r, j) * coeff[3] :
+                            m(r, c));
                     });
 
                     if (from == 0) {
                         Matrix<T> op = Matrix<T>::identity(m.columns());
-                        op.entry(i, i) = inv[0];
-                        op.entry(j, i) = inv[1];
-                        op.entry(i, j) = inv[2];
-                        op.entry(j, j) = inv[3];
+                        op(i, i) = inv[0];
+                        op(j, i) = inv[1];
+                        op(i, j) = inv[2];
+                        op(j, j) = inv[3];
                         validate(alt * op, m);
                     }
                 }
@@ -1147,11 +1137,11 @@ namespace {
             Matrix<T> alt(m);
             alt.negateRow(i);
             validate(alt, m.rows(), m.columns(), [&m, i](size_t r, size_t c) {
-                return (r == i ? -m.entry(r, c) : m.entry(r, c));
+                return (r == i ? -m(r, c) : m(r, c));
             });
 
             Matrix<T> op = Matrix<T>::identity(m.rows());
-            op.entry(i, i) = -1;
+            op(i, i) = -1;
             validate(op * alt, m);
         }
 
@@ -1159,11 +1149,11 @@ namespace {
             Matrix<T> alt(m);
             alt.negateCol(i);
             validate(alt, m.rows(), m.columns(), [&m, i](size_t r, size_t c) {
-                return (c == i ? -m.entry(r, c) : m.entry(r, c));
+                return (c == i ? -m(r, c) : m(r, c));
             });
 
             Matrix<T> op = Matrix<T>::identity(m.columns());
-            op.entry(i, i) = -1;
+            op(i, i) = -1;
             validate(alt * op, m);
         }
 
@@ -1171,7 +1161,7 @@ namespace {
             Matrix<T> alt(m);
             alt.negate();
             validate(alt, m.rows(), m.columns(), [&m](size_t r, size_t c) {
-                return -m.entry(r, c);
+                return -m(r, c);
             });
 
             validate(-m, alt);
@@ -1201,7 +1191,7 @@ namespace {
         sum += rhs;
         validate(sum, lhs.rows(), lhs.columns(),
                 [&lhs, &rhs](size_t r, size_t c) {
-            return lhs.entry(r, c) + rhs.entry(r, c);
+            return lhs(r, c) + rhs(r, c);
         });
         {
             Matrix<T> tmp(lhs);
@@ -1216,7 +1206,7 @@ namespace {
         diff -= rhs;
         validate(diff, lhs.rows(), lhs.columns(),
                 [&lhs, &rhs](size_t r, size_t c) {
-            return lhs.entry(r, c) - rhs.entry(r, c);
+            return lhs(r, c) - rhs(r, c);
         });
         {
             Matrix<T> tmp(lhs);
@@ -1263,7 +1253,7 @@ namespace {
                 Matrix<T> tmp(m);
                 tmp += m;
                 validate(tmp, m.rows(), m.columns(), [&m](size_t r, size_t c) {
-                    return m.entry(r, c) * 2;
+                    return m(r, c) * 2;
                 });
 
                 validate(m + m, tmp);
@@ -1300,7 +1290,7 @@ namespace {
             Matrix<T> prod = m * scalar;
             validate(prod, m.rows(), m.columns(),
                     [&m, scalar](size_t r, size_t c) {
-                return m.entry(r, c) * scalar;
+                return m(r, c) * scalar;
             });
 
             validate(Matrix<T>(m) * scalar, prod); // rvalue variant
@@ -1368,7 +1358,7 @@ namespace {
             // initialise to zero, we keep things very manual here.
             T sum = 0;
             for (size_t i = 0; i < lhs.columns(); ++i)
-                sum += lhs.entry(r, i) * rhs.entry(i, c);
+                sum += lhs(r, i) * rhs(i, c);
             return sum;
         });
 
@@ -1395,8 +1385,7 @@ namespace {
         }
         for (size_t r = 0; r < lhs.rows(); ++r)
             for (size_t c = 0; c < rhs.columns(); ++c)
-                EXPECT_EQ(prod.entry(r, c),
-                    lhs.rowVector(r) * rhs.columnVector(c));
+                EXPECT_EQ(prod(r, c), lhs.rowVector(r) * rhs.columnVector(c));
 
         EXPECT_THROW({ lhs * Vector<T>(lhs.columns() + 1); },
             regina::InvalidArgument);
@@ -1599,8 +1588,8 @@ TEST(MatrixTest, determinantAdjugate) {
         Matrix<Integer> antidiagonal(size);
         Integer factorial = 1;
         for (size_t i = 0; i < size; ++i) {
-            diagonal.entry(i, i) = i + 1;
-            antidiagonal.entry(size - i - 1, i) = i + 1;
+            diagonal(i, i) = i + 1;
+            antidiagonal(size - i - 1, i) = i + 1;
             factorial *= (i + 1);
         }
         verifyAdjugate<Integer>(diagonal, factorial);
@@ -1620,7 +1609,7 @@ TEST(MatrixTest, determinantAdjugate) {
             Matrix<Integer> random(size);
             for (size_t i = 0; i < size; ++i)
                 for (size_t j = 0; j < size; ++j)
-                    random.entry(i, j) = Integer::randomBinary(8);
+                    random(i, j) = Integer::randomBinary(8);
             verifyAdjugate<Integer>(random);
         }
     }
@@ -1676,7 +1665,7 @@ namespace {
 
             bool allZero = true;
             for (size_t j = 0; j < m.columns(); ++j)
-                if (m.entry(i, j) != 0) {
+                if (m(i, j) != 0) {
                     allZero = false;
                     break;
                 }
@@ -1696,14 +1685,14 @@ namespace {
 
             ASSERT_GT(gcd, 0);
             for (size_t j = 0; j < m.columns(); ++j) {
-                EXPECT_EQ(m.entry(i, j) % gcd, 0);
+                EXPECT_EQ(m(i, j) % gcd, 0);
             }
 
             MatrixInt alt(m);
             alt.divRowExact(i, gcd);
             validate(alt, m.rows(), m.columns(),
                     [&m, i, &gcd](size_t r, size_t c) {
-                return (r == i ? m.entry(r, c).divExact(gcd) : m.entry(r, c));
+                return (r == i ? m(r, c).divExact(gcd) : m(r, c));
             });
             EXPECT_EQ(alt.gcdRow(i), 1);
 
@@ -1716,7 +1705,7 @@ namespace {
 
             alt.divRowExact(i, -1);
             validate(alt, m.rows(), m.columns(), [&m, i](size_t r, size_t c) {
-                return (r == i ? -m.entry(r, c) : m.entry(r, c));
+                return (r == i ? -m(r, c) : m(r, c));
             });
             EXPECT_EQ(alt.gcdRow(i), gcd);
 
@@ -1725,7 +1714,7 @@ namespace {
 
             alt.multRow(i, -2);
             validate(alt, m.rows(), m.columns(), [&m, i](size_t r, size_t c) {
-                return (r == i ? -2 * m.entry(r, c) : m.entry(r, c));
+                return (r == i ? -2 * m(r, c) : m(r, c));
             });
             EXPECT_EQ(alt.gcdRow(i), 2 * gcd);
         }
@@ -1735,7 +1724,7 @@ namespace {
 
             bool allZero = true;
             for (size_t j = 0; j < m.rows(); ++j)
-                if (m.entry(j, i) != 0) {
+                if (m(j, i) != 0) {
                     allZero = false;
                     break;
                 }
@@ -1755,14 +1744,14 @@ namespace {
 
             ASSERT_GT(gcd, 0);
             for (size_t j = 0; j < m.rows(); ++j) {
-                EXPECT_EQ(m.entry(j, i) % gcd, 0);
+                EXPECT_EQ(m(j, i) % gcd, 0);
             }
 
             MatrixInt alt(m);
             alt.divColExact(i, gcd);
             validate(alt, m.rows(), m.columns(),
                     [&m, i, &gcd](size_t r, size_t c) {
-                return (c == i ? m.entry(r, c).divExact(gcd) : m.entry(r, c));
+                return (c == i ? m(r, c).divExact(gcd) : m(r, c));
             });
             EXPECT_EQ(alt.gcdCol(i), 1);
 
@@ -1775,7 +1764,7 @@ namespace {
 
             alt.divColExact(i, -1);
             validate(alt, m.rows(), m.columns(), [&m, i](size_t r, size_t c) {
-                return (c == i ? -m.entry(r, c) : m.entry(r, c));
+                return (c == i ? -m(r, c) : m(r, c));
             });
             EXPECT_EQ(alt.gcdCol(i), gcd);
 
@@ -1784,7 +1773,7 @@ namespace {
 
             alt.multCol(i, -2);
             validate(alt, m.rows(), m.columns(), [&m, i](size_t r, size_t c) {
-                return (c == i ? -2 * m.entry(r, c) : m.entry(r, c));
+                return (c == i ? -2 * m(r, c) : m(r, c));
             });
             EXPECT_EQ(alt.gcdCol(i), 2 * gcd);
         }
@@ -1847,9 +1836,9 @@ namespace {
                     // Whether or not res.first[r, fromCol] is zero, the entire
                     // column beneath this position must be zero.
                     for (size_t i = r + 1; i < m.rows(); ++i)
-                        EXPECT_EQ(res.first.entry(i, fromCol), 0);
+                        EXPECT_EQ(res.first(i, fromCol), 0);
 
-                    if (res.first.entry(r, fromCol) != 0)
+                    if (res.first(r, fromCol) != 0)
                         break;
                     ++fromCol;
                 } while (fromCol < m.columns());
@@ -1858,11 +1847,11 @@ namespace {
                     break;
 
                 // The first non-zero entry in this row:
-                auto corner = res.first.entry(r, fromCol);
+                auto corner = res.first(r, fromCol);
                 EXPECT_GT(corner, 0);
                 for (size_t i = 0; i < r; ++i) {
-                    EXPECT_GE(res.first.entry(i, fromCol), 0);
-                    EXPECT_LT(res.first.entry(i, fromCol), corner);
+                    EXPECT_GE(res.first(i, fromCol), 0);
+                    EXPECT_LT(res.first(i, fromCol), corner);
                 }
 
                 ++fromCol;
@@ -1879,10 +1868,10 @@ namespace {
             MatrixInt comb(2 * m.rows(), m.columns());
             for (size_t i = 0; i < m.rows(); ++i)
                 for (size_t j = 0; j < m.columns(); ++j)
-                    comb.entry(i, j) = m.entry(i, j);
+                    comb(i, j) = m(i, j);
             for (size_t i = 0; i < m.rows(); ++i)
                 for (size_t j = 0; j < m.columns(); ++j)
-                    comb.entry(m.rows() + i, j) = res.first.entry(i, j);
+                    comb(m.rows() + i, j) = res.first(i, j);
             EXPECT_EQ(comb.rank(), res.second);
         }
 
@@ -1947,10 +1936,10 @@ namespace {
             MatrixInt comb(m.rows() + basis.rows(), m.columns());
             for (size_t i = 0; i < m.rows(); ++i)
                 for (size_t j = 0; j < m.columns(); ++j)
-                    comb.entry(i, j) = m.entry(i, j);
+                    comb(i, j) = m(i, j);
             for (size_t i = 0; i < basis.rows(); ++i)
                 for (size_t j = 0; j < m.columns(); ++j)
-                    comb.entry(m.rows() + i, j) = basis.entry(i, j);
+                    comb(m.rows() + i, j) = basis(i, j);
             EXPECT_EQ(comb.rank(), rank);
         }
 
@@ -1961,7 +1950,7 @@ namespace {
             for (size_t j = 0; j < m.rows(); ++j) {
                 bool equal = true;
                 for (size_t c = 0; c < m.columns(); ++c)
-                    if (basis.entry(i, c) != m.entry(j, c)) {
+                    if (basis(i, c) != m(j, c)) {
                         equal = false;
                         break;
                     }
@@ -1984,7 +1973,7 @@ namespace {
             for (size_t j = i + 1; j < comp.rows(); ++j) {
                 Integer sum;
                 for (size_t k = 0; k < m.columns(); ++k)
-                    sum.addProduct(altBasis.entry(i, k), comp.entry(j, k));
+                    sum.addProduct(altBasis(i, k), comp(j, k));
                 EXPECT_EQ(sum, 0);
             }
         }
@@ -2086,12 +2075,12 @@ namespace {
         for (size_t r = 0; r < snf.rows(); ++r)
             for (size_t c = 0; c < snf.columns(); ++c) {
                 if (r != c || r >= diag.size())
-                    EXPECT_EQ(snf.entry(r, c), 0);
+                    EXPECT_EQ(snf(r, c), 0);
             }
 
         size_t i = 0;
         for (auto d : diag) {
-            EXPECT_EQ(snf.entry(i, i), d);
+            EXPECT_EQ(snf(i, i), d);
             ++i;
         }
 
@@ -2199,7 +2188,7 @@ namespace {
         for (size_t i = r.columns() - dim; i < r.columns(); ++i) {
             Integer sum = 0;
             for (size_t j = 0; j < m.columns(); ++j)
-                sum.addProduct(m.entry(axis, j), r.entry(j, i));
+                sum.addProduct(m(axis, j), r(j, i));
             ans.gcdWith(sum);
         }
         return ans;
@@ -2244,7 +2233,7 @@ namespace {
             for (size_t r = 0; r < m.rows(); ++r) {
                 if (sublattice[r] != 0) {
                     ASSERT_LT(c, e.columns());
-                    EXPECT_EQ(e.entry(r, c), sublattice[r]);
+                    EXPECT_EQ(e(r, c), sublattice[r]);
                     ++c;
                 }
             }
@@ -2278,7 +2267,7 @@ namespace {
             for (size_t i = 0; i < m.rows(); ++i) {
                 Integer sum;
                 for (size_t j = 0; j < m.columns(); ++j)
-                    sum.addProduct(m.entry(i, j), ans.entry(j, c));
+                    sum.addProduct(m(i, j), ans(j, c));
                 if (sublattice[i] == 0)
                     EXPECT_EQ(sum, 0);
                 else {

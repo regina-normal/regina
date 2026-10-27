@@ -81,7 +81,7 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
                 }
                 for (size_t j = 0; j < cols; ++j) {
                     try {
-                        m->entry(i, j) = row[j].cast<Element>();
+                        (*m)(i, j) = row[j].cast<Element>();
                     } catch (const pybind11::cast_error&) {
                         delete m;
                         throw regina::InvalidArgument("The given elements "
@@ -97,13 +97,23 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
         .def("swap", &Matrix::swap, rdoc::swap)
         .def("rows", &Matrix::rows, rdoc::rows)
         .def("columns", &Matrix::columns, rdoc::columns)
+        .def("__getitem__", [](Matrix& m, std::pair<size_t, size_t> pos)
+                -> Element& {
+            return m(pos.first, pos.second);
+        }, pybind11::return_value_policy::reference_internal,
+            rdoc::__call)
+        .def("__setitem__", [](Matrix& m, std::pair<size_t, size_t> pos,
+                const Element& e) {
+            m(pos.first, pos.second) = e;
+        }, rdoc::__call)
         .def("set", [](Matrix& m, size_t row, size_t col, const Element& e) {
-            m.entry(row, col) = e;
-        }, rdoc::set)
+            m(row, col) = e;
+        }, rdoc::set) // deprecated
         // Give the read-only entry() the same docstring as the read-write
         // set(), so users know they are allowed to call set().
-        .def("entry", overload_cast<size_t, size_t>(&Matrix::entry),
-            pybind11::return_value_policy::reference_internal, rdoc::entry)
+        .def("entry", overload_cast<size_t, size_t>(&Matrix::operator()),
+            pybind11::return_value_policy::reference_internal,
+            rdoc::entry) // deprecated
         .def("transpose", &Matrix::transpose, rdoc::transpose)
         .def("swapRows", &Matrix::swapRows,
             "first"_a, "second"_a, "fromCol"_a = 0, rdoc::swapRows)

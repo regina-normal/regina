@@ -478,6 +478,9 @@ Version 8.0  [ TODO ]
             - This class now formally supports empty matrices (of size 0×k,
               k×0, or 0×0).  Because of this, the routine initialised()
               no longer makes sense and has been removed completely.
+            - You can now read, write and modify matrix entries in-place
+              using the more natural syntax `matrix(row, column)` in C++,
+              or `matrix[row, column]` in Python.
             - New addition and subtraction operators +, -, += and -=.
             - New unary negation operator -.
             - New scalar multiplication operators * and *=.

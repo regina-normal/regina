@@ -474,13 +474,12 @@ class Matrix : public Output<Matrix<T>> {
          * Returns a read-write reference to the entry at the given
          * row and column.  Rows and columns are numbered beginning at zero.
          *
-         * \python In general, to assign values to matrix elements you
-         * should use the Python-only set() routine.  This entry() routine does
-         * give read-write access to matrix elements in Python, but it does
-         * not allow them to be set using the assignment operator.
-         * In other words, code such as `matrix.entry(r, c).negate()`
-         * will work, but `matrix.entry(r, c) = value` will not; instead
-         * you will need to call `matrix.set(r, c, value)`.
+         * \python In Python, this is the square bracket operator,
+         * not the round bracket operator; that is, Python users can access
+         * entries through the syntax `matrix[row, column]`.
+         * Moreover (unlike the old entry() routine from Regina 7.x),
+         * this operator can also _set_ entries; that is, you can write
+         * `matrix[row, column] = value`.
          *
          * \param row the row of the desired entry; this must be between
          * 0 and `rows()-1` inclusive.
@@ -488,36 +487,74 @@ class Matrix : public Output<Matrix<T>> {
          * between 0 and `columns()-1` inclusive.
          * \return a reference to the entry in the given row and column.
          */
-        T& entry(size_t row, size_t column) {
+        T& operator () (size_t row, size_t column) {
             return data_[row * cols_ + column];
         }
         /**
          * Returns a read-only reference to the entry at the given
          * row and column.  Rows and columns are numbered beginning at zero.
          *
+         * \nopython In Python, only the read-write version of this operator
+         * is available (not this read-only operator).  Note also that this
+         * operator uses square brackets in Python (not round brackets).
+         *
          * \param row the row of the desired entry; this must be between
          * 0 and `rows()-1` inclusive.
          * \param column the column of the desired entry; this must be
          * between 0 and `columns()-1` inclusive.
          * \return a reference to the entry in the given row and column.
          */
-        const T& entry(size_t row, size_t column) const {
+        const T& operator () (size_t row, size_t column) const {
+            return data_[row * cols_ + column];
+        }
+
+        /**
+         * Deprecated function that returns a read-write reference to the entry
+         * at the given row and column.
+         *
+         * \deprecated You can now use the syntax `matrix(row, column)` in C++
+         * or `matrix[row, column]` in Python.
+         *
+         * \python The square bracket operator is more robust, and supports
+         * reading, writing and in-place modification.  This deprecated entry()
+         * function is more limited: it can be used to read values or modify
+         * them in-place (e.g., `matrix.entry(r, c).negate()`), but it cannot
+         * be used to assign values to entries (e.g., `matrix.entry(r, c) = 1`).
+         *
+         * \param row the row of the desired entry; this must be between
+         * 0 and `rows()-1` inclusive.
+         * \param column the column of the desired entry; this must be
+         * between 0 and `columns()-1` inclusive.
+         * \return a reference to the entry in the given row and column.
+         */
+        [[deprecated]] T& entry(size_t row, size_t column) {
+            return data_[row * cols_ + column];
+        }
+        /**
+         * Deprecated function that returns a read-only reference to the entry
+         * at the given row and column.
+         *
+         * \deprecated You can now use the syntax `matrix(row, column)`
+         * instead of this deprecated syntax `matrix.entry(row, column)`.
+         *
+         * \param row the row of the desired entry; this must be between
+         * 0 and `rows()-1` inclusive.
+         * \param column the column of the desired entry; this must be
+         * between 0 and `columns()-1` inclusive.
+         * \return a reference to the entry in the given row and column.
+         */
+        [[deprecated]] const T& entry(size_t row, size_t column) const {
             return data_[row * cols_ + column];
         }
 #ifdef __APIDOCS
         /**
-         * Python-only routine that sets the entry at the given row and column.
-         * Rows and columns are numbered beginning at zero.
+         * Deprecated Python-only routine that sets the entry at the given row
+         * and column.
          *
-         * \nocpp For C++ users, entry() is used for both reading and
-         * writing: just write `entry(row, column) = value`.
+         * \deprecated Python users can now assign values to matrix entries
+         * using the more intuitive syntax `matrix[row, column] = value`.
          *
-         * \python In general, to assign values to matrix elements you
-         * should use the syntax `matrix.set(row, column, value)`.  The entry()
-         * routine does give read-write access to matrix elements in Python,
-         * but it does not allow them to be set using the assignment operator.
-         * In other words, code such as `matrix.entry(r, c).negate()`
-         * will work, but `matrix.entry(r, c) = value` will not.
+         * \nocpp C++ users should use the syntax `matrix(row, column) = value`.
          *
          * \param row the row of the entry to set; this must be between
          * 0 and `rows()-1` inclusive.
@@ -525,7 +562,7 @@ class Matrix : public Output<Matrix<T>> {
          * between 0 and `columns()-1` inclusive.
          * \param value the new entry to place in the given row and column.
          */
-        void set(size_t row, size_t column, const T& value);
+        [[deprecated]] void set(size_t row, size_t column, const T& value);
 #endif
 
         /**
