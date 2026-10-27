@@ -642,6 +642,22 @@ TEST_F(LaurentTest, moveThenAssign) {
                     validate(x, d);
                     validate(y, c);
                 }
+                {
+                    L x(c);
+                    validate(x, c);
+                    L y;
+                    if (junk != cases.end()) {
+                        y = *junk;
+                        validate(y, *junk);
+                    } else {
+                        validateZero(y);
+                    }
+
+                    y = std::move(x);
+                    x = L(d);
+                    validate(x, d);
+                    validate(y, c);
+                }
             }
 
             if (junk == cases.end())
@@ -1268,32 +1284,27 @@ TEST_F(LaurentTest, negate) {
         SCOPED_TRACE_REGINA(c);
         if (c.isZero()) {
             validateZero(-c);
+            validateZero(-L(c));
 
             L x(c);
             x.negate();
             validateZero(x);
-            validateZero(-c);
-            validateZero(-std::move(x));
         } else {
             L neg = -c;
             validate(neg);
+
             EXPECT_FALSE(neg.isZero());
             EXPECT_EQ(neg.minExp(), c.minExp());
             EXPECT_EQ(neg.maxExp(), c.maxExp());
             for (long i = c.minExp(); i <= c.maxExp(); ++i)
                 EXPECT_EQ(neg[i], -c[i]);
 
-            {
-                L x(c);
-                validate(-std::move(x), neg);
-            }
+            validate(-L(c), neg);
             {
                 L x(c);
                 x.negate();
                 validate(x, neg);
             }
-
-            validateZero(c + neg);
         }
     }
 }

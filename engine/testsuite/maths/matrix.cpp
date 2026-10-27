@@ -422,6 +422,22 @@ void verifyMoveThenAssign() {
                     validate(x, d);
                     validate(y, c);
                 }
+                {
+                    Matrix<T> x(c);
+                    validate(x, c);
+                    Matrix<T> y;
+                    if (junk != tests.cases.end()) {
+                        y = *junk;
+                        validate(y, junk->get());
+                    } else {
+                        validateEmpty(y);
+                    }
+
+                    y = std::move(x);
+                    x = Matrix<T>(d);
+                    validate(x, d);
+                    validate(y, c);
+                }
             }
 
             if (junk == tests.cases.end())

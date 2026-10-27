@@ -59,7 +59,9 @@ template <CoefficientDomain T> class Laurent;
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
- * even when passing or returning objects by value.
+ * even when passing or returning objects by value.  If a Laurent2 object is
+ * moved from, it can later be reused by assigning it a new value or by
+ * calling one of the initialisation functions init() or initExp().
  *
  * The underlying storage method for this class is sparse: only the
  * non-zero coefficients are stored.

@@ -375,6 +375,7 @@ Version 8.0  [ TODO ]
               native C++ integers.
             - Many optimisations to this class, including rvalue variants of
               many operations.
+            - New routine validate(), for use in test suites.
         Class LightweightSequence<T>:
             - Removed the inner class SubsequenceCompareFirst<...>.
               This was a very specialised class designed specifically for

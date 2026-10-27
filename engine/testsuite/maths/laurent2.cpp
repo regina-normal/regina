@@ -41,13 +41,21 @@ using regina::Laurent2;
 using L = Laurent2<Integer>;
 using Term = std::pair<std::pair<long, long>, Integer>;
 
+// An integer that cannot fit into 128 bits.
+// We split the digits into chunks to not break syntax highlighting.
+#define BIG "5421309874" "5789403215" "6654013103" "5798756432" "1035741817"
+
 class Laurent2Test : public testing::Test {
     protected:
+        // An integer that cannot fit into 128 bits.
+        const Integer bigInt { BIG };
+
         const L zero {};
         const L one { {0, 0, 1} };
         const L two { {0, 0, 2} };
         const L x2 { {2, 0, 1} };
         const L xy { {1, 1, 1} };
+        const L xy2 { {1, 2, 1} };
         const L a { {0, 0, 1}, {1, 2, -2}, {-2, -1, 3} };
         const L b { {1, 0, 2}, {1, 2, -4}, {0, -1, -2} };
 
@@ -123,6 +131,144 @@ void validate(const L& poly, const L& from, TranslateTerm&& translate) {
             EXPECT_EQ(*pit++, translate(*fit++));
         EXPECT_EQ(pit, poly.end());
         EXPECT_EQ(fit, from.end());
+    }
+}
+
+TEST_F(Laurent2Test, moveThenAssign) {
+    // Here we test both move-then-assign and move-then-init.
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+
+        // Here *junk indicates the initial value of y.  The point of this is
+        // to ensure that, when moving x into y, we don't end up with unwanted
+        // residue from this junk living within x.
+        //
+        // We also allow junk to be cases.end() which means that y should be
+        // default constructed (hence the awkward structure of this loop).
+        auto junk = cases.begin();
+        while (true) {
+            {
+                L x(c);
+                validate(x, c);
+                L y;
+                if (junk != cases.end()) {
+                    y = *junk;
+                    validate(y, *junk);
+                } else {
+                    validateZero(y);
+                }
+
+                y = std::move(x);
+                x = 3;
+                validate(x, L(3));
+                validate(y, c);
+            }
+            {
+                L x(c);
+                validate(x, c);
+                L y;
+                if (junk != cases.end()) {
+                    y = *junk;
+                    validate(y, *junk);
+                } else {
+                    validateZero(y);
+                }
+
+                y = std::move(x);
+                x = bigInt;
+                validate(x, L(bigInt));
+                validate(y, c);
+            }
+            {
+                L x(c);
+                validate(x, c);
+                L y;
+                if (junk != cases.end()) {
+                    y = *junk;
+                    validate(y, *junk);
+                } else {
+                    validateZero(y);
+                }
+
+                y = std::move(x);
+                Integer i(bigInt);
+                x = std::move(i);
+                validate(x, L(bigInt));
+                validate(y, c);
+            }
+            {
+                L x(c);
+                validate(x, c);
+                L y;
+                if (junk != cases.end()) {
+                    y = *junk;
+                    validate(y, *junk);
+                } else {
+                    validateZero(y);
+                }
+
+                y = std::move(x);
+                x.init();
+                validateZero(x);
+                validate(y, c);
+            }
+            {
+                L x(c);
+                validate(x, c);
+                L y;
+                if (junk != cases.end()) {
+                    y = *junk;
+                    validate(y, *junk);
+                } else {
+                    validateZero(y);
+                }
+
+                y = std::move(x);
+                x.initExp(1, 2);
+                validate(x, xy2);
+                validate(y, c);
+            }
+
+            for (const L& d : cases) {
+                SCOPED_TRACE_REGINA(d);
+                {
+                    L x(c);
+                    validate(x, c);
+                    L y;
+                    if (junk != cases.end()) {
+                        y = *junk;
+                        validate(y, *junk);
+                    } else {
+                        validateZero(y);
+                    }
+
+                    y = std::move(x);
+                    x = d;
+                    validate(x, d);
+                    validate(y, c);
+                }
+                {
+                    L x(c);
+                    validate(x, c);
+                    L y;
+                    if (junk != cases.end()) {
+                        y = *junk;
+                        validate(y, *junk);
+                    } else {
+                        validateZero(y);
+                    }
+
+                    y = std::move(x);
+                    x = L(d);
+                    validate(x, d);
+                    validate(y, c);
+                }
+            }
+
+            if (junk == cases.end())
+                break;
+            ++junk;
+        }
     }
 }
 
@@ -234,20 +380,6 @@ void verifyMult(const L& x, const L& y,
 }
 
 TEST_F(Laurent2Test, arithmetic) {
-    verifyMult(zero, 0, {});
-    verifyMult(zero, 1, {});
-    verifyMult(zero, 2, {});
-    verifyMult(a, 0, {});
-    verifyMult(a, 1, { {0, 0, 1}, {1, 2, -2}, {-2, -1, 3} });
-    verifyMult(a, -1, { {0, 0, -1}, {1, 2, 2}, {-2, -1, -3} });
-    verifyMult(a, 2, { {0, 0, 2}, {1, 2, -4}, {-2, -1, 6} });
-
-    verifyDiv(zero, 1, {});
-    verifyDiv(zero, 2, {});
-    verifyDiv(a, 1, { {0, 0, 1}, {1, 2, -2}, {-2, -1, 3} });
-    verifyDiv(a, -1, { {0, 0, -1}, {1, 2, 2}, {-2, -1, -3} });
-    verifyDiv(b, 2, { {1, 0, 1}, {1, 2, -2}, {0, -1, -1} });
-
     verifyMult(zero, zero, {});
     verifyMult(zero, a, {});
     verifyMult({ {1, 0, 1}, {0, -1, 1} },
@@ -275,6 +407,194 @@ TEST_F(Laurent2Test, negate) {
             L x(c);
             x.negate();
             validate(x, neg);
+        }
+    }
+}
+
+template <regina::CppInteger Native>
+void verifyNativeProduct(const L& poly, const Integer& scalar,
+        const L& product) {
+    SCOPED_TRACE_TYPE(Native);
+
+    Native native;
+    if (scalar >= std::numeric_limits<Native>::min() &&
+            scalar <= std::numeric_limits<Native>::max()) {
+        EXPECT_NO_THROW({ native = scalar.safeValue<Native>(); });
+    } else {
+        EXPECT_THROW({ scalar.safeValue<Native>(); }, regina::IntegerOverflow);
+        return;
+    }
+
+    validate(poly * native, product);
+    validate(L(poly) * native, product);
+    validate(native * poly, product);
+    validate(native * L(poly), product);
+    {
+        L x(poly);
+        validate(x *= native, product);
+    }
+}
+
+template <regina::CppInteger Native>
+void verifyNativeQuotient(const L& poly, const Integer& scalar,
+        const L& quotient) {
+    SCOPED_TRACE_TYPE(Native);
+
+    Native native;
+    if (scalar >= std::numeric_limits<Native>::min() &&
+            scalar <= std::numeric_limits<Native>::max()) {
+        EXPECT_NO_THROW({ native = scalar.safeValue<Native>(); });
+    } else {
+        EXPECT_THROW({ scalar.safeValue<Native>(); }, regina::IntegerOverflow);
+        return;
+    }
+
+    validate(poly / native, quotient);
+    validate(L(poly) / native, quotient);
+    {
+        L x(poly);
+        validate(x /= native, quotient);
+    }
+}
+
+void verifyScalarMultiplyDivide(const L& poly, const Integer& scalar) {
+    SCOPED_TRACE_REGINA(scalar);
+
+    const L product = poly * scalar;
+    if (scalar == 0) {
+        validateZero(product);
+    } else {
+        validate(product, poly, [&scalar](const Term& term) {
+            return std::make_pair(term.first, term.second * scalar);
+        });
+    }
+    validate(L(poly) * scalar, product);
+    validate(scalar * poly, product);
+    validate(scalar * L(poly), product);
+    {
+        L x(poly);
+        validate(x *= scalar, product);
+    }
+
+    verifyNativeProduct<int8_t>(poly, scalar, product);
+    verifyNativeProduct<int16_t>(poly, scalar, product);
+    verifyNativeProduct<int32_t>(poly, scalar, product);
+    verifyNativeProduct<int64_t>(poly, scalar, product);
+    #ifdef INT128_AVAILABLE
+    verifyNativeProduct<regina::Int128>(poly, scalar, product);
+    #endif
+
+    if (scalar.sign() >= 0) {
+        verifyNativeProduct<uint8_t>(poly, scalar, product);
+        verifyNativeProduct<uint16_t>(poly, scalar, product);
+        verifyNativeProduct<uint32_t>(poly, scalar, product);
+        verifyNativeProduct<uint64_t>(poly, scalar, product);
+        #ifdef INT128_AVAILABLE
+        verifyNativeProduct<regina::UInt128>(poly, scalar, product);
+        #endif
+    }
+
+    // For now, Laurent2 division requires a non-zero divisor.
+    if (scalar != 0) {
+        const L quotient = poly / scalar;
+        if (poly.isZero()) {
+            validateZero(quotient);
+        } else {
+            validate(quotient);
+            EXPECT_LE(quotient.countTerms(), poly.countTerms());
+
+            auto pit = poly.begin();
+            auto qit = quotient.begin();
+            while (pit != poly.end() || qit != quotient.end()) {
+                if (pit != poly.end() && qit != quotient.end() &&
+                        pit->first == qit->first) {
+                    auto q = (pit++)->second / scalar;
+                    EXPECT_NE(q, 0);
+                    EXPECT_EQ((qit++)->second, q);
+                } else if (pit != poly.end()) {
+                    // We might have a coefficient which, when divided by our
+                    // scalar using integer division, becomes zero.
+                    EXPECT_GT(pit->second, -scalar.abs());
+                    EXPECT_LT(pit->second, scalar.abs());
+                    EXPECT_EQ((pit++)->second / scalar, 0);
+                } else {
+                    // We have a deeper mismatch between terms that we do not
+                    // know how to recover from.
+                    ADD_FAILURE();
+                    break;
+                }
+            }
+        }
+        validate(L(poly) / scalar, quotient);
+        {
+            L x(poly);
+            validate(x /= scalar, quotient);
+        }
+
+        verifyNativeQuotient<int8_t>(poly, scalar, quotient);
+        verifyNativeQuotient<int16_t>(poly, scalar, quotient);
+        verifyNativeQuotient<int32_t>(poly, scalar, quotient);
+        verifyNativeQuotient<int64_t>(poly, scalar, quotient);
+        #ifdef INT128_AVAILABLE
+        verifyNativeQuotient<regina::Int128>(poly, scalar, quotient);
+        #endif
+
+        if (scalar.sign() >= 0) {
+            verifyNativeQuotient<uint8_t>(poly, scalar, quotient);
+            verifyNativeQuotient<uint16_t>(poly, scalar, quotient);
+            verifyNativeQuotient<uint32_t>(poly, scalar, quotient);
+            verifyNativeQuotient<uint64_t>(poly, scalar, quotient);
+            #ifdef INT128_AVAILABLE
+            verifyNativeQuotient<regina::UInt128>(poly, scalar, quotient);
+            #endif
+        }
+    }
+}
+
+TEST_F(Laurent2Test, scalarMultiplyDivide) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+
+        for (int i = -3; i <= 3; ++i)
+            verifyScalarMultiplyDivide(c, i);
+
+        // Run through boundaries and "midpoints" for {8,16,32,64,128}-bit ints:
+        Integer pow2 = 256; // 2^8
+        Integer halfPow2 = 128;
+        Integer quarterPow2 = 64;
+        for (int i = 0; i < 5; ++i) {
+            // pow2 = 2^bits = 2^{2^b} for some b
+            // halfPow2 = 2^(bits-1)
+            // quarterPow2 = 2^(bits-2)
+            for (int j = -1; j <= 1; ++j) {
+                verifyScalarMultiplyDivide(c, pow2 + j);
+                verifyScalarMultiplyDivide(c, -pow2 + j);
+                verifyScalarMultiplyDivide(c, halfPow2 + j);
+                verifyScalarMultiplyDivide(c, -halfPow2 + j);
+                verifyScalarMultiplyDivide(c, quarterPow2 + j);
+                verifyScalarMultiplyDivide(c, -quarterPow2 + j);
+            }
+            // Double the number of bits in pow2:
+            quarterPow2 *= pow2;
+            halfPow2 *= pow2;
+            pow2 *= pow2;
+        }
+
+        verifyScalarMultiplyDivide(c, bigInt);
+        verifyScalarMultiplyDivide(c, -bigInt);
+
+        // Test expected arithmetic properties:
+        validateZero(c * 0);
+        validate(c * 1, c);
+        validate(c * -1, -c);
+        validate(c * 2, c + c);
+
+        if (! c.isZero()) {
+            verifyScalarMultiplyDivide(c, c.begin()->second);
+
+            L c0 = c / c.begin()->second;
+            EXPECT_EQ(c0.begin()->first, c.begin()->first);
+            EXPECT_EQ(c0.begin()->second, 1);
         }
     }
 }
@@ -438,3 +758,27 @@ TEST_F(Laurent2Test, tightEncoding) {
         TightEncodingTest<L>::verifyTightEncoding(c);
     }
 }
+
+TEST_F(Laurent2Test, swap) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        for (const L& d : cases) {
+            SCOPED_TRACE_REGINA(d);
+            {
+                L x(c);
+                L y(d);
+                x.swap(y);
+                validate(x, d);
+                validate(y, c);
+            }
+            {
+                L x(c);
+                L y(d);
+                swap(x, y);
+                validate(x, d);
+                validate(y, c);
+            }
+        }
+    }
+}
+
