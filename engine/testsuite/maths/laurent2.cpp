@@ -31,290 +31,292 @@
 #include "maths/integer.h"
 #include "maths/laurent2.h"
 #include "utilities/stringutils.h"
+#include <array>
 
 #include "utilities/tightencodingtest.h"
 
 using regina::Integer;
 using regina::Laurent2;
 
+using L = Laurent2<Integer>;
+
 class Laurent2Test : public testing::Test {
     protected:
-        Laurent2<Integer> zero {};
-        Laurent2<Integer> one { {0, 0, 1} };
-        Laurent2<Integer> two { {0, 0, 2} };
-        Laurent2<Integer> x2 { {2, 0, 1} };
-        Laurent2<Integer> xy { {1, 1, 1} };
-        Laurent2<Integer> a { {0, 0, 1}, {1, 2, -2}, {-2, -1, 3} };
-        Laurent2<Integer> b { {1, 0, 2}, {1, 2, -4}, {0, -1, -2} };
+        L zero {};
+        L one { {0, 0, 1} };
+        L two { {0, 0, 2} };
+        L x2 { {2, 0, 1} };
+        L xy { {1, 1, 1} };
+        L a { {0, 0, 1}, {1, 2, -2}, {-2, -1, 3} };
+        L b { {1, 0, 2}, {1, 2, -4}, {0, -1, -2} };
 
-        template <typename T>
-        static void verifyEqual(const Laurent2<T>& result,
-                std::initializer_list<std::tuple<long, long, T>> coeffs) {
-            SCOPED_TRACE_REGINA(result);
-
-            Laurent2<T> expect(coeffs);
-            SCOPED_TRACE_REGINA(expect);
-
-            EXPECT_EQ(result, expect);
-            EXPECT_FALSE(result != expect);
-            EXPECT_EQ(result.str(), expect.str());
-            if (coeffs.size() == 0) {
-                EXPECT_TRUE(result.isZero());
-            } else {
-                EXPECT_FALSE(result.isZero());
-            }
-        }
-
-        template <typename T>
-        void verifyPlus(const Laurent2<T>& x, const Laurent2<T>& y,
-                std::initializer_list<std::tuple<long, long, T>> coeffs) {
-            SCOPED_TRACE_REGINA(x);
-            SCOPED_TRACE_REGINA(y);
-
-            verifyEqual(x + y, coeffs);
-            verifyEqual((x + zero) + y, coeffs);
-            verifyEqual(x + (y + zero), coeffs);
-            verifyEqual((x + zero) + (y + zero), coeffs);
-
-            verifyEqual(y + x, coeffs);
-            verifyEqual((y + zero) + x, coeffs);
-            verifyEqual(y + (x + zero), coeffs);
-            verifyEqual((y + zero) + (x + zero), coeffs);
-
-            {
-                Laurent2<T> z(x);
-                verifyEqual(z += y, coeffs);
-            }
-            {
-                Laurent2<T> z(x);
-                verifyEqual(z += (y + zero), coeffs);
-            }
-            {
-                Laurent2<T> z(y);
-                verifyEqual(z += x, coeffs);
-            }
-            {
-                Laurent2<T> z(y);
-                verifyEqual(z += (x + zero), coeffs);
-            }
-        }
-
-        template <typename T>
-        void verifyMinus(const Laurent2<T>& x, const Laurent2<T>& y,
-                std::initializer_list<std::tuple<long, long, T>> coeffs) {
-            SCOPED_TRACE_REGINA(x);
-            SCOPED_TRACE_REGINA(y);
-
-            verifyEqual(x - y, coeffs);
-            verifyEqual((x + zero) - y, coeffs);
-            verifyEqual(x - (y + zero), coeffs);
-            verifyEqual((x + zero) - (y + zero), coeffs);
-
-            {
-                Laurent2<T> z(x);
-                verifyEqual(z -= y, coeffs);
-            }
-            {
-                Laurent2<T> z(x);
-                verifyEqual(z -= (y + zero), coeffs);
-            }
-
-            verifyPlus(x, -y, coeffs);
-            {
-                Laurent2<T> z(y);
-                z.negate();
-                verifyPlus(x, z, coeffs);
-            }
-        }
-
-        template <typename T>
-        void verifyMult(const Laurent2<T>& x, const T& y,
-                std::initializer_list<std::tuple<long, long, T>> coeffs) {
-            SCOPED_TRACE_REGINA(x);
-            SCOPED_TRACE_REGINA(y);
-
-            verifyEqual(x * y, coeffs);
-            verifyEqual((x + zero) * y, coeffs);
-            verifyEqual(y * x, coeffs);
-            verifyEqual(y * (x + zero), coeffs);
-            {
-                Laurent2<T> z(x);
-                verifyEqual(z *= y, coeffs);
-            }
-        }
-
-        template <typename T, regina::CppInteger U>
-        void verifyMult(const Laurent2<T>& x, U y,
-                std::initializer_list<std::tuple<long, long, T>> coeffs) {
-            SCOPED_TRACE_REGINA(x);
-            SCOPED_TRACE_INTEGER(y);
-
-            verifyEqual(x * y, coeffs);
-            verifyEqual((x + zero) * y, coeffs);
-            verifyEqual(y * x, coeffs);
-            verifyEqual(y * (x + zero), coeffs);
-            {
-                Laurent2<T> z(x);
-                verifyEqual(z *= y, coeffs);
-            }
-
-            verifyMult(x, T(y), coeffs);
-        }
-
-        template <typename T>
-        void verifyDiv(const Laurent2<T>& x, const T& y,
-                std::initializer_list<std::tuple<long, long, T>> coeffs) {
-            SCOPED_TRACE_REGINA(x);
-            SCOPED_TRACE_REGINA(y);
-
-            verifyEqual(x / y, coeffs);
-            verifyEqual((x + zero) / y, coeffs);
-            {
-                Laurent2<T> z(x);
-                verifyEqual(z /= y, coeffs);
-            }
-        }
-
-        template <typename T>
-        void verifyMult(const Laurent2<T>& x, const Laurent2<T>& y,
-                std::initializer_list<std::tuple<long, long, T>> coeffs) {
-            SCOPED_TRACE_REGINA(x);
-            SCOPED_TRACE_REGINA(y);
-
-            verifyEqual(x * y, coeffs);
-            verifyEqual((x + zero) * y, coeffs);
-            verifyEqual(x * (y + zero), coeffs);
-            verifyEqual((x + zero) * (y + zero), coeffs);
-
-            verifyEqual(y * x, coeffs);
-            verifyEqual((y + zero) * x, coeffs);
-            verifyEqual(y * (x + zero), coeffs);
-            verifyEqual((y + zero) * (x + zero), coeffs);
-
-            {
-                Laurent2<T> z(x);
-                verifyEqual(z *= y, coeffs);
-            }
-            {
-                Laurent2<T> z(x);
-                verifyEqual(z *= (y + zero), coeffs);
-            }
-            {
-                Laurent2<T> z(y);
-                verifyEqual(z *= x, coeffs);
-            }
-            {
-                Laurent2<T> z(y);
-                verifyEqual(z *= (x + zero), coeffs);
-            }
-        }
+        const std::array<std::reference_wrapper<const L>, 7> cases {
+            std::cref(zero), std::cref(one), std::cref(two),
+            std::cref(x2), std::cref(xy), std::cref(a), std::cref(b) };
 };
 
-TEST_F(Laurent2Test, set) {
-    Laurent2<Integer> x { {0, 0, 1}, {1, -1, 2} };
+static void validate(const L& poly,
+        std::initializer_list<std::tuple<long, long, Integer>> coeffs) {
+    // We assume here that coeffs only contains non-zero coefficients, and
+    // does not contain any duplicate exponent pairs.
 
-    verifyEqual<Integer>(x, { {0, 0, 1}, {1, -1, 2} });
+    SCOPED_TRACE_REGINA(poly);
+
+    // There's very little that can go wrong with the internal data structures
+    // of Laurent2.  We therefore just focus on verifying the coefficient map.
+
+    EXPECT_EQ(poly.countTerms(), coeffs.size());
+    if (coeffs.size() == 0) {
+        EXPECT_TRUE(poly.isZero());
+    } else {
+        EXPECT_FALSE(poly.isZero());
+        for (const auto& c : coeffs)
+            EXPECT_EQ(poly(std::get<0>(c), std::get<1>(c)), std::get<2>(c));
+    }
+}
+
+void verifyPlus(const L& x, const L& y,
+        std::initializer_list<std::tuple<long, long, Integer>> coeffs) {
+    SCOPED_TRACE_REGINA(x);
+    SCOPED_TRACE_REGINA(y);
+
+    const L zero;
+
+    validate(x + y, coeffs);
+    validate((x + zero) + y, coeffs);
+    validate(x + (y + zero), coeffs);
+    validate((x + zero) + (y + zero), coeffs);
+
+    validate(y + x, coeffs);
+    validate((y + zero) + x, coeffs);
+    validate(y + (x + zero), coeffs);
+    validate((y + zero) + (x + zero), coeffs);
+
+    {
+        L z(x);
+        validate(z += y, coeffs);
+    }
+    {
+        L z(x);
+        validate(z += (y + zero), coeffs);
+    }
+    {
+        L z(y);
+        validate(z += x, coeffs);
+    }
+    {
+        L z(y);
+        validate(z += (x + zero), coeffs);
+    }
+}
+
+void verifyMinus(const L& x, const L& y,
+        std::initializer_list<std::tuple<long, long, Integer>> coeffs) {
+    SCOPED_TRACE_REGINA(x);
+    SCOPED_TRACE_REGINA(y);
+
+    const L zero;
+
+    validate(x - y, coeffs);
+    validate((x + zero) - y, coeffs);
+    validate(x - (y + zero), coeffs);
+    validate((x + zero) - (y + zero), coeffs);
+
+    {
+        L z(x);
+        validate(z -= y, coeffs);
+    }
+    {
+        L z(x);
+        validate(z -= (y + zero), coeffs);
+    }
+
+    verifyPlus(x, -y, coeffs);
+    {
+        L z(y);
+        z.negate();
+        verifyPlus(x, z, coeffs);
+    }
+}
+
+void verifyMult(const L& x, const Integer& y,
+        std::initializer_list<std::tuple<long, long, Integer>> coeffs) {
+    SCOPED_TRACE_REGINA(x);
+    SCOPED_TRACE_REGINA(y);
+
+    const L zero;
+
+    validate(x * y, coeffs);
+    validate((x + zero) * y, coeffs);
+    validate(y * x, coeffs);
+    validate(y * (x + zero), coeffs);
+    {
+        L z(x);
+        validate(z *= y, coeffs);
+    }
+}
+
+template <regina::CppInteger U>
+void verifyMult(const L& x, U y,
+        std::initializer_list<std::tuple<long, long, Integer>> coeffs) {
+    SCOPED_TRACE_REGINA(x);
+    SCOPED_TRACE_INTEGER(y);
+
+    const L zero;
+
+    validate(x * y, coeffs);
+    validate((x + zero) * y, coeffs);
+    validate(y * x, coeffs);
+    validate(y * (x + zero), coeffs);
+    {
+        L z(x);
+        validate(z *= y, coeffs);
+    }
+
+    verifyMult(x, Integer(y), coeffs);
+}
+
+void verifyDiv(const L& x, const Integer& y,
+        std::initializer_list<std::tuple<long, long, Integer>> coeffs) {
+    SCOPED_TRACE_REGINA(x);
+    SCOPED_TRACE_REGINA(y);
+
+    const L zero;
+
+    validate(x / y, coeffs);
+    validate((x + zero) / y, coeffs);
+    {
+        L z(x);
+        validate(z /= y, coeffs);
+    }
+}
+
+void verifyMult(const L& x, const L& y,
+        std::initializer_list<std::tuple<long, long, Integer>> coeffs) {
+    SCOPED_TRACE_REGINA(x);
+    SCOPED_TRACE_REGINA(y);
+
+    const L zero;
+
+    validate(x * y, coeffs);
+    validate((x + zero) * y, coeffs);
+    validate(x * (y + zero), coeffs);
+    validate((x + zero) * (y + zero), coeffs);
+
+    validate(y * x, coeffs);
+    validate((y + zero) * x, coeffs);
+    validate(y * (x + zero), coeffs);
+    validate((y + zero) * (x + zero), coeffs);
+
+    {
+        L z(x);
+        validate(z *= y, coeffs);
+    }
+    {
+        L z(x);
+        validate(z *= (y + zero), coeffs);
+    }
+    {
+        L z(y);
+        validate(z *= x, coeffs);
+    }
+    {
+        L z(y);
+        validate(z *= (x + zero), coeffs);
+    }
+}
+
+TEST_F(Laurent2Test, set) {
+    L x { {0, 0, 1}, {1, -1, 2} };
+
+    validate(x, { {0, 0, 1}, {1, -1, 2} });
     x.set(-1, 1, 3);
-    verifyEqual<Integer>(x, { {0, 0, 1}, {1, -1, 2}, {-1, 1, 3} });
+    validate(x, { {0, 0, 1}, {1, -1, 2}, {-1, 1, 3} });
     x.set(0, 0, 0);
-    verifyEqual<Integer>(x, { {1, -1, 2}, {-1, 1, 3} });
+    validate(x, { {1, -1, 2}, {-1, 1, 3} });
     x.set(1, -1, 0);
-    verifyEqual<Integer>(x, { {-1, 1, 3} });
+    validate(x, { {-1, 1, 3} });
     x.set(1, -1, 0);
-    verifyEqual<Integer>(x, { {-1, 1, 3} });
+    validate(x, { {-1, 1, 3} });
     x.set(-1, 1, 0);
-    verifyEqual<Integer>(x, {});
+    validate(x, {});
     x.set(0, 0, 0);
-    verifyEqual<Integer>(x, {});
+    validate(x, {});
     x.set(-1, -1, 1);
-    verifyEqual<Integer>(x, { {-1, -1, 1} });
+    validate(x, { {-1, -1, 1} });
 }
 
 TEST_F(Laurent2Test, arithmetic) {
-    verifyEqual<Integer>(zero, {});
+    validate(zero, {});
 
-    verifyEqual<Integer>(-zero, {});
-    verifyEqual<Integer>(-a, { {0, 0, -1}, {1, 2, 2}, {-2, -1, -3} });
+    validate(-zero, {});
+    validate(-a, { {0, 0, -1}, {1, 2, 2}, {-2, -1, -3} });
 
-    verifyPlus<Integer>(zero, zero, {});
-    verifyPlus<Integer>(one, two, { {0, 0, 3} });
-    verifyPlus<Integer>(a, zero,
-        { {0, 0, 1}, {1, 2, -2}, {-2, -1, 3} });
-    verifyPlus<Integer>(a, one,
-        { {0, 0, 2}, {1, 2, -2}, {-2, -1, 3} });
-    verifyPlus<Integer>(b, one,
-        { {0, 0, 1}, {1, 0, 2}, {1, 2, -4}, {0, -1, -2} });
-    verifyPlus<Integer>(a, b,
+    verifyPlus(zero, zero, {});
+    verifyPlus(one, two, { {0, 0, 3} });
+    verifyPlus(a, zero, { {0, 0, 1}, {1, 2, -2}, {-2, -1, 3} });
+    verifyPlus(a, one, { {0, 0, 2}, {1, 2, -2}, {-2, -1, 3} });
+    verifyPlus(b, one, { {0, 0, 1}, {1, 0, 2}, {1, 2, -4}, {0, -1, -2} });
+    verifyPlus(a, b,
         { {0, 0, 1}, {1, 0, 2}, {1, 2, -6}, {0, -1, -2}, {-2, -1, 3} });
 
-    verifyMinus<Integer>(zero, zero, {});
-    verifyMinus<Integer>(one, two, { {0, 0, -1} });
-    verifyMinus<Integer>(a, zero,
-        { {0, 0, 1}, {1, 2, -2}, {-2, -1, 3} });
-    verifyMinus<Integer>(zero, a,
-        { {0, 0, -1}, {1, 2, 2}, {-2, -1, -3} });
-    verifyMinus<Integer>(a, one,
-        { {1, 2, -2}, {-2, -1, 3} });
-    verifyMinus<Integer>(a, a + a,
-        { {0, 0, -1}, {1, 2, 2}, {-2, -1, -3} });
-    verifyMinus<Integer>(a, b,
+    verifyMinus(zero, zero, {});
+    verifyMinus(one, two, { {0, 0, -1} });
+    verifyMinus(a, zero, { {0, 0, 1}, {1, 2, -2}, {-2, -1, 3} });
+    verifyMinus(zero, a, { {0, 0, -1}, {1, 2, 2}, {-2, -1, -3} });
+    verifyMinus(a, one, { {1, 2, -2}, {-2, -1, 3} });
+    verifyMinus(a, a + a, { {0, 0, -1}, {1, 2, 2}, {-2, -1, -3} });
+    verifyMinus(a, b,
         { {0, 0, 1}, {1, 0, -2}, {1, 2, 2}, {0, -1, 2}, {-2, -1, 3} });
-    verifyMinus<Integer>(2 * a, b,
-        { {0, 0, 2}, {1, 0, -2}, {0, -1, 2}, {-2, -1, 6} });
-    verifyMinus<Integer>(a, a, {});
+    verifyMinus(2 * a, b, { {0, 0, 2}, {1, 0, -2}, {0, -1, 2}, {-2, -1, 6} });
+    verifyMinus(a, a, {});
 
-    verifyMult<Integer>(zero, 0, {});
-    verifyMult<Integer>(zero, 1, {});
-    verifyMult<Integer>(zero, 2, {});
-    verifyMult<Integer>(a, 0, {});
-    verifyMult<Integer>(a, 1, { {0, 0, 1}, {1, 2, -2}, {-2, -1, 3} });
-    verifyMult<Integer>(a, -1, { {0, 0, -1}, {1, 2, 2}, {-2, -1, -3} });
-    verifyMult<Integer>(a, 2, { {0, 0, 2}, {1, 2, -4}, {-2, -1, 6} });
+    verifyMult(zero, 0, {});
+    verifyMult(zero, 1, {});
+    verifyMult(zero, 2, {});
+    verifyMult(a, 0, {});
+    verifyMult(a, 1, { {0, 0, 1}, {1, 2, -2}, {-2, -1, 3} });
+    verifyMult(a, -1, { {0, 0, -1}, {1, 2, 2}, {-2, -1, -3} });
+    verifyMult(a, 2, { {0, 0, 2}, {1, 2, -4}, {-2, -1, 6} });
 
-    verifyDiv<Integer>(zero, 1, {});
-    verifyDiv<Integer>(zero, 2, {});
-    verifyDiv<Integer>(a, 1, { {0, 0, 1}, {1, 2, -2}, {-2, -1, 3} });
-    verifyDiv<Integer>(a, -1, { {0, 0, -1}, {1, 2, 2}, {-2, -1, -3} });
-    verifyDiv<Integer>(b, 2, { {1, 0, 1}, {1, 2, -2}, {0, -1, -1} });
+    verifyDiv(zero, 1, {});
+    verifyDiv(zero, 2, {});
+    verifyDiv(a, 1, { {0, 0, 1}, {1, 2, -2}, {-2, -1, 3} });
+    verifyDiv(a, -1, { {0, 0, -1}, {1, 2, 2}, {-2, -1, -3} });
+    verifyDiv(b, 2, { {1, 0, 1}, {1, 2, -2}, {0, -1, -1} });
 
-    verifyMult<Integer>(zero, zero, {});
-    verifyMult<Integer>(zero, a, {});
-    verifyMult<Integer>({ {1, 0, 1}, {0, -1, 1} },
-                        { {1, 0, 1}, {0, -1, -1} },
-                        { {2, 0, 1}, {0, -2, -1} });
-    verifyMult<Integer>(a, xy, { {1, 1, 1}, {2, 3, -2}, {-1, 0, 3} });
+    verifyMult(zero, zero, {});
+    verifyMult(zero, a, {});
+    verifyMult({ {1, 0, 1}, {0, -1, 1} },
+               { {1, 0, 1}, {0, -1, -1} },
+               { {2, 0, 1}, {0, -2, -1} });
+    verifyMult(a, xy, { {1, 1, 1}, {2, 3, -2}, {-1, 0, 3} });
 
     {
-        Laurent2<Integer> x(x2);
-        verifyEqual<Integer>(x + x, { {2, 0, 2} });
-        verifyEqual<Integer>(x += x, { {2, 0, 2} });
+        L x(x2);
+        validate(x + x, { {2, 0, 2} });
+        validate(x += x, { {2, 0, 2} });
     }
     {
-        Laurent2<Integer> x(x2);
-        verifyEqual<Integer>(x - x, {});
-        verifyEqual<Integer>(x -= x, {});
+        L x(x2);
+        validate(x - x, {});
+        validate(x -= x, {});
     }
     {
-        Laurent2<Integer> x { {0, -1, 1}, {0, 1, 1} };
-        verifyEqual<Integer>(x * x,
-            { {0, -2, 1}, {0, 0, 2}, {0, 2, 1} });
-        verifyEqual<Integer>(x *= x,
-            { {0, -2, 1}, {0, 0, 2}, {0, 2, 1} });
+        L x { {0, -1, 1}, {0, 1, 1} };
+        validate(x * x, { {0, -2, 1}, {0, 0, 2}, {0, 2, 1} });
+        validate(x *= x, { {0, -2, 1}, {0, 0, 2}, {0, 2, 1} });
     }
 }
 
 TEST_F(Laurent2Test, ringConstants) {
     // Verify that the RingTraits constants looks correct.
-    EXPECT_EQ(regina::RingTraits<Laurent2<Integer>>::zero.str(), "0");
-    EXPECT_EQ(regina::RingTraits<Laurent2<Integer>>::one.str(), "1");
+    EXPECT_EQ(regina::RingTraits<L>::zero.str(), "0");
+    EXPECT_EQ(regina::RingTraits<L>::one.str(), "1");
 }
 
 TEST_F(Laurent2Test, tightEncoding) {
-    TightEncodingTest<Laurent2<Integer>>::verifyTightEncoding(zero);
-    TightEncodingTest<Laurent2<Integer>>::verifyTightEncoding(one);
-    TightEncodingTest<Laurent2<Integer>>::verifyTightEncoding(two);
-    TightEncodingTest<Laurent2<Integer>>::verifyTightEncoding(x2);
-    TightEncodingTest<Laurent2<Integer>>::verifyTightEncoding(xy);
-    TightEncodingTest<Laurent2<Integer>>::verifyTightEncoding(a);
-    TightEncodingTest<Laurent2<Integer>>::verifyTightEncoding(b);
+    for (const L& c : cases) {
+        TightEncodingTest<L>::verifyTightEncoding(c);
+    }
 }

@@ -580,6 +580,19 @@ Parameter ``x``:
 Parameter ``y``:
     the second polynomial in the product to add to this.)doc";
 
+// Docstring regina::python::doc::Laurent2::countTerms
+static constexpr const char countTerms[] =
+R"doc(Returns the number of terms with non-zero coefficients in this
+polynomial.
+
+This function runs in constant time. There is no corresponding
+function for single-variable Laurent polynomials, since for the class
+``Laurent<T>`` the internal data structures do not support a constant-
+time query of this type.
+
+Returns:
+    the number of non-zero terms.)doc";
+
 // Docstring regina::python::doc::Laurent2::global_swap
 static constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given polynomials.

@@ -67,6 +67,7 @@ void addLaurent2(pybind11::module_& m) {
         .def("init", overload_cast<>(&Laurent2<Integer>::init), rdoc::init)
         .def("initExp", &Laurent2<Integer>::initExp, rdoc::initExp)
         .def("isZero", &Laurent2<Integer>::isZero, rdoc::isZero)
+        .def("countTerms", &Laurent2<Integer>::countTerms, rdoc::countTerms)
         .def("set", &Laurent2<Integer>::set, rdoc::set)
         .def("swap", &Laurent2<Integer>::swap, rdoc::swap)
         .def("shift", &Laurent2<Integer>::shift, rdoc::shift)

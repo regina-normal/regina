@@ -364,6 +364,7 @@ Version 8.0  [ TODO ]
             - New constructors, assignment operators and comparison operators
               that create or compare against a constant polynomial, given by a
               coefficient of type T or a native C++ integer.
+            - New routine countTerms().
             - New routine addProduct(), which optimises x ±= y * z.
             - New routines shift() and shifted().
             - Deprecated the shift constructor Laurent2(poly, xShift, yShift);

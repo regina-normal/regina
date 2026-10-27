@@ -462,6 +462,21 @@ class Laurent2 :
         }
 
         /**
+         * Returns the number of terms with non-zero coefficients in this
+         * polynomial.
+         *
+         * This function runs in constant time.  There is no corresponding
+         * function for single-variable Laurent polynomials, since for the
+         * class `Laurent<T>` the internal data structures do not support a
+         * constant-time query of this type.
+         *
+         * \return the number of non-zero terms.
+         */
+        size_t countTerms() const {
+            return coeff_.size();
+        }
+
+        /**
          * Returns the given coefficient of this polynomial.
          * There are no restrictions on the exponents \a xExp and \a yExp.
          *
