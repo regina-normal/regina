@@ -29,6 +29,7 @@
  **************************************************************************/
 
 #include "maths/integer.h"
+#include "maths/laurent.h"
 #include "maths/laurent2.h"
 #include "utilities/stringutils.h"
 #include <array>
@@ -53,15 +54,18 @@ class Laurent2Test : public testing::Test {
         const L zero {};
         const L one { {0, 0, 1} };
         const L two { {0, 0, 2} };
+        const L minusOne { {0, 0, -1} };
         const L x2 { {2, 0, 1} };
         const L xy { {1, 1, 1} };
         const L xy2 { {1, 2, 1} };
         const L a { {0, 0, 1}, {1, 2, -2}, {-2, -1, 3} };
         const L b { {1, 0, 2}, {1, 2, -4}, {0, -1, -2} };
 
-        const std::array<std::reference_wrapper<const L>, 7> cases {
+        const std::array<std::reference_wrapper<const L>, 9> cases {
             std::cref(zero), std::cref(one), std::cref(two),
-            std::cref(x2), std::cref(xy), std::cref(a), std::cref(b) };
+            std::cref(minusOne),
+            std::cref(x2), std::cref(xy), std::cref(xy2),
+            std::cref(a), std::cref(b) };
 };
 
 void validate(const L& poly) {
@@ -290,108 +294,6 @@ TEST_F(Laurent2Test, set) {
     validate(x, {});
     x.set(-1, -1, 1);
     validate(x, { {-1, -1, 1} });
-}
-
-void verifyMult(const L& x, const Integer& y,
-        std::initializer_list<std::tuple<long, long, Integer>> coeffs) {
-    SCOPED_TRACE_REGINA(x);
-    SCOPED_TRACE_REGINA(y);
-
-    const L zero;
-
-    validate(x * y, coeffs);
-    validate((x + zero) * y, coeffs);
-    validate(y * x, coeffs);
-    validate(y * (x + zero), coeffs);
-    {
-        L z(x);
-        validate(z *= y, coeffs);
-    }
-}
-
-template <regina::CppInteger U>
-void verifyMult(const L& x, U y,
-        std::initializer_list<std::tuple<long, long, Integer>> coeffs) {
-    SCOPED_TRACE_REGINA(x);
-    SCOPED_TRACE_INTEGER(y);
-
-    const L zero;
-
-    validate(x * y, coeffs);
-    validate((x + zero) * y, coeffs);
-    validate(y * x, coeffs);
-    validate(y * (x + zero), coeffs);
-    {
-        L z(x);
-        validate(z *= y, coeffs);
-    }
-
-    verifyMult(x, Integer(y), coeffs);
-}
-
-void verifyDiv(const L& x, const Integer& y,
-        std::initializer_list<std::tuple<long, long, Integer>> coeffs) {
-    SCOPED_TRACE_REGINA(x);
-    SCOPED_TRACE_REGINA(y);
-
-    const L zero;
-
-    validate(x / y, coeffs);
-    validate((x + zero) / y, coeffs);
-    {
-        L z(x);
-        validate(z /= y, coeffs);
-    }
-}
-
-void verifyMult(const L& x, const L& y,
-        std::initializer_list<std::tuple<long, long, Integer>> coeffs) {
-    SCOPED_TRACE_REGINA(x);
-    SCOPED_TRACE_REGINA(y);
-
-    const L zero;
-
-    validate(x * y, coeffs);
-    validate((x + zero) * y, coeffs);
-    validate(x * (y + zero), coeffs);
-    validate((x + zero) * (y + zero), coeffs);
-
-    validate(y * x, coeffs);
-    validate((y + zero) * x, coeffs);
-    validate(y * (x + zero), coeffs);
-    validate((y + zero) * (x + zero), coeffs);
-
-    {
-        L z(x);
-        validate(z *= y, coeffs);
-    }
-    {
-        L z(x);
-        validate(z *= (y + zero), coeffs);
-    }
-    {
-        L z(y);
-        validate(z *= x, coeffs);
-    }
-    {
-        L z(y);
-        validate(z *= (x + zero), coeffs);
-    }
-}
-
-TEST_F(Laurent2Test, arithmetic) {
-    verifyMult(zero, zero, {});
-    verifyMult(zero, a, {});
-    verifyMult({ {1, 0, 1}, {0, -1, 1} },
-               { {1, 0, 1}, {0, -1, -1} },
-               { {2, 0, 1}, {0, -2, -1} });
-    verifyMult(a, xy, { {1, 1, 1}, {2, 3, -2}, {-1, 0, 3} });
-
-    {
-        L x { {0, -1, 1}, {0, 1, 1} };
-        validate(x * x, { {0, -2, 1}, {0, 0, 2}, {0, 2, 1} });
-        validate(x *= x, { {0, -2, 1}, {0, 0, 2}, {0, 2, 1} });
-    }
 }
 
 TEST_F(Laurent2Test, negate) {
@@ -744,6 +646,156 @@ TEST_F(Laurent2Test, addSubtract) {
         validate(c - zero, c);
         validate(zero - c, -c);
         validateZero(c + -c);
+    }
+}
+
+TEST_F(Laurent2Test, multiply) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        for (const L& d : cases) {
+            SCOPED_TRACE_REGINA(d);
+
+            if (c.isZero() || d.isZero()) {
+                validateZero(c * d);
+                validateZero(c * L(d));
+                validateZero(L(c) * d);
+                validateZero(L(c) * L(d));
+                {
+                    L x(c);
+                    validateZero(x *= d);
+                }
+                {
+                    L x(c);
+                    validateZero(x *= L(d));
+                }
+            } else {
+                const L product = c * d;
+                validate(product);
+                EXPECT_FALSE(product.isZero());
+                EXPECT_GE(product.countTerms(), c.countTerms());
+                EXPECT_GE(product.countTerms(), d.countTerms());
+
+                // We will verify the individual coefficients with the help of
+                // Laurent<Laurent<Integer>>, whose own multiplications are
+                // tested by explicit formula.
+                {
+                    regina::Laurent<regina::Laurent<Integer>> cLL;
+                    for (const auto& term : c) {
+                        long x = term.first.first;
+                        cLL.set(x, cLL[x] + regina::Laurent<Integer>(
+                            term.second).shifted(term.first.second));
+                    }
+
+                    regina::Laurent<regina::Laurent<Integer>> dLL;
+                    for (const auto& term : d) {
+                        long x = term.first.first;
+                        dLL.set(x, dLL[x] + regina::Laurent<Integer>(
+                            term.second).shifted(term.first.second));
+                    }
+
+                    validate(product, L(cLL * dLL));
+                }
+
+                validate(c * L(d), product);
+                validate(L(c) * d, product);
+                validate(L(c) * L(d), product);
+                {
+                    L x(c);
+                    validate(x *= d, product);
+                }
+                {
+                    L x(c);
+                    validate(x *= L(d), product);
+                }
+
+                {
+                    L x(c);
+                    x.addProduct(d, d);
+                    validate(x, c + d * d);
+                }
+                {
+                    // Compute the expected result of c -> c + c * d:
+                    const L expect = c * (d + L(1));
+                    {
+                        L x(c);
+                        x.addProduct(x, d);
+                        validate(x, expect);
+                    }
+                    {
+                        L x(c);
+                        x.addProduct(d, x);
+                        validate(x, expect);
+                    }
+                }
+
+                // Test expected arithmetic properties:
+                validate(c * d, d * c);
+            }
+
+            for (const L& e : cases) {
+                SCOPED_TRACE_REGINA(e);
+                {
+                    L x(c);
+                    x.addProduct(d, e);
+                    validate(x, c + d * e);
+                }
+                {
+                    L x(c);
+                    x.addProduct(L(d), L(e));
+                    validate(x, c + d * e);
+                }
+            }
+        }
+
+        // Test operations upon one's self:
+        const L copy(c);
+        const L square = c * copy;
+        if (c.isZero()) {
+            validateZero(square);
+        } else {
+            validate(square);
+            EXPECT_FALSE(square.isZero());
+            EXPECT_GE(square.countTerms(), c.countTerms());
+
+            // We will verify the individual coefficients with the help of
+            // Laurent<Laurent<Integer>>, whose own multiplications are
+            // tested by explicit formula.
+            {
+                regina::Laurent<regina::Laurent<Integer>> cLL;
+                for (const auto& term : c) {
+                    long x = term.first.first;
+                    cLL.set(x, cLL[x] + regina::Laurent<Integer>(term.second).
+                        shifted(term.first.second));
+                }
+
+                validate(square, L(cLL * cLL));
+            }
+        }
+        validate(c * c, square);
+        {
+            L x(c);
+            validate(x *= x, square);
+        }
+
+        {
+            L x(c);
+            x.addProduct(x, x);
+            validate(x, c + square);
+        }
+
+        // More expected arithmetic properties:
+        validate(c * one, c);
+        validate(one * c, c);
+        validate(c * two, c + c);
+        validate(two * c, c + c);
+        validate(c * minusOne, -c);
+        validate(minusOne * c, -c);
+        validate(c * x2, c.shifted(2, 0));
+        validate(x2 * c, c.shifted(2, 0));
+        validate(c * xy, c.shifted(1, 1));
+        validate(xy * c, c.shifted(1, 1));
+        validate(c * xy2, c.shifted(1, 2));
+        validate(xy2 * c, c.shifted(1, 2));
     }
 }
 
