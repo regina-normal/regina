@@ -108,7 +108,7 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
     FixedArray<IntegerType> m(rows * cols);
     for (i = 0; i < rows; ++i)
         for (j = 0; j < cols; ++j)
-            m[i * cols + j] = subspace.entry(i, use[j]);
+            m[i * cols + j] = subspace(i, use[j]);
 
     // What follows is a variant of Matrix::makeRowBasis().
     //

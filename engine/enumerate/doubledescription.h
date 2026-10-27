@@ -226,7 +226,7 @@ class DoubleDescription {
                         if (i != axis)
                             facets_.set(i, true);
                     for (size_t i = 0; i < Vector<IntegerType>::size(); ++i)
-                        elts_[i] = subspace.entry(*hypOrder++, axis);
+                        elts_[i] = subspace(*hypOrder++, axis);
                 }
 
                 /**

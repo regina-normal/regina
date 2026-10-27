@@ -161,11 +161,11 @@ LPInitialTableaux<Constraint>::LPInitialTableaux(const Triangulation<3>& tri,
         scaling_ = -2;
         for (r = 0; r < eqns_.rows(); ++r) {
             // Since rightmost must be -1 or -2, unsafeValue() must succeed.
-            long rightmost = eqns_.entry(r, eqns_.columns() - 1).
+            long rightmost = eqns_(r, eqns_.columns() - 1).
                 template unsafeValue<long>();
             if (rightmost == -1) {
                 for (c = 0; c < eqns_.columns(); ++c)
-                    eqns_.entry(r, c) *= 2;
+                    eqns_(r, c) *= 2;
             } else if (rightmost != -2)
                 throw ImpossibleScenario("Some angle equation does not have "
                     "-1 or -2 as its final coefficient");
@@ -184,10 +184,10 @@ LPInitialTableaux<Constraint>::LPInitialTableaux(const Triangulation<3>& tri,
     col_ = FixedArray<Col>(cols_);
     for (c = 0; c < eqns_.columns() - (scaling_ ? 1 : 0); ++c)
         for (r = 0; r < eqns_.rows(); ++r)
-            if (eqns_.entry(r, c) != 0) {
+            if (eqns_(r, c) != 0) {
                 // Each entry should have absolute value <= 4, so
                 // unsafeValue() is safe to use here.
-                col_[c].push(r, eqns_.entry(r, c).template unsafeValue<int>());
+                col_[c].push(r, eqns_(r, c).template unsafeValue<int>());
             }
 
     // Add in the final row(s) for any additional constraints.
@@ -324,15 +324,15 @@ void LPInitialTableaux<Constraint>::reorder(bool enumeration) {
                         continue;
                     if (system_.quad()) {
                         // We're in quadrilateral coordinates.
-                        if (eqns_.entry(j, 3 * k) != 0 ||
-                                eqns_.entry(j, 3 * k + 1) != 0 ||
-                                eqns_.entry(j, 3 * k + 2) != 0)
+                        if (eqns_(j, 3 * k) != 0 ||
+                                eqns_(j, 3 * k + 1) != 0 ||
+                                eqns_(j, 3 * k + 2) != 0)
                             ++curr;
                     } else {
                         // We're in standard coordinates.
-                        if (eqns_.entry(j, 7 * k + 4) != 0 ||
-                                eqns_.entry(j, 7 * k + 5) != 0 ||
-                                eqns_.entry(j, 7 * k + 6) != 0)
+                        if (eqns_(j, 7 * k + 4) != 0 ||
+                                eqns_(j, 7 * k + 5) != 0 ||
+                                eqns_(j, 7 * k + 6) != 0)
                             ++curr;
                     }
                     if (curr >= best)
@@ -354,9 +354,9 @@ void LPInitialTableaux<Constraint>::reorder(bool enumeration) {
                     continue;
                 if (system_.quad()) {
                     // We're in quadrilateral coordinates.
-                    if ((eqns_.entry(bestRow, 3 * k) != 0 ||
-                            eqns_.entry(bestRow, 3 * k + 1) != 0 ||
-                            eqns_.entry(bestRow, 3 * k + 2) != 0)) {
+                    if ((eqns_(bestRow, 3 * k) != 0 ||
+                            eqns_(bestRow, 3 * k + 1) != 0 ||
+                            eqns_(bestRow, 3 * k + 2) != 0)) {
                         touched[k] = true;
 
                         columnPerm_[3 * (n - nTouched) - 3] = 3 * k;
@@ -367,9 +367,9 @@ void LPInitialTableaux<Constraint>::reorder(bool enumeration) {
                     }
                 } else {
                     // We're in standard coordinates.
-                    if ((eqns_.entry(bestRow, 7 * k + 4) != 0 ||
-                            eqns_.entry(bestRow, 7 * k + 5) != 0 ||
-                            eqns_.entry(bestRow, 7 * k + 6) != 0)) {
+                    if ((eqns_(bestRow, 7 * k + 4) != 0 ||
+                            eqns_(bestRow, 7 * k + 5) != 0 ||
+                            eqns_(bestRow, 7 * k + 6) != 0)) {
                         touched[k] = true;
 
                         // The quadrilateral columns...

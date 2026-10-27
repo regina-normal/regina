@@ -283,7 +283,7 @@ void Matrix<T>::makeRowBasis() requires ReginaInteger<T> {
         // Determine a good value for lead[currRow].
         // The candidates are lead[currRow,...,(cols_-1)].
         for (c = currRow; c < cols_; ++c)
-            if (echelon.entry(currRow, lead[c]) != 0)
+            if (echelon(currRow, lead[c]) != 0)
                 break;
 
         if (c == cols_) {
@@ -312,10 +312,10 @@ void Matrix<T>::makeRowBasis() requires ReginaInteger<T> {
 
             // Zero out all lower entries in column lead[currRow], using
             // only integer arithmetic.
-            const T& coeff1 = echelon.entry(currRow, lead[currRow]);
+            const T& coeff1 = echelon(currRow, lead[currRow]);
             for (size_t r = currRow + 1; r < rows_; ++r) {
                 // Make coeff2 a copy, because row r is about to change.
-                T coeff2 = echelon.entry(r, lead[currRow]);
+                T coeff2 = echelon(r, lead[currRow]);
                 if (coeff2 != 0) {
                     echelon.multRow(r, coeff1);
                     echelon.addRow(currRow, r, -coeff2);
@@ -347,7 +347,7 @@ std::pair<Matrix<T>, Matrix<T>> Matrix<T>::rowBasisAndOrthComp() const
     size_t currRow = 0;
     while (currRow < ans.first.rows_) {
         for (c = currRow; c < cols_; ++c)
-            if (echelon.entry(currRow, lead[c]) != 0)
+            if (echelon(currRow, lead[c]) != 0)
                 break;
 
         if (c == cols_) {
@@ -367,9 +367,9 @@ std::pair<Matrix<T>, Matrix<T>> Matrix<T>::rowBasisAndOrthComp() const
         } else {
             std::swap(lead[currRow], lead[c]);
 
-            const T& coeff1 = echelon.entry(currRow, lead[currRow]);
+            const T& coeff1 = echelon(currRow, lead[currRow]);
             for (size_t r = currRow + 1; r < ans.first.rows_; ++r) {
-                T coeff2 = echelon.entry(r, lead[currRow]);
+                T coeff2 = echelon(r, lead[currRow]);
                 if (coeff2 != 0) {
                     echelon.multRow(r, coeff1);
                     echelon.addRow(currRow, r, -coeff2);
@@ -386,27 +386,26 @@ std::pair<Matrix<T>, Matrix<T>> Matrix<T>::rowBasisAndOrthComp() const
 
     T lcmLead = 1;
     for (size_t r = 0; r < cols_; ++r) {
-        ans.second.entry(r, lead[r]) = -lcmLead;
+        ans.second(r, lead[r]) = -lcmLead;
         for (c = 0; c < r && c < ans.first.rows_; ++c) {
-            ans.second.entry(r, lead[c]) =
-                (echelon.entry(c, lead[r]) * lcmLead).
-                divExact(echelon.entry(c, lead[c]));
+            ans.second(r, lead[c]) =
+                (echelon(c, lead[r]) * lcmLead).divExact(echelon(c, lead[c]));
         }
         ans.second.reduceRow(r);
 
         if (r < ans.first.rows_) {
-            const T& coeff1 = echelon.entry(r, lead[r]);
+            const T& coeff1 = echelon(r, lead[r]);
             lcmLead.lcmWith(coeff1);
 
             for (size_t tmp = 0; tmp < r; ++tmp) {
-                T coeff2 = echelon.entry(tmp, lead[r]);
+                T coeff2 = echelon(tmp, lead[r]);
                 if (coeff2 != 0) {
                     echelon.multRow(tmp, coeff1);
                     echelon.addRow(r, tmp, -coeff2);
                     echelon.reduceRow(tmp);
                 }
                 // TODO: Is this actually necessary?
-                lcmLead.lcmWith(echelon.entry(tmp, lead[tmp]));
+                lcmLead.lcmWith(echelon(tmp, lead[tmp]));
             }
         }
     }
@@ -510,7 +509,7 @@ void Matrix<T>::makeSmith() requires ReginaInteger<T> {
         // TODO: Adjust nonEmptyRows and nonEmptyCols as we iterate here.
         for (i = currStage; i < nonEmptyRows; ++i)
             for (j = currStage; j < nonEmptyCols; ++j) {
-                T pivotVal = entry(i, j).abs();
+                T pivotVal = (*this)(i, j).abs();
                 if (pivotVal > 0)
                     if (tmp == 0 || pivotVal < tmp) {
                         tmp = pivotVal;
@@ -531,11 +530,11 @@ void Matrix<T>::makeSmith() requires ReginaInteger<T> {
 
         // Make zeros for the remainder of the current row.
         for (i=currStage+1; i<nonEmptyCols; i++) {
-            if (entry(currStage, i) == 0)
+            if ((*this)(currStage, i) == 0)
                 continue;
             // Put a zero in (currStage, i).
-            a = entry(currStage, currStage);
-            b = entry(currStage, i);
+            a = (*this)(currStage, currStage);
+            b = (*this)(currStage, i);
             d = a.gcdWithCoeffs(b, u, v);
             a.divByExact(d);
             b.divByExact(d);
@@ -547,12 +546,12 @@ void Matrix<T>::makeSmith() requires ReginaInteger<T> {
         // Check to see if we change anything and thus muck up the row.
         flag = false;
         for (i=currStage+1; i<nonEmptyRows; i++) {
-            if (entry(i, currStage) == 0)
+            if ((*this)(i, currStage) == 0)
                 continue;
             // Put a zero in (i, currStage).
             flag = true;
-            a = entry(currStage, currStage);
-            b = entry(i, currStage);
+            a = (*this)(currStage, currStage);
+            b = (*this)(i, currStage);
             d = a.gcdWithCoeffs(b, u, v);
             a.divByExact(d);
             b.divByExact(d);
@@ -562,7 +561,7 @@ void Matrix<T>::makeSmith() requires ReginaInteger<T> {
         if (flag) {
             flag = false;
             for (i=currStage+1; i<nonEmptyCols; i++)
-                if (entry(currStage, i) != 0) {
+                if ((*this)(currStage, i) != 0) {
                     flag = true;
                     break;
                 }
@@ -573,10 +572,10 @@ void Matrix<T>::makeSmith() requires ReginaInteger<T> {
         }
 
         // Check that entry (currStage, currStage) divides everything else.
-        T& diag = entry(currStage, currStage);
+        T& diag = (*this)(currStage, currStage);
         for (i=currStage+1; i<nonEmptyRows; i++)
             for (j=currStage+1; j<nonEmptyCols; j++)
-                if ((entry(i, j) % diag) != 0) {
+                if (((*this)(i, j) % diag) != 0) {
                     // Add row i to the current stage row and start this
                     // stage over.
                     addRowFrom(i, currStage, currStage + 1);
@@ -617,7 +616,7 @@ std::array<Matrix<T>, 4> Matrix<T>::makeSmithHafnerMcCurley()
         // TODO: Adjust nonEmptyRows and nonEmptyCols as we iterate here.
         for (i = currStage; i < nonEmptyRows; ++i)
             for (j = currStage; j < nonEmptyCols; ++j) {
-                T pivotVal = entry(i, j).abs();
+                T pivotVal = (*this)(i, j).abs();
                 if (pivotVal > 0)
                     if (tmp == 0 || pivotVal < tmp) {
                         tmp = pivotVal;
@@ -644,11 +643,11 @@ std::array<Matrix<T>, 4> Matrix<T>::makeSmithHafnerMcCurley()
 
         // Make zeros for the remainder of the current row.
         for (i=currStage+1; i<nonEmptyCols; i++) {
-            if (entry(currStage, i) == 0)
+            if ((*this)(currStage, i) == 0)
                 continue;
             // Put a zero in (currStage, i).
-            a = entry(currStage, currStage);
-            b = entry(currStage, i);
+            a = (*this)(currStage, currStage);
+            b = (*this)(currStage, i);
             d = a.gcdWithCoeffs(b, u, v);
             a.divByExact(d);
             b.divByExact(d);
@@ -662,12 +661,12 @@ std::array<Matrix<T>, 4> Matrix<T>::makeSmithHafnerMcCurley()
         // Check to see if we change anything and thus muck up the row.
         flag = false;
         for (i=currStage+1; i<nonEmptyRows; i++) {
-            if (entry(i, currStage) == 0)
+            if ((*this)(i, currStage) == 0)
                 continue;
             // Put a zero in (i, currStage).
             flag = true;
-            a = entry(currStage, currStage);
-            b = entry(i, currStage);
+            a = (*this)(currStage, currStage);
+            b = (*this)(i, currStage);
             d = a.gcdWithCoeffs(b, u, v);
             a.divByExact(d);
             b.divByExact(d);
@@ -679,7 +678,7 @@ std::array<Matrix<T>, 4> Matrix<T>::makeSmithHafnerMcCurley()
         if (flag) {
             flag = false;
             for (i=currStage+1; i<nonEmptyCols; i++)
-                if (entry(currStage, i) != 0) {
+                if ((*this)(currStage, i) != 0) {
                     flag = true;
                     break;
                 }
@@ -690,10 +689,10 @@ std::array<Matrix<T>, 4> Matrix<T>::makeSmithHafnerMcCurley()
         }
 
         // Check that entry (currStage, currStage) divides everything else.
-        T& diag = entry(currStage, currStage);
+        T& diag = (*this)(currStage, currStage);
         for (i=currStage+1; i<nonEmptyRows; i++)
             for (j=currStage+1; j<nonEmptyCols; j++)
-                if ((entry(i, j) % diag) != 0) {
+                if (((*this)(i, j) % diag) != 0) {
                     // Add row i to the current stage row and start this
                     // stage over.
                     addRowFrom(i, currStage, currStage + 1);
@@ -738,7 +737,7 @@ bool metricFindPivot(size_t currStage, const Matrix<T>& matrix,
     for (size_t i=currStage; i<matrix.rows(); i++)
         if (rowGCD[i].abs() == minGCD)
             for (size_t j=currStage; j<matrix.columns(); j++) {
-                if (matrix.entry(i,j) == 0)
+                if (matrix(i,j) == 0)
                     continue;
 
                 if (pivotFound == false) {
@@ -749,8 +748,8 @@ bool metricFindPivot(size_t currStage, const Matrix<T>& matrix,
                     // okay, so now we have a previous potential pivot and this
                     // one.  Have to choose which one we prefer.
                     // 1st step, compare the magnitudes...
-                    auto oldAbs = matrix.entry(pr,pc).abs();
-                    auto newAbs = matrix.entry(i,j).abs();
+                    auto oldAbs = matrix(pr,pc).abs();
+                    auto newAbs = matrix(i,j).abs();
                     if (newAbs < oldAbs) {
                         pr = i;
                         pc = j;
@@ -801,12 +800,12 @@ void metricColOp(size_t currStage, size_t i, size_t j, Matrix<T>& matrix,
     colNorm[i] = 0; colNorm[j] = 0;
     for (size_t k=currStage; k<matrix.rows(); k++)
     {
-        t1 = a*matrix.entry(k, i) + c*matrix.entry(k, j);
-        t2 = b*matrix.entry(k, i) + d*matrix.entry(k, j);
-        rowNorm[k] += t1.abs() + t2.abs() - matrix.entry(k,i).abs()
-                                          - matrix.entry(k,j).abs();
-        matrix.entry(k, i) = t1;
-        matrix.entry(k, j) = t2;
+        t1 = a*matrix(k, i) + c*matrix(k, j);
+        t2 = b*matrix(k, i) + d*matrix(k, j);
+        rowNorm[k] += t1.abs() + t2.abs() - matrix(k,i).abs()
+                                          - matrix(k,j).abs();
+        matrix(k, i) = t1;
+        matrix(k, j) = t2;
         colNorm[i] += t1.abs();
         colNorm[j] += t2.abs();
     }
@@ -831,12 +830,12 @@ void metricRowOp(size_t currStage, size_t i, size_t j, Matrix<T>& matrix,
     rowNorm[i] = rowNorm[j] = 0;
     rowGCD[i] = rowGCD[j] = 0;
     for (size_t k=currStage; k<matrix.columns(); k++) {
-        t1 = a*matrix.entry(i, k) + b*matrix.entry(j, k);
-        t2 = c*matrix.entry(i, k) + d*matrix.entry(j, k);
-        colNorm[k] += t1.abs() + t2.abs() - matrix.entry(i, k).abs()
-                                          - matrix.entry(j, k).abs();
-        matrix.entry(i, k) = t1;
-        matrix.entry(j, k) = t2;
+        t1 = a*matrix(i, k) + b*matrix(j, k);
+        t2 = c*matrix(i, k) + d*matrix(j, k);
+        colNorm[k] += t1.abs() + t2.abs() - matrix(i, k).abs()
+                                          - matrix(j, k).abs();
+        matrix(i, k) = t1;
+        matrix(j, k) = t2;
         rowNorm[i] += t1.abs();
         rowNorm[j] += t2.abs();
         rowGCD[i].gcdWith(t1);
@@ -905,33 +904,33 @@ rowMuckerLoop:
         // up row currStage first we do the col ops, eliminating
         // entries to the right of currStage, currStage
         for (j=currStage+1; j<columns(); j++)
-            if (entry(currStage, j) != 0) {
-                g = entry(currStage, currStage).gcdWithCoeffs(
-                     entry(currStage, j), u, v);
+            if ((*this)(currStage, j) != 0) {
+                g = (*this)(currStage, currStage).gcdWithCoeffs(
+                     (*this)(currStage, j), u, v);
                 detail::metricColOp(currStage, currStage, j, *this, u,
-                            -entry(currStage,j).divExact(g), v,
-                            entry(currStage, currStage).divExact(g),
+                            -(*this)(currStage,j).divExact(g), v,
+                            (*this)(currStage, currStage).divExact(g),
                             cob[0], cob[1], rowNorm, colNorm);
             }
         // then the row ops, eliminating entries below currStage, currStage
         for (i=currStage+1; i<rows(); i++)
-            if (entry(i, currStage) != 0) {
-                g = entry(currStage, currStage).gcdWithCoeffs(
-                     entry(i, currStage), u, v);
+            if ((*this)(i, currStage) != 0) {
+                g = (*this)(currStage, currStage).gcdWithCoeffs(
+                     (*this)(i, currStage), u, v);
                 detail::metricRowOp(currStage, currStage, i, *this, u, v,
-                            -entry(i,currStage).divExact(g),
-                            entry(currStage,currStage).divExact(g),
+                            -(*this)(i,currStage).divExact(g),
+                            (*this)(currStage,currStage).divExact(g),
                             cob[2], cob[3], rowNorm, colNorm,
                             rowGCD);
             }
         // scan row currStage, if it isn't zero, goto rowMuckerLoop
         for (j=currStage+1; j<columns(); j++)
-            if (entry(currStage, j) != 0) goto rowMuckerLoop;
-        // ensure entry(currStage, currStage) is positive
-        if (entry(currStage, currStage)<0) {
+            if ((*this)(currStage, j) != 0) goto rowMuckerLoop;
+        // ensure entry (currStage, currStage) is positive
+        if ((*this)(currStage, currStage)<0) {
             // we'll make it a column operation
             for (i=currStage; i<rows(); i++)
-                entry(i, currStage).negate();
+                (*this)(i, currStage).negate();
             cob[0].negateCol(currStage);
             cob[1].negateRow(currStage);
         }
@@ -939,9 +938,9 @@ rowMuckerLoop:
         // entry(cs,cs). if not, record row and gcd(entry(cs,cs),
         // rowGCD[this row], pick the row with the lowest of these gcds...
         size_t rowT=currStage;
-        T bestGCD(entry(currStage, currStage).abs());
+        T bestGCD((*this)(currStage, currStage).abs());
         for (i=currStage+1; i<rows(); i++) {
-            g = entry(currStage, currStage).gcd(rowGCD[i]).abs();
+            g = (*this)(currStage, currStage).gcd(rowGCD[i]).abs();
             if ( g < bestGCD ) {
                 rowT = i;
                 bestGCD = g;
@@ -1000,7 +999,7 @@ Matrix<T> Matrix<T>::preimageOfLattice(const std::vector<T>& sublattice) const
     for (size_t c = 0; c < cols_; ++c) {
         bool zeroCol = true;
         for (size_t r = 0; r < free.rows(); ++r)
-            if (free.entry(r, c) != 0) {
+            if (free(r, c) != 0) {
                 zeroCol = false;
                 break;
             }
@@ -1031,7 +1030,7 @@ Matrix<T> Matrix<T>::preimageOfLattice(const std::vector<T>& sublattice) const
         // build rowNZlist
         rowNZlist.clear();
         for (size_t i = 0; i < tHom.columns(); ++i)
-            if (tHom.entry(CR,i) != 0)
+            if (tHom(CR,i) != 0)
                 rowNZlist.push_back(i);
 
         // okay, so now we have a list of non-zero entries.
@@ -1044,10 +1043,10 @@ Matrix<T> Matrix<T>::preimageOfLattice(const std::vector<T>& sublattice) const
         // case 2: rowNZlist.size()==1 multiply column only if neccessary,
         // increment CR, continue;
         if (rowNZlist.size() == 1) {
-            // check to see if tHom.entry(CR, rowNZlist[0]) %
+            // check to see if tHom(CR, rowNZlist[0]) %
             // sublattice[torList[CR]] == 0 if not, find smallest positive
             // integer s.t. when multiplied by it, above becomes true.
-            T gcd = tHom.entry(CR, rowNZlist[0]).gcd(sublattice[torList[CR]]);
+            T gcd = tHom(CR, rowNZlist[0]).gcd(sublattice[torList[CR]]);
             T d = sublattice[torList[CR]].divExact(gcd);
             tHom.multCol(rowNZlist[0], d);
             tOps.multCol(rowNZlist[0], d);
@@ -1057,10 +1056,10 @@ Matrix<T> Matrix<T>::preimageOfLattice(const std::vector<T>& sublattice) const
         // case 3: rowNZlist.size()>1.row ops to reduce rowNZlist.size().
         // then continue
         while (rowNZlist.size() > 1) {
-            auto [gcd, u, v] = tHom.entry(CR, rowNZlist[0]).gcdWithCoeffs(
-                tHom.entry(CR, rowNZlist[1]));
-            T a = tHom.entry(CR, rowNZlist[0]).divExact(gcd);
-            T b = tHom.entry(CR, rowNZlist[1]).divExact(gcd);
+            auto [gcd, u, v] = tHom(CR, rowNZlist[0]).gcdWithCoeffs(
+                tHom(CR, rowNZlist[1]));
+            T a = tHom(CR, rowNZlist[0]).divExact(gcd);
+            T b = tHom(CR, rowNZlist[1]).divExact(gcd);
             tHom.combCols(rowNZlist[0], rowNZlist[1], u, v, -b, a);
             tOps.combCols(rowNZlist[0], rowNZlist[1], u, v, -b, a);
             // now rowNZlist[1] entry is zero, remove it from the list.

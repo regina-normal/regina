@@ -55,7 +55,7 @@ AbelianGroup::AbelianGroup(MatrixInt presentation) {
     // Now i is precisely the length of the diagonal.
     while (i > 0) {
         --i;
-        const auto& d = presentation.entry(i, i);
+        const auto& d = presentation(i, i);
         if (d == 0)
             ++rank_;
         else if (d == 1)
@@ -108,14 +108,14 @@ void AbelianGroup::addGroup(MatrixInt presentation) {
     // Now i is precisely the length of the diagonal.
     while (i > 0) {
         --i;
-        if (presentation.entry(i, i) == 0)
+        if (presentation(i, i) == 0)
             ++rank_;
-        else if (presentation.entry(i, i) == 1)
+        else if (presentation(i, i) == 1)
             return;
         else {
             // We use addTorsion() because there might have been other
             // invariant factors present before we called addGroup().
-            addTorsion(presentation.entry(i, i));
+            addTorsion(presentation(i, i));
         }
     }
 }
@@ -238,7 +238,7 @@ AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N) {
     // exactly what we need to do.
     while (i > 0) {
         --i;
-        const auto& d = N.entry(i, i);
+        const auto& d = N(i, i);
         if (d == 0)
             ++rank_;
         else if (d == 1)
@@ -264,16 +264,16 @@ AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N, const Integer &p) :
 
     if (cof == 0) {
         for (size_t i=0; i<lim; i++)
-            if (N.entry(i,i) != 0) {
+            if (N(i,i) != 0) {
                 rank_--;
-                if (N.entry(i,i) > 1)
-                    addTorsion(N.entry(i,i));
+                if (N(i,i) > 1)
+                    addTorsion(N(i,i));
             }
     } else {
         for (size_t i=0; i<lim; i++)
-            if (N.entry(i,i) !=0) {
+            if (N(i,i) !=0) {
                 rank_--;
-                Integer g( N.entry(i,i).gcd(cof) );
+                Integer g( N(i,i).gcd(cof) );
                 if (g > 1)
                     addTorsion(g);
             }
@@ -282,10 +282,10 @@ AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N, const Integer &p) :
     M.makeSmith();
     lim = (M.rows() < M.columns() ? M.rows() : M.columns() );
     for (size_t i=0; i<lim; i++) {
-        if (M.entry(i,i) != 0) {
+        if (M(i,i) != 0) {
             rank_--;
             if (cof != 0) {
-                Integer g( M.entry(i,i).gcd(cof) );
+                Integer g( M(i,i).gcd(cof) );
                 if (g>1)
                     addTorsion(g);
             }

@@ -115,9 +115,9 @@ inline PosOrder::PosOrder(const MatrixInt& matrix) :
 
 inline bool PosOrder::operator () (size_t i, size_t j) const {
     for (size_t c = 0; c < matrix_.columns(); ++c) {
-        if (matrix_.entry(i, c) == 0 && matrix_.entry(j, c) != 0)
+        if (matrix_(i, c) == 0 && matrix_(j, c) != 0)
             return true;
-        if (matrix_.entry(i, c) != 0 && matrix_.entry(j, c) == 0)
+        if (matrix_(i, c) != 0 && matrix_(j, c) == 0)
             return false;
     }
     return false;

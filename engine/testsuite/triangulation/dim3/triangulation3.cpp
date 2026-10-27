@@ -1584,7 +1584,7 @@ static void verifyFundGroupVsH1(const Triangulation<3>& tri, const char* name) {
     regina::MatrixInt m(rel, gen);
     for (size_t i = 0; i < rel; ++i)
         for (const auto& t : g.relation(i).terms())
-            m.entry(i, t.generator) += t.exponent;
+            m(i, t.generator) += t.exponent;
 
     EXPECT_EQ(AbelianGroup(std::move(m)), tri.homology());
 }

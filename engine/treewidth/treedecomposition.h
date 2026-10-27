@@ -1701,7 +1701,7 @@ TreeDecomposition::TreeDecomposition(const Matrix<T>& graph,
 
     for (size_t i = 0; i < graph.rows(); ++i)
         for (size_t j = 0; j < graph.columns(); ++j)
-            g.adj_[i][j] = graph.entry(i, j) || graph.entry(j, i);
+            g.adj_[i][j] = graph(i, j) || graph(j, i);
 
     construct(g, alg);
 }

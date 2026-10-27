@@ -183,7 +183,7 @@ void addTreeLP(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal, rdoc::entry)
         .def("set", [](LPMatrix<Integer>& m, size_t row, size_t col,
                 const regina::Integer& value){
-            m.entry(row, col) = value;
+            m(row, col) = value;
         }, rdoc::set)
         .def("rows", &LPMatrix<Integer>::rows, rdoc::rows)
         .def("columns", &LPMatrix<Integer>::columns, rdoc::columns)

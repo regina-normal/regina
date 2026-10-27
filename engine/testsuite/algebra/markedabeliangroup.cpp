@@ -192,6 +192,6 @@ TEST_F(MarkedAbelianGroupTest, kleinBottle) {
     MatrixInt m = hom.reducedMatrix();
     EXPECT_EQ(m.rows(), 2);
     EXPECT_EQ(m.columns(), 1);
-    EXPECT_EQ(m.entry(0, 0), 1);
-    EXPECT_EQ(m.entry(1, 0), 0);
+    EXPECT_EQ(m(0, 0), 1);
+    EXPECT_EQ(m(1, 0), 0);
 }

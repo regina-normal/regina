@@ -335,11 +335,9 @@ void HomologicalData::computeChainComplexes() {
     for (size_t i=0;i<tri.countEdges();i++) {
         // these are the standard edges
         ssize_t temp=sNIV.index(tri.edge(i)->vertex(0)->index());
-        (A1_->entry( ((temp==(-1)) ?
-            (sNIV.size()+sIEOE.index(2*i)) : temp ), i))-=1;
+        --(*A1_)(temp == -1 ? (sNIV.size()+sIEOE.index(2*i)) : temp, i);
         temp=sNIV.index(tri.edge(i)->vertex(1)->index());
-        (A1_->entry( ((temp==(-1)) ?
-            (sNIV.size()+sIEOE.index(2*i+1)) : temp), i))+=1;
+        ++(*A1_)(temp == -1 ? (sNIV.size()+sIEOE.index(2*i+1)) : temp, i);
     } // ok
 
     for (size_t i=0;i<sIEEOF.size();i++) { // these are the ideal edges...
@@ -347,23 +345,19 @@ void HomologicalData::computeChainComplexes() {
         // the vertex of this triangle
         p1=tri.triangle(sIEEOF[i]/3)->edgeMapping( (sIEEOF[i] + 1) % 3);
         if (p1.sign()==1) {
-            A1_->entry(sNIV.size() + sIEOE.index(2*(
-                tri.triangle(sIEEOF[i]/3)->
-                edge(p1[2])->index() )+1), tri.countEdges()+i)-=1;
+            --(*A1_)(sNIV.size() + sIEOE.index(2*(tri.triangle(sIEEOF[i]/3)->
+                edge(p1[2])->index() )+1), tri.countEdges()+i);
         } else {
-            A1_->entry(sNIV.size() + sIEOE.index(2*(
-                tri.triangle(sIEEOF[i]/3)->
-                edge(p1[2])->index() )) , tri.countEdges()+i)-=1;
+            --(*A1_)(sNIV.size() + sIEOE.index(2*(tri.triangle(sIEEOF[i]/3)->
+                edge(p1[2])->index() )), tri.countEdges()+i);
         }
         p1=tri.triangle(sIEEOF[i]/3)->edgeMapping( (sIEEOF[i] + 2) % 3);
         if (p1.sign()==1) {
-            A1_->entry(sNIV.size() + sIEOE.index(2*(
-                tri.triangle(sIEEOF[i]/3)->
-                edge(p1[2])->index() )) , tri.countEdges()+i)+=1;
+            ++(*A1_)(sNIV.size() + sIEOE.index(2*(tri.triangle(sIEEOF[i]/3)->
+                edge(p1[2])->index() )), tri.countEdges()+i);
         } else {
-            A1_->entry(sNIV.size() + sIEOE.index(2*(
-                tri.triangle(sIEEOF[i]/3)->
-                edge(p1[2])->index() )+1) , tri.countEdges()+i)+=1;
+            ++(*A1_)(sNIV.size() + sIEOE.index(2*(tri.triangle(sIEEOF[i]/3)->
+                edge(p1[2])->index() )+1), tri.countEdges()+i);
         }
     }
     // that handles matrix A1.
@@ -377,14 +371,12 @@ void HomologicalData::computeChainComplexes() {
             // edges (if they exist)
             if ( (j/3) == 0) {
                 p1=tri.triangle(i)->edgeMapping(j % 3);
-                A2_->entry(
-                    tri.triangle(i)->edge(j % 3)->index() ,i) +=
+                (*A2_)(tri.triangle(i)->edge(j % 3)->index(), i) +=
                     ( (p1.sign()==1) ? +1 : -1 );
             } else {
                 // check triangle i vertex j % 3 is ideal
                 if (tri.triangle(i)->vertex(j % 3)->isIdeal())
-                    A2_->entry( tri.countEdges() +
-                        sIEEOF.index((3*i) + (j % 3)), i) += 1;
+                    ++(*A2_)(tri.countEdges() + sIEEOF.index(3*i + (j % 3)), i);
             }
         }
     }
@@ -405,10 +397,9 @@ void HomologicalData::computeChainComplexes() {
         for (int j=1;j<4;j++) {
             p1=tri.tetrahedron( sIEFOT[i]/4 )->triangleMapping(
                 (sIEFOT[i] + j) % 4);
-            A2_->entry( tri.countEdges() + sIEEOF.index(
-                3*tri.tetrahedron(
+            (*A2_)( tri.countEdges() + sIEEOF.index(3*tri.tetrahedron(
                 sIEFOT[i]/4 )->triangle( (sIEFOT[i] + j) % 4)->index() +
-                p1.pre(sIEFOT[i] % 4) ) ,
+                p1.pre(sIEFOT[i] % 4) ),
                 tri.countTriangles()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
         }
     }
@@ -419,13 +410,12 @@ void HomologicalData::computeChainComplexes() {
         for (int j=0;j<4;j++) {
             // first go through standard faces 0 through 3
             p1=tri.tetrahedron(i)->triangleMapping(j);
-            A3_->entry( tri.tetrahedron(i)->triangle(j)->index(), i) +=
+            (*A3_)( tri.tetrahedron(i)->triangle(j)->index(), i) +=
                 ( (p1.sign()==1) ? 1 : -1 );
             // then ideal faces 0 through 3, if they exist
             if (tri.tetrahedron(i)->vertex(j)->isIdeal()==1) {
                 // this part is in error.
-                A3_->entry( tri.countTriangles() +
-                    sIEFOT.index((4*i) + j), i) += 1;
+                ++(*A3_)( tri.countTriangles() + sIEFOT.index((4*i) + j), i);
             }
         }
     }
@@ -435,10 +425,8 @@ void HomologicalData::computeChainComplexes() {
     // start B1: for each dual edge == non-boundary triangle,
     //              find the tetrahedra that bound it
     for (size_t i=0;i<dNBF.size();i++) {
-        B1_->entry(
-            tri.triangle(dNBF[i])->embedding(1).tetrahedron()->index(), i)+=1;
-        B1_->entry(
-            tri.triangle(dNBF[i])->embedding(0).tetrahedron()->index(), i)-=1;
+        ++(*B1_)(tri.triangle(dNBF[i])->embedding(1).tetrahedron()->index(), i);
+        --(*B1_)(tri.triangle(dNBF[i])->embedding(0).tetrahedron()->index(), i);
     }
     // end B1
 
@@ -453,8 +441,8 @@ void HomologicalData::computeChainComplexes() {
             // embedding(0).tetrahedron() is the current tet, and
             // embedding(0).triangle() is this current face p1[2]...
 
-            B2_->entry( dNBF.index(
-                emb.tetrahedron()->triangle(p1[2])->index() ) ,i)+=
+            (*B2_)( dNBF.index(
+                emb.tetrahedron()->triangle(p1[2])->index() ), i)+=
                     ( ( emb.tetrahedron() ==
                         emb.tetrahedron()->triangle(
                             p1[2] )->embedding( 0 ).tetrahedron() &&
@@ -576,8 +564,7 @@ void HomologicalData::computeChainComplexes() {
 
         std::set<long>::const_iterator it;
         for (it = edge_adjacency.begin(); it != edge_adjacency.end(); ++it) {
-            B3_->entry( dNBE.index((*it)/4) , i) +=
-                ( ( ((*it) % 2)==0 ) ? 1 : -1 );
+            (*B3_)( dNBE.index((*it)/4), i) += ( ( ((*it) % 2)==0 ) ? 1 : -1 );
         }
     }
     // end B3
@@ -846,12 +833,12 @@ void HomologicalData::computeChainComplexes() {
                 if (( currV/3  == prevV/3 ) && (tri.triangle(dNBF[j])->
                         vertex(currV/3)->isIdeal()) )  // ideal edge
                 {
-                    H1map_->entry( tri.countEdges() +
-                        sIEEOF.index(3*dNBF[j] + (currV/3)) , j ) += 1;
+                    ++(*H1map_)(tri.countEdges() +
+                        sIEEOF.index(3*dNBF[j] + (currV/3)), j);
                 }
                 if ( currV/3  != prevV/3 ) // regular edge
                 {
-                    H1map_->entry(tri.triangle(dNBF[j])->edge(((currV/3) + 1) % 3 )->index(), j) 
+                    (*H1map_)(tri.triangle(dNBF[j])->edge(((currV/3) + 1) % 3 )->index(), j) 
                       += ( 
                            ( 
                              static_cast<unsigned>( 
@@ -865,14 +852,14 @@ void HomologicalData::computeChainComplexes() {
             }
         // now we fill out the matrix.
         if (stage0nec)
-            H1map_->entry( stage0edgeNum, j ) += ( stage0posOr ? 1 : -1 );
+            (*H1map_)(stage0edgeNum, j) += (stage0posOr ? 1 : -1);
         if (stage1nec)
-            H1map_->entry( stage1edgeNum, j ) += ( stage1posOr ? 1 : -1 );
+            (*H1map_)(stage1edgeNum, j) += (stage1posOr ? 1 : -1);
 
         if (stage3nec)
-            H1map_->entry( stage3edgeNum, j ) += ( stage3posOr ? 1 : -1 );
+            (*H1map_)(stage3edgeNum, j) += (stage3posOr ? 1 : -1);
         if (stage4nec)
-            H1map_->entry( stage4edgeNum, j ) += ( stage4posOr ? 1 : -1 );
+            (*H1map_)(stage4edgeNum, j) += (stage4posOr ? 1 : -1);
 
     }
 
@@ -881,9 +868,9 @@ void HomologicalData::computeChainComplexes() {
     for (size_t i=0;i<sBNIE.size();i++) { // these are the standard boundary edges
         // temp == -1 when the boundary edge end is ideal.
         ssize_t temp=sBNIV.index(tri.edge(sBNIE[i])->vertex(0)->index());
-        (Bd1_->entry( ((temp==(-1)) ? (sBNIV.size()+2*i) : temp ), i))-=1;
+        --(*Bd1_)( ((temp==(-1)) ? (sBNIV.size()+2*i) : temp ), i);
         temp=sBNIV.index(tri.edge(sBNIE[i])->vertex(1)->index());
-        (Bd1_->entry( ((temp==(-1)) ? (sBNIV.size()+2*i+1) : temp), i))+=1;
+        ++(*Bd1_)( ((temp==(-1)) ? (sBNIV.size()+2*i+1) : temp), i);
     } // ok
 
     for (size_t i=0;i<sIEEOF.size();i++) { // these are the ideal edges...
@@ -891,23 +878,23 @@ void HomologicalData::computeChainComplexes() {
         // the vertex of this triangle
         p1=tri.triangle(sIEEOF[i]/3)->edgeMapping( (sIEEOF[i] + 1) % 3);
         if (p1.sign()==1) {
-            Bd1_->entry(sBNIV.size() + sIEOE.index(2*(
+            --(*Bd1_)(sBNIV.size() + sIEOE.index(2*(
                 tri.triangle(sIEEOF[i]/3)->
-                edge(p1[2])->index() )+1), sBNIE.size()+i)-=1;
+                edge(p1[2])->index() )+1), sBNIE.size()+i);
         } else {
-            Bd1_->entry(sBNIV.size() + sIEOE.index(2*(
+            --(*Bd1_)(sBNIV.size() + sIEOE.index(2*(
                 tri.triangle(sIEEOF[i]/3)->
-                edge(p1[2])->index() )) , sBNIE.size()+i)-=1;
+                edge(p1[2])->index() )), sBNIE.size()+i);
         }
         p1=tri.triangle(sIEEOF[i]/3)->edgeMapping( (sIEEOF[i] + 2) % 3);
         if (p1.sign()==1) {
-            Bd1_->entry(sBNIV.size() + sIEOE.index(2*(
+            ++(*Bd1_)(sBNIV.size() + sIEOE.index(2*(
                 tri.triangle(sIEEOF[i]/3)->
-                edge(p1[2])->index() )) , sBNIE.size()+i)+=1;
+                edge(p1[2])->index() )), sBNIE.size()+i);
         } else {
-            Bd1_->entry(sBNIV.size() + sIEOE.index(2*(
+            ++(*Bd1_)(sBNIV.size() + sIEOE.index(2*(
                 tri.triangle(sIEEOF[i]/3)->
-                edge(p1[2])->index() )+1) , sBNIE.size()+i)+=1;
+                edge(p1[2])->index() )+1), sBNIE.size()+i);
         }
     }
     // that handles matrix Bd1.
@@ -922,14 +909,13 @@ void HomologicalData::computeChainComplexes() {
             // edges (if they exist)
             if ( (j/3) == 0) {
                 p1=tri.triangle(sBNIF[i])->edgeMapping(j % 3);
-                Bd2_->entry( sBNIE.index( tri.triangle(
-                    sBNIF[i])->edge(j % 3)->index() ) ,i) +=
+                (*Bd2_)(sBNIE.index(tri.triangle(
+                    sBNIF[i])->edge(j % 3)->index()), i) +=
                     ( (p1.sign()==1) ? +1 : -1 );
             } else {
                 // check triangle i vertex j % 3 is ideal
                 if (tri.triangle(sBNIF[i])->vertex(j % 3)->isIdeal())
-                    Bd2_->entry( sBNIF.size() + sIEEOF.index(
-                        (3*i) + (j % 3)), i) += 1;
+                    ++(*Bd2_)(sBNIF.size() + sIEEOF.index((3*i) + (j % 3)), i);
             }
         }
     }
@@ -950,9 +936,9 @@ void HomologicalData::computeChainComplexes() {
         for (int j=1;j<4;j++) {
             p1=tri.tetrahedron( sIEFOT[i]/4 )->triangleMapping(
                 (sIEFOT[i] + j) % 4);
-            Bd2_->entry( sBNIE.size() + sIEEOF.index(3*
+            (*Bd2_)( sBNIE.size() + sIEEOF.index(3*
                 tri.tetrahedron(sIEFOT[i]/4 )->triangle(
-                (sIEFOT[i] + j) % 4)->index() + p1.pre(sIEFOT[i] % 4) ) ,
+                (sIEFOT[i] + j) % 4)->index() + p1.pre(sIEFOT[i] % 4) ),
                 sBNIF.size()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
         }
     }
@@ -961,17 +947,17 @@ void HomologicalData::computeChainComplexes() {
     // fill out b0Incl
     // boundary 0-cells:
     for (size_t i=0;i<B0Incl_->columns();i++)
-        B0Incl_->entry( ( ( i < sBNIV.size()) ? sNIV.index(sBNIV[i]) :
-                sNIV.size() + i - sBNIV.size() ) ,i)+=1;
+        ++(*B0Incl_)( ( ( i < sBNIV.size()) ? sNIV.index(sBNIV[i]) :
+            sNIV.size() + i - sBNIV.size() ), i);
     // fill out b1Incl
     for (size_t i=0;i<B1Incl_->columns();i++)
         // each boundary edge corresponds to a triangulation edge
-        B1Incl_->entry( ( ( i < sBNIE.size() ) ? sBNIE[i] :
-                tri.countEdges() + i - sBNIE.size() ) ,i)+=1;
+        ++(*B1Incl_)( ( ( i < sBNIE.size() ) ? sBNIE[i] :
+            tri.countEdges() + i - sBNIE.size() ), i);
     // fill out b2Incl
     for (size_t i=0;i<B2Incl_->columns();i++)
-        B2Incl_->entry( ( ( i < sBNIF.size() ) ? sBNIF[i] :
-                tri.countTriangles() + i - sBNIF.size() ) ,i)+=1;
+        ++(*B2Incl_)( ( ( i < sBNIF.size() ) ? sBNIF[i] :
+            tri.countTriangles() + i - sBNIF.size() ), i);
 }
 
 const MarkedAbelianGroup& HomologicalData::homology(unsigned q) {
@@ -1274,8 +1260,8 @@ void HomologicalData::computeTorsionLinkingForm() {
     for (i=0; i<standardBasis.rows(); i++)
         for (j=0; j<standardBasis.columns(); j++)
             for (k=0; k<dualtostandard.columns(); k++)
-                standardBasis.entry(i,j).addProduct(
-                    dualtostandard.entry(i,k), pvList[j][k]);
+                standardBasis(i,j).addProduct(
+                    dualtostandard(i,k), pvList[j][k]);
 
     // step 3: construct bounding classes
     //           the j-th column of standardBasis, when multiplied by
@@ -1292,30 +1278,30 @@ void HomologicalData::computeTorsionLinkingForm() {
 
     for (i=0; i<standardBasis.rows(); i++)
         for (j=0; j<standardBasis.columns(); j++)
-            areboundariesM.entry(i,j) *= ppList[j];
+            areboundariesM(i,j) *= ppList[j];
 
     MatrixInt stepa( areboundariesM.rows(), areboundariesM.columns() );
     for (i=0; i<standardBasis.rows(); i++)
         for (j=0; j<standardBasis.columns(); j++)
             for (k=0; k<C.columns(); k++)
-                stepa.entry(i,j) += C.entry(i,k)*areboundariesM.entry(k,j);
+                stepa(i,j) += C(i,k)*areboundariesM(k,j);
 
     unsigned long rankON=0;
     for (i=0; ((i<ON.rows()) && (i<ON.columns())); i++)
-        if (ON.entry(i,i) != 0) rankON++;
+        if (ON(i,i) != 0) rankON++;
 
     MatrixInt stepb( R.columns(), stepa.columns() );
 
     for (i=0; i<rankON; i++)
         for (j=0; j<stepb.columns(); j++)
-            stepb.entry(i,j) = stepa.entry(i,j).divByExact(ON.entry(i,i));
+            stepb(i,j) = stepa(i,j).divByExact(ON(i,i));
 
     MatrixInt boundingMat( stepb.rows(), stepb.columns() );
 
     for (i=0; i<stepb.rows(); i++)
         for (j=0; j<stepb.columns(); j++)
             for (k=0; k<R.columns(); k++)
-                boundingMat.entry(i,j) += R.entry(i,k)*stepb.entry(k,j);
+                boundingMat(i,j) += R(i,k)*stepb(k,j);
 
     // step 4: intersect, construct matrix.
 
@@ -1329,7 +1315,7 @@ void HomologicalData::computeTorsionLinkingForm() {
         for (j=0; j<pvList.size(); j++) {
             for (k=0; k<dNBF.size(); k++) {
                 // we need to determine the sign of the intersection of
-                // boundingMat.entry(k,i) * pvList[j][k]
+                // boundingMat(k,i) * pvList[j][k]
                 // the denominator will be ppList[i]
                 //
                 // Computing the orientation of the intersection, ingredients:
@@ -1348,22 +1334,21 @@ void HomologicalData::computeTorsionLinkingForm() {
                 // the same dimension as the standard 2-cells + ideal 2-cells,
                 // standard ones coming first.
                 // pvList is vectors in dual 1-cells
-                torsionLinkingFormPresentationMat.entry(i,j) +=
-                    Rational(
-                        boundingMat.entry(dNBF[k],i)*pvList[j][k]*
-                        Integer(
-                            tri.triangle(dNBF[k])->embedding(0).
-                                tetrahedron()->orientation()*
-                            tri.triangle(dNBF[k])->embedding(0).
-                                vertices().sign() ), ppList[i] );
+                torsionLinkingFormPresentationMat(i,j) += Rational(
+                    boundingMat(dNBF[k],i) * pvList[j][k] * Integer(
+                        tri.triangle(dNBF[k])->embedding(0).
+                            tetrahedron()->orientation()*
+                        tri.triangle(dNBF[k])->embedding(0).
+                            vertices().sign()),
+                    ppList[i] );
             }
-            Integer tN=torsionLinkingFormPresentationMat.entry(i,j).numerator();
-            Integer tD=torsionLinkingFormPresentationMat.entry(i,j).denominator();
+            Integer tN=torsionLinkingFormPresentationMat(i,j).numerator();
+            Integer tD=torsionLinkingFormPresentationMat(i,j).denominator();
             auto [tQ, tR] = tN.divisionAlg(tD);
             tN = tR.gcd(tD);
             tR.divByExact(tN);
             tD.divByExact(tN);
-            torsionLinkingFormPresentationMat.entry(i,j)=Rational(tR,tD);
+            torsionLinkingFormPresentationMat(i,j)=Rational(tR,tD);
         }
 
     // Compute indexing.size() just once, since for std::list this might be
@@ -1384,11 +1369,8 @@ void HomologicalData::computeTorsionLinkingForm() {
                 it1->second.size() );
         for (j=0; j<it1->second.size(); j++)
             for (k=0; k<it1->second.size(); k++)
-                linkingFormPD[i].entry(j,k) =
-                    torsionLinkingFormPresentationMat.entry(
-                        it1->second[j].second,
-                        it1->second[k].second
-                    );
+                linkingFormPD[i](j,k) = torsionLinkingFormPresentationMat(
+                    it1->second[j].second, it1->second[k].second);
     }
 
     // now we should implement the classification of these forms
@@ -1508,7 +1490,7 @@ void HomologicalData::computeTorsionLinkingForm() {
                         for (k=0; k<linkingFormPD[0].columns();
                                 k++)
                             tSum += Rational(groupV[j]*groupV[k])*
-                                linkingFormPD[0].entry(j,k);
+                                linkingFormPD[0](j,k);
 
                     // reduce mod 1, then turn into a long double and
                     // evaluate cos, sin
@@ -1610,8 +1592,8 @@ void HomologicalData::computeTorsionLinkingForm() {
 
             for (k=0; k<torRankV[i].second[j]; k++)
                 for (l=0; l<torRankV[i].second[j]; l++)
-                    tempM.entry(k,l) = (Rational(tI)*linkingFormPD[i].
-                        entry(k+curri,l+curri)).numerator();
+                    tempM(k,l) = (Rational(tI) *
+                        linkingFormPD[i](k+curri,l+curri)).numerator();
 
             tempa.push_back( tempM.det().legendre(torRankV[i].first) );
             // legendre symbol, compute and append to tempa
@@ -1620,7 +1602,7 @@ void HomologicalData::computeTorsionLinkingForm() {
             // increment curri
             curri = curri + torRankV[i].second[j]; // crashes here.
         }
-        oddTorLegSymV.emplace_back( torRankV[i].first , tempa );
+        oddTorLegSymV.emplace_back( torRankV[i].first, tempa );
     }
 
     // step 4: kk test for: split, hyperbolic, and the embeddability
@@ -1687,7 +1669,7 @@ void HomologicalData::computeTorsionLinkingForm() {
             // congruent to zero. if not, trigger flag.
             tI = Integer(2);
             tI.raiseToPower(h1PrimePowerDecomp[0].second[i]-1);
-            tRat = Rational(tI) * linkingFormPD[0].entry(i,i);
+            tRat = Rational(tI) * linkingFormPD[0](i,i);
             Integer tN = tRat.numerator();
             Integer tD = tRat.denominator();
             auto [tQ, tR] = tN.divisionAlg(tD);

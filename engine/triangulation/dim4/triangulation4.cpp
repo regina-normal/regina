@@ -163,13 +163,13 @@ IntersectionForm Triangulation<4>::intersectionForm() const {
                 Integer count = dualBasis[i][k] * primalBasis[j][k];
                 if (count != 0) {
                     if (sign[k])
-                        form.entry(i, j) += count;
+                        form(i, j) += count;
                     else
-                        form.entry(i, j) -= count;
+                        form(i, j) -= count;
                 }
             }
             if (j != i)
-                form.entry(j, i) = form.entry(i, j);
+                form(j, i) = form(i, j);
         }
 
     return IntersectionForm(std::move(form));

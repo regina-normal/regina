@@ -165,8 +165,8 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                     // Display each boundary slope as (nu(L), -nu(M)).
                     for (unsigned i = 0; i < slopes.rows(); ++i)
                         ans += QString(" (%1, %2)")
-                            .arg(slopes.entry(i,1).stringValue().c_str())
-                            .arg((-slopes.entry(i,0)).stringValue().c_str());
+                            .arg(slopes(i,1).stringValue().c_str())
+                            .arg((-slopes(i,0)).stringValue().c_str());
                     return ans;
                 } catch (const regina::ReginaException&) {
                     // This could be a FailedPrecondition or a SnapPeaisNull.

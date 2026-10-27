@@ -172,9 +172,9 @@ AbelianGroup LayeredChainPair::homology() const {
     // of each layered chain.
     MatrixInt mat(3, 3);
     mat.fill(1);
-    mat.entry(0, 1) = mat.entry(2, 2) = -1;
-    mat.entry(1, 0) = chain_[0].index();
-    mat.entry(2, 1) = chain_[1].index();
+    mat(0, 1) = mat(2, 2) = -1;
+    mat(1, 0) = chain_[0].index();
+    mat(2, 1) = chain_[1].index();
     return AbelianGroup(std::move(mat));
 }
 

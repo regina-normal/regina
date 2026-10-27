@@ -57,7 +57,7 @@ HomMarkedAbelianGroup HomGroupPresentation::markedAbelianisation() const {
     for (size_t j=0; j<ccMat.columns(); j++) {
         GroupExpression COLj( evaluate(j) );
         for (size_t i=0; i<COLj.countTerms(); i++)
-            ccMat.entry( COLj.generator(i), j ) += COLj.exponent(i);
+            ccMat( COLj.generator(i), j ) += COLj.exponent(i);
     }
     return HomMarkedAbelianGroup(std::move(DOM), std::move(RAN),
         std::move(ccMat));

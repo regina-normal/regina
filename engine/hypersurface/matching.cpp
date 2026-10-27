@@ -90,13 +90,13 @@ MatrixInt makeMatchingEquations(const Triangulation<4>& triangulation,
                     // Triangles:
                     for (int i=0; i<4; i++) {
                         // Tetrahedra that meet this triangle:
-                        ++ans.entry(row, pos0 + perm0[i]);
-                        --ans.entry(row, pos1 + perm1[i]);
+                        ++ans(row, pos0 + perm0[i]);
+                        --ans(row, pos1 + perm1[i]);
 
                         // Prisms that meet this triangle:
-                        ++ans.entry(row, pos0 + 5 +
+                        ++ans(row, pos0 + 5 +
                             Edge<4>::edgeNumber[perm0[i]][perm0[4]]);
-                        --ans.entry(row, pos1 + 5 +
+                        --ans(row, pos1 + 5 +
                             Edge<4>::edgeNumber[perm1[i]][perm1[4]]);
                         ++row;
                     }
@@ -104,13 +104,13 @@ MatrixInt makeMatchingEquations(const Triangulation<4>& triangulation,
                     // Quads:
                     for (const int* q : quadDefn) {
                         // Prisms that meet this quad:
-                        ++ans.entry(row, pos0 + 5 +
+                        ++ans(row, pos0 + 5 +
                             Edge<4>::edgeNumber[perm0[q[0]]][perm0[q[1]]]);
-                        ++ans.entry(row, pos0 + 5 +
+                        ++ans(row, pos0 + 5 +
                             Edge<4>::edgeNumber[perm0[q[2]]][perm0[q[3]]]);
-                        --ans.entry(row, pos1 + 5 +
+                        --ans(row, pos1 + 5 +
                             Edge<4>::edgeNumber[perm1[q[0]]][perm1[q[1]]]);
-                        --ans.entry(row, pos1 + 5 +
+                        --ans(row, pos1 + 5 +
                             Edge<4>::edgeNumber[perm1[q[2]]][perm1[q[3]]]);
                         ++row;
                     }
@@ -142,9 +142,9 @@ MatrixInt makeMatchingEquations(const Triangulation<4>& triangulation,
                         for (const auto& emb : *t) {
                             size_t pos = 10 * emb.pentachoron()->index();
                             Perm<5> perm = emb.vertices();
-                            ++ans.entry(row, pos +
+                            ++ans(row, pos +
                                 Edge<4>::edgeNumber[perm[v]][perm[3]]);
-                            --ans.entry(row, pos +
+                            --ans(row, pos +
                                 Edge<4>::edgeNumber[perm[v]][perm[4]]);
                         }
                         ++row;
@@ -163,13 +163,13 @@ MatrixInt makeMatchingEquations(const Triangulation<4>& triangulation,
                     // Quads:
                     for (const int* q : quadDefn) {
                         // Prisms that meet this quad:
-                        ++ans.entry(row, pos0 +
+                        ++ans(row, pos0 +
                             Edge<4>::edgeNumber[perm0[q[0]]][perm0[q[1]]]);
-                        ++ans.entry(row, pos0 +
+                        ++ans(row, pos0 +
                             Edge<4>::edgeNumber[perm0[q[2]]][perm0[q[3]]]);
-                        --ans.entry(row, pos1 +
+                        --ans(row, pos1 +
                             Edge<4>::edgeNumber[perm1[q[0]]][perm1[q[1]]]);
-                        --ans.entry(row, pos1 +
+                        --ans(row, pos1 +
                             Edge<4>::edgeNumber[perm1[q[2]]][perm1[q[3]]]);
                         ++row;
                     }

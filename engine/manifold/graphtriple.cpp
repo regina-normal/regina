@@ -107,29 +107,29 @@ AbelianGroup GraphTriple::homology() const {
         // The relation for the base orbifold:
         for (i = 1 + genus[s];
                 i < 1 + genus[s] + punc[s] + fibres[s] + 1 + ref[s]; i++)
-            m.entry(reln, start[s] + i) = 1;
+            m(reln, start[s] + i) = 1;
         if (! sfs[s]->baseOrientable())
             for (i = 1; i < 1 + genus[s]; i++)
-                m.entry(reln, start[s] + i) = 2;
+                m(reln, start[s] + i) = 2;
         reln++;
 
         // A relation for each exception fibre:
         for (f = 0; f < fibres[s]; f++) {
             fibre = sfs[s]->fibre(f);
-            m.entry(reln, start[s] + 1 + genus[s] + punc[s] + f) = fibre.alpha;
-            m.entry(reln, start[s]) = fibre.beta;
+            m(reln, start[s] + 1 + genus[s] + punc[s] + f) = fibre.alpha;
+            m(reln, start[s]) = fibre.beta;
             reln++;
         }
 
         // The obstruction constant:
-        m.entry(reln, start[s] + 1 + genus[s] + punc[s] + fibres[s]) = 1;
-        m.entry(reln, start[s]) = sfs[s]->obstruction();
+        m(reln, start[s] + 1 + genus[s] + punc[s] + fibres[s]) = 1;
+        m(reln, start[s]) = sfs[s]->obstruction();
         reln++;
 
         // A relation for each reflector boundary:
         for (i = 0; i < ref[s]; i++) {
-            m.entry(reln, start[s]) = -1;
-            m.entry(reln, start[s] + 1 + genus[s] + punc[s] + fibres[s] +
+            m(reln, start[s]) = -1;
+            m(reln, start[s] + 1 + genus[s] + punc[s] + fibres[s] +
                 1 + ref[s] + i) = 2;
             reln++;
         }
@@ -138,29 +138,29 @@ AbelianGroup GraphTriple::homology() const {
         // appears in some cases; otherwise we will just have a
         // (harmless) zero row in the matrix.
         if (sfs[s]->reflectors(true))
-            m.entry(reln, start[s]) = 1;
+            m(reln, start[s]) = 1;
         else if (sfs[s]->fibreReversing())
-            m.entry(reln, start[s]) = 2;
+            m(reln, start[s]) = 2;
         reln++;
     }
 
     // Joining of boundaries:
-    m.entry(reln, start[1]) = -1;
-    m.entry(reln, 0) = matchingReln_[0][0][0];
-    m.entry(reln, 1 + genus[0]) = matchingReln_[0][0][1];
+    m(reln, start[1]) = -1;
+    m(reln, 0) = matchingReln_[0][0][0];
+    m(reln, 1 + genus[0]) = matchingReln_[0][0][1];
     reln++;
-    m.entry(reln, start[1] + 1 + genus[1]) = -1;
-    m.entry(reln, 0) = matchingReln_[0][1][0];
-    m.entry(reln, 1 + genus[0]) = matchingReln_[0][1][1];
+    m(reln, start[1] + 1 + genus[1]) = -1;
+    m(reln, 0) = matchingReln_[0][1][0];
+    m(reln, 1 + genus[0]) = matchingReln_[0][1][1];
     reln++;
 
-    m.entry(reln, start[2]) = -1;
-    m.entry(reln, 0) = matchingReln_[1][0][0];
-    m.entry(reln, 1 + genus[0] + 1) = matchingReln_[1][0][1];
+    m(reln, start[2]) = -1;
+    m(reln, 0) = matchingReln_[1][0][0];
+    m(reln, 1 + genus[0] + 1) = matchingReln_[1][0][1];
     reln++;
-    m.entry(reln, start[2] + 1 + genus[2]) = -1;
-    m.entry(reln, 0) = matchingReln_[1][1][0];
-    m.entry(reln, 1 + genus[0] + 1) = matchingReln_[1][1][1];
+    m(reln, start[2] + 1 + genus[2]) = -1;
+    m(reln, 0) = matchingReln_[1][1][0];
+    m(reln, 1 + genus[0] + 1) = matchingReln_[1][1][1];
     reln++;
 
     // Phew.

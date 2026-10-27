@@ -51,7 +51,7 @@ const AbelianGroup& SnapPeaTriangulation::homologyFilled() const {
     MatrixInt rRelns(sRelns.num_rows, sRelns.num_columns);
     for (int i = 0; i < sRelns.num_rows; ++i)
         for (int j = 0; j < sRelns.num_columns; ++j)
-            rRelns.entry(i, j) = sRelns.relations[i][j];
+            rRelns(i, j) = sRelns.relations[i][j];
 
     regina::snappea::free_relations(&sRelns);
 

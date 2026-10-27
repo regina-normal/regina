@@ -100,9 +100,9 @@ const AbelianGroup& Triangulation<3>::homologyRel() const {
                 edgeGenIndex = genIndex[currTet->edge(currEdge)->index()];
                 if (edgeGenIndex >= 0) {
                     if (currTet->edgeMapping(currEdge)[0] == currEdgeStart)
-                        pres.entry(i, edgeGenIndex) += 1;
+                        pres(i, edgeGenIndex) += 1;
                     else
-                        pres.entry(i, edgeGenIndex) -= 1;
+                        pres(i, edgeGenIndex) -= 1;
                 }
             }
             i++;

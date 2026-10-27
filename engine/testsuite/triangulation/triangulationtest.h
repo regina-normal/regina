@@ -2379,11 +2379,11 @@ class TriangulationTest : public testing::Test {
                         rank + dualBoundariesAsPrimal.columns());
                     for (size_t row = 0; row < b.rows(); ++row) {
                         for (size_t col = 0; col < rank; ++col)
-                            comb.entry(row, col) = b.entry(row, col);
+                            comb(row, col) = b(row, col);
                         for (size_t col = 0;
                                 col < dualBoundariesAsPrimal.columns(); ++col)
-                            comb.entry(row, rank + col) =
-                                dualBoundariesAsPrimal.entry(row, col);
+                            comb(row, rank + col) =
+                                dualBoundariesAsPrimal(row, col);
                     }
 
                     EXPECT_EQ(rank, std::move(comb).rank());

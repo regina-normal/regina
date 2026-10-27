@@ -355,7 +355,7 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
     Integer maxEqnEntry = 0;
     for (i = 0; i < eqns.rows(); ++i)
         for (j = 0; j < eqns.columns(); ++j) {
-            Integer tmp = eqns.entry(i, j).abs();
+            Integer tmp = eqns(i, j).abs();
             if (tmp > maxEqnEntry)
                 maxEqnEntry = tmp;
         }
@@ -371,7 +371,7 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
     for (i = 0; i < eqns.columns(); ++i) {
         Integer tmp = 0;
         for (j = 0; j < eqns.rows(); ++j)
-            tmp += Integer(eqns.entry(j, i).abs());
+            tmp += Integer(eqns(j, i).abs());
         if (tmp > maxOrigColSum)
             maxOrigColSum = tmp;
     }
@@ -384,7 +384,7 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
         FixedArray<Integer> colNorm(eqns.columns()); // initialised to zeroes
         for (i = 0; i < eqns.columns(); ++i)
             for (j = 0; j < eqns.rows(); ++j)
-                colNorm[i].addProduct(eqns.entry(j, i), eqns.entry(j, i));
+                colNorm[i].addProduct(eqns(j, i), eqns(j, i));
         std::sort(colNorm.begin(), colNorm.end());
         // This loop relies on the fact that the equations have been made
         // linearly independent, and therefore eqns.rows() ≤ eqns.columns().
@@ -633,7 +633,7 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
         std::vector<mpz_class> v;
         v.reserve(eqns_.columns());
         for (size_t c = 0; c < eqns_.columns(); ++c) {
-            const Integer& entry(eqns_.entry(r, c));
+            const Integer& entry(eqns_(r, c));
             if (entry.isNative()) {
                 // Since entry is native, unsafeValue() must succeed.
                 v.emplace_back(entry.unsafeValue<long>());

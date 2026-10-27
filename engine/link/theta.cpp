@@ -444,10 +444,10 @@ const Laurent2<Integer>& Link::theta() const {
     for (auto c : crossings_) {
         size_t i = arcOrder[c->upper().prev().id()];
         size_t j = arcOrder[c->lower().prev().id()];
-        a.entry(j, j + 1).set(0, a.entry(j, j + 1)[0] - 1);
-        a.entry(i, j + 1).set(0, a.entry(i, j + 1)[0] - 1);
-        a.entry(i, i + 1).set(c->sign(), a.entry(i, i + 1)[c->sign()] - 1);
-        a.entry(i, j + 1).set(c->sign(), a.entry(i, j + 1)[c->sign()] + 1);
+        a(j, j + 1).set(0, a(j, j + 1)[0] - 1);
+        a(i, j + 1).set(0, a(i, j + 1)[0] - 1);
+        a(i, i + 1).set(c->sign(), a(i, i + 1)[c->sign()] - 1);
+        a(i, j + 1).set(c->sign(), a(i, j + 1)[c->sign()] + 1);
     }
 
     // Now compute rotation numbers for arcs and extract the Alexander
@@ -501,56 +501,48 @@ const Laurent2<Integer>& Link::theta() const {
         size_t j = arcOrder[c->lower().prev().id()];
         if (c->sign() > 0) {
             ++writhe;
-            sum1bits[0] += T2(adj.entry(j, i)) *
-                ( u[2] * T3(adj.entry(j, i))
-                - shifted(T3(adj.entry(j, j)), 0, 1)
-                - u[1] * T3(adj.entry(i, i)));
-            sum1bits[0] +=
-                T2(adj.entry(j, j)) * T3(adj.entry(i, i)) * 2;
-            sum1bits[0] -=
-                T3(adj.entry(j, j)) * T2(adj.entry(i, i));
-            sum1bits[1] += T3(adj.entry(j, j)) * T1(adj.entry(i, i));
-            sum1bits[2] += T2(adj.entry(j, i)) *
-                shifted(T1(adj.entry(i, i)), 0, 1);
-            sum1bits[2] -= T2(adj.entry(j, j)) * T1(adj.entry(i, i));
-            sum1bits[3] -= T3(adj.entry(i, i));
+            sum1bits[0] += T2(adj(j, i)) *
+                ( u[2] * T3(adj(j, i))
+                - shifted(T3(adj(j, j)), 0, 1)
+                - u[1] * T3(adj(i, i)));
+            sum1bits[0] += T2(adj(j, j)) * T3(adj(i, i)) * 2;
+            sum1bits[0] -= T3(adj(j, j)) * T2(adj(i, i));
+            sum1bits[1] += T3(adj(j, j)) * T1(adj(i, i));
+            sum1bits[2] += T2(adj(j, i)) * shifted(T1(adj(i, i)), 0, 1);
+            sum1bits[2] -= T2(adj(j, j)) * T1(adj(i, i));
+            sum1bits[3] -= T3(adj(i, i));
 
-            sum1bits[4] += shifted(u[0], 0, 1) * T1(adj.entry(j, i)) *
-                ( d[1] * T3(adj.entry(j, j))
-                + d[2] *
-                    ( T2(adj.entry(j, i).shifted(1)) - T2(adj.entry(j, j))));
-            sum1bits[4] += u[2] * T3(adj.entry(j, i)) *
+            sum1bits[4] += shifted(u[0], 0, 1) * T1(adj(j, i)) *
+                ( d[1] * T3(adj(j, j))
+                + d[2] * ( T2(adj(j, i).shifted(1)) - T2(adj(j, j)) ));
+            sum1bits[4] += u[2] * T3(adj(j, i)) *
                 ( d01
-                - d[1] * shifted(T1(adj.entry(i, i)), 0, 1)
-                + d[0] * T2(adj.entry(i, j))
-                + d[0] * x[0] * T2(adj.entry(j, j))
-                - d[1] * ( u[0] * w[0] ) * T1(adj.entry(j, i)));
+                - d[1] * shifted(T1(adj(i, i)), 0, 1)
+                + d[0] * T2(adj(i, j))
+                + d[0] * x[0] * T2(adj(j, j))
+                - d[1] * ( u[0] * w[0] ) * T1(adj(j, i)));
         } else {
             --writhe;
-            sum1bits[0] -= T2(adj.entry(j, i)) *
-                ( v[2] * T3(adj.entry(j, i))
-                - shifted(T3(adj.entry(j, j)), 0, -1)
-                - v[1] * T3(adj.entry(i, i)));
-            sum1bits[0] -=
-                T2(adj.entry(j, j)) * T3(adj.entry(i, i)) * 2;
-            sum1bits[0] +=
-                T3(adj.entry(j, j)) * T2(adj.entry(i, i));
-            sum1bits[1] -= T3(adj.entry(j, j)) * T1(adj.entry(i, i));
-            sum1bits[2] -= T2(adj.entry(j, i)) *
-                shifted(T1(adj.entry(i, i)), 0, -1);
-            sum1bits[2] += T2(adj.entry(j, j)) * T1(adj.entry(i, i));
-            sum1bits[3] += T3(adj.entry(i, i));
+            sum1bits[0] -= T2(adj(j, i)) *
+                ( v[2] * T3(adj(j, i))
+                - shifted(T3(adj(j, j)), 0, -1)
+                - v[1] * T3(adj(i, i)));
+            sum1bits[0] -= T2(adj(j, j)) * T3(adj(i, i)) * 2;
+            sum1bits[0] += T3(adj(j, j)) * T2(adj(i, i));
+            sum1bits[1] -= T3(adj(j, j)) * T1(adj(i, i));
+            sum1bits[2] -= T2(adj(j, i)) * shifted(T1(adj(i, i)), 0, -1);
+            sum1bits[2] += T2(adj(j, j)) * T1(adj(i, i));
+            sum1bits[3] += T3(adj(i, i));
 
-            sum1bits[5] += shifted(v[0], 0, -1) * T1(adj.entry(j, i)) *
-                ( d[1] * T3(adj.entry(j, j))
-                + d[2] *
-                    ( T2(adj.entry(j, i).shifted(-1)) - T2(adj.entry(j, j))));
-            sum1bits[5] += v[2] * T3(adj.entry(j, i)) *
+            sum1bits[5] += shifted(v[0], 0, -1) * T1(adj(j, i)) *
+                ( d[1] * T3(adj(j, j))
+                + d[2] * ( T2(adj(j, i).shifted(-1)) - T2(adj(j, j)) ));
+            sum1bits[5] += v[2] * T3(adj(j, i)) *
                 ( d01
-                - d[1] * shifted(T1(adj.entry(i, i)), 0, -1)
-                + d[0] * T2(adj.entry(i, j))
-                + d[0] * x[1] * T2(adj.entry(j, j))
-                - d[1] * ( v[0] * w[1] ) * T1(adj.entry(j, i)));
+                - d[1] * shifted(T1(adj(i, i)), 0, -1)
+                + d[0] * T2(adj(i, j))
+                + d[0] * x[1] * T2(adj(j, j))
+                - d[1] * ( v[0] * w[1] ) * T1(adj(j, i)));
         }
     }
     WorkingL2 sum1 = u[1] * d01 * d[2] * writhe +
@@ -573,10 +565,10 @@ const Laurent2<Integer>& Link::theta() const {
             size_t i1 = arcOrder[c1->upper().prev().id()];
             size_t j1 = arcOrder[c1->lower().prev().id()];
 
-            const auto& p = adj.entry(j1, i0);
+            const auto& p = adj(j1, i0);
             if (p.isZero())
                 continue;
-            const auto& q = adj.entry(j0, i1);
+            const auto& q = adj(j0, i1);
             if (q.isZero())
                 continue;
 
@@ -585,29 +577,28 @@ const Laurent2<Integer>& Link::theta() const {
                 if (c1->sign() > 0) {
                     sum2bits[0].addProduct(
                         T1T2(p,
-                            (adj.entry(i1, i0) - p).shifted(1) +
-                                adj.entry(j1, j0) - adj.entry(i1, j0)),
+                            (adj(i1, i0) - p).shifted(1) +
+                                adj(j1, j0) - adj(i1, j0)),
                         T3(q));
                 } else {
                     sum2bits[1].addProduct(
                         T1T2(p,
-                            ((adj.entry(i1, i0) - p).shifted(1)
-                                + adj.entry(j1, j0)
-                                - adj.entry(i1, j0)).shifted(1)),
+                            ((adj(i1, i0) - p).shifted(1)
+                                + adj(j1, j0) - adj(i1, j0)).shifted(1)),
                         T3(q));
                 }
             } else {
                 if (c1->sign() > 0) {
                     sum2bits[2].addProduct(
                         T1T2(p,
-                            (adj.entry(i1, i0) - p).shifted(-1)
-                                + adj.entry(j1, j0) - adj.entry(i1, j0)),
+                            (adj(i1, i0) - p).shifted(-1)
+                                + adj(j1, j0) - adj(i1, j0)),
                         T3(q));
                 } else {
                     sum2bits[3].addProduct(
                         T1T2(p,
-                            (adj.entry(j1, j0) - adj.entry(i1, j0)).shifted(1) +
-                                adj.entry(i1, i0) - p),
+                            (adj(j1, j0) - adj(i1, j0)).shifted(1) +
+                                adj(i1, i0) - p),
                         T3(q));
                 }
             }
@@ -615,23 +606,22 @@ const Laurent2<Integer>& Link::theta() const {
             if (c0->sign() > 0) {
                 if (c1->sign() > 0) {
                     sum2bits[0].addProduct(T1T3(p, q),
-                        (adj.entry(i1, i0) - p).shifted(1) +
-                            adj.entry(j1, j0) - adj.entry(i1, j0));
+                        (adj(i1, i0) - p).shifted(1) +
+                            adj(j1, j0) - adj(i1, j0));
                 } else {
                     sum2bits[1].addProduct(T1T3(p, q),
-                        ((adj.entry(i1, i0) - p).shifted(1)
-                            + adj.entry(j1, j0)
-                            - adj.entry(i1, j0)).shifted(1));
+                        ((adj(i1, i0) - p).shifted(1)
+                            + adj(j1, j0) - adj(i1, j0)).shifted(1));
                 }
             } else {
                 if (c1->sign() > 0) {
                     sum2bits[2].addProduct(T1T3(p, q),
-                        (adj.entry(i1, i0) - p).shifted(-1)
-                            + adj.entry(j1, j0) - adj.entry(i1, j0));
+                        (adj(i1, i0) - p).shifted(-1)
+                            + adj(j1, j0) - adj(i1, j0));
                 } else {
                     sum2bits[3].addProduct(T1T3(p, q),
-                        (adj.entry(j1, j0) - adj.entry(i1, j0)).shifted(1) +
-                            adj.entry(i1, i0) - p);
+                        (adj(j1, j0) - adj(i1, j0)).shifted(1) +
+                            adj(i1, i0) - p);
                 }
             }
             #endif
@@ -652,9 +642,9 @@ const Laurent2<Integer>& Link::theta() const {
     for (size_t id = 0; id < 2 * n; ++id)
         if (rot[id]) {
             size_t k = arcOrder[id];
-            sum3 += (adj.entry(k, k) * 2 - det) * rot[id];
+            sum3 += (adj(k, k) * 2 - det) * rot[id];
             if (k == 0)
-                sum3 += (adj.entry(2 * n, 2 * n) * 2 - det) * rot[id];
+                sum3 += (adj(2 * n, 2 * n) * 2 - det) * rot[id];
         }
 
     // Next we compute comb = (y-1) θ.

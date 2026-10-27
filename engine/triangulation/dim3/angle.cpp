@@ -149,7 +149,7 @@ bool Triangulation<3>::hasGeneralAngleStructure() const {
     size_t col = 0;
 
     while (row < rank) {
-        if (eqns.entry(row, col) != 0) {
+        if (eqns(row, col) != 0) {
             leading[row] = col;
             ++row;
         }
@@ -176,12 +176,12 @@ bool Triangulation<3>::hasGeneralAngleStructure() const {
         // Enforce equation #row.
 
         col = leading[row];
-        Integer den = eqns.entry(row, col);
+        Integer den = eqns(row, col);
 
         Integer num; // set to 0
         for (++col; col < v.size(); ++col)
-            if (eqns.entry(row, col) != 0)
-                num.addProduct(eqns.entry(row, col), v[col]);
+            if (eqns(row, col) != 0)
+                num.addProduct(eqns(row, col), v[col]);
 
         // Our row Hermite normal form guarantees that den > 0.
         // We need to set v[leading[row]] = -num/den.

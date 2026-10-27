@@ -411,22 +411,22 @@ Matrix<Integer> NormalSurface::boundaryIntersections() const {
         // Note: we are converting from LargeInteger to Integer below.
         for(unsigned int j=0; j < numTet; j++) {
             meridian +=
-                equations.entry(2*i, 3*j) *
+                equations(2*i, 3*j) *
                     Integer(quads(j, quadSeparating[0][1])) +
-                equations.entry(2*i, 3*j+1) *
+                equations(2*i, 3*j+1) *
                     Integer(quads(j, quadSeparating[0][2])) +
-                equations.entry(2*i, 3*j+2) *
+                equations(2*i, 3*j+2) *
                     Integer(quads(j, quadSeparating[0][3]));
             longitude +=
-                equations.entry(2*i+1, 3*j) *
+                equations(2*i+1, 3*j) *
                     Integer(quads(j, quadSeparating[0][1])) +
-                equations.entry(2*i+1, 3*j+1) *
+                equations(2*i+1, 3*j+1) *
                     Integer(quads(j, quadSeparating[0][2])) +
-                equations.entry(2*i+1, 3*j+2) *
+                equations(2*i+1, 3*j+2) *
                     Integer(quads(j, quadSeparating[0][3]));
         }
-        slopes.entry(i,0) = meridian;
-        slopes.entry(i,1) = longitude;
+        slopes(i,0) = meridian;
+        slopes(i,1) = longitude;
     }
     return slopes;
 }

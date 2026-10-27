@@ -326,13 +326,13 @@ TEST_F(SnapPeaTest, spunBoundaries) {
         regina::MatrixInt m = f.boundaryIntersections();
         ASSERT_EQ(m.rows(), 1);
         ASSERT_EQ(m.columns(), 2);
-        if (m.entry(0, 0) == 1 && m.entry(0, 1) == 4)
+        if (m(0, 0) == 1 && m(0, 1) == 4)
             found[0] = true;
-        else if (m.entry(0, 0) == 1 && m.entry(0, 1) == -4)
+        else if (m(0, 0) == 1 && m(0, 1) == -4)
             found[1] = true;
-        else if (m.entry(0, 0) == -1 && m.entry(0, 1) == 4)
+        else if (m(0, 0) == -1 && m(0, 1) == 4)
             found[2] = true;
-        else if (m.entry(0, 0) == -1 && m.entry(0, 1) == -4)
+        else if (m(0, 0) == -1 && m(0, 1) == -4)
             found[3] = true;
         else
             ADD_FAILURE() << "Unexpected boundary intersections: " << m.str();

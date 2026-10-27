@@ -79,46 +79,46 @@ AbelianGroup GraphPair::homology() const {
     unsigned long i, f;
     // The relation for each base orbifold:
     for (i = 1 + genus0; i < 1 + genus0 + 1 + fibres0 + 1 + ref0; i++)
-        m.entry(0, i) = 1;
+        m(0, i) = 1;
     if (! sfs_[0].baseOrientable())
         for (i = 1; i < 1 + genus0; i++)
-            m.entry(0, i) = 2;
+            m(0, i) = 2;
 
     for (i = 1 + genus1; i < 1 + genus1 + 1 + fibres1 + 1 + ref1; i++)
-        m.entry(1, all0 + i) = 1;
+        m(1, all0 + i) = 1;
     if (! sfs_[1].baseOrientable())
         for (i = 1; i < 1 + genus1; i++)
-            m.entry(1, all0 + i) = 2;
+            m(1, all0 + i) = 2;
 
     // A relation for each exceptional fibre and obstruction constant:
     SFSFibre fibre;
 
     for (f = 0; f < fibres0; f++) {
         fibre = sfs_[0].fibre(f);
-        m.entry(2 + f, 1 + genus0 + 1 + f) = fibre.alpha;
-        m.entry(2 + f, 0) = fibre.beta;
+        m(2 + f, 1 + genus0 + 1 + f) = fibre.alpha;
+        m(2 + f, 0) = fibre.beta;
     }
-    m.entry(2 + fibres0, 1 + genus0 + 1 + fibres0) = 1;
-    m.entry(2 + fibres0, 0) = sfs_[0].obstruction();
+    m(2 + fibres0, 1 + genus0 + 1 + fibres0) = 1;
+    m(2 + fibres0, 0) = sfs_[0].obstruction();
 
     for (f = 0; f < fibres1; f++) {
         fibre = sfs_[1].fibre(f);
-        m.entry(3 + fibres0 + f, all0 + 1 + genus1 + 1 + f) = fibre.alpha;
-        m.entry(3 + fibres0 + f, all0) = fibre.beta;
+        m(3 + fibres0 + f, all0 + 1 + genus1 + 1 + f) = fibre.alpha;
+        m(3 + fibres0 + f, all0) = fibre.beta;
     }
-    m.entry(3 + fibres0 + fibres1, all0 + 1 + genus1 + 1 + fibres1) = 1;
-    m.entry(3 + fibres0 + fibres1, all0) = sfs_[1].obstruction();
+    m(3 + fibres0 + fibres1, all0 + 1 + genus1 + 1 + fibres1) = 1;
+    m(3 + fibres0 + fibres1, all0) = sfs_[1].obstruction();
 
     // A relation for each reflector boundary:
     for (i = 0; i < ref0; i++) {
-        m.entry(4 + fibres0 + fibres1 + i, 0) = -1;
-        m.entry(4 + fibres0 + fibres1 + i,
+        m(4 + fibres0 + fibres1 + i, 0) = -1;
+        m(4 + fibres0 + fibres1 + i,
             1 + genus0 + 1 + fibres0 + 1 + ref0 + i) = 2;
     }
 
     for (i = 0; i < ref1; i++) {
-        m.entry(4 + fibres0 + fibres1 + ref0 + i, all0) = -1;
-        m.entry(4 + fibres0 + fibres1 + ref0 + i,
+        m(4 + fibres0 + fibres1 + ref0 + i, all0) = -1;
+        m(4 + fibres0 + fibres1 + ref0 + i,
             all0 + 1 + genus1 + 1 + fibres1 + 1 + ref1 + i) = 2;
     }
 
@@ -126,23 +126,23 @@ AbelianGroup GraphPair::homology() const {
     // appears in some cases; otherwise we will just have a (harmless)
     // zero row in the matrix.
     if (sfs_[0].reflectors(true))
-        m.entry(4 + fibres0 + fibres1 + ref0 + ref1, 0) = 1;
+        m(4 + fibres0 + fibres1 + ref0 + ref1, 0) = 1;
     else if (sfs_[0].fibreReversing())
-        m.entry(4 + fibres0 + fibres1 + ref0 + ref1, 0) = 2;
+        m(4 + fibres0 + fibres1 + ref0 + ref1, 0) = 2;
 
     if (sfs_[1].reflectors(true))
-        m.entry(5 + fibres0 + fibres1 + ref0 + ref1, all0) = 1;
+        m(5 + fibres0 + fibres1 + ref0 + ref1, all0) = 1;
     else if (sfs_[1].fibreReversing())
-        m.entry(5 + fibres0 + fibres1 + ref0 + ref1, all0) = 2;
+        m(5 + fibres0 + fibres1 + ref0 + ref1, all0) = 2;
 
     // Finally, two relations for the joining of boundaries:
-    m.entry(6 + fibres0 + fibres1 + ref0 + ref1, all0) = -1;
-    m.entry(6 + fibres0 + fibres1 + ref0 + ref1, 0) = matchingReln_[0][0];
-    m.entry(6 + fibres0 + fibres1 + ref0 + ref1, 1 + genus0) =
+    m(6 + fibres0 + fibres1 + ref0 + ref1, all0) = -1;
+    m(6 + fibres0 + fibres1 + ref0 + ref1, 0) = matchingReln_[0][0];
+    m(6 + fibres0 + fibres1 + ref0 + ref1, 1 + genus0) =
         matchingReln_[0][1];
-    m.entry(7 + fibres0 + fibres1 + ref0 + ref1, all0 + 1 + genus1) = -1;
-    m.entry(7 + fibres0 + fibres1 + ref0 + ref1, 0) = matchingReln_[1][0];
-    m.entry(7 + fibres0 + fibres1 + ref0 + ref1, 1 + genus0) =
+    m(7 + fibres0 + fibres1 + ref0 + ref1, all0 + 1 + genus1) = -1;
+    m(7 + fibres0 + fibres1 + ref0 + ref1, 0) = matchingReln_[1][0];
+    m(7 + fibres0 + fibres1 + ref0 + ref1, 1 + genus0) =
         matchingReln_[1][1];
 
     return AbelianGroup(std::move(m));

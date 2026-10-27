@@ -60,18 +60,18 @@ MatrixInt makeAngleEquations(const Triangulation<3>& tri) {
         for (auto& emb : *edge) {
             index = emb.tetrahedron()->index();
             if (emb.edge() < 3)
-                eqns.entry(row, 3 * index + emb.edge()) += 1;
+                eqns(row, 3 * index + emb.edge()) += 1;
             else
-                eqns.entry(row, 3 * index + 5 - emb.edge()) += 1;
+                eqns(row, 3 * index + 5 - emb.edge()) += 1;
         }
-        eqns.entry(row, cols - 1) = -2;
+        eqns(row, cols - 1) = -2;
         ++row;
     }
     for (index = 0; index < n; index++) {
-        eqns.entry(row, 3 * index) = 1;
-        eqns.entry(row, 3 * index + 1) = 1;
-        eqns.entry(row, 3 * index + 2) = 1;
-        eqns.entry(row, cols - 1) = -1;
+        eqns(row, 3 * index) = 1;
+        eqns(row, 3 * index + 1) = 1;
+        eqns(row, 3 * index + 2) = 1;
+        eqns(row, cols - 1) = -1;
         ++row;
     }
 
