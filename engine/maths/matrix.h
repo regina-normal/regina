@@ -1757,6 +1757,7 @@ class Matrix : public Output<Matrix<T>> {
         std::pair<Matrix, T> adjugate(
                 AdjugateAlgorithm alg = AdjugateAlgorithm::Default) const
                 requires IntegralDomain<T> {
+            // TODO: Use divExact() / divByExact() if T satisfies ReginaInteger.
             if (rows_ != cols_)
                 throw FailedPrecondition("The adjugate can only be "
                     "computed for a square matrix");
