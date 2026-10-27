@@ -120,113 +120,119 @@ struct MatrixTests {
     };
 };
 
-template <typename T>
-requires std::semiregular<T> && regina::Writeable<T>
-static void validate(const Matrix<T>& m, size_t rows, size_t columns) {
-    EXPECT_NO_THROW({ m.validate(); });
-    ASSERT_EQ(m.rows(), rows);
-    ASSERT_EQ(m.columns(), columns);
-}
+namespace {
+    template <typename T>
+    requires std::semiregular<T> && regina::Writeable<T>
+    void validate(const Matrix<T>& m, size_t rows, size_t columns) {
+        EXPECT_NO_THROW({ m.validate(); });
+        ASSERT_EQ(m.rows(), rows);
+        ASSERT_EQ(m.columns(), columns);
+    }
 
-template <typename T>
-requires std::semiregular<T> && regina::Writeable<T>
-static void validateEmpty(const Matrix<T>& m) {
-    validate(m, 0, 0);
-    EXPECT_EQ(m, Matrix<T>());
-}
+    template <typename T>
+    requires std::semiregular<T> && regina::Writeable<T>
+    void validateEmpty(const Matrix<T>& m) {
+        validate(m, 0, 0);
+        EXPECT_EQ(m, Matrix<T>());
+    }
 
-template <typename T>
-requires std::semiregular<T> && regina::Writeable<T>
-static void validateNoRows(const Matrix<T>& m, size_t columns) {
-    validate(m, 0, columns);
-    EXPECT_EQ(m, Matrix<T>(0, columns));
-}
+    template <typename T>
+    requires std::semiregular<T> && regina::Writeable<T>
+    void validateNoRows(const Matrix<T>& m, size_t columns) {
+        validate(m, 0, columns);
+        EXPECT_EQ(m, Matrix<T>(0, columns));
+    }
 
-template <typename T>
-requires std::semiregular<T> && regina::Writeable<T>
-static void validateNoColumns(const Matrix<T>& m, size_t rows) {
-    validate(m, rows, 0);
-    EXPECT_EQ(m, Matrix<T>(rows, 0));
-}
+    template <typename T>
+    requires std::semiregular<T> && regina::Writeable<T>
+    void validateNoColumns(const Matrix<T>& m, size_t rows) {
+        validate(m, rows, 0);
+        EXPECT_EQ(m, Matrix<T>(rows, 0));
+    }
 
-template <typename T>
-requires std::regular<T> && regina::Writeable<T> && regina::IntegerCompatible<T>
-static void validateIdentity(const Matrix<T>& m, size_t size) {
-    validate(m, size, size);
-    for (size_t i = 0; i < size; ++i)
-        for (size_t j = 0; j < size; ++j)
-            EXPECT_EQ(m.entry(i, j), i == j ? 1 : 0);
-}
+    template <typename T>
+    requires std::regular<T> && regina::Writeable<T> &&
+        regina::IntegerCompatible<T>
+    void validateIdentity(const Matrix<T>& m, size_t size) {
+        validate(m, size, size);
+        for (size_t i = 0; i < size; ++i)
+            for (size_t j = 0; j < size; ++j)
+                EXPECT_EQ(m.entry(i, j), i == j ? 1 : 0);
+    }
 
-template <typename T>
-requires std::regular<T> && regina::Writeable<T> && regina::IntegerCompatible<T>
-static void validateZero(const Matrix<T>& m, size_t rows, size_t columns) {
-    validate(m, rows, columns);
-    for (size_t i = 0; i < rows; ++i)
-        for (size_t j = 0; j < columns; ++j)
-            EXPECT_EQ(m.entry(i, j), 0);
-}
+    template <typename T>
+    requires std::regular<T> && regina::Writeable<T> &&
+        regina::IntegerCompatible<T>
+    void validateZero(const Matrix<T>& m, size_t rows, size_t columns) {
+        validate(m, rows, columns);
+        for (size_t i = 0; i < rows; ++i)
+            for (size_t j = 0; j < columns; ++j)
+                EXPECT_EQ(m.entry(i, j), 0);
+    }
 
-template <typename T>
-requires std::regular<T> && regina::Writeable<T>
-static void validate(const Matrix<T>& m, const Matrix<T>& expect) {
-    validate(m, expect.rows(), expect.columns());
-    for (size_t i = 0; i < m.rows(); ++i)
-        for (size_t j = 0; j < m.columns(); ++j)
-            EXPECT_EQ(m.entry(i, j), expect.entry(i, j));
-}
+    template <typename T>
+    requires std::regular<T> && regina::Writeable<T>
+    void validate(const Matrix<T>& m, const Matrix<T>& expect) {
+        validate(m, expect.rows(), expect.columns());
+        for (size_t i = 0; i < m.rows(); ++i)
+            for (size_t j = 0; j < m.columns(); ++j)
+                EXPECT_EQ(m.entry(i, j), expect.entry(i, j));
+    }
 
-template <typename T, std::regular_invocable<size_t, size_t> ComputeEntry>
-requires std::regular<T> && regina::Writeable<T>
-static void validate(const Matrix<T>& m, size_t rows, size_t columns,
-        ComputeEntry&& expectedEntry) {
-    validate(m, rows, columns);
-    for (size_t i = 0; i < rows; ++i)
-        for (size_t j = 0; j < columns; ++j)
-            EXPECT_EQ(m.entry(i, j), expectedEntry(i, j));
-}
+    template <typename T, std::regular_invocable<size_t, size_t> ComputeEntry>
+    requires std::regular<T> && regina::Writeable<T>
+    void validate(const Matrix<T>& m, size_t rows, size_t columns,
+            ComputeEntry&& expectedEntry) {
+        validate(m, rows, columns);
+        for (size_t i = 0; i < rows; ++i)
+            for (size_t j = 0; j < columns; ++j)
+                EXPECT_EQ(m.entry(i, j), expectedEntry(i, j));
+    }
+} // anonymous namespace
 
 // MARK: - Core operations
 
-template <regina::AnyInteger T>
-static void verifyConstruct() {
-    validateEmpty(Matrix<T>());
+namespace {
+    template <regina::AnyInteger T>
+    void verifyConstruct() {
+        validateEmpty(Matrix<T>());
 
-    // Only test the initialiser list constructor for empty matrices.
-    // This constructor is already tested thoroughly for non-empty matrices
-    // in the setup for MatrixTests<T>::cases.
-    validateEmpty(Matrix<T>({}));
-    validateNoColumns(Matrix<T>({ {}, {}, {} }), 3);
+        // Only test the initialiser list constructor for empty matrices.
+        // This constructor is already tested thoroughly for non-empty matrices
+        // in the setup for MatrixTests<T>::cases.
+        validateEmpty(Matrix<T>({}));
+        validateNoColumns(Matrix<T>({ {}, {}, {} }), 3);
 
-    validateEmpty(Matrix<T>(0));
-    validateEmpty(Matrix<T>(0, 0));
-    validateNoRows(Matrix<T>(0, 3), 3);
-    validateNoColumns(Matrix<T>(3, 0), 3);
+        validateEmpty(Matrix<T>(0));
+        validateEmpty(Matrix<T>(0, 0));
+        validateNoRows(Matrix<T>(0, 3), 3);
+        validateNoColumns(Matrix<T>(3, 0), 3);
 
-    if constexpr (regina::ReginaInteger<T>) {
-        static_assert(regina::RingTraits<T>::zeroInitialised);
-        validateZero(Matrix<T>(1), 1, 1);
-        validateZero(Matrix<T>(3), 3, 3);
-        validateZero(Matrix<T>(3, 4), 3, 4);
-        validateZero(Matrix<T>(4, 3), 4, 3);
-    } else {
-        validate(Matrix<T>(1), 1, 1);
-        validate(Matrix<T>(3), 3, 3);
-        validate(Matrix<T>(3, 4), 3, 4);
-        validate(Matrix<T>(4, 3), 4, 3);
-    }
+        if constexpr (regina::ReginaInteger<T>) {
+            static_assert(regina::RingTraits<T>::zeroInitialised);
+            validateZero(Matrix<T>(1), 1, 1);
+            validateZero(Matrix<T>(3), 3, 3);
+            validateZero(Matrix<T>(3, 4), 3, 4);
+            validateZero(Matrix<T>(4, 3), 4, 3);
+        } else {
+            validate(Matrix<T>(1), 1, 1);
+            validate(Matrix<T>(3), 3, 3);
+            validate(Matrix<T>(3, 4), 3, 4);
+            validate(Matrix<T>(4, 3), 4, 3);
+        }
 
-    const MatrixTests<T> tests;
-    for (const Matrix<T>& c : tests.cases) {
-        SCOPED_TRACE_REGINA(c);
-        {
-            Matrix<T> x(c);
-            validate(x, c);
-            Matrix<T> y(std::move(x));
-            validate(y, c);
+        const MatrixTests<T> tests;
+        for (const Matrix<T>& c : tests.cases) {
+            SCOPED_TRACE_REGINA(c);
+            {
+                Matrix<T> x(c);
+                validate(x, c);
+                Matrix<T> y(std::move(x));
+                validate(y, c);
+            }
         }
     }
-}
+} // anonymous namespace
 
 TEST(MatrixTest, construct) {
     verifyConstruct<int>();
@@ -249,109 +255,117 @@ TEST(MatrixTest, construct) {
     }
 }
 
-template <regina::AnyInteger T>
-static void verifyAssign() {
-    const MatrixTests<T> tests;
-    for (const Matrix<T>& c : tests.cases) {
-        SCOPED_TRACE_REGINA(c);
-        for (const Matrix<T>& d : tests.cases) {
-            SCOPED_TRACE_REGINA(d);
-            {
-                Matrix<T> x(c);
-                validate(x, c);
-                x = d;
-                validate(x, d);
-            }
-            {
-                Matrix<T> x(c), y(d);
-                validate(x, c);
-                validate(y, d);
-                x = std::move(y);
-                validate(x, d);
+namespace {
+    template <regina::AnyInteger T>
+    void verifyAssign() {
+        const MatrixTests<T> tests;
+        for (const Matrix<T>& c : tests.cases) {
+            SCOPED_TRACE_REGINA(c);
+            for (const Matrix<T>& d : tests.cases) {
+                SCOPED_TRACE_REGINA(d);
+                {
+                    Matrix<T> x(c);
+                    validate(x, c);
+                    x = d;
+                    validate(x, d);
+                }
+                {
+                    Matrix<T> x(c), y(d);
+                    validate(x, c);
+                    validate(y, d);
+                    x = std::move(y);
+                    validate(x, d);
+                }
             }
         }
     }
-}
+} // anonymous namespace
 
 TEST(MatrixTest, assign) {
     verifyAssign<int>();
     verifyAssign<Integer>();
 }
 
-template <regina::AnyInteger T>
-static void verifyFill() {
-    const MatrixTests<T> tests;
-    for (const Matrix<T>& c : tests.cases) {
-        SCOPED_TRACE_REGINA(c);
-        {
-            Matrix<T> x(c);
-            x.fill(0);
-            validateZero(x, c.rows(), c.columns());
-        }
-        {
-            Matrix<T> x(c);
-            x.fill(-2);
-            validate(x, c.rows(), c.columns(), [](size_t, size_t) {
-                return -2;
-            });
+namespace {
+    template <regina::AnyInteger T>
+    void verifyFill() {
+        const MatrixTests<T> tests;
+        for (const Matrix<T>& c : tests.cases) {
+            SCOPED_TRACE_REGINA(c);
+            {
+                Matrix<T> x(c);
+                x.fill(0);
+                validateZero(x, c.rows(), c.columns());
+            }
+            {
+                Matrix<T> x(c);
+                x.fill(-2);
+                validate(x, c.rows(), c.columns(), [](size_t, size_t) {
+                    return -2;
+                });
+            }
         }
     }
-}
+} // anonymous namespace
 
 TEST(MatrixTest, fill) {
     verifyFill<int>();
     verifyFill<Integer>();
 }
 
-template <regina::AnyInteger T>
-static void verifyDimensions() {
-    // This test is where we also perform basic validation on all of our
-    // standard test cases.
-    const MatrixTests<T> tests;
+namespace {
+    template <regina::AnyInteger T>
+    void verifyDimensions() {
+        // This test is where we also perform basic validation on all of our
+        // standard test cases.
+        const MatrixTests<T> tests;
 
-    validate(tests.empty, 0, 0);
-    validate(tests.noRows, 0, 3);
-    validate(tests.noCols, 3, 0);
-    validate(tests.zero3, 3, 3);
-    validate(tests.zero34, 3, 4);
-    validate(tests.identity3, 3, 3);
-    validate(tests.identity34, 3, 4);
-    validate(tests.one, 1, 1);
-    validate(tests.minusOne, 1, 1);
-    validate(tests.two, 1, 1);
-    validate(tests.vector, 1, 3);
-    validate(tests.shear2, 2, 2);
-    validate(tests.square3, 3, 3);
-    validate(tests.rect34, 3, 4);
-    validate(tests.rect43, 4, 3);
-    validate(tests.redundant34, 3, 4);
-    validate(tests.duplicate34, 3, 4);
-    validate(tests.perm4, 4, 4);
-    validate(tests.fib1, 3, 3);
-    validate(tests.fib2, 3, 3);
-}
+        validate(tests.empty, 0, 0);
+        validate(tests.noRows, 0, 3);
+        validate(tests.noCols, 3, 0);
+        validate(tests.zero3, 3, 3);
+        validate(tests.zero34, 3, 4);
+        validate(tests.identity3, 3, 3);
+        validate(tests.identity34, 3, 4);
+        validate(tests.one, 1, 1);
+        validate(tests.minusOne, 1, 1);
+        validate(tests.two, 1, 1);
+        validate(tests.vector, 1, 3);
+        validate(tests.shear2, 2, 2);
+        validate(tests.square3, 3, 3);
+        validate(tests.rect34, 3, 4);
+        validate(tests.rect43, 4, 3);
+        validate(tests.redundant34, 3, 4);
+        validate(tests.duplicate34, 3, 4);
+        validate(tests.perm4, 4, 4);
+        validate(tests.fib1, 3, 3);
+        validate(tests.fib2, 3, 3);
+    }
+} // anonymous namespace
 
 TEST(MatrixTest, dimensions) {
     verifyDimensions<int>();
     verifyDimensions<Integer>();
 }
 
-template <regina::AnyInteger T>
-static void verifyEntry(size_t rows, size_t columns) {
-    // This tests both read and write variants of entry().
-    // We do not work very hard here, since entry() is already being verified
-    // through many other tests in this suite.
-    // We just verify that we can read and write from/to every cell in the
-    // matrix.
-    Matrix<T> m(rows, columns);
-    for (size_t r = 0; r < rows; ++r)
-        for (size_t c = 0; c < columns; ++c)
-            m.entry(r, c) = 3 * r + 173 * c + 2;
-    const Matrix<T>& mRef(m);
-    for (size_t r = 0; r < rows; ++r)
-        for (size_t c = 0; c < columns; ++c)
-            EXPECT_EQ(mRef.entry(r, c), 3 * r + 173 * c + 2);
-}
+namespace {
+    template <regina::AnyInteger T>
+    void verifyEntry(size_t rows, size_t columns) {
+        // This tests both read and write variants of entry().
+        // We do not work very hard here, since entry() is already being
+        // verified through many other tests in this suite.
+        // We just verify that we can read and write from/to every cell in the
+        // matrix.
+        Matrix<T> m(rows, columns);
+        for (size_t r = 0; r < rows; ++r)
+            for (size_t c = 0; c < columns; ++c)
+                m.entry(r, c) = 3 * r + 173 * c + 2;
+        const Matrix<T>& mRef(m);
+        for (size_t r = 0; r < rows; ++r)
+            for (size_t c = 0; c < columns; ++c)
+                EXPECT_EQ(mRef.entry(r, c), 3 * r + 173 * c + 2);
+    }
+} // anonymous namespace
 
 TEST(MatrixTest, entry) {
     verifyEntry<int>(3, 4);
@@ -360,299 +374,311 @@ TEST(MatrixTest, entry) {
     verifyEntry<Integer>(4, 3);
 }
 
-template <regina::AnyInteger T>
-static void verifySwap() {
-    const MatrixTests<T> tests;
-    for (const Matrix<T>& c : tests.cases) {
-        SCOPED_TRACE_REGINA(c);
-        for (const Matrix<T>& d : tests.cases) {
-            SCOPED_TRACE_REGINA(d);
-            {
-                Matrix<T> x(c);
-                Matrix<T> y(d);
-                x.swap(y);
-                validate(x, d);
-                validate(y, c);
-            }
-            {
-                Matrix<T> x(c);
-                Matrix<T> y(d);
-                swap(x, y);
-                validate(x, d);
-                validate(y, c);
+namespace {
+    template <regina::AnyInteger T>
+    void verifySwap() {
+        const MatrixTests<T> tests;
+        for (const Matrix<T>& c : tests.cases) {
+            SCOPED_TRACE_REGINA(c);
+            for (const Matrix<T>& d : tests.cases) {
+                SCOPED_TRACE_REGINA(d);
+                {
+                    Matrix<T> x(c);
+                    Matrix<T> y(d);
+                    x.swap(y);
+                    validate(x, d);
+                    validate(y, c);
+                }
+                {
+                    Matrix<T> x(c);
+                    Matrix<T> y(d);
+                    swap(x, y);
+                    validate(x, d);
+                    validate(y, c);
+                }
             }
         }
     }
-}
+} // anonymous namespace
 
 TEST(MatrixTest, swap) {
     verifySwap<int>();
     verifySwap<Integer>();
 }
 
-template <regina::AnyInteger T>
-static void verifyMoveThenAssign() {
-    const MatrixTests<T> tests;
-    for (const Matrix<T>& c : tests.cases) {
-        SCOPED_TRACE_REGINA(c);
+namespace {
+    template <regina::AnyInteger T>
+    void verifyMoveThenAssign() {
+        const MatrixTests<T> tests;
+        for (const Matrix<T>& c : tests.cases) {
+            SCOPED_TRACE_REGINA(c);
 
-        // Here *junk indicates the initial value of y.  The point of this is
-        // to ensure that, when moving x into y, we don't end up with unwanted
-        // residue from this junk living within x.
-        //
-        // We also allow junk to be cases.end() which means that y should be
-        // default constructed (hence the awkward structure of this loop).
-        auto junk = tests.cases.begin();
-        while (true) {
-            for (const Matrix<T>& d : tests.cases) {
-                SCOPED_TRACE_REGINA(d);
-                {
-                    Matrix<T> x(c);
-                    validate(x, c);
-                    Matrix<T> y;
-                    if (junk != tests.cases.end()) {
-                        y = *junk;
-                        validate(y, junk->get());
-                    } else {
-                        validateEmpty(y);
+            // Here *junk indicates the initial value of y.  The point of this
+            // is to ensure that, when moving x into y, we don't end up with
+            // unwanted residue from this junk living within x.
+            //
+            // We also allow junk to be cases.end() which means that y should be
+            // default constructed (hence the awkward structure of this loop).
+            auto junk = tests.cases.begin();
+            while (true) {
+                for (const Matrix<T>& d : tests.cases) {
+                    SCOPED_TRACE_REGINA(d);
+                    {
+                        Matrix<T> x(c);
+                        validate(x, c);
+                        Matrix<T> y;
+                        if (junk != tests.cases.end()) {
+                            y = *junk;
+                            validate(y, junk->get());
+                        } else {
+                            validateEmpty(y);
+                        }
+
+                        y = std::move(x);
+                        x = d;
+                        validate(x, d);
+                        validate(y, c);
                     }
+                    {
+                        Matrix<T> x(c);
+                        validate(x, c);
+                        Matrix<T> y;
+                        if (junk != tests.cases.end()) {
+                            y = *junk;
+                            validate(y, junk->get());
+                        } else {
+                            validateEmpty(y);
+                        }
 
-                    y = std::move(x);
-                    x = d;
-                    validate(x, d);
-                    validate(y, c);
-                }
-                {
-                    Matrix<T> x(c);
-                    validate(x, c);
-                    Matrix<T> y;
-                    if (junk != tests.cases.end()) {
-                        y = *junk;
-                        validate(y, junk->get());
-                    } else {
-                        validateEmpty(y);
+                        y = std::move(x);
+                        x = Matrix<T>(d);
+                        validate(x, d);
+                        validate(y, c);
                     }
-
-                    y = std::move(x);
-                    x = Matrix<T>(d);
-                    validate(x, d);
-                    validate(y, c);
                 }
+
+                if (junk == tests.cases.end())
+                    break;
+                ++junk;
             }
-
-            if (junk == tests.cases.end())
-                break;
-            ++junk;
         }
     }
-}
+} // anonymous namespace
 
 TEST(MatrixTest, moveThenAssign) {
     verifyMoveThenAssign<int>();
     verifyMoveThenAssign<Integer>();
 }
 
-template <regina::AnyInteger T>
-static void verifyComparison() {
-    const MatrixTests<T> tests;
-    for (const Matrix<T>& c : tests.cases) {
-        SCOPED_TRACE_REGINA(c);
+namespace {
+    template <regina::AnyInteger T>
+    void verifyComparison() {
+        const MatrixTests<T> tests;
+        for (const Matrix<T>& c : tests.cases) {
+            SCOPED_TRACE_REGINA(c);
 
-        EXPECT_TRUE(c == c);
-        EXPECT_TRUE(c == Matrix<T>(c));
-        EXPECT_FALSE(c != c);
-        EXPECT_FALSE(c != Matrix<T>(c));
+            EXPECT_TRUE(c == c);
+            EXPECT_TRUE(c == Matrix<T>(c));
+            EXPECT_FALSE(c != c);
+            EXPECT_FALSE(c != Matrix<T>(c));
 
-        for (const Matrix<T>& d : tests.cases) {
-            if (std::addressof(c) == std::addressof(d))
-                continue;
+            for (const Matrix<T>& d : tests.cases) {
+                if (std::addressof(c) == std::addressof(d))
+                    continue;
 
-            SCOPED_TRACE_REGINA(d);
-            EXPECT_FALSE(c == d);
-            EXPECT_TRUE(c != d);
+                SCOPED_TRACE_REGINA(d);
+                EXPECT_FALSE(c == d);
+                EXPECT_TRUE(c != d);
+            }
         }
     }
-}
+} // anonymous namespace
 
 TEST(MatrixTest, comparison) {
     verifyComparison<int>();
     verifyComparison<Integer>();
 }
 
-template <regina::AnyInteger T>
-static void verifyExtractRowsCols(const Matrix<T>& m) {
-    // This tests copyRows(), moveRows(), copyCols(), moveCols(),
-    // rowVector(), and columnVector().
+namespace {
+    template <regina::AnyInteger T>
+    void verifyExtractRowsCols(const Matrix<T>& m) {
+        // This tests copyRows(), moveRows(), copyCols(), moveCols(),
+        // rowVector(), and columnVector().
 
-    SCOPED_TRACE_REGINA(m);
+        SCOPED_TRACE_REGINA(m);
 
-    // Extract no rows/columns at all:
-    {
-        const size_t* idx = nullptr;
-        validateNoRows(m.copyRows(idx, idx), m.columns());
-        validateNoRows(Matrix<T>(m).moveRows(idx, idx), m.columns());
-        validateNoColumns(m.copyCols(idx, idx), m.rows());
-        validateNoColumns(Matrix<T>(m).moveCols(idx, idx), m.rows());
-    }
+        // Extract no rows/columns at all:
+        {
+            const size_t* idx = nullptr;
+            validateNoRows(m.copyRows(idx, idx), m.columns());
+            validateNoRows(Matrix<T>(m).moveRows(idx, idx), m.columns());
+            validateNoColumns(m.copyCols(idx, idx), m.rows());
+            validateNoColumns(Matrix<T>(m).moveCols(idx, idx), m.rows());
+        }
 
-    // Extract individual rows/columns:
-    {
-        Matrix<T> tmp(m); // to move rows from, one at a time
-        size_t idx[1];
-        for (size_t i = 0; i < m.rows(); ++i) {
-            *idx = i;
-            Matrix<T> row = m.copyRows(idx, idx + 1);
-            validate(row, 1, m.columns(), [&m, i](size_t, size_t c) {
-                return m.entry(i, c);
+        // Extract individual rows/columns:
+        {
+            Matrix<T> tmp(m); // to move rows from, one at a time
+            size_t idx[1];
+            for (size_t i = 0; i < m.rows(); ++i) {
+                *idx = i;
+                Matrix<T> row = m.copyRows(idx, idx + 1);
+                validate(row, 1, m.columns(), [&m, i](size_t, size_t c) {
+                    return m.entry(i, c);
+                });
+                validate(std::move(tmp).moveRows(idx, idx + 1), row);
+
+                Vector<T> vec = m.rowVector(i);
+                EXPECT_EQ(vec.size(), m.columns());
+                for (size_t j = 0; j < vec.size(); ++j)
+                    EXPECT_EQ(vec[j], m.entry(i, j));
+            }
+        }
+        {
+            Matrix<T> tmp(m); // to move columns from, one at a time
+            size_t idx[1];
+            for (size_t i = 0; i < m.columns(); ++i) {
+                *idx = i;
+                Matrix<T> col = m.copyCols(idx, idx + 1);
+                validate(col, m.rows(), 1, [&m, i](size_t r, size_t) {
+                    return m.entry(r, i);
+                });
+                validate(std::move(tmp).moveCols(idx, idx + 1), col);
+
+                Vector<T> vec = m.columnVector(i);
+                EXPECT_EQ(vec.size(), m.rows());
+                for (size_t j = 0; j < vec.size(); ++j)
+                    EXPECT_EQ(vec[j], m.entry(j, i));
+            }
+        }
+
+        // Extract two batches of rows/columns (even indices vs odd indices):
+        {
+            Matrix<T> tmp(m); // to move rows from, one batch at a time
+
+            size_t nEven = (m.rows() + 1) / 2;
+            size_t nOdd = m.rows() / 2;
+            regina::FixedArray<size_t> idxEven(nEven);
+            regina::FixedArray<size_t> idxOdd(nOdd);
+            for (size_t i = 0; i < m.rows(); ++i)
+                if (i % 2 == 0)
+                    idxEven[i / 2] = i;
+                else
+                    idxOdd[i / 2] = i;
+
+            Matrix<T> even = m.copyRows(idxEven.begin(), idxEven.end());
+            Matrix<T> odd = m.copyRows(idxOdd.begin(), idxOdd.end());
+            validate(even, nEven, m.columns(), [&m](size_t r, size_t c) {
+                return m.entry(2 * r, c);
             });
-            validate(std::move(tmp).moveRows(idx, idx + 1), row);
-
-            Vector<T> vec = m.rowVector(i);
-            EXPECT_EQ(vec.size(), m.columns());
-            for (size_t j = 0; j < vec.size(); ++j)
-                EXPECT_EQ(vec[j], m.entry(i, j));
-        }
-    }
-    {
-        Matrix<T> tmp(m); // to move columns from, one at a time
-        size_t idx[1];
-        for (size_t i = 0; i < m.columns(); ++i) {
-            *idx = i;
-            Matrix<T> col = m.copyCols(idx, idx + 1);
-            validate(col, m.rows(), 1, [&m, i](size_t r, size_t) {
-                return m.entry(r, i);
+            validate(odd, nOdd, m.columns(), [&m](size_t r, size_t c) {
+                return m.entry(2 * r + 1, c);
             });
-            validate(std::move(tmp).moveCols(idx, idx + 1), col);
+            validate(std::move(tmp).moveRows(idxEven.begin(), idxEven.end()),
+                even);
+            validate(std::move(tmp).moveRows(idxOdd.begin(), idxOdd.end()),
+                odd);
 
-            Vector<T> vec = m.columnVector(i);
-            EXPECT_EQ(vec.size(), m.rows());
-            for (size_t j = 0; j < vec.size(); ++j)
-                EXPECT_EQ(vec[j], m.entry(j, i));
+            Matrix<T> opsEven(m.rows(), nEven), opsOdd(m.rows(), nOdd);
+            if constexpr (! regina::ReginaInteger<T>) {
+                opsEven.fill(0);
+                opsOdd.fill(0);
+            }
+            for (size_t i = 0; i < opsEven.columns(); ++i)
+                opsEven.entry(2 * i, i) = 1;
+            for (size_t i = 0; i < opsOdd.columns(); ++i)
+                opsOdd.entry(2 * i + 1, i) = 1;
+
+            Matrix<T> collect = opsEven * even;
+            collect += opsOdd * odd;
+            validate(collect, m);
+        }
+        {
+            Matrix<T> tmp(m); // to move rows from, one batch at a time
+
+            size_t nEven = (m.columns() + 1) / 2;
+            size_t nOdd = m.columns() / 2;
+            regina::FixedArray<size_t> idxEven(nEven);
+            regina::FixedArray<size_t> idxOdd(nOdd);
+            for (size_t i = 0; i < m.columns(); ++i)
+                if (i % 2 == 0)
+                    idxEven[i / 2] = i;
+                else
+                    idxOdd[i / 2] = i;
+
+            Matrix<T> even = m.copyCols(idxEven.begin(), idxEven.end());
+            Matrix<T> odd = m.copyCols(idxOdd.begin(), idxOdd.end());
+            validate(even, m.rows(), nEven, [&m](size_t r, size_t c) {
+                return m.entry(r, 2 * c);
+            });
+            validate(odd, m.rows(), nOdd, [&m](size_t r, size_t c) {
+                return m.entry(r, 2 * c + 1);
+            });
+            validate(std::move(tmp).moveCols(idxEven.begin(), idxEven.end()),
+                even);
+            validate(std::move(tmp).moveCols(idxOdd.begin(), idxOdd.end()),
+                odd);
+
+            Matrix<T> opsEven(nEven, m.columns()), opsOdd(nOdd, m.columns());
+            if constexpr (! regina::ReginaInteger<T>) {
+                opsEven.fill(0);
+                opsOdd.fill(0);
+            }
+            for (size_t i = 0; i < opsEven.rows(); ++i)
+                opsEven.entry(i, 2 * i) = 1;
+            for (size_t i = 0; i < opsOdd.rows(); ++i)
+                opsOdd.entry(i, 2 * i + 1) = 1;
+
+            Matrix<T> collect = even * opsEven;
+            collect += odd * opsOdd;
+            validate(collect, m);
+        }
+
+        // Extract all rows/columns, in both forward and reverse order:
+        {
+            regina::FixedArray<size_t> idx(m.rows());
+            for (size_t i = 0; i < m.rows(); ++i)
+                idx[i] = i;
+            validate(m.copyRows(idx.begin(), idx.end()), m);
+            validate(Matrix<T>(m).moveRows(idx.begin(), idx.end()), m);
+
+            std::reverse(idx.begin(), idx.end());
+            Matrix<T> alt = m.copyRows(idx.begin(), idx.end());
+            validate(alt, m.rows(), m.columns(), [&m](size_t r, size_t c) {
+                return m.entry(m.rows() - 1 - r, c);
+            });
+            validate(Matrix<T>(m).moveRows(idx.begin(), idx.end()), alt);
+
+            Matrix<T> ops(m.rows());
+            if constexpr (! regina::ReginaInteger<T>)
+                ops.fill(0);
+            for (size_t i = 0; i < m.rows(); ++i)
+                ops.entry(i, m.rows() - 1 - i) = 1;
+            validate(ops * alt, m);
+        }
+        {
+            regina::FixedArray<size_t> idx(m.columns());
+            for (size_t i = 0; i < m.columns(); ++i)
+                idx[i] = i;
+            validate(m.copyCols(idx.begin(), idx.end()), m);
+            validate(Matrix<T>(m).moveCols(idx.begin(), idx.end()), m);
+
+            std::reverse(idx.begin(), idx.end());
+            Matrix<T> alt = m.copyCols(idx.begin(), idx.end());
+            validate(alt, m.rows(), m.columns(), [&m](size_t r, size_t c) {
+                return m.entry(r, m.columns() - 1 - c);
+            });
+            validate(Matrix<T>(m).moveCols(idx.begin(), idx.end()), alt);
+
+            Matrix<T> ops(m.columns());
+            if constexpr (! regina::ReginaInteger<T>)
+                ops.fill(0);
+            for (size_t i = 0; i < m.columns(); ++i)
+                ops.entry(i, m.columns() - 1 - i) = 1;
+            validate(alt * ops, m);
         }
     }
-
-    // Extract two batches of rows/columns (even indices vs odd indices):
-    {
-        Matrix<T> tmp(m); // to move rows from, one batch at a time
-
-        size_t nEven = (m.rows() + 1) / 2;
-        size_t nOdd = m.rows() / 2;
-        regina::FixedArray<size_t> idxEven(nEven);
-        regina::FixedArray<size_t> idxOdd(nOdd);
-        for (size_t i = 0; i < m.rows(); ++i)
-            if (i % 2 == 0)
-                idxEven[i / 2] = i;
-            else
-                idxOdd[i / 2] = i;
-
-        Matrix<T> even = m.copyRows(idxEven.begin(), idxEven.end());
-        Matrix<T> odd = m.copyRows(idxOdd.begin(), idxOdd.end());
-        validate(even, nEven, m.columns(), [&m](size_t r, size_t c) {
-            return m.entry(2 * r, c);
-        });
-        validate(odd, nOdd, m.columns(), [&m](size_t r, size_t c) {
-            return m.entry(2 * r + 1, c);
-        });
-        validate(std::move(tmp).moveRows(idxEven.begin(), idxEven.end()), even);
-        validate(std::move(tmp).moveRows(idxOdd.begin(), idxOdd.end()), odd);
-
-        Matrix<T> opsEven(m.rows(), nEven), opsOdd(m.rows(), nOdd);
-        if constexpr (! regina::ReginaInteger<T>) {
-            opsEven.fill(0);
-            opsOdd.fill(0);
-        }
-        for (size_t i = 0; i < opsEven.columns(); ++i)
-            opsEven.entry(2 * i, i) = 1;
-        for (size_t i = 0; i < opsOdd.columns(); ++i)
-            opsOdd.entry(2 * i + 1, i) = 1;
-
-        Matrix<T> collect = opsEven * even;
-        collect += opsOdd * odd;
-        validate(collect, m);
-    }
-    {
-        Matrix<T> tmp(m); // to move rows from, one batch at a time
-
-        size_t nEven = (m.columns() + 1) / 2;
-        size_t nOdd = m.columns() / 2;
-        regina::FixedArray<size_t> idxEven(nEven);
-        regina::FixedArray<size_t> idxOdd(nOdd);
-        for (size_t i = 0; i < m.columns(); ++i)
-            if (i % 2 == 0)
-                idxEven[i / 2] = i;
-            else
-                idxOdd[i / 2] = i;
-
-        Matrix<T> even = m.copyCols(idxEven.begin(), idxEven.end());
-        Matrix<T> odd = m.copyCols(idxOdd.begin(), idxOdd.end());
-        validate(even, m.rows(), nEven, [&m](size_t r, size_t c) {
-            return m.entry(r, 2 * c);
-        });
-        validate(odd, m.rows(), nOdd, [&m](size_t r, size_t c) {
-            return m.entry(r, 2 * c + 1);
-        });
-        validate(std::move(tmp).moveCols(idxEven.begin(), idxEven.end()), even);
-        validate(std::move(tmp).moveCols(idxOdd.begin(), idxOdd.end()), odd);
-
-        Matrix<T> opsEven(nEven, m.columns()), opsOdd(nOdd, m.columns());
-        if constexpr (! regina::ReginaInteger<T>) {
-            opsEven.fill(0);
-            opsOdd.fill(0);
-        }
-        for (size_t i = 0; i < opsEven.rows(); ++i)
-            opsEven.entry(i, 2 * i) = 1;
-        for (size_t i = 0; i < opsOdd.rows(); ++i)
-            opsOdd.entry(i, 2 * i + 1) = 1;
-
-        Matrix<T> collect = even * opsEven;
-        collect += odd * opsOdd;
-        validate(collect, m);
-    }
-
-    // Extract all rows/columns, in both forward and reverse order:
-    {
-        regina::FixedArray<size_t> idx(m.rows());
-        for (size_t i = 0; i < m.rows(); ++i)
-            idx[i] = i;
-        validate(m.copyRows(idx.begin(), idx.end()), m);
-        validate(Matrix<T>(m).moveRows(idx.begin(), idx.end()), m);
-
-        std::reverse(idx.begin(), idx.end());
-        Matrix<T> alt = m.copyRows(idx.begin(), idx.end());
-        validate(alt, m.rows(), m.columns(), [&m](size_t r, size_t c) {
-            return m.entry(m.rows() - 1 - r, c);
-        });
-        validate(Matrix<T>(m).moveRows(idx.begin(), idx.end()), alt);
-
-        Matrix<T> ops(m.rows());
-        if constexpr (! regina::ReginaInteger<T>)
-            ops.fill(0);
-        for (size_t i = 0; i < m.rows(); ++i)
-            ops.entry(i, m.rows() - 1 - i) = 1;
-        validate(ops * alt, m);
-    }
-    {
-        regina::FixedArray<size_t> idx(m.columns());
-        for (size_t i = 0; i < m.columns(); ++i)
-            idx[i] = i;
-        validate(m.copyCols(idx.begin(), idx.end()), m);
-        validate(Matrix<T>(m).moveCols(idx.begin(), idx.end()), m);
-
-        std::reverse(idx.begin(), idx.end());
-        Matrix<T> alt = m.copyCols(idx.begin(), idx.end());
-        validate(alt, m.rows(), m.columns(), [&m](size_t r, size_t c) {
-            return m.entry(r, m.columns() - 1 - c);
-        });
-        validate(Matrix<T>(m).moveCols(idx.begin(), idx.end()), alt);
-
-        Matrix<T> ops(m.columns());
-        if constexpr (! regina::ReginaInteger<T>)
-            ops.fill(0);
-        for (size_t i = 0; i < m.columns(); ++i)
-            ops.entry(i, m.columns() - 1 - i) = 1;
-        validate(alt * ops, m);
-    }
-}
+} // anonymous namespace
 
 TEST(MatrixTest, extractRowsCols) {
     for (const Matrix<int>& m : MatrixTests<int>().cases) {
@@ -665,18 +691,20 @@ TEST(MatrixTest, extractRowsCols) {
     }
 }
 
-template <typename T>
-requires std::regular<T> && regina::Writeable<T>
-static void verifyTranspose(const Matrix<T>& m) {
-    SCOPED_TRACE_REGINA(m);
+namespace {
+    template <typename T>
+    requires std::regular<T> && regina::Writeable<T>
+    void verifyTranspose(const Matrix<T>& m) {
+        SCOPED_TRACE_REGINA(m);
 
-    Matrix<T> trans = m.transpose();
-    validate(trans, m.columns(), m.rows(), [&m](size_t r, size_t c) {
-        return m.entry(c, r);
-    });
+        Matrix<T> trans = m.transpose();
+        validate(trans, m.columns(), m.rows(), [&m](size_t r, size_t c) {
+            return m.entry(c, r);
+        });
 
-    validate(trans.transpose(), m);
-}
+        validate(trans.transpose(), m);
+    }
+} // anonymous namespace
 
 TEST(MatrixTest, transpose) {
     for (const Matrix<int>& m : MatrixTests<int>().cases)
@@ -685,50 +713,52 @@ TEST(MatrixTest, transpose) {
         verifyTranspose(m);
 }
 
-template <regina::AnyInteger T>
-static void verifySwapRowsCols(const Matrix<T>& m) {
-    SCOPED_TRACE_REGINA(m);
+namespace {
+    template <regina::AnyInteger T>
+    void verifySwapRowsCols(const Matrix<T>& m) {
+        SCOPED_TRACE_REGINA(m);
 
-    for (size_t i = 0; i < m.rows(); ++i)
-        for (size_t j = 0; j < m.rows(); ++j)
-            for (size_t from = 0; from <= m.columns(); ++from) {
-                Matrix<T> alt(m);
-                alt.swapRows(i, j, from);
-                validate(alt, m.rows(), m.columns(), [&m, i, j, from](
-                        size_t r, size_t c) {
-                    return (r == i && c >= from ? m.entry(j, c) :
-                        r == j && c >= from ? m.entry(i, c) :
-                        m.entry(r, c));
-                });
+        for (size_t i = 0; i < m.rows(); ++i)
+            for (size_t j = 0; j < m.rows(); ++j)
+                for (size_t from = 0; from <= m.columns(); ++from) {
+                    Matrix<T> alt(m);
+                    alt.swapRows(i, j, from);
+                    validate(alt, m.rows(), m.columns(), [&m, i, j, from](
+                            size_t r, size_t c) {
+                        return (r == i && c >= from ? m.entry(j, c) :
+                            r == j && c >= from ? m.entry(i, c) :
+                            m.entry(r, c));
+                    });
 
-                if (from == 0) {
-                    Matrix<T> op = Matrix<T>::identity(m.rows());
-                    op.entry(i, i) = op.entry(j, j) = 0;
-                    op.entry(i, j) = op.entry(j, i) = 1;
-                    validate(op * alt, m);
+                    if (from == 0) {
+                        Matrix<T> op = Matrix<T>::identity(m.rows());
+                        op.entry(i, i) = op.entry(j, j) = 0;
+                        op.entry(i, j) = op.entry(j, i) = 1;
+                        validate(op * alt, m);
+                    }
                 }
-            }
 
-    for (size_t i = 0; i < m.columns(); ++i)
-        for (size_t j = 0; j < m.columns(); ++j)
-            for (size_t from = 0; from <= m.rows(); ++from) {
-                Matrix<T> alt(m);
-                alt.swapCols(i, j, from);
-                validate(alt, m.rows(), m.columns(), [&m, i, j, from](
-                        size_t r, size_t c) {
-                    return (c == i && r >= from ? m.entry(r, j) :
-                        c == j && r >= from ? m.entry(r, i) :
-                        m.entry(r, c));
-                });
+        for (size_t i = 0; i < m.columns(); ++i)
+            for (size_t j = 0; j < m.columns(); ++j)
+                for (size_t from = 0; from <= m.rows(); ++from) {
+                    Matrix<T> alt(m);
+                    alt.swapCols(i, j, from);
+                    validate(alt, m.rows(), m.columns(), [&m, i, j, from](
+                            size_t r, size_t c) {
+                        return (c == i && r >= from ? m.entry(r, j) :
+                            c == j && r >= from ? m.entry(r, i) :
+                            m.entry(r, c));
+                    });
 
-                if (from == 0) {
-                    Matrix<T> op = Matrix<T>::identity(m.columns());
-                    op.entry(i, i) = op.entry(j, j) = 0;
-                    op.entry(i, j) = op.entry(j, i) = 1;
-                    validate(alt * op, m);
+                    if (from == 0) {
+                        Matrix<T> op = Matrix<T>::identity(m.columns());
+                        op.entry(i, i) = op.entry(j, j) = 0;
+                        op.entry(i, j) = op.entry(j, i) = 1;
+                        validate(alt * op, m);
+                    }
                 }
-            }
-}
+    }
+} // anonymous namespace
 
 TEST(MatrixTest, swapRowsCols) {
     for (const Matrix<int>& m : MatrixTests<int>().cases) {
@@ -741,39 +771,42 @@ TEST(MatrixTest, swapRowsCols) {
     }
 }
 
-template <regina::AnyInteger T>
-static void verifyOutput() {
-    // Just test a handful of cases, to verify that things look ok.
-    // Note that 0x0, 0xk and kx0 matrices are already tested elsewhere.
-    const MatrixTests<T> tests;
+namespace {
+    template <regina::AnyInteger T>
+    void verifyOutput() {
+        // Just test a handful of cases, to verify that things look ok.
+        // Note that 0x0, 0xk and kx0 matrices are already tested elsewhere.
+        const MatrixTests<T> tests;
 
-    EXPECT_EQ(tests.empty.str(), "(empty 0x0 matrix)");
-    EXPECT_EQ(tests.noRows.str(), "(empty 0x3 matrix)");
-    EXPECT_EQ(tests.noCols.str(), "(empty 3x0 matrix)");
-    EXPECT_EQ(tests.zero3.str(), "[[ 0 0 0 ] [ 0 0 0 ] [ 0 0 0 ]]");
-    EXPECT_EQ(tests.zero34.str(), "[[ 0 0 0 0 ] [ 0 0 0 0 ] [ 0 0 0 0 ]]");
-    EXPECT_EQ(tests.identity3.str(), "[[ 1 0 0 ] [ 0 1 0 ] [ 0 0 1 ]]");
-    EXPECT_EQ(tests.identity34.str(), "[[ 1 0 0 0 ] [ 0 1 0 0 ] [ 0 0 1 0 ]]");
-    EXPECT_EQ(tests.one.str(), "[[ 1 ]]");
-    EXPECT_EQ(tests.minusOne.str(), "[[ -1 ]]");
-    EXPECT_EQ(tests.two.str(), "[[ 2 ]]");
-    EXPECT_EQ(tests.vector.str(), "[[ 12 -8 18 ]]");
-    EXPECT_EQ(tests.rect34.str(),
-        "[[ 4 -17 0 6 ] [ -2 4 9 0 ] [ 6 -3 -2 10 ]]");
+        EXPECT_EQ(tests.empty.str(), "(empty 0x0 matrix)");
+        EXPECT_EQ(tests.noRows.str(), "(empty 0x3 matrix)");
+        EXPECT_EQ(tests.noCols.str(), "(empty 3x0 matrix)");
+        EXPECT_EQ(tests.zero3.str(), "[[ 0 0 0 ] [ 0 0 0 ] [ 0 0 0 ]]");
+        EXPECT_EQ(tests.zero34.str(), "[[ 0 0 0 0 ] [ 0 0 0 0 ] [ 0 0 0 0 ]]");
+        EXPECT_EQ(tests.identity3.str(), "[[ 1 0 0 ] [ 0 1 0 ] [ 0 0 1 ]]");
+        EXPECT_EQ(tests.identity34.str(),
+            "[[ 1 0 0 0 ] [ 0 1 0 0 ] [ 0 0 1 0 ]]");
+        EXPECT_EQ(tests.one.str(), "[[ 1 ]]");
+        EXPECT_EQ(tests.minusOne.str(), "[[ -1 ]]");
+        EXPECT_EQ(tests.two.str(), "[[ 2 ]]");
+        EXPECT_EQ(tests.vector.str(), "[[ 12 -8 18 ]]");
+        EXPECT_EQ(tests.rect34.str(),
+            "[[ 4 -17 0 6 ] [ -2 4 9 0 ] [ 6 -3 -2 10 ]]");
 
-    EXPECT_EQ(tests.empty.detail(), "(empty 0x0 matrix)\n");
-    EXPECT_EQ(tests.noRows.detail(), "(empty 0x3 matrix)\n");
-    EXPECT_EQ(tests.noCols.detail(), "(empty 3x0 matrix)\n");
-    EXPECT_EQ(tests.zero3.detail(), "0 0 0\n0 0 0\n0 0 0\n");
-    EXPECT_EQ(tests.zero34.detail(), "0 0 0 0\n0 0 0 0\n0 0 0 0\n");
-    EXPECT_EQ(tests.identity3.detail(), "1 0 0\n0 1 0\n0 0 1\n");
-    EXPECT_EQ(tests.identity34.detail(), "1 0 0 0\n0 1 0 0\n0 0 1 0\n");
-    EXPECT_EQ(tests.one.detail(), "1\n");
-    EXPECT_EQ(tests.minusOne.detail(), "-1\n");
-    EXPECT_EQ(tests.two.detail(), "2\n");
-    EXPECT_EQ(tests.vector.detail(), "12 -8 18\n");
-    EXPECT_EQ(tests.rect34.detail(), "4 -17 0 6\n-2 4 9 0\n6 -3 -2 10\n");
-}
+        EXPECT_EQ(tests.empty.detail(), "(empty 0x0 matrix)\n");
+        EXPECT_EQ(tests.noRows.detail(), "(empty 0x3 matrix)\n");
+        EXPECT_EQ(tests.noCols.detail(), "(empty 3x0 matrix)\n");
+        EXPECT_EQ(tests.zero3.detail(), "0 0 0\n0 0 0\n0 0 0\n");
+        EXPECT_EQ(tests.zero34.detail(), "0 0 0 0\n0 0 0 0\n0 0 0 0\n");
+        EXPECT_EQ(tests.identity3.detail(), "1 0 0\n0 1 0\n0 0 1\n");
+        EXPECT_EQ(tests.identity34.detail(), "1 0 0 0\n0 1 0 0\n0 0 1 0\n");
+        EXPECT_EQ(tests.one.detail(), "1\n");
+        EXPECT_EQ(tests.minusOne.detail(), "-1\n");
+        EXPECT_EQ(tests.two.detail(), "2\n");
+        EXPECT_EQ(tests.vector.detail(), "12 -8 18\n");
+        EXPECT_EQ(tests.rect34.detail(), "4 -17 0 6\n-2 4 9 0\n6 -3 -2 10\n");
+    }
+} // anonymous namespace
 
 TEST(MatrixTest, output) {
     verifyOutput<int>();
@@ -782,53 +815,55 @@ TEST(MatrixTest, output) {
 
 // MARK: - General rings or integral domains
 
-template <regina::Ring T>
-static void verifyIdentityZero(size_t rows, size_t columns) {
-    // This tests makeIdentity(), identity(), isIdentity(), and isZero().
+namespace {
+    template <regina::Ring T>
+    void verifyIdentityZero(size_t rows, size_t columns) {
+        // This tests makeIdentity(), identity(), isIdentity(), and isZero().
 
-    {
-        Matrix<T> idSquare = Matrix<T>::identity(rows);
-        validateIdentity(idSquare, rows);
-        EXPECT_TRUE(idSquare.isIdentity());
-        for (size_t i = 0; i < rows; ++i)
-            for (size_t j = 0; j < rows; ++j) {
-                idSquare.entry(i, j) = (i == j ? 0 : 1);
-                EXPECT_FALSE(idSquare.isIdentity());
-                idSquare.entry(i, j) = (i == j ? 1 : 0);
-                EXPECT_TRUE(idSquare.isIdentity());
-            }
+        {
+            Matrix<T> idSquare = Matrix<T>::identity(rows);
+            validateIdentity(idSquare, rows);
+            EXPECT_TRUE(idSquare.isIdentity());
+            for (size_t i = 0; i < rows; ++i)
+                for (size_t j = 0; j < rows; ++j) {
+                    idSquare.entry(i, j) = (i == j ? 0 : 1);
+                    EXPECT_FALSE(idSquare.isIdentity());
+                    idSquare.entry(i, j) = (i == j ? 1 : 0);
+                    EXPECT_TRUE(idSquare.isIdentity());
+                }
+        }
+
+        {
+            Matrix<T> zero(rows, columns);
+            if constexpr (! regina::ReginaInteger<T>)
+                zero.fill(0);
+            EXPECT_TRUE(zero.isZero());
+            for (size_t i = 0; i < rows; ++i)
+                for (size_t j = 0; j < columns; ++j) {
+                    zero.entry(i, j) = 1;
+                    EXPECT_FALSE(zero.isZero());
+                    zero.entry(i, j) = 0;
+                    EXPECT_TRUE(zero.isZero());
+                }
+        }
+
+        {
+            Matrix<T> id(rows, columns);
+            id.fill(2); // ensure all entries are overwritten by makeIdentity()
+            EXPECT_EQ(id.isIdentity(), rows == 0 && columns == 0);
+            id.makeIdentity();
+            validate(id, rows, columns, [](size_t r, size_t c) {
+                return r == c ? 1 : 0;
+            });
+            EXPECT_EQ(id.isIdentity(), rows == columns);
+            EXPECT_EQ(id.isZero(), rows == 0 || columns == 0);
+
+            Matrix<T> alt(rows, columns); // leave entries unininitialised
+            alt.makeIdentity();
+            validate(alt, id);
+        }
     }
-
-    {
-        Matrix<T> zero(rows, columns);
-        if constexpr (! regina::ReginaInteger<T>)
-            zero.fill(0);
-        EXPECT_TRUE(zero.isZero());
-        for (size_t i = 0; i < rows; ++i)
-            for (size_t j = 0; j < columns; ++j) {
-                zero.entry(i, j) = 1;
-                EXPECT_FALSE(zero.isZero());
-                zero.entry(i, j) = 0;
-                EXPECT_TRUE(zero.isZero());
-            }
-    }
-
-    {
-        Matrix<T> id(rows, columns);
-        id.fill(2); // ensure all entries are overwritten by makeIdentity()
-        EXPECT_EQ(id.isIdentity(), rows == 0 && columns == 0);
-        id.makeIdentity();
-        validate(id, rows, columns, [](size_t r, size_t c) {
-            return r == c ? 1 : 0;
-        });
-        EXPECT_EQ(id.isIdentity(), rows == columns);
-        EXPECT_EQ(id.isZero(), rows == 0 || columns == 0);
-
-        Matrix<T> alt(rows, columns); // leave entries unininitialised
-        alt.makeIdentity();
-        validate(alt, id);
-    }
-}
+} // anonymous namespace
 
 TEST(MatrixTest, identityZero) {
     verifyIdentityZero<int>(0, 0);
@@ -845,106 +880,108 @@ TEST(MatrixTest, identityZero) {
     }
 }
 
-template <regina::Ring T>
-static void verifyAddRowCol(const Matrix<T>& m) {
-    SCOPED_TRACE_REGINA(m);
+namespace {
+    template <regina::Ring T>
+    void verifyAddRowCol(const Matrix<T>& m) {
+        SCOPED_TRACE_REGINA(m);
 
-    for (size_t src = 0; src < m.rows(); ++src)
-        for (size_t dest = 0; dest < m.rows(); ++dest) {
-            if (dest == src)
-                continue;
-            for (size_t from = 0; from <= m.columns(); ++from) {
-                Matrix<T> alt(m);
-                alt.addRowFrom(src, dest, from);
-                validate(alt, m.rows(), m.columns(), [&m, src, dest, from](
-                        size_t r, size_t c) {
-                    return (r == dest && c >= from ?
-                        m.entry(src, c) + m.entry(dest, c) :
-                        m.entry(r, c));
-                });
-
-                if (from == 0) {
-                    Matrix<T> alt2(m);
-                    alt2.addRow(src, dest);
-                    validate(alt2, alt);
-
-                    Matrix<T> op = Matrix<T>::identity(m.rows());
-                    op.entry(dest, src) = -1;
-                    validate(op * alt, m);
-                }
-
-                for (int mult : { -2, -1, 0, 1, 2 }) {
-                    Matrix<T> alt2(m);
-                    alt2.addRow(src, dest, mult, from);
-                    validate(alt2, m.rows(), m.columns(),
-                            [&m, src, dest, mult, from](size_t r, size_t c) {
+        for (size_t src = 0; src < m.rows(); ++src)
+            for (size_t dest = 0; dest < m.rows(); ++dest) {
+                if (dest == src)
+                    continue;
+                for (size_t from = 0; from <= m.columns(); ++from) {
+                    Matrix<T> alt(m);
+                    alt.addRowFrom(src, dest, from);
+                    validate(alt, m.rows(), m.columns(), [&m, src, dest, from](
+                            size_t r, size_t c) {
                         return (r == dest && c >= from ?
-                            m.entry(src, c) * mult + m.entry(dest, c) :
+                            m.entry(src, c) + m.entry(dest, c) :
                             m.entry(r, c));
                     });
 
-                    if (mult == 0)
-                        EXPECT_EQ(alt2, m);
-                    else if (mult == 1)
-                        EXPECT_EQ(alt2, alt);
-
                     if (from == 0) {
+                        Matrix<T> alt2(m);
+                        alt2.addRow(src, dest);
+                        validate(alt2, alt);
+
                         Matrix<T> op = Matrix<T>::identity(m.rows());
-                        op.entry(dest, src) = -mult;
-                        validate(op * alt2, m);
+                        op.entry(dest, src) = -1;
+                        validate(op * alt, m);
+                    }
+
+                    for (int mult : { -2, -1, 0, 1, 2 }) {
+                        Matrix<T> alt2(m);
+                        alt2.addRow(src, dest, mult, from);
+                        validate(alt2, m.rows(), m.columns(), [&m, src, dest,
+                                mult, from](size_t r, size_t c) {
+                            return (r == dest && c >= from ?
+                                m.entry(src, c) * mult + m.entry(dest, c) :
+                                m.entry(r, c));
+                        });
+
+                        if (mult == 0)
+                            EXPECT_EQ(alt2, m);
+                        else if (mult == 1)
+                            EXPECT_EQ(alt2, alt);
+
+                        if (from == 0) {
+                            Matrix<T> op = Matrix<T>::identity(m.rows());
+                            op.entry(dest, src) = -mult;
+                            validate(op * alt2, m);
+                        }
                     }
                 }
             }
-        }
 
-    for (size_t src = 0; src < m.columns(); ++src)
-        for (size_t dest = 0; dest < m.columns(); ++dest) {
-            if (dest == src)
-                continue;
-            for (size_t from = 0; from <= m.rows(); ++from) {
-                Matrix<T> alt(m);
-                alt.addColFrom(src, dest, from);
-                validate(alt, m.rows(), m.columns(), [&m, src, dest, from](
-                        size_t r, size_t c) {
-                    return (c == dest && r >= from ?
-                        m.entry(r, src) + m.entry(r, dest) :
-                        m.entry(r, c));
-                });
-
-                if (from == 0) {
-                    Matrix<T> alt2(m);
-                    alt2.addCol(src, dest);
-                    validate(alt2, alt);
-
-                    Matrix<T> op = Matrix<T>::identity(m.columns());
-                    op.entry(src, dest) = -1;
-                    validate(alt * op, m);
-                }
-
-                for (int mult : { -2, -1, 0, 1, 2 }) {
-                    Matrix<T> alt2(m);
-                    alt2.addCol(src, dest, mult, from);
-                    validate(alt2, m.rows(), m.columns(),
-                            [&m, src, dest, mult, from](size_t r, size_t c) {
+        for (size_t src = 0; src < m.columns(); ++src)
+            for (size_t dest = 0; dest < m.columns(); ++dest) {
+                if (dest == src)
+                    continue;
+                for (size_t from = 0; from <= m.rows(); ++from) {
+                    Matrix<T> alt(m);
+                    alt.addColFrom(src, dest, from);
+                    validate(alt, m.rows(), m.columns(), [&m, src, dest, from](
+                            size_t r, size_t c) {
                         return (c == dest && r >= from ?
-                            m.entry(r, src) * mult + m.entry(r, dest) :
+                            m.entry(r, src) + m.entry(r, dest) :
                             m.entry(r, c));
                     });
 
-                    if (mult == 0)
-                        EXPECT_EQ(alt2, m);
-                    else if (mult == 1)
-                        EXPECT_EQ(alt2, alt);
-
                     if (from == 0) {
+                        Matrix<T> alt2(m);
+                        alt2.addCol(src, dest);
+                        validate(alt2, alt);
+
                         Matrix<T> op = Matrix<T>::identity(m.columns());
-                        op.entry(src, dest) = -mult;
-                        validate(alt2 * op, m);
+                        op.entry(src, dest) = -1;
+                        validate(alt * op, m);
+                    }
+
+                    for (int mult : { -2, -1, 0, 1, 2 }) {
+                        Matrix<T> alt2(m);
+                        alt2.addCol(src, dest, mult, from);
+                        validate(alt2, m.rows(), m.columns(), [&m, src, dest,
+                                mult, from](size_t r, size_t c) {
+                            return (c == dest && r >= from ?
+                                m.entry(r, src) * mult + m.entry(r, dest) :
+                                m.entry(r, c));
+                        });
+
+                        if (mult == 0)
+                            EXPECT_EQ(alt2, m);
+                        else if (mult == 1)
+                            EXPECT_EQ(alt2, alt);
+
+                        if (from == 0) {
+                            Matrix<T> op = Matrix<T>::identity(m.columns());
+                            op.entry(src, dest) = -mult;
+                            validate(alt2 * op, m);
+                        }
                     }
                 }
             }
-        }
-}
+    }
+} // anonymous namespace
 
 TEST(MatrixTest, addRowCol) {
     for (const Matrix<int>& m : MatrixTests<int>().cases) {
@@ -957,52 +994,54 @@ TEST(MatrixTest, addRowCol) {
     }
 }
 
-template <regina::Ring T>
-static void verifyMultRowCol(const Matrix<T>& m) {
-    SCOPED_TRACE_REGINA(m);
+namespace {
+    template <regina::Ring T>
+    void verifyMultRowCol(const Matrix<T>& m) {
+        SCOPED_TRACE_REGINA(m);
 
-    for (size_t i = 0; i < m.rows(); ++i) {
-        for (int mult : { -2, -1, 0, 1, 2 }) {
-            for (size_t from = 0; from <= m.columns(); ++from) {
-                Matrix<T> alt(m);
-                alt.multRow(i, mult, from);
-                validate(alt, m.rows(), m.columns(), [&m, i, mult, from](
-                        size_t r, size_t c) {
-                    return (r == i && c >= from ? m.entry(i, c) * mult :
-                        m.entry(r, c));
-                });
+        for (size_t i = 0; i < m.rows(); ++i) {
+            for (int mult : { -2, -1, 0, 1, 2 }) {
+                for (size_t from = 0; from <= m.columns(); ++from) {
+                    Matrix<T> alt(m);
+                    alt.multRow(i, mult, from);
+                    validate(alt, m.rows(), m.columns(), [&m, i, mult, from](
+                            size_t r, size_t c) {
+                        return (r == i && c >= from ? m.entry(i, c) * mult :
+                            m.entry(r, c));
+                    });
 
-                if (mult == 1)
-                    EXPECT_EQ(alt, m);
-                else if (mult == -1 && from == 0) {
-                    alt.negateRow(i);
-                    validate(alt, m);
+                    if (mult == 1)
+                        EXPECT_EQ(alt, m);
+                    else if (mult == -1 && from == 0) {
+                        alt.negateRow(i);
+                        validate(alt, m);
+                    }
+                }
+            }
+        }
+
+        for (size_t i = 0; i < m.columns(); ++i) {
+            for (int mult : { -2, -1, 0, 1, 2 }) {
+                for (size_t from = 0; from <= m.rows(); ++from) {
+                    Matrix<T> alt(m);
+                    alt.multCol(i, mult, from);
+                    validate(alt, m.rows(), m.columns(), [&m, i, mult, from](
+                            size_t r, size_t c) {
+                        return (c == i && r >= from ? m.entry(r, i) * mult :
+                            m.entry(r, c));
+                    });
+
+                    if (mult == 1)
+                        EXPECT_EQ(alt, m);
+                    else if (mult == -1 && from == 0) {
+                        alt.negateCol(i);
+                        validate(alt, m);
+                    }
                 }
             }
         }
     }
-
-    for (size_t i = 0; i < m.columns(); ++i) {
-        for (int mult : { -2, -1, 0, 1, 2 }) {
-            for (size_t from = 0; from <= m.rows(); ++from) {
-                Matrix<T> alt(m);
-                alt.multCol(i, mult, from);
-                validate(alt, m.rows(), m.columns(), [&m, i, mult, from](
-                        size_t r, size_t c) {
-                    return (c == i && r >= from ? m.entry(r, i) * mult :
-                        m.entry(r, c));
-                });
-
-                if (mult == 1)
-                    EXPECT_EQ(alt, m);
-                else if (mult == -1 && from == 0) {
-                    alt.negateCol(i);
-                    validate(alt, m);
-                }
-            }
-        }
-    }
-}
+} // anonymous namespace
 
 TEST(MatrixTest, multRowCol) {
     for (const Matrix<int>& m : MatrixTests<int>().cases) {
@@ -1015,70 +1054,76 @@ TEST(MatrixTest, multRowCol) {
     }
 }
 
-template <regina::Ring T>
-static void verifyCombRowsCols(const Matrix<T>& m) {
-    SCOPED_TRACE_REGINA(m);
+namespace {
+    template <regina::Ring T>
+    void verifyCombRowsCols(const Matrix<T>& m) {
+        SCOPED_TRACE_REGINA(m);
 
-    // For now we just test with one hard-coded set of coefficients.
-    static const int coeff[4] = { 3, -8, 2, -5 }; // determinant 1
-    static const int inv[4] = { -5, 8, -2, 3 }; // inverse combination
+        // For now we just test with one hard-coded set of coefficients.
+        static const int coeff[4] = { 3, -8, 2, -5 }; // determinant 1
+        static const int inv[4] = { -5, 8, -2, 3 }; // inverse combination
 
-    for (size_t i = 0; i < m.rows(); ++i)
-        for (size_t j = 0; j < m.rows(); ++j) {
-            if (j == i)
-                continue;
-            for (size_t from = 0; from <= m.columns(); ++from) {
-                Matrix<T> alt(m);
-                alt.combRows(i, j, coeff[0], coeff[1], coeff[2], coeff[3],
-                    from);
-                validate(alt, m.rows(), m.columns(), [&m, i, j, from](
-                        size_t r, size_t c) {
-                    return (r == i && c >= from ?
-                        m.entry(i, c) * coeff[0] + m.entry(j, c) * coeff[1] :
-                        r == j && c >= from ?
-                        m.entry(i, c) * coeff[2] + m.entry(j, c) * coeff[3] :
-                        m.entry(r, c));
-                });
+        for (size_t i = 0; i < m.rows(); ++i)
+            for (size_t j = 0; j < m.rows(); ++j) {
+                if (j == i)
+                    continue;
+                for (size_t from = 0; from <= m.columns(); ++from) {
+                    Matrix<T> alt(m);
+                    alt.combRows(i, j, coeff[0], coeff[1], coeff[2], coeff[3],
+                        from);
+                    validate(alt, m.rows(), m.columns(), [&m, i, j, from](
+                            size_t r, size_t c) {
+                        return (r == i && c >= from ?
+                            m.entry(i, c) * coeff[0] +
+                                m.entry(j, c) * coeff[1] :
+                            r == j && c >= from ?
+                            m.entry(i, c) * coeff[2] +
+                                m.entry(j, c) * coeff[3] :
+                            m.entry(r, c));
+                    });
 
-                if (from == 0) {
-                    Matrix<T> op = Matrix<T>::identity(m.rows());
-                    op.entry(i, i) = inv[0];
-                    op.entry(i, j) = inv[1];
-                    op.entry(j, i) = inv[2];
-                    op.entry(j, j) = inv[3];
-                    validate(op * alt, m);
+                    if (from == 0) {
+                        Matrix<T> op = Matrix<T>::identity(m.rows());
+                        op.entry(i, i) = inv[0];
+                        op.entry(i, j) = inv[1];
+                        op.entry(j, i) = inv[2];
+                        op.entry(j, j) = inv[3];
+                        validate(op * alt, m);
+                    }
                 }
             }
-        }
 
-    for (size_t i = 0; i < m.columns(); ++i)
-        for (size_t j = 0; j < m.columns(); ++j) {
-            if (j == i)
-                continue;
-            for (size_t from = 0; from <= m.rows(); ++from) {
-                Matrix<T> alt(m);
-                alt.combCols(i, j, coeff[0], coeff[1], coeff[2], coeff[3],
-                    from);
-                validate(alt, m.rows(), m.columns(), [&m, i, j, from](
-                        size_t r, size_t c) {
-                    return (c == i && r >= from ?
-                        m.entry(r, i) * coeff[0] + m.entry(r, j) * coeff[1] :
-                        c == j && r >= from ?
-                        m.entry(r, i) * coeff[2] + m.entry(r, j) * coeff[3] :
-                        m.entry(r, c));
-                });
+        for (size_t i = 0; i < m.columns(); ++i)
+            for (size_t j = 0; j < m.columns(); ++j) {
+                if (j == i)
+                    continue;
+                for (size_t from = 0; from <= m.rows(); ++from) {
+                    Matrix<T> alt(m);
+                    alt.combCols(i, j, coeff[0], coeff[1], coeff[2], coeff[3],
+                        from);
+                    validate(alt, m.rows(), m.columns(), [&m, i, j, from](
+                            size_t r, size_t c) {
+                        return (c == i && r >= from ?
+                            m.entry(r, i) * coeff[0] +
+                                m.entry(r, j) * coeff[1] :
+                            c == j && r >= from ?
+                            m.entry(r, i) * coeff[2] +
+                                m.entry(r, j) * coeff[3] :
+                            m.entry(r, c));
+                    });
 
-                if (from == 0) {
-                    Matrix<T> op = Matrix<T>::identity(m.columns());
-                    op.entry(i, i) = inv[0];
-                    op.entry(j, i) = inv[1];
-                    op.entry(i, j) = inv[2];
-                    op.entry(j, j) = inv[3];
-                    validate(alt * op, m);
+                    if (from == 0) {
+                        Matrix<T> op = Matrix<T>::identity(m.columns());
+                        op.entry(i, i) = inv[0];
+                        op.entry(j, i) = inv[1];
+                        op.entry(i, j) = inv[2];
+                        op.entry(j, j) = inv[3];
+                        validate(alt * op, m);
+                    }
                 }
             }
-        }
-}
+    }
+} // anonymous namespace
 
 TEST(MatrixTest, combRowsCols) {
     for (const Matrix<int>& m : MatrixTests<int>().cases) {
@@ -1091,50 +1136,52 @@ TEST(MatrixTest, combRowsCols) {
     }
 }
 
-template <regina::Ring T>
-static void verifyNegateRowColMatrix(const Matrix<T>& m) {
-    // This tests negateRow(), negateCol(), and negate().
+namespace {
+    template <regina::Ring T>
+    void verifyNegateRowColMatrix(const Matrix<T>& m) {
+        // This tests negateRow(), negateCol(), and negate().
 
-    SCOPED_TRACE_REGINA(m);
+        SCOPED_TRACE_REGINA(m);
 
-    for (size_t i = 0; i < m.rows(); ++i) {
-        Matrix<T> alt(m);
-        alt.negateRow(i);
-        validate(alt, m.rows(), m.columns(), [&m, i](size_t r, size_t c) {
-            return (r == i ? -m.entry(r, c) : m.entry(r, c));
-        });
+        for (size_t i = 0; i < m.rows(); ++i) {
+            Matrix<T> alt(m);
+            alt.negateRow(i);
+            validate(alt, m.rows(), m.columns(), [&m, i](size_t r, size_t c) {
+                return (r == i ? -m.entry(r, c) : m.entry(r, c));
+            });
 
-        Matrix<T> op = Matrix<T>::identity(m.rows());
-        op.entry(i, i) = -1;
-        validate(op * alt, m);
+            Matrix<T> op = Matrix<T>::identity(m.rows());
+            op.entry(i, i) = -1;
+            validate(op * alt, m);
+        }
+
+        for (size_t i = 0; i < m.columns(); ++i) {
+            Matrix<T> alt(m);
+            alt.negateCol(i);
+            validate(alt, m.rows(), m.columns(), [&m, i](size_t r, size_t c) {
+                return (c == i ? -m.entry(r, c) : m.entry(r, c));
+            });
+
+            Matrix<T> op = Matrix<T>::identity(m.columns());
+            op.entry(i, i) = -1;
+            validate(alt * op, m);
+        }
+
+        {
+            Matrix<T> alt(m);
+            alt.negate();
+            validate(alt, m.rows(), m.columns(), [&m](size_t r, size_t c) {
+                return -m.entry(r, c);
+            });
+
+            validate(-m, alt);
+            validate(-Matrix<T>(m), alt); // rvalue variant
+
+            alt += m;
+            EXPECT_TRUE(alt.isZero());
+        }
     }
-
-    for (size_t i = 0; i < m.columns(); ++i) {
-        Matrix<T> alt(m);
-        alt.negateCol(i);
-        validate(alt, m.rows(), m.columns(), [&m, i](size_t r, size_t c) {
-            return (c == i ? -m.entry(r, c) : m.entry(r, c));
-        });
-
-        Matrix<T> op = Matrix<T>::identity(m.columns());
-        op.entry(i, i) = -1;
-        validate(alt * op, m);
-    }
-
-    {
-        Matrix<T> alt(m);
-        alt.negate();
-        validate(alt, m.rows(), m.columns(), [&m](size_t r, size_t c) {
-            return -m.entry(r, c);
-        });
-
-        validate(-m, alt);
-        validate(-Matrix<T>(m), alt); // rvalue variant
-
-        alt += m;
-        EXPECT_TRUE(alt.isZero());
-    }
-}
+} // anonymous namespace
 
 TEST(MatrixTest, negateRowColMatrix) {
     for (const Matrix<int>& m : MatrixTests<int>().cases) {
@@ -1147,138 +1194,146 @@ TEST(MatrixTest, negateRowColMatrix) {
     }
 }
 
-template <regina::Ring T>
-static void verifyAddSubtract(const Matrix<T>& lhs, const Matrix<T>& rhs) {
-    Matrix<T> sum(lhs);
-    sum += rhs;
-    validate(sum, lhs.rows(), lhs.columns(), [&lhs, &rhs](size_t r, size_t c) {
-        return lhs.entry(r, c) + rhs.entry(r, c);
-    });
-    {
-        Matrix<T> tmp(lhs);
-        validate(tmp += Matrix<T>(rhs), sum);
+namespace {
+    template <regina::Ring T>
+    void verifyAddSubtract(const Matrix<T>& lhs, const Matrix<T>& rhs) {
+        Matrix<T> sum(lhs);
+        sum += rhs;
+        validate(sum, lhs.rows(), lhs.columns(),
+                [&lhs, &rhs](size_t r, size_t c) {
+            return lhs.entry(r, c) + rhs.entry(r, c);
+        });
+        {
+            Matrix<T> tmp(lhs);
+            validate(tmp += Matrix<T>(rhs), sum);
+        }
+        validate(lhs + rhs, sum);
+        validate(lhs + Matrix<T>(rhs), sum);
+        validate(Matrix<T>(lhs) + rhs, sum);
+        validate(Matrix<T>(lhs) + Matrix<T>(rhs), sum);
+
+        Matrix<T> diff(lhs);
+        diff -= rhs;
+        validate(diff, lhs.rows(), lhs.columns(),
+                [&lhs, &rhs](size_t r, size_t c) {
+            return lhs.entry(r, c) - rhs.entry(r, c);
+        });
+        {
+            Matrix<T> tmp(lhs);
+            validate(tmp -= Matrix<T>(rhs), diff);
+        }
+        validate(lhs - rhs, diff);
+        validate(lhs - Matrix<T>(rhs), diff);
+        validate(Matrix<T>(lhs) - rhs, diff);
+        validate(Matrix<T>(lhs) - Matrix<T>(rhs), diff);
     }
-    validate(lhs + rhs, sum);
-    validate(lhs + Matrix<T>(rhs), sum);
-    validate(Matrix<T>(lhs) + rhs, sum);
-    validate(Matrix<T>(lhs) + Matrix<T>(rhs), sum);
 
-    Matrix<T> diff(lhs);
-    diff -= rhs;
-    validate(diff, lhs.rows(), lhs.columns(), [&lhs, &rhs](size_t r, size_t c) {
-        return lhs.entry(r, c) - rhs.entry(r, c);
-    });
-    {
-        Matrix<T> tmp(lhs);
-        validate(tmp -= Matrix<T>(rhs), diff);
-    }
-    validate(lhs - rhs, diff);
-    validate(lhs - Matrix<T>(rhs), diff);
-    validate(Matrix<T>(lhs) - rhs, diff);
-    validate(Matrix<T>(lhs) - Matrix<T>(rhs), diff);
-}
+    template <regina::Ring T>
+    void verifyAddSubtract() {
+        for (const Matrix<T>& m : MatrixTests<T>().cases) {
+            for (const Matrix<T>& n : MatrixTests<T>().cases) {
+                Matrix<T> mt = m.transpose();
+                Matrix<T> nt = n.transpose();
 
-template <regina::Ring T>
-static void verifyAddSubtract() {
-    for (const Matrix<T>& m : MatrixTests<T>().cases) {
-        for (const Matrix<T>& n : MatrixTests<T>().cases) {
-            Matrix<T> mt = m.transpose();
-            Matrix<T> nt = n.transpose();
+                if (m.rows() == n.rows() && m.columns() == n.columns()) {
+                    EXPECT_NO_THROW({ verifyAddSubtract(m, n); });
+                    EXPECT_NO_THROW({ verifyAddSubtract(mt, nt); });
+                } else {
+                    Matrix<T> tmp(m);
+                    EXPECT_THROW({ tmp += n; }, regina::InvalidArgument);
+                    EXPECT_THROW({ tmp -= n; }, regina::InvalidArgument);
+                    EXPECT_THROW({ mt += nt; }, regina::InvalidArgument);
+                    EXPECT_THROW({ mt -= nt; }, regina::InvalidArgument);
+                }
 
-            if (m.rows() == n.rows() && m.columns() == n.columns()) {
-                EXPECT_NO_THROW({ verifyAddSubtract(m, n); });
-                EXPECT_NO_THROW({ verifyAddSubtract(mt, nt); });
-            } else {
-                Matrix<T> tmp(m);
-                EXPECT_THROW({ tmp += n; }, regina::InvalidArgument);
-                EXPECT_THROW({ tmp -= n; }, regina::InvalidArgument);
-                EXPECT_THROW({ mt += nt; }, regina::InvalidArgument);
-                EXPECT_THROW({ mt -= nt; }, regina::InvalidArgument);
+                if (m.rows() == n.columns() && m.columns() == n.rows()) {
+                    EXPECT_NO_THROW({ verifyAddSubtract(mt, n); });
+                    EXPECT_NO_THROW({ verifyAddSubtract(m, nt); });
+                } else {
+                    Matrix<T> tmp(m);
+                    EXPECT_THROW({ mt += n; }, regina::InvalidArgument);
+                    EXPECT_THROW({ mt -= n; }, regina::InvalidArgument);
+                    EXPECT_THROW({ tmp += nt; }, regina::InvalidArgument);
+                    EXPECT_THROW({ tmp -= nt; }, regina::InvalidArgument);
+                }
             }
 
-            if (m.rows() == n.columns() && m.columns() == n.rows()) {
-                EXPECT_NO_THROW({ verifyAddSubtract(mt, n); });
-                EXPECT_NO_THROW({ verifyAddSubtract(m, nt); });
-            } else {
+            // Test self-operations (we won't worry about transposes here):
+            {
                 Matrix<T> tmp(m);
-                EXPECT_THROW({ mt += n; }, regina::InvalidArgument);
-                EXPECT_THROW({ mt -= n; }, regina::InvalidArgument);
-                EXPECT_THROW({ tmp += nt; }, regina::InvalidArgument);
-                EXPECT_THROW({ tmp -= nt; }, regina::InvalidArgument);
+                tmp += m;
+                validate(tmp, m.rows(), m.columns(), [&m](size_t r, size_t c) {
+                    return m.entry(r, c) * 2;
+                });
+
+                validate(m + m, tmp);
+                validate(m + Matrix<T>(m), tmp);
+                validate(Matrix<T>(m) + m, tmp);
+                validate(Matrix<T>(m) + Matrix<T>(m), tmp);
+            }
+            {
+                Matrix<T> tmp(m);
+                tmp -= m;
+                validateZero(tmp, m.rows(), m.columns());
+
+                validateZero(m - m, m.rows(), m.columns());
+                validateZero(m - Matrix<T>(m), m.rows(), m.columns());
+                validateZero(Matrix<T>(m) - m, m.rows(), m.columns());
+                validateZero(Matrix<T>(m) - Matrix<T>(m),
+                    m.rows(), m.columns());
             }
         }
-
-        // Test self-operations (we won't worry about transposes here):
-        {
-            Matrix<T> tmp(m);
-            tmp += m;
-            validate(tmp, m.rows(), m.columns(), [&m](size_t r, size_t c) {
-                return m.entry(r, c) * 2;
-            });
-
-            validate(m + m, tmp);
-            validate(m + Matrix<T>(m), tmp);
-            validate(Matrix<T>(m) + m, tmp);
-            validate(Matrix<T>(m) + Matrix<T>(m), tmp);
-        }
-        {
-            Matrix<T> tmp(m);
-            tmp -= m;
-            validateZero(tmp, m.rows(), m.columns());
-
-            validateZero(m - m, m.rows(), m.columns());
-            validateZero(m - Matrix<T>(m), m.rows(), m.columns());
-            validateZero(Matrix<T>(m) - m, m.rows(), m.columns());
-            validateZero(Matrix<T>(m) - Matrix<T>(m), m.rows(), m.columns());
-        }
     }
-}
+} // anonymous namespace
 
 TEST(MatrixTest, addSubtract) {
     verifyAddSubtract<int>();
     verifyAddSubtract<Integer>();
 }
 
-template <regina::Ring T>
-static void verifyScalarProduct(const Matrix<T>& m) {
-    SCOPED_TRACE_REGINA(m);
+namespace {
+    template <regina::Ring T>
+    void verifyScalarProduct(const Matrix<T>& m) {
+        SCOPED_TRACE_REGINA(m);
 
-    for (int scalar : { -2, -1, 0, 1, 2 }) {
-        Matrix<T> prod = m * scalar;
-        validate(prod, m.rows(), m.columns(), [&m, scalar](size_t r, size_t c) {
-            return m.entry(r, c) * scalar;
-        });
+        for (int scalar : { -2, -1, 0, 1, 2 }) {
+            Matrix<T> prod = m * scalar;
+            validate(prod, m.rows(), m.columns(),
+                    [&m, scalar](size_t r, size_t c) {
+                return m.entry(r, c) * scalar;
+            });
 
-        validate(Matrix<T>(m) * scalar, prod); // rvalue variant
-        {
-            Matrix<T> tmp(m);
-            tmp *= scalar;
-            validate(tmp, prod);
-        }
+            validate(Matrix<T>(m) * scalar, prod); // rvalue variant
+            {
+                Matrix<T> tmp(m);
+                tmp *= scalar;
+                validate(tmp, prod);
+            }
 
-        if (scalar == 0 || m.isZero()) {
-            EXPECT_TRUE(prod.isZero());
-        } else {
-            EXPECT_FALSE(prod.isZero());
-            if (scalar == 1) {
-                EXPECT_EQ(prod, m);
+            if (scalar == 0 || m.isZero()) {
+                EXPECT_TRUE(prod.isZero());
             } else {
-                EXPECT_NE(prod, m);
-                if (scalar > 1) {
-                    for (int i = 1; i < scalar; ++i)
-                        prod -= m;
+                EXPECT_FALSE(prod.isZero());
+                if (scalar == 1) {
                     EXPECT_EQ(prod, m);
                 } else {
-                    // scalar < 0
-                    prod.negate();
-                    for (int i = 1; i < -scalar; ++i)
-                        prod -= m;
-                    EXPECT_EQ(prod, m);
+                    EXPECT_NE(prod, m);
+                    if (scalar > 1) {
+                        for (int i = 1; i < scalar; ++i)
+                            prod -= m;
+                        EXPECT_EQ(prod, m);
+                    } else {
+                        // scalar < 0
+                        prod.negate();
+                        for (int i = 1; i < -scalar; ++i)
+                            prod -= m;
+                        EXPECT_EQ(prod, m);
+                    }
                 }
             }
         }
     }
-}
+} // anonymous namespace
 
 TEST(MatrixTest, scalarProduct) {
     for (const Matrix<int>& m : MatrixTests<int>().cases) {
@@ -1291,186 +1346,198 @@ TEST(MatrixTest, scalarProduct) {
     }
 }
 
-template <regina::Ring T>
-static void verifyProduct(const Matrix<T>& lhs, const Matrix<T>& rhs) {
-    // This tests matrix-matrix and matrix-vector products.
-    // It is assumed that lhs ans rhs have compatible dimensions.
+namespace {
+    template <regina::Ring T>
+    void verifyProduct(const Matrix<T>& lhs, const Matrix<T>& rhs) {
+        // This tests matrix-matrix and matrix-vector products.
+        // It is assumed that lhs ans rhs have compatible dimensions.
 
-    // We already test matrix products in several places elsewhere, including
-    // row/column operations, bulk row/column extraction, adjugates, inverses,
-    // change-of-basis matrices for Hermite/Smith normal forms, lattice
-    // image/preimage verification, and 0x0, 0xk and kx0 matrices.
-    //
-    // We therefore keeps things reasonably simple here, and focus mainly on
-    // the interactions between matrices and vectors.
+        // We already test matrix products in several places elsewhere,
+        // including row/column operations, bulk row/column extraction,
+        // adjugates, inverses, change-of-basis matrices for Hermite/Smith
+        // normal forms, lattice image/preimage verification, and 0x0, 0xk and
+        // kx0 matrices.
+        //
+        // We therefore keeps things reasonably simple here, and focus mainly on
+        // the interactions between matrices and vectors.
 
-    Matrix<T> prod = lhs * rhs;
-    validate(prod, lhs.rows(), rhs.columns(), [&lhs, &rhs](size_t r, size_t c) {
-        // Although type T might have addProduct(), and might automatically
-        // initialise to zero, we keep things very manual here.
-        T sum = 0;
-        for (size_t i = 0; i < lhs.columns(); ++i)
-            sum += lhs.entry(r, i) * rhs.entry(i, c);
-        return sum;
-    });
+        Matrix<T> prod = lhs * rhs;
+        validate(prod, lhs.rows(), rhs.columns(),
+                [&lhs, &rhs](size_t r, size_t c) {
+            // Although type T might have addProduct(), and might automatically
+            // initialise to zero, we keep things very manual here.
+            T sum = 0;
+            for (size_t i = 0; i < lhs.columns(); ++i)
+                sum += lhs.entry(r, i) * rhs.entry(i, c);
+            return sum;
+        });
 
-    // Test vector * matrix, matrix * vector, and vector * vector.
-    {
-        auto ans = Vector<T>(rhs.rows(), 0) * rhs;
-        EXPECT_EQ(ans.size(), rhs.columns());
-        EXPECT_TRUE(ans.isZero());
+        // Test vector * matrix, matrix * vector, and vector * vector.
+        {
+            auto ans = Vector<T>(rhs.rows(), 0) * rhs;
+            EXPECT_EQ(ans.size(), rhs.columns());
+            EXPECT_TRUE(ans.isZero());
+        }
+        {
+            auto ans = lhs * Vector<T>(lhs.columns(), 0);
+            EXPECT_EQ(ans.size(), lhs.rows());
+            EXPECT_TRUE(ans.isZero());
+        }
+        for (size_t r = 0; r < lhs.rows(); ++r) {
+            auto ans = lhs.rowVector(r) * rhs;
+            EXPECT_EQ(ans.size(), rhs.columns());
+            EXPECT_EQ(ans, prod.rowVector(r));
+        }
+        for (size_t c = 0; c < rhs.columns(); ++c) {
+            auto ans = lhs * rhs.columnVector(c);
+            EXPECT_EQ(ans.size(), lhs.rows());
+            EXPECT_EQ(ans, prod.columnVector(c));
+        }
+        for (size_t r = 0; r < lhs.rows(); ++r)
+            for (size_t c = 0; c < rhs.columns(); ++c)
+                EXPECT_EQ(prod.entry(r, c),
+                    lhs.rowVector(r) * rhs.columnVector(c));
+
+        EXPECT_THROW({ lhs * Vector<T>(lhs.columns() + 1); },
+            regina::InvalidArgument);
+        EXPECT_THROW({ Vector<T>(rhs.rows() + 1) * rhs; },
+            regina::InvalidArgument);
     }
-    {
-        auto ans = lhs * Vector<T>(lhs.columns(), 0);
-        EXPECT_EQ(ans.size(), lhs.rows());
-        EXPECT_TRUE(ans.isZero());
-    }
-    for (size_t r = 0; r < lhs.rows(); ++r) {
-        auto ans = lhs.rowVector(r) * rhs;
-        EXPECT_EQ(ans.size(), rhs.columns());
-        EXPECT_EQ(ans, prod.rowVector(r));
-    }
-    for (size_t c = 0; c < rhs.columns(); ++c) {
-        auto ans = lhs * rhs.columnVector(c);
-        EXPECT_EQ(ans.size(), lhs.rows());
-        EXPECT_EQ(ans, prod.columnVector(c));
-    }
-    for (size_t r = 0; r < lhs.rows(); ++r)
-        for (size_t c = 0; c < rhs.columns(); ++c)
-            EXPECT_EQ(prod.entry(r, c), lhs.rowVector(r) * rhs.columnVector(c));
 
-    EXPECT_THROW({ lhs * Vector<T>(lhs.columns() + 1); },
-        regina::InvalidArgument);
-    EXPECT_THROW({ Vector<T>(rhs.rows() + 1) * rhs; }, regina::InvalidArgument);
-}
+    template <regina::Ring T>
+    void verifyProduct() {
+        for (const Matrix<T>& m : MatrixTests<T>().cases) {
+            for (const Matrix<T>& n : MatrixTests<T>().cases) {
+                if (m.columns() == n.rows()) {
+                    // This case captures self-operation (m * m) for
+                    // square matrices.
+                    EXPECT_NO_THROW({ verifyProduct(m, n); });
+                } else {
+                    EXPECT_THROW({ m * n; }, regina::InvalidArgument);
+                }
 
-template <regina::Ring T>
-static void verifyProduct() {
-    for (const Matrix<T>& m : MatrixTests<T>().cases) {
-        for (const Matrix<T>& n : MatrixTests<T>().cases) {
-            if (m.columns() == n.rows()) {
-                // This case captures self-operation (m * m) for
-                // square matrices.
-                EXPECT_NO_THROW({ verifyProduct(m, n); });
-            } else {
-                EXPECT_THROW({ m * n; }, regina::InvalidArgument);
-            }
+                if (m.columns() == n.columns()) {
+                    EXPECT_NO_THROW({ verifyProduct(m, n.transpose()); });
+                } else {
+                    EXPECT_THROW({ m * n.transpose(); },
+                        regina::InvalidArgument);
+                }
 
-            if (m.columns() == n.columns()) {
-                EXPECT_NO_THROW({ verifyProduct(m, n.transpose()); });
-            } else {
-                EXPECT_THROW({ m * n.transpose(); }, regina::InvalidArgument);
-            }
+                if (m.rows() == n.rows()) {
+                    EXPECT_NO_THROW({ verifyProduct(m.transpose(), n); });
+                } else {
+                    EXPECT_THROW({ m.transpose() * n; },
+                        regina::InvalidArgument);
+                }
 
-            if (m.rows() == n.rows()) {
-                EXPECT_NO_THROW({ verifyProduct(m.transpose(), n); });
-            } else {
-                EXPECT_THROW({ m.transpose() * n; }, regina::InvalidArgument);
-            }
-
-            if (m.rows() == n.columns()) {
-                EXPECT_NO_THROW({ verifyProduct(m.transpose(),
-                    n.transpose()); });
-            } else {
-                EXPECT_THROW({ m.transpose() * n.transpose(); },
-                    regina::InvalidArgument);
+                if (m.rows() == n.columns()) {
+                    EXPECT_NO_THROW({ verifyProduct(m.transpose(),
+                        n.transpose()); });
+                } else {
+                    EXPECT_THROW({ m.transpose() * n.transpose(); },
+                        regina::InvalidArgument);
+                }
             }
         }
     }
-}
+} // anonymous namespace
 
 TEST(MatrixTest, product) {
     verifyProduct<int>();
     verifyProduct<Integer>();
 }
 
-template <regina::Ring T>
-static void verifyTrace() {
-    // Start with some simple examples.
-    {
-        Matrix<T> zero(3);
-        if constexpr (! regina::ReginaInteger<T>)
-            zero.fill(0);
-        EXPECT_EQ(zero.trace(), 0);
+namespace {
+    template <regina::Ring T>
+    void verifyTrace() {
+        // Start with some simple examples.
+        {
+            Matrix<T> zero(3);
+            if constexpr (! regina::ReginaInteger<T>)
+                zero.fill(0);
+            EXPECT_EQ(zero.trace(), 0);
+        }
+        EXPECT_EQ(Matrix<T>::identity(3).trace(), 3);
+        {
+            Matrix<T> m(3);
+            m.fill(-5);
+            EXPECT_EQ(m.trace(), -15);
+        }
+
+        // Work through all of our usual square Matrix cases, and just
+        // a couple of our usual non-square cases.
+        const MatrixTests<Integer> tests;
+
+        EXPECT_THROW({ tests.noRows.trace(); }, regina::FailedPrecondition);
+        EXPECT_THROW({ tests.noCols.trace(); }, regina::FailedPrecondition);
+        EXPECT_THROW({ tests.rect34.trace(); }, regina::FailedPrecondition);
+        EXPECT_THROW({ tests.rect43.trace(); }, regina::FailedPrecondition);
+
+        EXPECT_EQ(tests.empty.trace(), 0); // self-transpose
+        EXPECT_EQ(tests.zero3.trace(), 0); // self-transpose
+        EXPECT_EQ(tests.identity3.trace(), 3); // self-transpose
+        EXPECT_EQ(tests.one.trace(), 1); // self-transpose
+        EXPECT_EQ(tests.minusOne.trace(), -1); // self-transpose
+        EXPECT_EQ(tests.two.trace(), 2); // self-transpose
+        EXPECT_EQ(tests.shear2.trace(), 2);
+        EXPECT_EQ(tests.shear2.transpose().trace(), 2);
+        EXPECT_EQ(tests.square3.trace(), -8);
+        EXPECT_EQ(tests.square3.transpose().trace(), -8);
+        EXPECT_EQ(tests.perm4.trace(), 0);
+        EXPECT_EQ(tests.perm4.transpose().trace(), 0);
+        EXPECT_EQ(tests.fib1.trace(), 1183);
+        EXPECT_EQ(tests.fib1.transpose().trace(), 1183);
+        EXPECT_EQ(tests.fib2.trace(), 652);
+        EXPECT_EQ(tests.fib2.transpose().trace(), 652);
     }
-    EXPECT_EQ(Matrix<T>::identity(3).trace(), 3);
-    {
-        Matrix<T> m(3);
-        m.fill(-5);
-        EXPECT_EQ(m.trace(), -15);
-    }
-
-    // Work through all of our usual square Matrix cases, and just a couple of
-    // our usual non-square cases.
-    const MatrixTests<Integer> tests;
-
-    EXPECT_THROW({ tests.noRows.trace(); }, regina::FailedPrecondition);
-    EXPECT_THROW({ tests.noCols.trace(); }, regina::FailedPrecondition);
-    EXPECT_THROW({ tests.rect34.trace(); }, regina::FailedPrecondition);
-    EXPECT_THROW({ tests.rect43.trace(); }, regina::FailedPrecondition);
-
-    EXPECT_EQ(tests.empty.trace(), 0); // self-transpose
-    EXPECT_EQ(tests.zero3.trace(), 0); // self-transpose
-    EXPECT_EQ(tests.identity3.trace(), 3); // self-transpose
-    EXPECT_EQ(tests.one.trace(), 1); // self-transpose
-    EXPECT_EQ(tests.minusOne.trace(), -1); // self-transpose
-    EXPECT_EQ(tests.two.trace(), 2); // self-transpose
-    EXPECT_EQ(tests.shear2.trace(), 2);
-    EXPECT_EQ(tests.shear2.transpose().trace(), 2);
-    EXPECT_EQ(tests.square3.trace(), -8);
-    EXPECT_EQ(tests.square3.transpose().trace(), -8);
-    EXPECT_EQ(tests.perm4.trace(), 0);
-    EXPECT_EQ(tests.perm4.transpose().trace(), 0);
-    EXPECT_EQ(tests.fib1.trace(), 1183);
-    EXPECT_EQ(tests.fib1.transpose().trace(), 1183);
-    EXPECT_EQ(tests.fib2.trace(), 652);
-    EXPECT_EQ(tests.fib2.transpose().trace(), 652);
-}
+} // anonymous namespace
 
 TEST(MatrixTest, trace) {
     verifyTrace<int>();
     verifyTrace<Integer>();
 }
 
-template <regina::IntegralDomain T>
-static void verifyAdjugate(const Matrix<T>& m, const T& determinant,
-        AdjugateAlgorithm alg) {
-    // We have already verified that the matrix is square through the variant
-    // of verifyAdjugate() that does not take an algorithm as input.
+namespace {
+    template <regina::IntegralDomain T>
+    void verifyAdjugate(const Matrix<T>& m, const T& determinant,
+            AdjugateAlgorithm alg) {
+        // We have already verified that the matrix is square through the
+        // variant of verifyAdjugate() that does not take an algorithm as input.
 
-    EXPECT_EQ(m.det(alg), determinant);
+        EXPECT_EQ(m.det(alg), determinant);
 
-    if (m.rows() > 1 && alg == AdjugateAlgorithm::MahajanVinay) {
-        EXPECT_THROW({ m.adjugate(alg); }, regina::InvalidArgument);
-    } else {
-        auto adj = m.adjugate(alg);
-        validate(adj.first, m.rows(), m.columns());
-        EXPECT_EQ(adj.second, determinant);
-        if (m.rows() != 0)
-            EXPECT_EQ(m * adj.first,
-                Matrix<T>::identity(m.rows()) * determinant);
+        if (m.rows() > 1 && alg == AdjugateAlgorithm::MahajanVinay) {
+            EXPECT_THROW({ m.adjugate(alg); }, regina::InvalidArgument);
+        } else {
+            auto adj = m.adjugate(alg);
+            validate(adj.first, m.rows(), m.columns());
+            EXPECT_EQ(adj.second, determinant);
+            if (m.rows() != 0)
+                EXPECT_EQ(m * adj.first,
+                    Matrix<T>::identity(m.rows()) * determinant);
+        }
     }
-}
 
-template <regina::IntegralDomain T>
-static void verifyAdjugate(const Matrix<T>& m, const T& determinant) {
-    // We use this if we already have an expcted value for the determinant.
-    ASSERT_EQ(m.rows(), m.columns());
+    template <regina::IntegralDomain T>
+    void verifyAdjugate(const Matrix<T>& m, const T& determinant) {
+        // We use this if we already have an expcted value for the determinant.
+        ASSERT_EQ(m.rows(), m.columns());
 
-    verifyAdjugate(m, determinant, AdjugateAlgorithm::FaddeevLeverrier);
-    verifyAdjugate(m, determinant, AdjugateAlgorithm::PreparataSarwate);
-    verifyAdjugate(m, determinant, AdjugateAlgorithm::MahajanVinay);
-}
+        verifyAdjugate(m, determinant, AdjugateAlgorithm::FaddeevLeverrier);
+        verifyAdjugate(m, determinant, AdjugateAlgorithm::PreparataSarwate);
+        verifyAdjugate(m, determinant, AdjugateAlgorithm::MahajanVinay);
+    }
 
-template <regina::IntegralDomain T>
-static void verifyAdjugate(const Matrix<T>& m) {
-    // We use this if we do not know the determinant in advance.
-    ASSERT_EQ(m.rows(), m.columns());
+    template <regina::IntegralDomain T>
+    void verifyAdjugate(const Matrix<T>& m) {
+        // We use this if we do not know the determinant in advance.
+        ASSERT_EQ(m.rows(), m.columns());
 
-    auto det = m.det(AdjugateAlgorithm::MahajanVinay);
-    verifyAdjugate(m, det, AdjugateAlgorithm::FaddeevLeverrier);
-    verifyAdjugate(m, det, AdjugateAlgorithm::PreparataSarwate);
-}
+        auto det = m.det(AdjugateAlgorithm::MahajanVinay);
+        verifyAdjugate(m, det, AdjugateAlgorithm::FaddeevLeverrier);
+        verifyAdjugate(m, det, AdjugateAlgorithm::PreparataSarwate);
+    }
+} // anonymous namespace
 
 TEST(MatrixTest, determinantAdjugate) {
     // Note: we cannot test determinant/adjugate with Matrix<T> for any native
@@ -1597,128 +1664,132 @@ TEST(MatrixTest, determinantAdjugate) {
 
 // MARK: - Specific to ReginaInteger
 
-static void verifyGcdDivReduceRowCol(const MatrixInt& m) {
-    // This tests gcdRow(), gcdCol(), reduceRow(), reduceCol(),
-    // divRowExact(), and divColExact().
+namespace {
+    void verifyGcdDivReduceRowCol(const MatrixInt& m) {
+        // This tests gcdRow(), gcdCol(), reduceRow(), reduceCol(),
+        // divRowExact(), and divColExact().
 
-    SCOPED_TRACE_REGINA(m);
+        SCOPED_TRACE_REGINA(m);
 
-    for (size_t i = 0; i < m.rows(); ++i) {
-        Integer gcd = m.gcdRow(i);
+        for (size_t i = 0; i < m.rows(); ++i) {
+            Integer gcd = m.gcdRow(i);
 
-        bool allZero = true;
-        for (size_t j = 0; j < m.columns(); ++j)
-            if (m.entry(i, j) != 0) {
-                allZero = false;
-                break;
+            bool allZero = true;
+            for (size_t j = 0; j < m.columns(); ++j)
+                if (m.entry(i, j) != 0) {
+                    allZero = false;
+                    break;
+                }
+
+            if (allZero) {
+                EXPECT_EQ(gcd, 0);
+
+                MatrixInt alt(m);
+                alt.divRowExact(i, 317);
+                validate(alt, m);
+                alt.divRowExact(i, -1);
+                validate(alt, m);
+                alt.reduceRow(i);
+                validate(alt, m);
+                continue;
             }
 
-        if (allZero) {
-            EXPECT_EQ(gcd, 0);
+            ASSERT_GT(gcd, 0);
+            for (size_t j = 0; j < m.columns(); ++j) {
+                EXPECT_EQ(m.entry(i, j) % gcd, 0);
+            }
 
             MatrixInt alt(m);
-            alt.divRowExact(i, 317);
+            alt.divRowExact(i, gcd);
+            validate(alt, m.rows(), m.columns(),
+                    [&m, i, &gcd](size_t r, size_t c) {
+                return (r == i ? m.entry(r, c).divExact(gcd) : m.entry(r, c));
+            });
+            EXPECT_EQ(alt.gcdRow(i), 1);
+
+            MatrixInt red(m);
+            red.reduceRow(i);
+            validate(red, alt);
+
+            alt.multRow(i, gcd);
             validate(alt, m);
+
             alt.divRowExact(i, -1);
+            validate(alt, m.rows(), m.columns(), [&m, i](size_t r, size_t c) {
+                return (r == i ? -m.entry(r, c) : m.entry(r, c));
+            });
+            EXPECT_EQ(alt.gcdRow(i), gcd);
+
+            alt.negateRow(i);
             validate(alt, m);
-            alt.reduceRow(i);
-            validate(alt, m);
-            continue;
+
+            alt.multRow(i, -2);
+            validate(alt, m.rows(), m.columns(), [&m, i](size_t r, size_t c) {
+                return (r == i ? -2 * m.entry(r, c) : m.entry(r, c));
+            });
+            EXPECT_EQ(alt.gcdRow(i), 2 * gcd);
         }
 
-        ASSERT_GT(gcd, 0);
-        for (size_t j = 0; j < m.columns(); ++j) {
-            EXPECT_EQ(m.entry(i, j) % gcd, 0);
-        }
+        for (size_t i = 0; i < m.columns(); ++i) {
+            Integer gcd = m.gcdCol(i);
 
-        MatrixInt alt(m);
-        alt.divRowExact(i, gcd);
-        validate(alt, m.rows(), m.columns(), [&m, i, &gcd](size_t r, size_t c) {
-            return (r == i ? m.entry(r, c).divExact(gcd) : m.entry(r, c));
-        });
-        EXPECT_EQ(alt.gcdRow(i), 1);
+            bool allZero = true;
+            for (size_t j = 0; j < m.rows(); ++j)
+                if (m.entry(j, i) != 0) {
+                    allZero = false;
+                    break;
+                }
 
-        MatrixInt red(m);
-        red.reduceRow(i);
-        validate(red, alt);
+            if (allZero) {
+                EXPECT_EQ(gcd, 0);
 
-        alt.multRow(i, gcd);
-        validate(alt, m);
-
-        alt.divRowExact(i, -1);
-        validate(alt, m.rows(), m.columns(), [&m, i](size_t r, size_t c) {
-            return (r == i ? -m.entry(r, c) : m.entry(r, c));
-        });
-        EXPECT_EQ(alt.gcdRow(i), gcd);
-
-        alt.negateRow(i);
-        validate(alt, m);
-
-        alt.multRow(i, -2);
-        validate(alt, m.rows(), m.columns(), [&m, i](size_t r, size_t c) {
-            return (r == i ? -2 * m.entry(r, c) : m.entry(r, c));
-        });
-        EXPECT_EQ(alt.gcdRow(i), 2 * gcd);
-    }
-
-    for (size_t i = 0; i < m.columns(); ++i) {
-        Integer gcd = m.gcdCol(i);
-
-        bool allZero = true;
-        for (size_t j = 0; j < m.rows(); ++j)
-            if (m.entry(j, i) != 0) {
-                allZero = false;
-                break;
+                MatrixInt alt(m);
+                alt.divColExact(i, 317);
+                validate(alt, m);
+                alt.divColExact(i, -1);
+                validate(alt, m);
+                alt.reduceCol(i);
+                validate(alt, m);
+                continue;
             }
 
-        if (allZero) {
-            EXPECT_EQ(gcd, 0);
+            ASSERT_GT(gcd, 0);
+            for (size_t j = 0; j < m.rows(); ++j) {
+                EXPECT_EQ(m.entry(j, i) % gcd, 0);
+            }
 
             MatrixInt alt(m);
-            alt.divColExact(i, 317);
+            alt.divColExact(i, gcd);
+            validate(alt, m.rows(), m.columns(),
+                    [&m, i, &gcd](size_t r, size_t c) {
+                return (c == i ? m.entry(r, c).divExact(gcd) : m.entry(r, c));
+            });
+            EXPECT_EQ(alt.gcdCol(i), 1);
+
+            MatrixInt red(m);
+            red.reduceCol(i);
+            validate(red, alt);
+
+            alt.multCol(i, gcd);
             validate(alt, m);
+
             alt.divColExact(i, -1);
+            validate(alt, m.rows(), m.columns(), [&m, i](size_t r, size_t c) {
+                return (c == i ? -m.entry(r, c) : m.entry(r, c));
+            });
+            EXPECT_EQ(alt.gcdCol(i), gcd);
+
+            alt.negateCol(i);
             validate(alt, m);
-            alt.reduceCol(i);
-            validate(alt, m);
-            continue;
+
+            alt.multCol(i, -2);
+            validate(alt, m.rows(), m.columns(), [&m, i](size_t r, size_t c) {
+                return (c == i ? -2 * m.entry(r, c) : m.entry(r, c));
+            });
+            EXPECT_EQ(alt.gcdCol(i), 2 * gcd);
         }
-
-        ASSERT_GT(gcd, 0);
-        for (size_t j = 0; j < m.rows(); ++j) {
-            EXPECT_EQ(m.entry(j, i) % gcd, 0);
-        }
-
-        MatrixInt alt(m);
-        alt.divColExact(i, gcd);
-        validate(alt, m.rows(), m.columns(), [&m, i, &gcd](size_t r, size_t c) {
-            return (c == i ? m.entry(r, c).divExact(gcd) : m.entry(r, c));
-        });
-        EXPECT_EQ(alt.gcdCol(i), 1);
-
-        MatrixInt red(m);
-        red.reduceCol(i);
-        validate(red, alt);
-
-        alt.multCol(i, gcd);
-        validate(alt, m);
-
-        alt.divColExact(i, -1);
-        validate(alt, m.rows(), m.columns(), [&m, i](size_t r, size_t c) {
-            return (c == i ? -m.entry(r, c) : m.entry(r, c));
-        });
-        EXPECT_EQ(alt.gcdCol(i), gcd);
-
-        alt.negateCol(i);
-        validate(alt, m);
-
-        alt.multCol(i, -2);
-        validate(alt, m.rows(), m.columns(), [&m, i](size_t r, size_t c) {
-            return (c == i ? -2 * m.entry(r, c) : m.entry(r, c));
-        });
-        EXPECT_EQ(alt.gcdCol(i), 2 * gcd);
     }
-}
+} // anonymous namespace
 
 TEST(MatrixTest, gcdDivReduceRowCol) {
     const MatrixTests<Integer> tests;
@@ -1728,121 +1799,124 @@ TEST(MatrixTest, gcdDivReduceRowCol) {
     }
 }
 
-static void verifyHermite(const MatrixInt& m) {
-    SCOPED_TRACE_REGINA(m);
+namespace {
+    void verifyHermite(const MatrixInt& m) {
+        SCOPED_TRACE_REGINA(m);
 
-    MatrixInt trans = m.transpose();
+        MatrixInt trans = m.transpose();
 
-    // We test row Hermite normal form of m, and column Hermite normal form of
-    // trans.  The assumption is that verifyHermite() will be called on both m
-    // and m.transpose(), thereby leading to the testing of all four variants.
+        // We test row Hermite normal form of m, and column Hermite normal form
+        // of trans.  The assumption is that verifyHermite() will be called on
+        // both m and m.transpose(), thereby leading to the testing of all four
+        // variants.
 
-    auto res = m.rowHermite();
-    auto resTrans = trans.columnHermite();
-    validate(res.first, m.rows(), m.columns());
-    validate(resTrans.first, m.columns(), m.rows());
-    {
-        auto alt = MatrixInt(m).rowHermite(); // rvalue variant
-        validate(alt.first, res.first);
-        EXPECT_EQ(alt.second, res.second);
-    }
-    {
-        auto alt = MatrixInt(trans).columnHermite(); // rvalue variant
-        validate(alt.first, resTrans.first);
-        EXPECT_EQ(alt.second, resTrans.second);
-    }
+        auto res = m.rowHermite();
+        auto resTrans = trans.columnHermite();
+        validate(res.first, m.rows(), m.columns());
+        validate(resTrans.first, m.columns(), m.rows());
+        {
+            auto alt = MatrixInt(m).rowHermite(); // rvalue variant
+            validate(alt.first, res.first);
+            EXPECT_EQ(alt.second, res.second);
+        }
+        {
+            auto alt = MatrixInt(trans).columnHermite(); // rvalue variant
+            validate(alt.first, resTrans.first);
+            EXPECT_EQ(alt.second, resTrans.second);
+        }
 
-    EXPECT_EQ(res.first, resTrans.first.transpose()); // compare matrices
-    EXPECT_EQ(res.second, resTrans.second); // compare ranks
+        EXPECT_EQ(res.first, resTrans.first.transpose()); // compare matrices
+        EXPECT_EQ(res.second, resTrans.second); // compare ranks
 
-    EXPECT_EQ(m.rank(), res.second);
-    EXPECT_EQ(MatrixInt(m).rank(), res.second); // rvalue variant
+        EXPECT_EQ(m.rank(), res.second);
+        EXPECT_EQ(MatrixInt(m).rank(), res.second); // rvalue variant
 
-    // Verify that the rank is within the expected range.
-    ASSERT_LE(res.second, m.rows());
-    ASSERT_LE(res.second, m.columns());
+        // Verify that the rank is within the expected range.
+        ASSERT_LE(res.second, m.rows());
+        ASSERT_LE(res.second, m.columns());
 
-    // Verify that res.first is actually in row Hermite normal form.
-    if (m.columns() == 0) {
-        validateNoColumns(res.first, m.rows());
-    } else {
-        size_t fromCol = 0;
-        for (size_t r = 0; r < m.rows(); ++r) {
-            // The initial non-zero entry in this row must appear in
-            // column ≥ fromCol.
-            do {
-                // Whether or not res.first[r, fromCol] is zero, the entire
-                // column beneath this position must be zero.
-                for (size_t i = r + 1; i < m.rows(); ++i)
-                    EXPECT_EQ(res.first.entry(i, fromCol), 0);
+        // Verify that res.first is actually in row Hermite normal form.
+        if (m.columns() == 0) {
+            validateNoColumns(res.first, m.rows());
+        } else {
+            size_t fromCol = 0;
+            for (size_t r = 0; r < m.rows(); ++r) {
+                // The initial non-zero entry in this row must appear in
+                // column ≥ fromCol.
+                do {
+                    // Whether or not res.first[r, fromCol] is zero, the entire
+                    // column beneath this position must be zero.
+                    for (size_t i = r + 1; i < m.rows(); ++i)
+                        EXPECT_EQ(res.first.entry(i, fromCol), 0);
 
-                if (res.first.entry(r, fromCol) != 0)
+                    if (res.first.entry(r, fromCol) != 0)
+                        break;
+                    ++fromCol;
+                } while (fromCol < m.columns());
+
+                if (fromCol == m.columns())
                     break;
+
+                // The first non-zero entry in this row:
+                auto corner = res.first.entry(r, fromCol);
+                EXPECT_GT(corner, 0);
+                for (size_t i = 0; i < r; ++i) {
+                    EXPECT_GE(res.first.entry(i, fromCol), 0);
+                    EXPECT_LT(res.first.entry(i, fromCol), corner);
+                }
+
                 ++fromCol;
-            } while (fromCol < m.columns());
+                if (fromCol == m.columns())
+                    break;
+            }
+        }
 
-            if (fromCol == m.columns())
-                break;
+        if (m.rows() == m.columns())
+            EXPECT_EQ(res.first.det(), m.det().abs());
 
-            // The first non-zero entry in this row is res.first[r, fromCol].
-            auto corner = res.first.entry(r, fromCol);
-            EXPECT_GT(corner, 0);
-            for (size_t i = 0; i < r; ++i) {
-                EXPECT_GE(res.first.entry(i, fromCol), 0);
-                EXPECT_LT(res.first.entry(i, fromCol), corner);
+        // Ensure that res.first spans the same row space as m.
+        {
+            MatrixInt comb(2 * m.rows(), m.columns());
+            for (size_t i = 0; i < m.rows(); ++i)
+                for (size_t j = 0; j < m.columns(); ++j)
+                    comb.entry(i, j) = m.entry(i, j);
+            for (size_t i = 0; i < m.rows(); ++i)
+                for (size_t j = 0; j < m.columns(); ++j)
+                    comb.entry(m.rows() + i, j) = res.first.entry(i, j);
+            EXPECT_EQ(comb.rank(), res.second);
+        }
+
+        // Compare results with the change-of-basis variant for column Hermite
+        // normal form.
+        {
+            auto [e, r, ri, rank] = trans.columnHermiteCoB();
+            validate(e, resTrans.first);
+            validate(r, trans.columns(), trans.columns());
+            validate(ri, trans.columns(), trans.columns());
+            EXPECT_EQ(rank, resTrans.second);
+
+            // Validate the rvalue variant:
+            {
+                auto [e2, r2, ri2, rank2] = MatrixInt(trans).columnHermiteCoB();
+                validate(e2, e);
+                validate(r2, r);
+                validate(ri2, ri);
+                EXPECT_EQ(rank2, rank);
             }
 
-            ++fromCol;
-            if (fromCol == m.columns())
-                break;
+            EXPECT_EQ(trans * r, e);
+            EXPECT_EQ(e * ri, trans);
+            EXPECT_TRUE((r * ri).isIdentity());
+            EXPECT_TRUE((ri * r).isIdentity());
+
+            if (trans.rows() == 0) {
+                // We can be more precise about what the CoB matrices should be.
+                validateIdentity(r, trans.columns());
+                validateIdentity(ri, trans.columns());
+            }
         }
     }
-
-    if (m.rows() == m.columns())
-        EXPECT_EQ(res.first.det(), m.det().abs());
-
-    // Ensure that res.first spans the same row space as m.
-    {
-        MatrixInt comb(2 * m.rows(), m.columns());
-        for (size_t i = 0; i < m.rows(); ++i)
-            for (size_t j = 0; j < m.columns(); ++j)
-                comb.entry(i, j) = m.entry(i, j);
-        for (size_t i = 0; i < m.rows(); ++i)
-            for (size_t j = 0; j < m.columns(); ++j)
-                comb.entry(m.rows() + i, j) = res.first.entry(i, j);
-        EXPECT_EQ(comb.rank(), res.second);
-    }
-
-    // Compare results with the change-of-basis variant for column Hermite
-    // normal form.
-    {
-        auto [e, r, ri, rank] = trans.columnHermiteCoB();
-        validate(e, resTrans.first);
-        validate(r, trans.columns(), trans.columns());
-        validate(ri, trans.columns(), trans.columns());
-        EXPECT_EQ(rank, resTrans.second);
-
-        // Validate the rvalue variant:
-        {
-            auto [e2, r2, ri2, rank2] = MatrixInt(trans).columnHermiteCoB();
-            validate(e2, e);
-            validate(r2, r);
-            validate(ri2, ri);
-            EXPECT_EQ(rank2, rank);
-        }
-
-        EXPECT_EQ(trans * r, e);
-        EXPECT_EQ(e * ri, trans);
-        EXPECT_TRUE((r * ri).isIdentity());
-        EXPECT_TRUE((ri * r).isIdentity());
-
-        if (trans.rows() == 0) {
-            // We can be more precise about what the CoB matrices should be.
-            validateIdentity(r, trans.columns());
-            validateIdentity(ri, trans.columns());
-        }
-    }
-}
+} // anonymous namespace
 
 TEST(MatrixTest, hermite) {
     const MatrixTests<Integer> tests;
@@ -1852,76 +1926,78 @@ TEST(MatrixTest, hermite) {
     }
 }
 
-static void verifyRowBasis(const MatrixInt& m) {
-    SCOPED_TRACE_REGINA(m);
+namespace {
+    void verifyRowBasis(const MatrixInt& m) {
+        SCOPED_TRACE_REGINA(m);
 
-    size_t rank = m.rank();
-    MatrixInt basis = m.rowBasis();
-    validate(basis, rank, m.columns());
-    validate(MatrixInt(m).rowBasis(), basis); // rvalue variant
-    {
-        MatrixInt tmp(m);
-        tmp.makeRowBasis();
-        validate(tmp, basis);
-    }
+        size_t rank = m.rank();
+        MatrixInt basis = m.rowBasis();
+        validate(basis, rank, m.columns());
+        validate(MatrixInt(m).rowBasis(), basis); // rvalue variant
+        {
+            MatrixInt tmp(m);
+            tmp.makeRowBasis();
+            validate(tmp, basis);
+        }
 
-    EXPECT_EQ(basis.rank(), rank);
+        EXPECT_EQ(basis.rank(), rank);
 
-    // Ensure that basis spans the same row space as m.
-    {
-        MatrixInt comb(m.rows() + basis.rows(), m.columns());
-        for (size_t i = 0; i < m.rows(); ++i)
-            for (size_t j = 0; j < m.columns(); ++j)
-                comb.entry(i, j) = m.entry(i, j);
-        for (size_t i = 0; i < basis.rows(); ++i)
-            for (size_t j = 0; j < m.columns(); ++j)
-                comb.entry(m.rows() + i, j) = basis.entry(i, j);
-        EXPECT_EQ(comb.rank(), rank);
-    }
+        // Ensure that basis spans the same row space as m.
+        {
+            MatrixInt comb(m.rows() + basis.rows(), m.columns());
+            for (size_t i = 0; i < m.rows(); ++i)
+                for (size_t j = 0; j < m.columns(); ++j)
+                    comb.entry(i, j) = m.entry(i, j);
+            for (size_t i = 0; i < basis.rows(); ++i)
+                for (size_t j = 0; j < m.columns(); ++j)
+                    comb.entry(m.rows() + i, j) = basis.entry(i, j);
+            EXPECT_EQ(comb.rank(), rank);
+        }
 
-    // Ensure that every row of basis matches some row of m.
-    // (There are faster ways of doing this, but our tests are not large.)
-    for (size_t i = 0; i < basis.rows(); ++i) {
-        bool found = false;
-        for (size_t j = 0; j < m.rows(); ++j) {
-            bool equal = true;
-            for (size_t c = 0; c < m.columns(); ++c)
-                if (basis.entry(i, c) != m.entry(j, c)) {
-                    equal = false;
+        // Ensure that every row of basis matches some row of m.
+        // (There are faster ways of doing this, but our tests are not large.)
+        for (size_t i = 0; i < basis.rows(); ++i) {
+            bool found = false;
+            for (size_t j = 0; j < m.rows(); ++j) {
+                bool equal = true;
+                for (size_t c = 0; c < m.columns(); ++c)
+                    if (basis.entry(i, c) != m.entry(j, c)) {
+                        equal = false;
+                        break;
+                    }
+                if (equal) {
+                    found = true;
                     break;
                 }
-            if (equal) {
-                found = true;
-                break;
+            }
+            EXPECT_TRUE(found);
+        }
+
+        // Now verify the incremental basis for the orthogonal complement.
+        auto [altBasis, comp] = m.rowBasisAndOrthComp();
+        validate(altBasis, basis);
+        ASSERT_EQ(comp.rows(), m.columns());
+        ASSERT_EQ(comp.columns(), m.columns());
+        EXPECT_EQ(comp.rank(), m.columns());
+        for (size_t i = 0; i < altBasis.rows(); ++i) {
+            // Row i of altBasis should be orthogonal to all rows > i of comp.
+            for (size_t j = i + 1; j < comp.rows(); ++j) {
+                Integer sum;
+                for (size_t k = 0; k < m.columns(); ++k)
+                    sum.addProduct(altBasis.entry(i, k), comp.entry(j, k));
+                EXPECT_EQ(sum, 0);
             }
         }
-        EXPECT_TRUE(found);
-    }
 
-    // Now verify the incremental basis for the orthogonal complement.
-    auto [altBasis, comp] = m.rowBasisAndOrthComp();
-    validate(altBasis, basis);
-    ASSERT_EQ(comp.rows(), m.columns());
-    ASSERT_EQ(comp.columns(), m.columns());
-    EXPECT_EQ(comp.rank(), m.columns());
-    for (size_t i = 0; i < altBasis.rows(); ++i) {
-        // Row i of altBasis should be orthogonal to all rows > i of comp.
-        for (size_t j = i + 1; j < comp.rows(); ++j) {
-            Integer sum;
-            for (size_t k = 0; k < m.columns(); ++k)
-                sum.addProduct(altBasis.entry(i, k), comp.entry(j, k));
-            EXPECT_EQ(sum, 0);
+        if (m.rows() == 0) {
+            // The API just promises that the rows of comp form a basis for
+            // R^cols.  However, the current algorithm gives c = -I(cols) and
+            // so for now we explicitly test for that.
+            comp.negate();
+            validateIdentity(comp, m.columns());
         }
     }
-
-    if (m.rows() == 0) {
-        // The API just promises that the rows of comp form a basis for R^cols.
-        // However, the current algorithm gives c = -I(cols) and so for now we
-        // explicitly test for that.
-        comp.negate();
-        validateIdentity(comp, m.columns());
-    }
-}
+} // anonymous namespace
 
 TEST(MatrixTest, rowBasis) {
     const MatrixTests<Integer> tests;
@@ -1957,36 +2033,39 @@ TEST(MatrixTest, rowBasis) {
     });
 }
 
-static void verifyInverse(const MatrixInt& m) {
-    SCOPED_TRACE_REGINA(m);
+namespace {
+    void verifyInverse(const MatrixInt& m) {
+        SCOPED_TRACE_REGINA(m);
 
-    if (m.rows() != m.columns()) {
-        EXPECT_THROW({ m.inverse(); }, regina::FailedPrecondition);
-        EXPECT_THROW({ MatrixInt(m).inverse(); }, regina::FailedPrecondition);
-        return;
+        if (m.rows() != m.columns()) {
+            EXPECT_THROW({ m.inverse(); }, regina::FailedPrecondition);
+            EXPECT_THROW({ MatrixInt(m).inverse(); },
+                regina::FailedPrecondition);
+            return;
+        }
+
+        if (m.rows() == 0) {
+            EXPECT_NO_THROW({ validateEmpty(m.inverse()); });
+            EXPECT_NO_THROW({ validateEmpty(MatrixInt(m).inverse()); });
+            return;
+        }
+
+        auto det = m.det();
+        if (det != 1 && det != -1) {
+            EXPECT_THROW({ m.inverse(); }, regina::NoSolution);
+            EXPECT_THROW({ MatrixInt(m).inverse(); }, regina::NoSolution);
+            return;
+        }
+
+        MatrixInt inv;
+        EXPECT_NO_THROW({ inv = m.inverse(); });
+        EXPECT_NO_THROW({ EXPECT_EQ(MatrixInt(m).inverse(), inv); }); // rvalue
+        EXPECT_EQ(inv.rows(), m.rows());
+        EXPECT_EQ(inv.columns(), m.rows());
+        EXPECT_TRUE((m * inv).isIdentity());
+        EXPECT_TRUE((inv * m).isIdentity());
     }
-
-    if (m.rows() == 0) {
-        EXPECT_NO_THROW({ validateEmpty(m.inverse()); });
-        EXPECT_NO_THROW({ validateEmpty(MatrixInt(m).inverse()); });
-        return;
-    }
-
-    auto det = m.det();
-    if (det != 1 && det != -1) {
-        EXPECT_THROW({ m.inverse(); }, regina::NoSolution);
-        EXPECT_THROW({ MatrixInt(m).inverse(); }, regina::NoSolution);
-        return;
-    }
-
-    MatrixInt inv;
-    EXPECT_NO_THROW({ inv = m.inverse(); });
-    EXPECT_NO_THROW({ EXPECT_EQ(MatrixInt(m).inverse(), inv); }); // rvalue
-    EXPECT_EQ(inv.rows(), m.rows());
-    EXPECT_EQ(inv.columns(), m.rows());
-    EXPECT_TRUE((m * inv).isIdentity());
-    EXPECT_TRUE((inv * m).isIdentity());
-}
+} // anonymous namespace
 
 TEST(MatrixTest, inverse) {
     const MatrixTests<Integer> tests;
@@ -1996,65 +2075,69 @@ TEST(MatrixTest, inverse) {
     }
 }
 
-static void verifySmith(const MatrixInt& m, std::initializer_list<long> diag) {
-    SCOPED_TRACE_REGINA(m);
+namespace {
+    void verifySmith(const MatrixInt& m, std::initializer_list<long> diag) {
+        SCOPED_TRACE_REGINA(m);
 
-    MatrixInt snf = m.smith();
-    validate(snf, m.rows(), m.columns());
-    validate(MatrixInt(m).smith(), snf); // rvalue variant
+        MatrixInt snf = m.smith();
+        validate(snf, m.rows(), m.columns());
+        validate(MatrixInt(m).smith(), snf); // rvalue variant
 
-    for (size_t r = 0; r < snf.rows(); ++r)
-        for (size_t c = 0; c < snf.columns(); ++c) {
-            if (r != c || r >= diag.size())
-                EXPECT_EQ(snf.entry(r, c), 0);
+        for (size_t r = 0; r < snf.rows(); ++r)
+            for (size_t c = 0; c < snf.columns(); ++c) {
+                if (r != c || r >= diag.size())
+                    EXPECT_EQ(snf.entry(r, c), 0);
+            }
+
+        size_t i = 0;
+        for (auto d : diag) {
+            EXPECT_EQ(snf.entry(i, i), d);
+            ++i;
         }
 
-    size_t i = 0;
-    for (auto d : diag) {
-        EXPECT_EQ(snf.entry(i, i), d);
-        ++i;
+        for (auto alg : { SNFAlgorithm::HafnerMcCurley,
+                SNFAlgorithm::Metrical }) {
+            auto [snfAlt, R, invR, C, invC] = m.smithCoB(alg);
+            validate(snfAlt, snf);
+            validate(R, m.columns(), m.columns());
+            validate(invR, m.columns(), m.columns());
+            validate(C, m.rows(), m.rows());
+            validate(invC, m.rows(), m.rows());
+
+            // Validate the rvalue variant:
+            {
+                auto [snfAlt2, R2, invR2, C2, invC2] =
+                    MatrixInt(m).smithCoB(alg);
+                validate(snfAlt2, snfAlt);
+                validate(R2, R);
+                validate(invR2, invR);
+                validate(C2, C);
+                validate(invC2, invC);
+            }
+
+            // Note: different algorithms could use different row/column moves
+            // and thereby give different change-of-basis matrices.
+            EXPECT_TRUE((R * invR).isIdentity());
+            EXPECT_TRUE((C * invC).isIdentity());
+            EXPECT_EQ((C * m * R), snfAlt);
+            EXPECT_EQ((invC * snfAlt * invR), m);
+
+            if (m.rows() == 0 || m.columns() == 0) {
+                // We can be more precise about what the CoB matrices should be.
+                validateIdentity(R, m.columns());
+                validateIdentity(invR, m.columns());
+                validateIdentity(C, m.rows());
+                validateIdentity(invC, m.rows());
+            }
+        }
     }
 
-    for (auto alg : { SNFAlgorithm::HafnerMcCurley, SNFAlgorithm::Metrical }) {
-        auto [snfAlt, R, invR, C, invC] = m.smithCoB(alg);
-        validate(snfAlt, snf);
-        validate(R, m.columns(), m.columns());
-        validate(invR, m.columns(), m.columns());
-        validate(C, m.rows(), m.rows());
-        validate(invC, m.rows(), m.rows());
-
-        // Validate the rvalue variant:
-        {
-            auto [snfAlt2, R2, invR2, C2, invC2] = MatrixInt(m).smithCoB(alg);
-            validate(snfAlt2, snfAlt);
-            validate(R2, R);
-            validate(invR2, invR);
-            validate(C2, C);
-            validate(invC2, invC);
-        }
-
-        // Note: different algorithms could use different row/column moves and
-        // thereby give different change-of-basis matrices.
-        EXPECT_TRUE((R * invR).isIdentity());
-        EXPECT_TRUE((C * invC).isIdentity());
-        EXPECT_EQ((C * m * R), snfAlt);
-        EXPECT_EQ((invC * snfAlt * invR), m);
-
-        if (m.rows() == 0 || m.columns() == 0) {
-            // We can be more precise about what the CoB matrices should be.
-            validateIdentity(R, m.columns());
-            validateIdentity(invR, m.columns());
-            validateIdentity(C, m.rows());
-            validateIdentity(invC, m.rows());
-        }
+    void verifySmithWithTranspose(const MatrixInt& m,
+            std::initializer_list<long> diag) {
+        verifySmith(m, diag);
+        verifySmith(m.transpose(), diag);
     }
-}
-
-static void verifySmithWithTranspose(const MatrixInt& m,
-        std::initializer_list<long> diag) {
-    verifySmith(m, diag);
-    verifySmith(m.transpose(), diag);
-}
+} // anonymous namespace
 
 TEST(MatrixTest, smith) {
     const MatrixTests<Integer> tests;
@@ -2080,132 +2163,137 @@ TEST(MatrixTest, smith) {
     verifySmithWithTranspose(tests.fib2, { 1, 1, 1 });
 }
 
-/**
- * Computes the intersection between the lattice generated by the columns
- * of \a m with the given coordinate axis.  This intersection consists of
- * integer multiples `ku` of the corresponding unit vector \a u; this routine
- * returns the smallest positive such integer \a k (or 0 if the intersection
- * contains only the origin).
- */
-static Integer latticeAxisIntersection(const MatrixInt& m, size_t axis) {
-    // We solve for m'v = 0, where m' is the matrix obtained by removing
-    // row #axis from m.
-    // We will put m' in column Hermite normal form e, with change-of-basis
-    // matrices r, ri for which e = m' * r and m' = e * ri.
-    regina::FixedArray<size_t> rows(m.rows() - 1);
-    for (size_t i = 0; i < axis; ++i)
-        rows[i] = i;
-    for (size_t i = axis + 1; i < m.rows(); ++i)
-        rows[i - 1] = i;
-    auto [e, r, ri, rank] = m.copyRows(rows.begin(), rows.end()).
-        columnHermiteCoB();
+namespace {
+    /**
+     * Computes the intersection between the lattice generated by the columns
+     * of \a m with the given coordinate axis.  This intersection consists of
+     * integer multiples `ku` of the corresponding unit vector \a u; this
+     * routine returns the smallest positive such integer \a k (or 0 if the
+     * intersection contains only the origin).
+     */
+    Integer latticeAxisIntersection(const MatrixInt& m, size_t axis) {
+        // We solve for m'v = 0, where m' is the matrix obtained by removing
+        // row #axis from m.
+        // We will put m' in column Hermite normal form e, with change-of-basis
+        // matrices r, ri for which e = m' * r and m' = e * ri.
+        regina::FixedArray<size_t> rows(m.rows() - 1);
+        for (size_t i = 0; i < axis; ++i)
+            rows[i] = i;
+        for (size_t i = axis + 1; i < m.rows(); ++i)
+            rows[i - 1] = i;
+        auto [e, r, ri, rank] = m.copyRows(rows.begin(), rows.end()).
+            columnHermiteCoB();
 
-    // Compute the number of empty columns in e.
-    size_t dim = e.columns() - rank;
+        // Compute the number of empty columns in e.
+        size_t dim = e.columns() - rank;
 
-    // We now need to solve e * ri * v = 0.  The solution space to (ri * v)
-    // is simply the integer lattice on the last dim coordinates, which means
-    // the solution space to v is generated by the last dim columns of r.
+        // We now need to solve e * ri * v = 0.  The solution space to (ri * v)
+        // is simply the integer lattice on the last dim coordinates, which
+        // means the solution space to v is generated by the last dim columns
+        // of r.
 
-    // So: for each of those last dim columns of r, we see where the
-    // corresponding vector mv hits the coordinate axis we are interested in,
-    // and our solution is the gcd of all of these values.
-    Integer ans; // zero
-    for (size_t i = r.columns() - dim; i < r.columns(); ++i) {
-        Integer sum = 0;
-        for (size_t j = 0; j < m.columns(); ++j)
-            sum.addProduct(m.entry(axis, j), r.entry(j, i));
-        ans.gcdWith(sum);
-    }
-    return ans;
-}
-
-static void verifyPreimageOfLattice(const MatrixInt& m,
-        std::vector<Integer> sublattice) {
-    SCOPED_TRACE_REGINA(m);
-    ASSERT_EQ(sublattice.size(), m.rows());
-
-    // Some parts of sublattice could be unreachable (and therefore have no
-    // preimage).  Replace sublattice with the portion of it that actually
-    // lies within the range of m.
-    for (size_t r = 0; r < m.rows(); ++r)
-        sublattice[r].lcmWith(latticeAxisIntersection(m, r));
-
-    // Time to perform the preimage computation and verify the solution.
-    auto ans = m.preimageOfLattice(sublattice);
-
-    EXPECT_EQ(ans.rows(), m.columns());
-    EXPECT_EQ(ans.rank(), ans.columns());
-
-    // Verify that m(ans) actually lies within the sublattice.
-    auto image = m * ans;
-    for (size_t r = 0; r < m.rows(); ++r) {
-        // If sublattice[r] == 0, this (correctly) ensures the entire row is 0.
-        EXPECT_EQ(image.gcdRow(r), sublattice[r]);
-    }
-
-    // At this point we have verified that m(ans) lives within the sublattice.
-    // An application of column Hermite normal form should show us that m(ans)
-    // is precisely equal to the sublattice.
-    size_t sublatticeRank = 0;
-    for (const auto& i : sublattice)
-        if (i != 0)
-            ++sublatticeRank;
-
-    {
-        auto [e, rank] = image.columnHermite();
-        size_t c = 0;
-        for (size_t r = 0; r < m.rows(); ++r) {
-            if (sublattice[r] != 0) {
-                ASSERT_LT(c, e.columns());
-                EXPECT_EQ(e.entry(r, c), sublattice[r]);
-                ++c;
-            }
-        }
-        EXPECT_EQ(rank, sublatticeRank);
-    }
-
-    // It is still possible that the preimage is a strict superset of ans.
-    // We can begin here by checking ranks.
-    // (Note: we have already verified that ans.rank() == ans.columns().)
-    EXPECT_EQ(ans.columns(), sublatticeRank + m.columns() - m.rank());
-
-    // Finally, verify that any attempt to scale down one or more columns of
-    // our answer will strictly increase the image m(ans) (and thereby exceed
-    // the element of the target sublattice).
-    //
-    // Note that, if scaling down some combination of columns of ans _preserves_
-    // the sublattice m(ans), then there is a _single_ column that we can scale
-    // down whilst preserving m(ans).  This means we can just verify columns
-    // of ans independently, one at a time.
-    for (size_t c = 0; c < ans.columns(); ++c) {
-        // First, identify the greatest factor by which we _could_ potentially
-        // scale down this column.
-        Integer maxScaleCol = ans.gcdCol(c);
-        ASSERT_NE(maxScaleCol, 0); // columns of ans should not be all zero
-        if (maxScaleCol == 1)
-            continue; // we cannot scale the column down at all
-
-        // Next, identify the greatest factor by which we can scale down the
-        // _image_ of this column without leaving the sublattice.
-        Integer maxScaleImage;
-        for (size_t i = 0; i < m.rows(); ++i) {
-            Integer sum;
+        // So: for each of those last dim columns of r, we see where the
+        // corresponding vector mv hits the coordinate axis we are interested
+        // in, and our solution is the gcd of all of these values.
+        Integer ans; // zero
+        for (size_t i = r.columns() - dim; i < r.columns(); ++i) {
+            Integer sum = 0;
             for (size_t j = 0; j < m.columns(); ++j)
-                sum.addProduct(m.entry(i, j), ans.entry(j, c));
-            if (sublattice[i] == 0)
-                EXPECT_EQ(sum, 0);
-            else {
-                EXPECT_EQ(sum % sublattice[i], 0);
-                maxScaleImage.gcdWith(sum.divExact(sublattice[i]));
-            }
+                sum.addProduct(m.entry(axis, j), r.entry(j, i));
+            ans.gcdWith(sum);
+        }
+        return ans;
+    }
+
+    void verifyPreimageOfLattice(const MatrixInt& m,
+            std::vector<Integer> sublattice) {
+        SCOPED_TRACE_REGINA(m);
+        ASSERT_EQ(sublattice.size(), m.rows());
+
+        // Some parts of sublattice could be unreachable (and therefore have no
+        // preimage).  Replace sublattice with the portion of it that actually
+        // lies within the range of m.
+        for (size_t r = 0; r < m.rows(); ++r)
+            sublattice[r].lcmWith(latticeAxisIntersection(m, r));
+
+        // Time to perform the preimage computation and verify the solution.
+        auto ans = m.preimageOfLattice(sublattice);
+
+        EXPECT_EQ(ans.rows(), m.columns());
+        EXPECT_EQ(ans.rank(), ans.columns());
+
+        // Verify that m(ans) actually lies within the sublattice.
+        auto image = m * ans;
+        for (size_t r = 0; r < m.rows(); ++r) {
+            // If sublattice[r] == 0, this (correctly) ensures the entire row
+            // is 0.
+            EXPECT_EQ(image.gcdRow(r), sublattice[r]);
         }
 
-        // Now we just need to ensure there is no non-trivial factor that can be
-        // used to scale the column of ans _and_ will not exit the sublattice.
-        EXPECT_EQ(maxScaleCol.gcd(maxScaleImage), 1);
+        // At this point we have verified that m(ans) lives within the
+        // sublattice.  An application of column Hermite normal form should
+        // show us that m(ans) is precisely equal to the sublattice.
+        size_t sublatticeRank = 0;
+        for (const auto& i : sublattice)
+            if (i != 0)
+                ++sublatticeRank;
+
+        {
+            auto [e, rank] = image.columnHermite();
+            size_t c = 0;
+            for (size_t r = 0; r < m.rows(); ++r) {
+                if (sublattice[r] != 0) {
+                    ASSERT_LT(c, e.columns());
+                    EXPECT_EQ(e.entry(r, c), sublattice[r]);
+                    ++c;
+                }
+            }
+            EXPECT_EQ(rank, sublatticeRank);
+        }
+
+        // It is still possible that the preimage is a strict superset of ans.
+        // We can begin here by checking ranks.
+        // (Note: we have already verified that ans.rank() == ans.columns().)
+        EXPECT_EQ(ans.columns(), sublatticeRank + m.columns() - m.rank());
+
+        // Finally, verify that any attempt to scale down one or more columns of
+        // our answer will strictly increase the image m(ans) (and thereby
+        // exceed the element of the target sublattice).
+        //
+        // Note that, if scaling down some combination of columns of ans
+        // _preserves_ the sublattice m(ans), then there is a _single_ column
+        // that we can scale down whilst preserving m(ans).  This means we can
+        // just verify columns of ans independently, one at a time.
+        for (size_t c = 0; c < ans.columns(); ++c) {
+            // First, identify the greatest factor by which we _could_
+            // potentially scale down this column.
+            Integer maxScaleCol = ans.gcdCol(c);
+            ASSERT_NE(maxScaleCol, 0); // columns of ans should not be all zero
+            if (maxScaleCol == 1)
+                continue; // we cannot scale the column down at all
+
+            // Next, identify the greatest factor by which we can scale down the
+            // _image_ of this column without leaving the sublattice.
+            Integer maxScaleImage;
+            for (size_t i = 0; i < m.rows(); ++i) {
+                Integer sum;
+                for (size_t j = 0; j < m.columns(); ++j)
+                    sum.addProduct(m.entry(i, j), ans.entry(j, c));
+                if (sublattice[i] == 0)
+                    EXPECT_EQ(sum, 0);
+                else {
+                    EXPECT_EQ(sum % sublattice[i], 0);
+                    maxScaleImage.gcdWith(sum.divExact(sublattice[i]));
+                }
+            }
+
+            // Now we just need to ensure there is no non-trivial factor that
+            // can be used to scale the column of ans _and_ will not exit the
+            // sublattice.
+            EXPECT_EQ(maxScaleCol.gcd(maxScaleImage), 1);
+        }
     }
-}
+} // anonymous namespace
 
 TEST(MatrixTest, preimageOfLattice) {
     // Begin with tests on empty matrices.

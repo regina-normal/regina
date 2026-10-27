@@ -133,56 +133,37 @@ class LaurentTest : public testing::Test {
         }
 };
 
-static void validate(const L& poly) {
-    auto alloc = poly.allocation();
-    if (alloc.second == 0) {
-        EXPECT_EQ(alloc.first, 0);
-        EXPECT_TRUE(poly.isZero());
-        EXPECT_EQ(poly.minExp(), 0);
-        EXPECT_EQ(poly.maxExp(), 0);
-        EXPECT_EQ(poly[0], 0);
-    } else if (poly.isZero()) {
-        // We have a zero polynomial but with memory pre-allocated.
-        // In this scenario, alloc.first (the base) is arbitrary.
-        EXPECT_EQ(poly.minExp(), 0);
-        EXPECT_EQ(poly.maxExp(), 0);
-        EXPECT_EQ(poly[0], 0);
-    } else {
-        EXPECT_LE(alloc.first, poly.minExp());
-        EXPECT_LE(poly.minExp(), poly.maxExp());
-        EXPECT_LT(poly.maxExp(),
-            alloc.first + static_cast<long>(alloc.second));
-        EXPECT_NE(poly[poly.minExp()], 0);
-        EXPECT_NE(poly[poly.maxExp()], 0);
+namespace {
+    void validate(const L& poly) {
+        auto alloc = poly.allocation();
+        if (alloc.second == 0) {
+            EXPECT_EQ(alloc.first, 0);
+            EXPECT_TRUE(poly.isZero());
+            EXPECT_EQ(poly.minExp(), 0);
+            EXPECT_EQ(poly.maxExp(), 0);
+            EXPECT_EQ(poly[0], 0);
+        } else if (poly.isZero()) {
+            // We have a zero polynomial but with memory pre-allocated.
+            // In this scenario, alloc.first (the base) is arbitrary.
+            EXPECT_EQ(poly.minExp(), 0);
+            EXPECT_EQ(poly.maxExp(), 0);
+            EXPECT_EQ(poly[0], 0);
+        } else {
+            EXPECT_LE(alloc.first, poly.minExp());
+            EXPECT_LE(poly.minExp(), poly.maxExp());
+            EXPECT_LT(poly.maxExp(),
+                alloc.first + static_cast<long>(alloc.second));
+            EXPECT_NE(poly[poly.minExp()], 0);
+            EXPECT_NE(poly[poly.maxExp()], 0);
+        }
     }
-}
 
-static void validateZero(const L& poly) {
-    EXPECT_TRUE(poly.isZero());
-    EXPECT_EQ(poly.minExp(), 0);
-    EXPECT_EQ(poly.maxExp(), 0);
-    EXPECT_EQ(poly[0], 0);
-    EXPECT_EQ(poly, 0);
-
-    auto alloc = poly.allocation();
-    if (alloc.second == 0)
-        EXPECT_EQ(alloc.first, 0);
-    // If alloc.second is positive then we have a zero polynomial
-    // but with memory pre-allocated, which means alloc.first
-    // (the base exponent) is arbitrary.
-
-    const L zero;
-    EXPECT_EQ(poly, zero);
-    EXPECT_FALSE(poly != zero);
-}
-
-static void validate(const L& poly, long minExp,
-        std::initializer_list<Integer> coeffs) {
-    if (coeffs.size() == 0) { // initializer_list does not have empty()
+    void validateZero(const L& poly) {
         EXPECT_TRUE(poly.isZero());
         EXPECT_EQ(poly.minExp(), 0);
         EXPECT_EQ(poly.maxExp(), 0);
         EXPECT_EQ(poly[0], 0);
+        EXPECT_EQ(poly, 0);
 
         auto alloc = poly.allocation();
         if (alloc.second == 0)
@@ -190,113 +171,134 @@ static void validate(const L& poly, long minExp,
         // If alloc.second is positive then we have a zero polynomial
         // but with memory pre-allocated, which means alloc.first
         // (the base exponent) is arbitrary.
-    } else {
-        EXPECT_FALSE(poly.isZero());
-        EXPECT_EQ(poly.minExp(), minExp);
-        EXPECT_EQ(poly.maxExp(), minExp + coeffs.size() - 1);
 
-        auto alloc = poly.allocation();
-        EXPECT_LE(alloc.first, minExp);
-        EXPECT_GE(alloc.first + static_cast<long>(alloc.second),
-            minExp + static_cast<long>(coeffs.size()));
-
-        EXPECT_NE(poly[poly.minExp()], 0);
-        EXPECT_NE(poly[poly.maxExp()], 0);
-
-        auto expect = coeffs.begin();
-        for (long e = minExp; expect != coeffs.end(); ++e, ++expect)
-            EXPECT_EQ(poly[e], *expect);
+        const L zero;
+        EXPECT_EQ(poly, zero);
+        EXPECT_FALSE(poly != zero);
     }
 
-    const L cmp(minExp, coeffs);
-    EXPECT_EQ(poly, cmp);
-    EXPECT_FALSE(poly != cmp);
-}
+    void validate(const L& poly, long minExp,
+            std::initializer_list<Integer> coeffs) {
+        if (coeffs.size() == 0) { // initializer_list does not have empty()
+            EXPECT_TRUE(poly.isZero());
+            EXPECT_EQ(poly.minExp(), 0);
+            EXPECT_EQ(poly.maxExp(), 0);
+            EXPECT_EQ(poly[0], 0);
 
-template <std::ranges::sized_range Container>
-static void validate(const L& poly, long minExp, const Container& coeffs) {
-    if (coeffs.empty()) {
-        EXPECT_TRUE(poly.isZero());
-        EXPECT_EQ(poly.minExp(), 0);
-        EXPECT_EQ(poly.maxExp(), 0);
-        EXPECT_EQ(poly[0], 0);
+            auto alloc = poly.allocation();
+            if (alloc.second == 0)
+                EXPECT_EQ(alloc.first, 0);
+            // If alloc.second is positive then we have a zero polynomial
+            // but with memory pre-allocated, which means alloc.first
+            // (the base exponent) is arbitrary.
+        } else {
+            EXPECT_FALSE(poly.isZero());
+            EXPECT_EQ(poly.minExp(), minExp);
+            EXPECT_EQ(poly.maxExp(), minExp + coeffs.size() - 1);
 
-        auto alloc = poly.allocation();
-        if (alloc.second == 0)
-            EXPECT_EQ(alloc.first, 0);
-        // If alloc.second is positive then we have a zero polynomial
-        // but with memory pre-allocated, which means alloc.first
-        // (the base exponent) is arbitrary.
-    } else {
-        EXPECT_FALSE(poly.isZero());
-        EXPECT_EQ(poly.minExp(), minExp);
-        EXPECT_EQ(poly.maxExp(), minExp + coeffs.size() - 1);
+            auto alloc = poly.allocation();
+            EXPECT_LE(alloc.first, minExp);
+            EXPECT_GE(alloc.first + static_cast<long>(alloc.second),
+                minExp + static_cast<long>(coeffs.size()));
 
-        auto alloc = poly.allocation();
-        EXPECT_LE(alloc.first, minExp);
-        EXPECT_GE(alloc.first + alloc.second, minExp + coeffs.size());
+            EXPECT_NE(poly[poly.minExp()], 0);
+            EXPECT_NE(poly[poly.maxExp()], 0);
 
-        EXPECT_NE(poly[poly.minExp()], 0);
-        EXPECT_NE(poly[poly.maxExp()], 0);
+            auto expect = coeffs.begin();
+            for (long e = minExp; expect != coeffs.end(); ++e, ++expect)
+                EXPECT_EQ(poly[e], *expect);
+        }
 
-        auto expect = coeffs.begin();
-        for (long e = minExp; expect != coeffs.end(); ++e, ++expect)
-            EXPECT_EQ(poly[e], *expect);
+        const L cmp(minExp, coeffs);
+        EXPECT_EQ(poly, cmp);
+        EXPECT_FALSE(poly != cmp);
     }
 
-    const L cmp(minExp, coeffs.begin(), coeffs.end());
-    EXPECT_EQ(poly, cmp);
-    EXPECT_FALSE(poly != cmp);
-}
+    template <std::ranges::sized_range Container>
+    void validate(const L& poly, long minExp, const Container& coeffs) {
+        if (coeffs.empty()) {
+            EXPECT_TRUE(poly.isZero());
+            EXPECT_EQ(poly.minExp(), 0);
+            EXPECT_EQ(poly.maxExp(), 0);
+            EXPECT_EQ(poly[0], 0);
 
-static void validate(const L& poly, const L& expect) {
-    if (expect.isZero()) {
-        EXPECT_TRUE(poly.isZero());
-        EXPECT_EQ(poly.minExp(), 0);
-        EXPECT_EQ(poly.maxExp(), 0);
-        EXPECT_EQ(poly[0], 0);
+            auto alloc = poly.allocation();
+            if (alloc.second == 0)
+                EXPECT_EQ(alloc.first, 0);
+            // If alloc.second is positive then we have a zero polynomial
+            // but with memory pre-allocated, which means alloc.first
+            // (the base exponent) is arbitrary.
+        } else {
+            EXPECT_FALSE(poly.isZero());
+            EXPECT_EQ(poly.minExp(), minExp);
+            EXPECT_EQ(poly.maxExp(), minExp + coeffs.size() - 1);
 
-        auto alloc = poly.allocation();
-        if (alloc.second == 0)
-            EXPECT_EQ(alloc.first, 0);
-        // If alloc.second is positive then we have a zero polynomial
-        // but with memory pre-allocated, which means alloc.first
-        // (the base exponent) is arbitrary.
-    } else {
-        EXPECT_FALSE(poly.isZero());
-        EXPECT_EQ(poly.minExp(), expect.minExp());
-        EXPECT_EQ(poly.maxExp(), expect.maxExp());
+            auto alloc = poly.allocation();
+            EXPECT_LE(alloc.first, minExp);
+            EXPECT_GE(alloc.first + alloc.second, minExp + coeffs.size());
 
-        auto alloc = poly.allocation();
-        EXPECT_LE(alloc.first, poly.minExp());
-        EXPECT_GT(alloc.first + static_cast<long>(alloc.second),
-            poly.maxExp());
+            EXPECT_NE(poly[poly.minExp()], 0);
+            EXPECT_NE(poly[poly.maxExp()], 0);
 
-        EXPECT_NE(poly[poly.minExp()], 0);
-        EXPECT_NE(poly[poly.maxExp()], 0);
+            auto expect = coeffs.begin();
+            for (long e = minExp; expect != coeffs.end(); ++e, ++expect)
+                EXPECT_EQ(poly[e], *expect);
+        }
 
-        for (long e = expect.minExp(); e != expect.maxExp(); ++e)
-            EXPECT_EQ(poly[e], expect[e]);
+        const L cmp(minExp, coeffs.begin(), coeffs.end());
+        EXPECT_EQ(poly, cmp);
+        EXPECT_FALSE(poly != cmp);
     }
 
-    EXPECT_EQ(poly, expect);
-    EXPECT_FALSE(poly != expect);
-}
+    void validate(const L& poly, const L& expect) {
+        if (expect.isZero()) {
+            EXPECT_TRUE(poly.isZero());
+            EXPECT_EQ(poly.minExp(), 0);
+            EXPECT_EQ(poly.maxExp(), 0);
+            EXPECT_EQ(poly[0], 0);
 
-/**
- * Returns a polynomial equal to \a poly, but with more space for
- * coefficients allocated on each end than is necessary.
- */
-static L padded(const L& poly) {
-    // Note: this still works if poly is the zero polynomial (in which
-    // case the first call to set() changes _both_ minExp and maxExp).
-    L ans(poly);
-    ans.set(ans.minExp() - 3, 1); // changes minExp
-    ans.set(ans.maxExp() + 2, 1); // changes maxExp
-    ans.set(ans.minExp(), 0);
-    ans.set(ans.maxExp(), 0);
-    return ans;
-}
+            auto alloc = poly.allocation();
+            if (alloc.second == 0)
+                EXPECT_EQ(alloc.first, 0);
+            // If alloc.second is positive then we have a zero polynomial
+            // but with memory pre-allocated, which means alloc.first
+            // (the base exponent) is arbitrary.
+        } else {
+            EXPECT_FALSE(poly.isZero());
+            EXPECT_EQ(poly.minExp(), expect.minExp());
+            EXPECT_EQ(poly.maxExp(), expect.maxExp());
+
+            auto alloc = poly.allocation();
+            EXPECT_LE(alloc.first, poly.minExp());
+            EXPECT_GT(alloc.first + static_cast<long>(alloc.second),
+                poly.maxExp());
+
+            EXPECT_NE(poly[poly.minExp()], 0);
+            EXPECT_NE(poly[poly.maxExp()], 0);
+
+            for (long e = expect.minExp(); e != expect.maxExp(); ++e)
+                EXPECT_EQ(poly[e], expect[e]);
+        }
+
+        EXPECT_EQ(poly, expect);
+        EXPECT_FALSE(poly != expect);
+    }
+
+    /**
+     * Returns a polynomial equal to \a poly, but with more space for
+     * coefficients allocated on each end than is necessary.
+     */
+    L padded(const L& poly) {
+        // Note: this still works if poly is the zero polynomial (in which
+        // case the first call to set() changes _both_ minExp and maxExp).
+        L ans(poly);
+        ans.set(ans.minExp() - 3, 1); // changes minExp
+        ans.set(ans.maxExp() + 2, 1); // changes maxExp
+        ans.set(ans.minExp(), 0);
+        ans.set(ans.maxExp(), 0);
+        return ans;
+    }
+} // anonymous namespace
 
 TEST_F(LaurentTest, construct) {
     validateZero(L());
@@ -426,48 +428,51 @@ TEST_F(LaurentTest, padding) {
     }
 }
 
-static void verifyReserveRange(const L& poly, long fromExp, long toExp) {
-    SCOPED_TRACE_NUMERIC(fromExp);
-    SCOPED_TRACE_NUMERIC(toExp);
+namespace {
+    void verifyReserveRange(const L& poly, long fromExp, long toExp) {
+        SCOPED_TRACE_NUMERIC(fromExp);
+        SCOPED_TRACE_NUMERIC(toExp);
 
-    L x(poly); // should set the range precisely from poly.
-    const auto initAlloc = x.allocation();
-    if (poly.isZero()) {
-        EXPECT_EQ(initAlloc.second, 0);
-        // initAlloc.first (the base) is arbitrary in this case.
-    } else {
-        EXPECT_EQ(initAlloc.first, poly.minExp());
-        EXPECT_EQ(initAlloc.second, poly.maxExp() - poly.minExp() + 1);
-    }
+        L x(poly); // should set the range precisely from poly.
+        const auto initAlloc = x.allocation();
+        if (poly.isZero()) {
+            EXPECT_EQ(initAlloc.second, 0);
+            // initAlloc.first (the base) is arbitrary in this case.
+        } else {
+            EXPECT_EQ(initAlloc.first, poly.minExp());
+            EXPECT_EQ(initAlloc.second, poly.maxExp() - poly.minExp() + 1);
+        }
 
-    x.reserveRange(fromExp, toExp);
+        x.reserveRange(fromExp, toExp);
 
-    EXPECT_EQ(x.minExp(), poly.minExp());
-    EXPECT_EQ(x.maxExp(), poly.maxExp());
+        EXPECT_EQ(x.minExp(), poly.minExp());
+        EXPECT_EQ(x.maxExp(), poly.maxExp());
 
-    if (fromExp > toExp) {
-        // Nothing should have changed.
-        EXPECT_EQ(x.allocation(), initAlloc);
-    } else {
-        const auto newAlloc = x.allocation();
-        EXPECT_GT(newAlloc.second, 0);
-        EXPECT_GE(newAlloc.second, initAlloc.second);
-        if (! poly.isZero()) {
-            EXPECT_LE(newAlloc.first, poly.minExp());
+        if (fromExp > toExp) {
+            // Nothing should have changed.
+            EXPECT_EQ(x.allocation(), initAlloc);
+        } else {
+            const auto newAlloc = x.allocation();
+            EXPECT_GT(newAlloc.second, 0);
+            EXPECT_GE(newAlloc.second, initAlloc.second);
+            if (! poly.isZero()) {
+                EXPECT_LE(newAlloc.first, poly.minExp());
+                EXPECT_GT(newAlloc.first + static_cast<long>(newAlloc.second),
+                    poly.maxExp());
+            }
+            EXPECT_LE(newAlloc.first, fromExp);
             EXPECT_GT(newAlloc.first + static_cast<long>(newAlloc.second),
-                poly.maxExp());
-        }
-        EXPECT_LE(newAlloc.first, fromExp);
-        EXPECT_GT(newAlloc.first + static_cast<long>(newAlloc.second), toExp);
+                toExp);
 
-        validate(x, poly);
+            validate(x, poly);
 
-        for (long i = fromExp; i <= toExp; ++i) {
-            x.set(i, 1);
-            EXPECT_EQ(x.allocation(), newAlloc);
+            for (long i = fromExp; i <= toExp; ++i) {
+                x.set(i, 1);
+                EXPECT_EQ(x.allocation(), newAlloc);
+            }
         }
     }
-}
+} // anonymous namespace
 
 TEST_F(LaurentTest, reserveRange) {
     for (const L& c : cases) {
@@ -1398,200 +1403,206 @@ TEST_F(LaurentTest, extract) {
     }
 }
 
-template <regina::CppInteger Native>
-static void verifyNativeProduct(const L& poly, const Integer& scalar,
-        const L& product) {
-    SCOPED_TRACE_TYPE(Native);
+namespace {
+    // TODO: Putting verifyNativeProduct and verifyNativeQuotient inside an
+    // anonymous namespace is slowing down the tests.  I'd love to know why.
+    template <regina::CppInteger Native>
+    void verifyNativeProduct(const L& poly, const Integer& scalar,
+            const L& product) {
+        SCOPED_TRACE_TYPE(Native);
 
-    Native native;
-    if (scalar >= std::numeric_limits<Native>::min() &&
-            scalar <= std::numeric_limits<Native>::max()) {
-        EXPECT_NO_THROW({ native = scalar.safeValue<Native>(); });
-    } else {
-        EXPECT_THROW({ scalar.safeValue<Native>(); }, regina::IntegerOverflow);
-        return;
-    }
-
-    validate(poly * native, product);
-    validate(L(poly) * native, product);
-    validate(native * poly, product);
-    validate(native * L(poly), product);
-    {
-        L x(poly);
-        validate(x *= native, product);
-    }
-}
-
-template <regina::CppInteger Native>
-static void verifyNativeQuotient(const L& poly, const Integer& scalar,
-        const std::optional<L>& quotient) {
-    SCOPED_TRACE_TYPE(Native);
-
-    Native native;
-    if (scalar >= std::numeric_limits<Native>::min() &&
-            scalar <= std::numeric_limits<Native>::max()) {
-        EXPECT_NO_THROW({ native = scalar.safeValue<Native>(); });
-    } else {
-        EXPECT_THROW({ scalar.safeValue<Native>(); }, regina::IntegerOverflow);
-        return;
-    }
-
-    if (quotient) {
-        validate(poly / native, *quotient);
-        validate(L(poly) / native, *quotient);
-        {
-            L x(poly);
-            validate(x /= native, *quotient);
-        }
-    } else {
-        #if 0 // For now, Laurent division requires a non-zero divisor.
-        EXPECT_THROW({ poly / native; }, regina::DivisionByZero);
-        EXPECT_THROW({ L(poly) / native; }, regina::DivisionByZero);
-        {
-            L x(poly);
-            EXPECT_THROW({ x /= native; }, regina::DivisionByZero);
-        }
-        #endif
-    }
-}
-
-template <typename Container>
-static void verifyScalarMultiplyDivide(const L& poly, const Integer& scalar,
-        const Container& cases) {
-    SCOPED_TRACE_REGINA(scalar);
-
-    const L product = poly * scalar;
-    if (poly.isZero() || scalar == 0) {
-        validateZero(product);
-    } else {
-        validate(product);
-        EXPECT_FALSE(product.isZero());
-        EXPECT_EQ(product.minExp(), poly.minExp());
-        EXPECT_EQ(product.maxExp(), poly.maxExp());
-        for (long i = poly.minExp(); i <= poly.maxExp(); ++i)
-            EXPECT_EQ(product[i], poly[i] * scalar);
-    }
-    validate(L(poly) * scalar, product);
-    validate(scalar * poly, product);
-    validate(scalar * L(poly), product);
-    {
-        L x(poly);
-        validate(x *= scalar, product);
-    }
-
-    verifyNativeProduct<int8_t>(poly, scalar, product);
-    verifyNativeProduct<int16_t>(poly, scalar, product);
-    verifyNativeProduct<int32_t>(poly, scalar, product);
-    verifyNativeProduct<int64_t>(poly, scalar, product);
-    #ifdef INT128_AVAILABLE
-    verifyNativeProduct<regina::Int128>(poly, scalar, product);
-    #endif
-
-    if (scalar.sign() >= 0) {
-        verifyNativeProduct<uint8_t>(poly, scalar, product);
-        verifyNativeProduct<uint16_t>(poly, scalar, product);
-        verifyNativeProduct<uint32_t>(poly, scalar, product);
-        verifyNativeProduct<uint64_t>(poly, scalar, product);
-        #ifdef INT128_AVAILABLE
-        verifyNativeProduct<regina::UInt128>(poly, scalar, product);
-        #endif
-    }
-
-    if (scalar == 0) {
-        #if 0 // For now, Laurent division requires a non-zero divisor.
-        EXPECT_THROW({ poly / scalar; }, regina::DivisionByZero);
-        EXPECT_THROW({ L(poly) / scalar; }, regina::DivisionByZero);
-        {
-            L x(poly);
-            EXPECT_THROW({ x /= scalar; }, regina::DivisionByZero);
-        }
-
-        verifyNativeQuotient<int8_t>(poly, scalar, {});
-        verifyNativeQuotient<int16_t>(poly, scalar, {});
-        verifyNativeQuotient<int32_t>(poly, scalar, {});
-        verifyNativeQuotient<int64_t>(poly, scalar, {});
-        #ifdef INT128_AVAILABLE
-        verifyNativeQuotient<regina::Int128>(poly, scalar, {});
-        #endif
-
-        verifyNativeQuotient<uint8_t>(poly, scalar, {});
-        verifyNativeQuotient<uint16_t>(poly, scalar, {});
-        verifyNativeQuotient<uint32_t>(poly, scalar, {});
-        verifyNativeQuotient<uint64_t>(poly, scalar, {});
-        #ifdef INT128_AVAILABLE
-        verifyNativeQuotient<regina::UInt128>(poly, scalar, {});
-        #endif
-        #endif
-    } else {
-        const L quotient = poly / scalar;
-        if (poly.isZero()) {
-            validateZero(quotient);
+        Native native;
+        if (scalar >= std::numeric_limits<Native>::min() &&
+                scalar <= std::numeric_limits<Native>::max()) {
+            EXPECT_NO_THROW({ native = scalar.safeValue<Native>(); });
         } else {
-            validate(quotient);
-            if (poly[poly.minExp()].abs() >= scalar.abs()) {
-                EXPECT_FALSE(quotient.isZero());
-                EXPECT_EQ(quotient.minExp(), poly.minExp());
-            } else {
-                if (! quotient.isZero())
-                    EXPECT_GT(quotient.minExp(), poly.minExp());
-            }
-            if (poly[poly.maxExp()].abs() >= scalar.abs()) {
-                EXPECT_FALSE(quotient.isZero());
-                EXPECT_EQ(quotient.maxExp(), poly.maxExp());
-            } else {
-                if (! quotient.isZero())
-                    EXPECT_LT(quotient.maxExp(), poly.maxExp());
-            }
-            for (long i = poly.minExp(); i <= poly.maxExp(); ++i)
-                EXPECT_EQ(quotient[i], poly[i] / scalar);
+            EXPECT_THROW({ scalar.safeValue<Native>(); },
+                regina::IntegerOverflow);
+            return;
         }
-        validate(L(poly) / scalar, quotient);
+
+        validate(poly * native, product);
+        validate(L(poly) * native, product);
+        validate(native * poly, product);
+        validate(native * L(poly), product);
         {
             L x(poly);
-            validate(x /= scalar, quotient);
+            validate(x *= native, product);
+        }
+    }
+
+    template <regina::CppInteger Native>
+    void verifyNativeQuotient(const L& poly, const Integer& scalar,
+            const std::optional<L>& quotient) {
+        SCOPED_TRACE_TYPE(Native);
+
+        Native native;
+        if (scalar >= std::numeric_limits<Native>::min() &&
+                scalar <= std::numeric_limits<Native>::max()) {
+            EXPECT_NO_THROW({ native = scalar.safeValue<Native>(); });
+        } else {
+            EXPECT_THROW({ scalar.safeValue<Native>(); },
+                regina::IntegerOverflow);
+            return;
         }
 
-        verifyNativeQuotient<int8_t>(poly, scalar, quotient);
-        verifyNativeQuotient<int16_t>(poly, scalar, quotient);
-        verifyNativeQuotient<int32_t>(poly, scalar, quotient);
-        verifyNativeQuotient<int64_t>(poly, scalar, quotient);
-        #ifdef INT128_AVAILABLE
-        verifyNativeQuotient<regina::Int128>(poly, scalar, quotient);
-        #endif
-
-        if (scalar.sign() >= 0) {
-            verifyNativeQuotient<uint8_t>(poly, scalar, quotient);
-            verifyNativeQuotient<uint16_t>(poly, scalar, quotient);
-            verifyNativeQuotient<uint32_t>(poly, scalar, quotient);
-            verifyNativeQuotient<uint64_t>(poly, scalar, quotient);
-            #ifdef INT128_AVAILABLE
-            verifyNativeQuotient<regina::UInt128>(poly, scalar, quotient);
+        if (quotient) {
+            validate(poly / native, *quotient);
+            validate(L(poly) / native, *quotient);
+            {
+                L x(poly);
+                validate(x /= native, *quotient);
+            }
+        } else {
+            #if 0 // For now, Laurent division requires a non-zero divisor.
+            EXPECT_THROW({ poly / native; }, regina::DivisionByZero);
+            EXPECT_THROW({ L(poly) / native; }, regina::DivisionByZero);
+            {
+                L x(poly);
+                EXPECT_THROW({ x /= native; }, regina::DivisionByZero);
+            }
             #endif
         }
     }
 
-    // Verify the scalar version of addProduct() while we're here.
-    for (const L& c : cases) {
-        SCOPED_TRACE_REGINA(c);
-        {
-            L x(c);
-            x.addProduct(poly, scalar);
-            validate(x, c + product);
-        }
-        {
-            L x(c);
-            x.addProduct(L(poly), scalar);
-            validate(x, c + product);
-        }
-    }
+    template <typename Container>
+    void verifyScalarMultiplyDivide(const L& poly, const Integer& scalar,
+            const Container& cases) {
+        SCOPED_TRACE_REGINA(scalar);
 
-    // Finally, test the scalar addProduct() when operating upon one's self.
-    {
-        L x(poly);
-        x.addProduct(x, scalar);
-        validate(x, poly + product);
+        const L product = poly * scalar;
+        if (poly.isZero() || scalar == 0) {
+            validateZero(product);
+        } else {
+            validate(product);
+            EXPECT_FALSE(product.isZero());
+            EXPECT_EQ(product.minExp(), poly.minExp());
+            EXPECT_EQ(product.maxExp(), poly.maxExp());
+            for (long i = poly.minExp(); i <= poly.maxExp(); ++i)
+                EXPECT_EQ(product[i], poly[i] * scalar);
+        }
+        validate(L(poly) * scalar, product);
+        validate(scalar * poly, product);
+        validate(scalar * L(poly), product);
+        {
+            L x(poly);
+            validate(x *= scalar, product);
+        }
+
+        verifyNativeProduct<int8_t>(poly, scalar, product);
+        verifyNativeProduct<int16_t>(poly, scalar, product);
+        verifyNativeProduct<int32_t>(poly, scalar, product);
+        verifyNativeProduct<int64_t>(poly, scalar, product);
+        #ifdef INT128_AVAILABLE
+        verifyNativeProduct<regina::Int128>(poly, scalar, product);
+        #endif
+
+        if (scalar.sign() >= 0) {
+            verifyNativeProduct<uint8_t>(poly, scalar, product);
+            verifyNativeProduct<uint16_t>(poly, scalar, product);
+            verifyNativeProduct<uint32_t>(poly, scalar, product);
+            verifyNativeProduct<uint64_t>(poly, scalar, product);
+            #ifdef INT128_AVAILABLE
+            verifyNativeProduct<regina::UInt128>(poly, scalar, product);
+            #endif
+        }
+
+        if (scalar == 0) {
+            #if 0 // For now, Laurent division requires a non-zero divisor.
+            EXPECT_THROW({ poly / scalar; }, regina::DivisionByZero);
+            EXPECT_THROW({ L(poly) / scalar; }, regina::DivisionByZero);
+            {
+                L x(poly);
+                EXPECT_THROW({ x /= scalar; }, regina::DivisionByZero);
+            }
+
+            verifyNativeQuotient<int8_t>(poly, scalar, {});
+            verifyNativeQuotient<int16_t>(poly, scalar, {});
+            verifyNativeQuotient<int32_t>(poly, scalar, {});
+            verifyNativeQuotient<int64_t>(poly, scalar, {});
+            #ifdef INT128_AVAILABLE
+            verifyNativeQuotient<regina::Int128>(poly, scalar, {});
+            #endif
+
+            verifyNativeQuotient<uint8_t>(poly, scalar, {});
+            verifyNativeQuotient<uint16_t>(poly, scalar, {});
+            verifyNativeQuotient<uint32_t>(poly, scalar, {});
+            verifyNativeQuotient<uint64_t>(poly, scalar, {});
+            #ifdef INT128_AVAILABLE
+            verifyNativeQuotient<regina::UInt128>(poly, scalar, {});
+            #endif
+            #endif
+        } else {
+            const L quotient = poly / scalar;
+            if (poly.isZero()) {
+                validateZero(quotient);
+            } else {
+                validate(quotient);
+                if (poly[poly.minExp()].abs() >= scalar.abs()) {
+                    EXPECT_FALSE(quotient.isZero());
+                    EXPECT_EQ(quotient.minExp(), poly.minExp());
+                } else {
+                    if (! quotient.isZero())
+                        EXPECT_GT(quotient.minExp(), poly.minExp());
+                }
+                if (poly[poly.maxExp()].abs() >= scalar.abs()) {
+                    EXPECT_FALSE(quotient.isZero());
+                    EXPECT_EQ(quotient.maxExp(), poly.maxExp());
+                } else {
+                    if (! quotient.isZero())
+                        EXPECT_LT(quotient.maxExp(), poly.maxExp());
+                }
+                for (long i = poly.minExp(); i <= poly.maxExp(); ++i)
+                    EXPECT_EQ(quotient[i], poly[i] / scalar);
+            }
+            validate(L(poly) / scalar, quotient);
+            {
+                L x(poly);
+                validate(x /= scalar, quotient);
+            }
+
+            verifyNativeQuotient<int8_t>(poly, scalar, quotient);
+            verifyNativeQuotient<int16_t>(poly, scalar, quotient);
+            verifyNativeQuotient<int32_t>(poly, scalar, quotient);
+            verifyNativeQuotient<int64_t>(poly, scalar, quotient);
+            #ifdef INT128_AVAILABLE
+            verifyNativeQuotient<regina::Int128>(poly, scalar, quotient);
+            #endif
+
+            if (scalar.sign() >= 0) {
+                verifyNativeQuotient<uint8_t>(poly, scalar, quotient);
+                verifyNativeQuotient<uint16_t>(poly, scalar, quotient);
+                verifyNativeQuotient<uint32_t>(poly, scalar, quotient);
+                verifyNativeQuotient<uint64_t>(poly, scalar, quotient);
+                #ifdef INT128_AVAILABLE
+                verifyNativeQuotient<regina::UInt128>(poly, scalar, quotient);
+                #endif
+            }
+        }
+
+        // Verify the scalar version of addProduct() while we're here.
+        for (const L& c : cases) {
+            SCOPED_TRACE_REGINA(c);
+            {
+                L x(c);
+                x.addProduct(poly, scalar);
+                validate(x, c + product);
+            }
+            {
+                L x(c);
+                x.addProduct(L(poly), scalar);
+                validate(x, c + product);
+            }
+        }
+
+        // Finally, test the scalar addProduct() when operating upon one's self.
+        {
+            L x(poly);
+            x.addProduct(x, scalar);
+            validate(x, poly + product);
+        }
     }
-}
+} // anonymous namespace
 
 TEST_F(LaurentTest, scalarMultiplyDivide) {
     for (const L& c : cases) {
@@ -1976,8 +1987,11 @@ TEST_F(LaurentTest, str) {
     EXPECT_EQ(paddedPoly.str(), "x^3 - x^2 + x");
 }
 
-static void verifyUtf8(const L& poly, const char8_t* expect) {
-    EXPECT_EQ(poly.utf8(), std::string(reinterpret_cast<const char*>(expect)));
+namespace {
+    void verifyUtf8(const L& poly, const char8_t* expect) {
+        EXPECT_EQ(poly.utf8(),
+            std::string(reinterpret_cast<const char*>(expect)));
+    }
 }
 
 TEST_F(LaurentTest, utf8) {

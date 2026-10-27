@@ -68,75 +68,77 @@ class Laurent2Test : public testing::Test {
             std::cref(a), std::cref(b) };
 };
 
-static void validate(const L& poly) {
-    EXPECT_NO_THROW({ poly.validate(); });
-}
+namespace {
+    void validate(const L& poly) {
+        EXPECT_NO_THROW({ poly.validate(); });
+    }
 
-static void validate(const L& poly,
-        std::initializer_list<std::tuple<long, long, Integer>> coeffs) {
-    // We assume here that coeffs only contains non-zero coefficients, and
-    // does not contain any duplicate exponent pairs.
+    void validate(const L& poly,
+            std::initializer_list<std::tuple<long, long, Integer>> coeffs) {
+        // We assume here that coeffs only contains non-zero coefficients, and
+        // does not contain any duplicate exponent pairs.
 
-    EXPECT_NO_THROW({ poly.validate(); });
-    EXPECT_EQ(poly.countTerms(), coeffs.size());
-    if (coeffs.size() == 0) {
+        EXPECT_NO_THROW({ poly.validate(); });
+        EXPECT_EQ(poly.countTerms(), coeffs.size());
+        if (coeffs.size() == 0) {
+            EXPECT_TRUE(poly.isZero());
+        } else {
+            EXPECT_FALSE(poly.isZero());
+            for (const auto& c : coeffs)
+                EXPECT_EQ(poly(std::get<0>(c), std::get<1>(c)), std::get<2>(c));
+        }
+    }
+
+    void validateZero(const L& poly) {
+        EXPECT_NO_THROW({ poly.validate(); });
         EXPECT_TRUE(poly.isZero());
-    } else {
-        EXPECT_FALSE(poly.isZero());
-        for (const auto& c : coeffs)
-            EXPECT_EQ(poly(std::get<0>(c), std::get<1>(c)), std::get<2>(c));
-    }
-}
-
-static void validateZero(const L& poly) {
-    EXPECT_NO_THROW({ poly.validate(); });
-    EXPECT_TRUE(poly.isZero());
-    EXPECT_EQ(poly.countTerms(), 0);
-    EXPECT_EQ(poly.begin(), poly.end());
-}
-
-static void validate(const L& poly, const L& expect) {
-    if (expect.isZero())
-        validateZero(poly);
-    else {
-        EXPECT_NO_THROW({ poly.validate(); });
-        EXPECT_FALSE(poly.isZero());
-        EXPECT_EQ(poly.countTerms(), expect.countTerms());
-
-        auto pit = poly.begin();
-        auto eit = expect.begin();
-        while (pit != poly.end() && eit != expect.end())
-            EXPECT_EQ(*pit++, *eit++);
-        EXPECT_EQ(pit, poly.end());
-        EXPECT_EQ(eit, expect.end());
+        EXPECT_EQ(poly.countTerms(), 0);
+        EXPECT_EQ(poly.begin(), poly.end());
     }
 
-    EXPECT_EQ(poly, expect);
-    EXPECT_FALSE(poly != expect);
-}
+    void validate(const L& poly, const L& expect) {
+        if (expect.isZero())
+            validateZero(poly);
+        else {
+            EXPECT_NO_THROW({ poly.validate(); });
+            EXPECT_FALSE(poly.isZero());
+            EXPECT_EQ(poly.countTerms(), expect.countTerms());
 
-template <std::regular_invocable<const Term&> TranslateTerm>
-requires requires(TranslateTerm trans, const Term t) {
-    { trans(t) } -> std::convertible_to<Term>;
-}
-static void validate(const L& poly, const L& from, TranslateTerm&& translate) {
-    // It is assumed that translate preserves the order of terms, and does not
-    // create any zero terms.
-    if (from.isZero())
-        validateZero(poly);
-    else {
-        EXPECT_NO_THROW({ poly.validate(); });
-        EXPECT_FALSE(poly.isZero());
-        EXPECT_EQ(poly.countTerms(), from.countTerms());
+            auto pit = poly.begin();
+            auto eit = expect.begin();
+            while (pit != poly.end() && eit != expect.end())
+                EXPECT_EQ(*pit++, *eit++);
+            EXPECT_EQ(pit, poly.end());
+            EXPECT_EQ(eit, expect.end());
+        }
 
-        auto pit = poly.begin();
-        auto fit = from.begin();
-        while (pit != poly.end() && fit != from.end())
-            EXPECT_EQ(*pit++, translate(*fit++));
-        EXPECT_EQ(pit, poly.end());
-        EXPECT_EQ(fit, from.end());
+        EXPECT_EQ(poly, expect);
+        EXPECT_FALSE(poly != expect);
     }
-}
+
+    template <std::regular_invocable<const Term&> TranslateTerm>
+    requires requires(TranslateTerm trans, const Term t) {
+        { trans(t) } -> std::convertible_to<Term>;
+    }
+    void validate(const L& poly, const L& from, TranslateTerm&& translate) {
+        // It is assumed that translate preserves the order of terms, and
+        // does not create any zero terms.
+        if (from.isZero())
+            validateZero(poly);
+        else {
+            EXPECT_NO_THROW({ poly.validate(); });
+            EXPECT_FALSE(poly.isZero());
+            EXPECT_EQ(poly.countTerms(), from.countTerms());
+
+            auto pit = poly.begin();
+            auto fit = from.begin();
+            while (pit != poly.end() && fit != from.end())
+                EXPECT_EQ(*pit++, translate(*fit++));
+            EXPECT_EQ(pit, poly.end());
+            EXPECT_EQ(fit, from.end());
+        }
+    }
+} // anonymous namespace
 
 TEST_F(Laurent2Test, moveThenAssign) {
     // Here we test both move-then-assign and move-then-init.
@@ -313,145 +315,151 @@ TEST_F(Laurent2Test, negate) {
     }
 }
 
-template <regina::CppInteger Native>
-static void verifyNativeProduct(const L& poly, const Integer& scalar,
-        const L& product) {
-    SCOPED_TRACE_TYPE(Native);
+namespace {
+    // TODO: Putting verifyNativeProduct and verifyNativeQuotient inside an
+    // anonymous namespace is slowing down the tests.  I'd love to know why.
+    template <regina::CppInteger Native>
+    void verifyNativeProduct(const L& poly, const Integer& scalar,
+            const L& product) {
+        SCOPED_TRACE_TYPE(Native);
 
-    Native native;
-    if (scalar >= std::numeric_limits<Native>::min() &&
-            scalar <= std::numeric_limits<Native>::max()) {
-        EXPECT_NO_THROW({ native = scalar.safeValue<Native>(); });
-    } else {
-        EXPECT_THROW({ scalar.safeValue<Native>(); }, regina::IntegerOverflow);
-        return;
-    }
-
-    validate(poly * native, product);
-    validate(L(poly) * native, product);
-    validate(native * poly, product);
-    validate(native * L(poly), product);
-    {
-        L x(poly);
-        validate(x *= native, product);
-    }
-}
-
-template <regina::CppInteger Native>
-static void verifyNativeQuotient(const L& poly, const Integer& scalar,
-        const L& quotient) {
-    SCOPED_TRACE_TYPE(Native);
-
-    Native native;
-    if (scalar >= std::numeric_limits<Native>::min() &&
-            scalar <= std::numeric_limits<Native>::max()) {
-        EXPECT_NO_THROW({ native = scalar.safeValue<Native>(); });
-    } else {
-        EXPECT_THROW({ scalar.safeValue<Native>(); }, regina::IntegerOverflow);
-        return;
-    }
-
-    validate(poly / native, quotient);
-    validate(L(poly) / native, quotient);
-    {
-        L x(poly);
-        validate(x /= native, quotient);
-    }
-}
-
-static void verifyScalarMultiplyDivide(const L& poly, const Integer& scalar) {
-    SCOPED_TRACE_REGINA(scalar);
-
-    const L product = poly * scalar;
-    if (scalar == 0) {
-        validateZero(product);
-    } else {
-        validate(product, poly, [&scalar](const Term& term) {
-            return std::make_pair(term.first, term.second * scalar);
-        });
-    }
-    validate(L(poly) * scalar, product);
-    validate(scalar * poly, product);
-    validate(scalar * L(poly), product);
-    {
-        L x(poly);
-        validate(x *= scalar, product);
-    }
-
-    verifyNativeProduct<int8_t>(poly, scalar, product);
-    verifyNativeProduct<int16_t>(poly, scalar, product);
-    verifyNativeProduct<int32_t>(poly, scalar, product);
-    verifyNativeProduct<int64_t>(poly, scalar, product);
-    #ifdef INT128_AVAILABLE
-    verifyNativeProduct<regina::Int128>(poly, scalar, product);
-    #endif
-
-    if (scalar.sign() >= 0) {
-        verifyNativeProduct<uint8_t>(poly, scalar, product);
-        verifyNativeProduct<uint16_t>(poly, scalar, product);
-        verifyNativeProduct<uint32_t>(poly, scalar, product);
-        verifyNativeProduct<uint64_t>(poly, scalar, product);
-        #ifdef INT128_AVAILABLE
-        verifyNativeProduct<regina::UInt128>(poly, scalar, product);
-        #endif
-    }
-
-    // For now, Laurent2 division requires a non-zero divisor.
-    if (scalar != 0) {
-        const L quotient = poly / scalar;
-        if (poly.isZero()) {
-            validateZero(quotient);
+        Native native;
+        if (scalar >= std::numeric_limits<Native>::min() &&
+                scalar <= std::numeric_limits<Native>::max()) {
+            EXPECT_NO_THROW({ native = scalar.safeValue<Native>(); });
         } else {
-            validate(quotient);
-            EXPECT_LE(quotient.countTerms(), poly.countTerms());
-
-            auto pit = poly.begin();
-            auto qit = quotient.begin();
-            while (pit != poly.end() || qit != quotient.end()) {
-                if (pit != poly.end() && qit != quotient.end() &&
-                        pit->first == qit->first) {
-                    auto q = (pit++)->second / scalar;
-                    EXPECT_NE(q, 0);
-                    EXPECT_EQ((qit++)->second, q);
-                } else if (pit != poly.end()) {
-                    // We might have a coefficient which, when divided by our
-                    // scalar using integer division, becomes zero.
-                    EXPECT_GT(pit->second, -scalar.abs());
-                    EXPECT_LT(pit->second, scalar.abs());
-                    EXPECT_EQ((pit++)->second / scalar, 0);
-                } else {
-                    // We have a deeper mismatch between terms that we do not
-                    // know how to recover from.
-                    ADD_FAILURE();
-                    break;
-                }
-            }
+            EXPECT_THROW({ scalar.safeValue<Native>(); },
+                regina::IntegerOverflow);
+            return;
         }
-        validate(L(poly) / scalar, quotient);
+
+        validate(poly * native, product);
+        validate(L(poly) * native, product);
+        validate(native * poly, product);
+        validate(native * L(poly), product);
         {
             L x(poly);
-            validate(x /= scalar, quotient);
+            validate(x *= native, product);
+        }
+    }
+
+    template <regina::CppInteger Native>
+    void verifyNativeQuotient(const L& poly, const Integer& scalar,
+            const L& quotient) {
+        SCOPED_TRACE_TYPE(Native);
+
+        Native native;
+        if (scalar >= std::numeric_limits<Native>::min() &&
+                scalar <= std::numeric_limits<Native>::max()) {
+            EXPECT_NO_THROW({ native = scalar.safeValue<Native>(); });
+        } else {
+            EXPECT_THROW({ scalar.safeValue<Native>(); },
+                regina::IntegerOverflow);
+            return;
         }
 
-        verifyNativeQuotient<int8_t>(poly, scalar, quotient);
-        verifyNativeQuotient<int16_t>(poly, scalar, quotient);
-        verifyNativeQuotient<int32_t>(poly, scalar, quotient);
-        verifyNativeQuotient<int64_t>(poly, scalar, quotient);
+        validate(poly / native, quotient);
+        validate(L(poly) / native, quotient);
+        {
+            L x(poly);
+            validate(x /= native, quotient);
+        }
+    }
+
+    void verifyScalarMultiplyDivide(const L& poly, const Integer& scalar) {
+        SCOPED_TRACE_REGINA(scalar);
+
+        const L product = poly * scalar;
+        if (scalar == 0) {
+            validateZero(product);
+        } else {
+            validate(product, poly, [&scalar](const Term& term) {
+                return std::make_pair(term.first, term.second * scalar);
+            });
+        }
+        validate(L(poly) * scalar, product);
+        validate(scalar * poly, product);
+        validate(scalar * L(poly), product);
+        {
+            L x(poly);
+            validate(x *= scalar, product);
+        }
+
+        verifyNativeProduct<int8_t>(poly, scalar, product);
+        verifyNativeProduct<int16_t>(poly, scalar, product);
+        verifyNativeProduct<int32_t>(poly, scalar, product);
+        verifyNativeProduct<int64_t>(poly, scalar, product);
         #ifdef INT128_AVAILABLE
-        verifyNativeQuotient<regina::Int128>(poly, scalar, quotient);
+        verifyNativeProduct<regina::Int128>(poly, scalar, product);
         #endif
 
         if (scalar.sign() >= 0) {
-            verifyNativeQuotient<uint8_t>(poly, scalar, quotient);
-            verifyNativeQuotient<uint16_t>(poly, scalar, quotient);
-            verifyNativeQuotient<uint32_t>(poly, scalar, quotient);
-            verifyNativeQuotient<uint64_t>(poly, scalar, quotient);
+            verifyNativeProduct<uint8_t>(poly, scalar, product);
+            verifyNativeProduct<uint16_t>(poly, scalar, product);
+            verifyNativeProduct<uint32_t>(poly, scalar, product);
+            verifyNativeProduct<uint64_t>(poly, scalar, product);
             #ifdef INT128_AVAILABLE
-            verifyNativeQuotient<regina::UInt128>(poly, scalar, quotient);
+            verifyNativeProduct<regina::UInt128>(poly, scalar, product);
             #endif
         }
+
+        // For now, Laurent2 division requires a non-zero divisor.
+        if (scalar != 0) {
+            const L quotient = poly / scalar;
+            if (poly.isZero()) {
+                validateZero(quotient);
+            } else {
+                validate(quotient);
+                EXPECT_LE(quotient.countTerms(), poly.countTerms());
+
+                auto pit = poly.begin();
+                auto qit = quotient.begin();
+                while (pit != poly.end() || qit != quotient.end()) {
+                    if (pit != poly.end() && qit != quotient.end() &&
+                            pit->first == qit->first) {
+                        auto q = (pit++)->second / scalar;
+                        EXPECT_NE(q, 0);
+                        EXPECT_EQ((qit++)->second, q);
+                    } else if (pit != poly.end()) {
+                        // We might have a coefficient which, when divided by
+                        // our scalar using integer division, becomes zero.
+                        EXPECT_GT(pit->second, -scalar.abs());
+                        EXPECT_LT(pit->second, scalar.abs());
+                        EXPECT_EQ((pit++)->second / scalar, 0);
+                    } else {
+                        // We have a deeper mismatch between terms that we
+                        // do not know how to recover from.
+                        ADD_FAILURE();
+                        break;
+                    }
+                }
+            }
+            validate(L(poly) / scalar, quotient);
+            {
+                L x(poly);
+                validate(x /= scalar, quotient);
+            }
+
+            verifyNativeQuotient<int8_t>(poly, scalar, quotient);
+            verifyNativeQuotient<int16_t>(poly, scalar, quotient);
+            verifyNativeQuotient<int32_t>(poly, scalar, quotient);
+            verifyNativeQuotient<int64_t>(poly, scalar, quotient);
+            #ifdef INT128_AVAILABLE
+            verifyNativeQuotient<regina::Int128>(poly, scalar, quotient);
+            #endif
+
+            if (scalar.sign() >= 0) {
+                verifyNativeQuotient<uint8_t>(poly, scalar, quotient);
+                verifyNativeQuotient<uint16_t>(poly, scalar, quotient);
+                verifyNativeQuotient<uint32_t>(poly, scalar, quotient);
+                verifyNativeQuotient<uint64_t>(poly, scalar, quotient);
+                #ifdef INT128_AVAILABLE
+                verifyNativeQuotient<regina::UInt128>(poly, scalar, quotient);
+                #endif
+            }
+        }
     }
-}
+} // anonymous namespace
 
 TEST_F(Laurent2Test, scalarMultiplyDivide) {
     for (const L& c : cases) {
