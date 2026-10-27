@@ -1381,6 +1381,27 @@ class Laurent2 :
             }
         }
 
+        /**
+         * A diagnostic routine that ensures that the internal representation
+         * of this polynomial is valid.
+         *
+         * If Regina is working correctly, this routine should do nothing.
+         * If the internal representation of this polynomial is _not_ valid,
+         * this routine will throw an exception.
+         *
+         * This routine is provided for use within Regina's various test suites.
+         * End users should not need to call it at all.
+         *
+         * \exception ImpossibleScenario The internal state of this polynomial
+         * is invalid.
+         */
+        void validate() const {
+            for (const auto& c : coeff_)
+                if (c.second == 0)
+                    throw ImpossibleScenario("Laurent2 is explicitly storing "
+                        "a term with a zero coefficient");
+        }
+
     private:
         /**
          * Removes all entries from coeff_ whose coefficients are zero.

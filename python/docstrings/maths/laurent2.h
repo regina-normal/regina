@@ -745,6 +745,21 @@ Parameter ``varY``:
 Returns:
     this polynomial as a unicode-enabled human-readable string.)doc";
 
+// Docstring regina::python::doc::Laurent2::validate
+static constexpr const char validate[] =
+R"doc(A diagnostic routine that ensures that the internal representation of
+this polynomial is valid.
+
+If Regina is working correctly, this routine should do nothing. If the
+internal representation of this polynomial is _not_ valid, this
+routine will throw an exception.
+
+This routine is provided for use within Regina's various test suites.
+End users should not need to call it at all.
+
+Exception ``ImpossibleScenario``:
+    The internal state of this polynomial is invalid.)doc";
+
 }; // struct Laurent2
 
 } // namespace regina::python::doc

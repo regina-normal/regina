@@ -84,6 +84,7 @@ void addLaurent2(pybind11::module_& m) {
         .def("utf8", overload_cast<const char*, const char*>(
             &Laurent2<Integer>::utf8, pybind11::const_),
             "varX"_a, "varY"_a = nullptr, rdoc::utf8)
+        .def("validate", &Laurent2<Integer>::validate, rdoc::validate)
         .def("__getitem__", [](const Laurent2<Integer>& p,
                 std::pair<long, long> exponents) {
             return p(exponents.first, exponents.second);
