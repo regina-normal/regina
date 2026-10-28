@@ -102,6 +102,7 @@ void addLaurent(pybind11::module_& m) {
             &Laurent<Integer>::str, pybind11::const_), rdoc::str)
         .def("utf8", overload_cast<const char*>(
             &Laurent<Integer>::utf8, pybind11::const_), rdoc::utf8)
+        .def("validate", &Laurent<Integer>::validate, rdoc::validate)
         .def(pybind11::self *= Integer(), rdoc::__imul)
         .def(pybind11::self *= long(), rdoc::__imul_2)
         .def(pybind11::self /= Integer(), rdoc::__idiv)

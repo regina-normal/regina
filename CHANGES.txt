@@ -352,6 +352,7 @@ Version 8.0  [ TODO ]
               policy and rvalue variants of many operations.  This comes with
               new functions allocation() and reserveRange() that query and
               manage the range of exponents for which memory is allocated.
+            - New routine validate(), for use in test suites.
         Class Laurent2<T>:
             - New constructor that converts a single-variable Laurent polynomial
               into a two-variable Laurent polynomial.

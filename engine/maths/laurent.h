@@ -2121,6 +2121,50 @@ class Laurent :
             }
         }
 
+        /**
+         * A diagnostic routine that ensures that the internal representation
+         * of this polynomial is valid.
+         *
+         * If Regina is working correctly, this routine should do nothing.
+         * If the internal representation of this polynomial is _not_ valid,
+         * this routine will throw an exception.
+         *
+         * This routine is provided for use within Regina's various test suites.
+         * End users should not need to call it at all.
+         *
+         * \exception ImpossibleScenario The internal state of this polynomial
+         * is invalid.
+         */
+        void validate() const {
+            if (minExp_ > maxExp_) {
+                // This is the zero polynomial.
+                // There are no further restrictions on minExp_, maxExp_, or
+                // base_.
+                if (coeff_ && capacity_ == 0)
+                    throw ImpossibleScenario(
+                        "Non-null coefficient array has zero capacity");
+            } else {
+                if (! coeff_)
+                    throw ImpossibleScenario(
+                        "Non-zero polynomial has null coefficient array");
+                if (capacity_ == 0)
+                    throw ImpossibleScenario(
+                        "Non-null coefficient array has zero capacity");
+                if (minExp_ < base_)
+                    throw ImpossibleScenario(
+                        "Minimum exponent lies outside the coefficient array");
+                if (maxExp_ >= base_ + static_cast<long>(capacity_))
+                    throw ImpossibleScenario(
+                        "Maximum exponent lies outside the coefficient array");
+                if (coeff_[minExp_ - base_] == 0)
+                    throw ImpossibleScenario(
+                        "Minimum exponent has zero coefficient");
+                if (coeff_[maxExp_ - base_] == 0)
+                    throw ImpossibleScenario(
+                        "Maximum exponent has zero coefficient");
+            }
+        }
+
     private:
         /**
          * Constructs a new polynomial with the given exponent range and

@@ -135,30 +135,11 @@ class LaurentTest : public testing::Test {
 
 namespace {
     void validate(const L& poly) {
-        auto alloc = poly.allocation();
-        if (alloc.second == 0) {
-            EXPECT_EQ(alloc.first, 0);
-            EXPECT_TRUE(poly.isZero());
-            EXPECT_EQ(poly.minExp(), 0);
-            EXPECT_EQ(poly.maxExp(), 0);
-            EXPECT_EQ(poly[0], 0);
-        } else if (poly.isZero()) {
-            // We have a zero polynomial but with memory pre-allocated.
-            // In this scenario, alloc.first (the base) is arbitrary.
-            EXPECT_EQ(poly.minExp(), 0);
-            EXPECT_EQ(poly.maxExp(), 0);
-            EXPECT_EQ(poly[0], 0);
-        } else {
-            EXPECT_LE(alloc.first, poly.minExp());
-            EXPECT_LE(poly.minExp(), poly.maxExp());
-            EXPECT_LT(poly.maxExp(),
-                alloc.first + static_cast<long>(alloc.second));
-            EXPECT_NE(poly[poly.minExp()], 0);
-            EXPECT_NE(poly[poly.maxExp()], 0);
-        }
+        EXPECT_NO_THROW({ poly.validate(); });
     }
 
     void validateZero(const L& poly) {
+        validate(poly);
         EXPECT_TRUE(poly.isZero());
         EXPECT_EQ(poly.minExp(), 0);
         EXPECT_EQ(poly.maxExp(), 0);
@@ -180,18 +161,9 @@ namespace {
     void validate(const L& poly, long minExp,
             std::initializer_list<Integer> coeffs) {
         if (coeffs.size() == 0) { // initializer_list does not have empty()
-            EXPECT_TRUE(poly.isZero());
-            EXPECT_EQ(poly.minExp(), 0);
-            EXPECT_EQ(poly.maxExp(), 0);
-            EXPECT_EQ(poly[0], 0);
-
-            auto alloc = poly.allocation();
-            if (alloc.second == 0)
-                EXPECT_EQ(alloc.first, 0);
-            // If alloc.second is positive then we have a zero polynomial
-            // but with memory pre-allocated, which means alloc.first
-            // (the base exponent) is arbitrary.
+            validateZero(poly);
         } else {
+            validate(poly);
             EXPECT_FALSE(poly.isZero());
             EXPECT_EQ(poly.minExp(), minExp);
             EXPECT_EQ(poly.maxExp(), minExp + coeffs.size() - 1);
@@ -217,18 +189,9 @@ namespace {
     template <std::ranges::sized_range Container>
     void validate(const L& poly, long minExp, const Container& coeffs) {
         if (coeffs.empty()) {
-            EXPECT_TRUE(poly.isZero());
-            EXPECT_EQ(poly.minExp(), 0);
-            EXPECT_EQ(poly.maxExp(), 0);
-            EXPECT_EQ(poly[0], 0);
-
-            auto alloc = poly.allocation();
-            if (alloc.second == 0)
-                EXPECT_EQ(alloc.first, 0);
-            // If alloc.second is positive then we have a zero polynomial
-            // but with memory pre-allocated, which means alloc.first
-            // (the base exponent) is arbitrary.
+            validateZero(poly);
         } else {
+            validate(poly);
             EXPECT_FALSE(poly.isZero());
             EXPECT_EQ(poly.minExp(), minExp);
             EXPECT_EQ(poly.maxExp(), minExp + coeffs.size() - 1);
@@ -252,18 +215,9 @@ namespace {
 
     void validate(const L& poly, const L& expect) {
         if (expect.isZero()) {
-            EXPECT_TRUE(poly.isZero());
-            EXPECT_EQ(poly.minExp(), 0);
-            EXPECT_EQ(poly.maxExp(), 0);
-            EXPECT_EQ(poly[0], 0);
-
-            auto alloc = poly.allocation();
-            if (alloc.second == 0)
-                EXPECT_EQ(alloc.first, 0);
-            // If alloc.second is positive then we have a zero polynomial
-            // but with memory pre-allocated, which means alloc.first
-            // (the base exponent) is arbitrary.
+            validateZero(poly);
         } else {
+            validate(poly);
             EXPECT_FALSE(poly.isZero());
             EXPECT_EQ(poly.minExp(), expect.minExp());
             EXPECT_EQ(poly.maxExp(), expect.maxExp());
