@@ -136,6 +136,102 @@ namespace {
     }
 } // anonymous namespace
 
+TEST_F(Laurent2Test, construct) {
+    // This tests also verifies isZero() and countTerms() (via validate())
+    // when it tests the initialiser list constructor.
+
+    validateZero(L());
+
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        {
+            L x(c);
+            validate(x, c);
+            L y(std::move(x));
+            validate(y, c);
+        }
+
+        using Tuple = std::tuple<long, long, Integer>;
+        {
+            std::vector<Tuple> coeffs;
+            for (const auto& t : c)
+                coeffs.emplace_back(t.first.first, t.first.second, t.second);
+            validate(L(coeffs.begin(), coeffs.end()), c);
+
+            std::reverse(coeffs.begin(), coeffs.end());
+            validate(L(coeffs.begin(), coeffs.end()), c);
+
+            std::vector<Tuple> messy;
+            for (const auto& t : c)
+                messy.emplace_back(t.first.first, t.first.second, 0);
+            for (const auto& t : c) // real coefficients in sorted order
+                messy.emplace_back(t.first.first, t.first.second, t.second);
+            for (const auto& t : c)
+                messy.emplace_back(t.first.second, t.first.first, 0);
+            for (const auto& t : coeffs) // real coefficients in reverse
+                messy.push_back(t);
+            messy.emplace_back(1000, -1000, 0);
+            validate(L(messy.begin(), messy.end()), c, [](const Term& term) {
+                return std::make_pair(term.first, term.second * 2);
+            });
+        }
+    }
+
+    {
+        Integer zero(0), pos(4), neg(-4), big(bigInt);
+        validateZero(L(zero));
+        validateZero(L(std::move(zero)));
+        validateZero(L(0));
+        validate(L(pos), {{0,0,4}});
+        validate(L(std::move(pos)), {{0,0,4}});
+        validate(L(4), {{0,0,4}});
+        validate(L(neg), {{0,0,-4}});
+        validate(L(std::move(neg)), {{0,0,-4}});
+        validate(L(-4), {{0,0,-4}});
+        validate(L(big), {{0,0,bigInt}});
+        validate(L(std::move(big)), {{0,0,bigInt}});
+        // At this point: zero, pos, neg, big are all unusable.
+    }
+}
+
+TEST_F(Laurent2Test, assign) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+
+        for (const L& d : cases) {
+            SCOPED_TRACE_REGINA(d);
+            {
+                L x(c);
+                validate(x, c);
+                x = d;
+                validate(x, d);
+            }
+            {
+                L x(c), y(d);
+                validate(x, c);
+                validate(y, d);
+                x = std::move(y);
+                validate(x, d);
+            }
+        }
+
+        Integer zero(0), pos(4), neg(-4), big(bigInt);
+        { L x(c); validate(x, c); x = zero; validateZero(x); }
+        { L x(c); validate(x, c); x = std::move(zero); validateZero(x); }
+        { L x(c); validate(x, c); x = 0; validateZero(x); }
+        { L x(c); validate(x, c); x = pos; validate(x, {{0,0,4}}); }
+        { L x(c); validate(x, c); x = std::move(pos); validate(x, {{0,0,4}}); }
+        { L x(c); validate(x, c); x = 4; validate(x, {{0,0,4}}); }
+        { L x(c); validate(x, c); x = neg; validate(x, {{0,0,-4}}); }
+        { L x(c); validate(x, c); x = std::move(neg); validate(x, {{0,0,-4}}); }
+        { L x(c); validate(x, c); x = -4; validate(x, {{0,0,-4}}); }
+        { L x(c); validate(x, c); x = big; validate(x, {{0,0,bigInt}}); }
+        { L x(c); validate(x, c); x = std::move(big);
+            validate(x, {{0,0,bigInt}}); }
+        // At this point: zero, pos, neg, big are all unusable.
+    }
+}
+
 TEST_F(Laurent2Test, init) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
@@ -294,6 +390,10 @@ TEST_F(Laurent2Test, moveThenAssign) {
 }
 
 TEST_F(Laurent2Test, set) {
+    // We rely on C++ standard data structures for our coefficient map, and so
+    // there is not really any specialised code to test here other than
+    // ensuring that the map remains free of zero coefficients.
+
     L x { {0, 0, 1}, {1, -1, 2} };
 
     validate(x, { {0, 0, 1}, {1, -1, 2} });
@@ -451,6 +551,37 @@ TEST_F(Laurent2Test, negate) {
             x.negate();
             validate(x, neg);
         }
+    }
+}
+
+TEST_F(Laurent2Test, invert) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+
+        L invX(c), invY(c);
+        invX.invertX();
+        invY.invertY();
+
+        {
+            std::vector<Term> terms(c.begin(), c.end());
+            for (auto& t : terms)
+                t.first.first = -t.first.first;
+            std::sort(terms.begin(), terms.end());
+            EXPECT_TRUE(std::equal(invX.begin(), invX.end(),
+                terms.begin(), terms.end()));
+        }
+        {
+            std::vector<Term> terms(c.begin(), c.end());
+            for (auto& t : terms)
+                t.first.second = -t.first.second;
+            std::sort(terms.begin(), terms.end());
+            EXPECT_TRUE(std::equal(invY.begin(), invY.end(),
+                terms.begin(), terms.end()));
+        }
+
+        invX.invertY();
+        invY.invertX();
+        EXPECT_EQ(invX, invY);
     }
 }
 
