@@ -313,6 +313,130 @@ TEST_F(Laurent2Test, set) {
     validate(x, { {-1, -1, 1} });
 }
 
+TEST_F(Laurent2Test, iterators) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+
+        // Here is as good a time as any to test operator() also.
+        if (c.isZero()) {
+            EXPECT_EQ(c.begin(), c.end());
+
+            for (int i : { -100, -1, 0, 1, 100 })
+                for (int j : { -100, -1, 0, 1, 100 })
+                    EXPECT_EQ(c(i, j), 0);
+        } else {
+            ASSERT_NE(c.begin(), c.end());
+
+            auto minExp = c.begin()->first;
+            EXPECT_EQ(c(minExp.first - 1, minExp.second), 0);
+            EXPECT_EQ(c(minExp.first, minExp.second - 1), 0);
+
+            auto it = c.begin();
+            std::optional<std::pair<long, long>> prevExp;
+            for (const Term& t : c) { // tests begin() / end() / iteration
+                if (prevExp.has_value()) {
+                    // Manually verify the order of iteration:
+                    EXPECT_LE(prevExp->first, t.first.first);
+                    if (prevExp->first == t.first.first)
+                        EXPECT_LT(prevExp->second, t.first.second);
+                }
+                EXPECT_EQ(c(t.first.first, t.first.second), t.second);
+                prevExp = t.first;
+            }
+
+            EXPECT_EQ(c(prevExp->first + 1, prevExp->second), 0);
+            EXPECT_EQ(c(prevExp->first, prevExp->second + 1), 0);
+        }
+    }
+}
+
+TEST_F(Laurent2Test, comparison) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+
+        EXPECT_TRUE(c == c);
+        EXPECT_TRUE(c == L(c));
+        EXPECT_FALSE(c != c);
+        EXPECT_FALSE(c != L(c));
+        EXPECT_EQ(c <=> c, std::strong_ordering::equal);
+        EXPECT_EQ(c <=> L(c), std::strong_ordering::equal);
+
+        for (const L& d : cases) {
+            if (std::addressof(c) == std::addressof(d))
+                continue;
+
+            SCOPED_TRACE_REGINA(d);
+
+            auto c_vs_d = c <=> d;
+            EXPECT_FALSE(c == d);
+            EXPECT_TRUE(c != d);
+            EXPECT_NE(c_vs_d, std::strong_ordering::equal);
+            EXPECT_EQ(d <=> c, 0 <=> c_vs_d);
+
+            // Test transitivity of comparisions:
+            for (const L& e : cases) {
+                if (std::addressof(e) == std::addressof(c) ||
+                        std::addressof(e) == std::addressof(d))
+                    continue;
+                if ((d <=> e) != (0 <=> c_vs_d))
+                    EXPECT_EQ(c <=> e, c_vs_d);
+            }
+        }
+
+        EXPECT_EQ(L(), 0);
+        EXPECT_EQ(L(), Integer());
+        EXPECT_NE(L(), 2);
+        EXPECT_NE(L(), Integer(2));
+        EXPECT_NE(L(), bigInt);
+        EXPECT_NE(L(2), 0);
+        EXPECT_NE(L(2), Integer());
+        EXPECT_EQ(L(2), 2);
+        EXPECT_EQ(L(2), Integer(2));
+        EXPECT_NE(L(2), bigInt);
+        EXPECT_NE(L(bigInt), 0);
+        EXPECT_NE(L(bigInt), Integer());
+        EXPECT_NE(L(bigInt), 2);
+        EXPECT_NE(L(bigInt), Integer(2));
+        EXPECT_EQ(L(bigInt), bigInt);
+        EXPECT_NE(L::monomial(0, 0), 0);
+        EXPECT_NE(L::monomial(0, 0), Integer(0));
+        EXPECT_EQ(L::monomial(0, 0), 1);
+        EXPECT_EQ(L::monomial(0, 0), Integer(1));
+        EXPECT_NE(L::monomial(2, 0), 2);
+        EXPECT_NE(L::monomial(0, 2), 2);
+        EXPECT_NE(L::monomial(2, 0), Integer(2));
+        EXPECT_NE(L::monomial(0, 2), Integer(2));
+    }
+}
+
+TEST_F(Laurent2Test, shift) {
+    static constexpr int shifts[5] = { -100, -5, 0, 5, 100 };
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        for (int xShift : shifts) {
+            SCOPED_TRACE_NUMERIC(xShift);
+
+            for (int yShift : shifts) {
+                SCOPED_TRACE_NUMERIC(yShift);
+
+                L s = c.shifted(xShift, yShift);
+                validate(s, c, [xShift, yShift](const Term& term) {
+                    return std::make_pair(
+                        std::make_pair(term.first.first + xShift,
+                            term.first.second + yShift),
+                        term.second);
+                });
+                validate(L(c).shifted(xShift, yShift), s);
+                {
+                    L x(c);
+                    x.shift(xShift, yShift);
+                    validate(x, s);
+                }
+            }
+        }
+    }
+}
+
 TEST_F(Laurent2Test, negate) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
