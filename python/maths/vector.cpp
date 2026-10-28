@@ -79,7 +79,17 @@ void addVectorOf(pybind11::module_& m, const char* className) {
         .def(pybind11::self + pybind11::self, rdoc::__add)
         .def(pybind11::self - pybind11::self, rdoc::__sub)
         .def(pybind11::self * T(), rdoc::__mul)
-        .def(pybind11::self * pybind11::self, rdoc::__mul_2)
+
+        // We bind (vector * vector) manually so that we can put noconvert()
+        // on the second argument.  Otherwise when we try to multiply
+        // (vector * matrix) it sees the matrix as a sequence and tries to
+        // convert it to a vector (and fails), instead of falling back to
+        // the __rmul__ defined in the Matrix class.  The actual error is:
+        // `TypeError: object of type 'regina.engine.MatrixInt' has no len()`.
+        .def("__mul__", [](const Vec& u, const Vec& v) {
+            return u * v;
+        }, pybind11::arg().noconvert(), pybind11::is_operator(), rdoc::__mul_2)
+
         .def("swap", &Vec::swap, rdoc::swap)
         .def("negate", &Vec::negate, rdoc::negate)
         .def("norm", &Vec::norm, rdoc::norm)

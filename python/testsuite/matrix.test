@@ -29,14 +29,29 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# Verify that the matrix-matrix, matrix-vector and vector-matrix product
-# operators are all bound correctly.
-
 m = MatrixInt([[1,2,3], [4,5,6]])
 v2 = VectorInt([2,-1])
 v3 = VectorInt([3,-2,1])
 v2l = VectorLarge([2,-1])
 v3l = VectorLarge([3,-2,1])
+
+# Verify that (vector * ...) binds to the right operators for various types on
+# the right hand side.
+
+print(v3 * 2)
+print(v3 * v3)
+print(v3 * (v3 + v3))
+print(v3 * VectorInt(v3l))
+
+# We don't test VectorInt * VectorLarge for now.
+# Wildly, on my Python 3.9.6 setup, `VectorInt(0) * VectorLarge(0)` works by
+# converting the RHS to VectorInt, but `VectorInt(3) * VectorLarge(3)` does
+# not (it complains about unsupported operand types for *).  This is very
+# unexpected and bears investigation, but it should not block the test suite
+# from passing for the time being.
+
+# Verify that the matrix-matrix, matrix-vector and vector-matrix product
+# operators are all bound correctly.
 
 print(m * m.transpose())
 print(m.transpose() * m)
