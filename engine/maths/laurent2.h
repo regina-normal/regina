@@ -1698,6 +1698,7 @@ Laurent2<T> operator + (const Laurent2<T>& lhs, Laurent2<T>&& rhs) {
  */
 template <CoefficientDomain T>
 Laurent2<T> operator + (Laurent2<T>&& lhs, Laurent2<T>&& rhs) {
+    // Choose an order of operations that should require fewer map insertions.
     if (lhs.coeff_.size() >= rhs.coeff_.size())
         return std::move(lhs += std::move(rhs));
     else
@@ -1812,8 +1813,11 @@ Laurent2<T> operator - (const Laurent2<T>& lhs, Laurent2<T>&& rhs) {
  */
 template <CoefficientDomain T>
 Laurent2<T> operator - (Laurent2<T>&& lhs, Laurent2<T>&& rhs) {
-    // TODO: choose between lhs,rhs
-    return std::move(lhs -= std::move(rhs));
+    // Choose an order of operations that should require fewer map insertions.
+    if (lhs.coeff_.size() >= rhs.coeff_.size())
+        return std::move(lhs -= std::move(rhs));
+    else
+        return -std::move(rhs -= std::move(lhs));
 }
 
 /**
