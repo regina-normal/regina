@@ -51,7 +51,7 @@ class Laurent2Test : public testing::Test {
         // An integer that cannot fit into 128 bits.
         const Integer bigInt { BIG };
 
-        const std::array<const L, 9> cases {
+        const std::array<const L, 11> cases {
             L(),
             L({{0, 0, 1}}),
             L({{0, 0, 2}}),
@@ -60,7 +60,9 @@ class Laurent2Test : public testing::Test {
             L({{1, 1, 1}}),
             L({{1, 2, 1}}),
             L({{0, 0, 1}, {1, 2, -2}, {-2, -1, 3}}),
-            L({{1, 0, 2}, {1, 2, -4}, {0, -1, -2}})
+            L({{1, 0, 2}, {1, 2, -4}, {0, -1, -2}}),
+            L({{1, 1, -1}, {1, 2, 1}, {0, -1, -2}, {1, 0, -2}}),
+            L({{1, 2, bigInt}, {1, -2, -bigInt}, {1, 1, -1}})
         };
 };
 
@@ -137,10 +139,20 @@ namespace {
 } // anonymous namespace
 
 TEST_F(Laurent2Test, construct) {
-    // This tests also verifies isZero() and countTerms() (via validate())
-    // when it tests the initialiser list constructor.
-
+    // Here we also test isZero() and countTerms() via the calls to validate()
+    // and validateZero(), through the initialiser list tests below.
     validateZero(L());
+    validateZero(L({}));
+    validate(L({{0,0,1}}), {{0,0,1}});
+    validate(L({{0,0,-1}}), {{0,0,-1}});
+    validate(L({{2,0,3}}), {{2,0,3}});
+    validate(L({{0,-2,-3}}), {{0,-2,-3}});
+    validate(L({{1,0,-2}, {1,1,5}, {0,1,7}}), {{1,0,-2}, {1,1,5}, {0,1,7}});
+    validate(L({{0,1,7}, {1,1,5}, {1,0,-2}}), {{1,0,-2}, {1,1,5}, {0,1,7}});
+    validate(L({{0,0,1}, {0,1,2}, {0,2,3}, {-1,0,4}, {-2,0,5}}),
+        {{0,0,1}, {0,1,2}, {0,2,3}, {-1,0,4}, {-2,0,5}});
+    validate(L({{-2,0,5}, {-1,0,4}, {0,2,3}, {0,1,2}, {0,0,1}}),
+        {{0,0,1}, {0,1,2}, {0,2,3}, {-1,0,4}, {-2,0,5}});
 
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
@@ -191,6 +203,71 @@ TEST_F(Laurent2Test, construct) {
         validate(L(big), {{0,0,bigInt}});
         validate(L(std::move(big)), {{0,0,bigInt}});
         // At this point: zero, pos, neg, big are all unusable.
+    }
+
+    const std::array<regina::Laurent<Integer>, 4> sub {
+        regina::Laurent<Integer>(),
+        regina::Laurent<Integer>(-5),
+        regina::Laurent<Integer>(-2, {3,0,2,-1}),
+    };
+
+    validateZero(L(sub[0], 0, 0));
+    validateZero(L(sub[0], 1, 0));
+    validateZero(L(sub[0], 0, 1));
+    validateZero(L(sub[0], -1, 0));
+    validateZero(L(sub[0], 0, -1));
+    validateZero(L(sub[0], 2, -3));
+    validate(L(sub[1], 0, 0), {{0,0,-5}});
+    validate(L(sub[1], 1, 0), {{0,0,-5}});
+    validate(L(sub[1], 0, 1), {{0,0,-5}});
+    validate(L(sub[1], -1, 0), {{0,0,-5}});
+    validate(L(sub[1], 0, -1), {{0,0,-5}});
+    validate(L(sub[1], 2, -3), {{0,0,-5}});
+    validate(L(sub[2], 0, 0), {{0,0,4}});
+    validate(L(sub[2], 1, 0), {{-2,0,3}, {0,0,2}, {1,0,-1}});
+    validate(L(sub[2], 0, 1), {{0,-2,3}, {0,0,2}, {0,1,-1}});
+    validate(L(sub[2], -1, 0), {{2,0,3}, {0,0,2}, {-1,0,-1}});
+    validate(L(sub[2], 0, -1), {{0,2,3}, {0,0,2}, {0,-1,-1}});
+    validate(L(sub[2], 2, -3), {{-4,6,3}, {0,0,2}, {2,-3,-1}});
+
+    for (const auto& s : sub) {
+        validateZero(L(sub[0], s));
+        validateZero(L(s, sub[0]));
+    }
+    validate(L(sub[1], sub[1]), {{0,0,25}});
+    validate(L(sub[1], sub[2]), {{0,-2,-15}, {0,0,-10}, {0,1,5}});
+    validate(L(sub[2], sub[1]), {{-2,0,-15}, {0,0,-10}, {1,0,5}});
+    validate(L(sub[2], sub[2]), {
+        {-2,-2,9}, {-2,0,6}, {-2,1,-3},
+        {0,-2,6}, {0,0,4}, {0,1,-2},
+        {1,-2,-3}, {1,0,-2}, {1,1,1}
+    });
+
+    using LL = regina::Laurent<regina::Laurent<Integer>>;
+    {
+        LL zero;
+        validateZero(L(zero));
+        validateZero(L(std::move(zero)));
+    }
+    {
+        LL poly(3, { sub[1] });
+        validate(L(poly), {{3,0,-5}});
+        validate(L(std::move(poly)), {{3,0,-5}});
+    }
+    {
+        LL poly(-5, { sub[2] });
+        validate(L(poly), {{-5,-2,3}, {-5,0,2}, {-5,1,-1}});
+        validate(L(std::move(poly)), {{-5,-2,3}, {-5,0,2}, {-5,1,-1}});
+    }
+    {
+        LL poly(-1, { 7, 0, 0, -3, 2 });
+        validate(L(poly), {{-1,0,7}, {2,0,-3}, {3,0,2}});
+        validate(L(std::move(poly)), {{-1,0,7}, {2,0,-3}, {3,0,2}});
+    }
+    {
+        LL poly(-1, { sub[1], sub[0], sub[0], sub[2] });
+        validate(L(poly), {{-1,0,-5}, {2,-2,3}, {2,0,2}, {2,1,-1}});
+        validate(L(std::move(poly)), {{-1,0,-5}, {2,-2,3}, {2,0,2}, {2,1,-1}});
     }
 }
 
@@ -1081,6 +1158,73 @@ TEST_F(Laurent2Test, ringConstants) {
     // Verify that the RingTraits constants looks correct.
     EXPECT_EQ(regina::RingTraits<L>::zero.str(), "0");
     EXPECT_EQ(regina::RingTraits<L>::one.str(), "1");
+}
+
+TEST_F(Laurent2Test, str) {
+    EXPECT_EQ(L().str(), "0");
+    EXPECT_EQ(L(2).str(), "2");
+    EXPECT_EQ(L(-1).str(), "-1");
+    EXPECT_EQ(L::monomial(1, 0).str(), "x");
+    EXPECT_EQ(L::monomial(2, 0).str(), "x^2");
+    EXPECT_EQ(L::monomial(-1, 0).str(), "x^-1");
+    EXPECT_EQ(L::monomial(0, 1).str(), "y");
+    EXPECT_EQ(L::monomial(0, 2).str(), "y^2");
+    EXPECT_EQ(L::monomial(0, -1).str(), "y^-1");
+    EXPECT_EQ(L::monomial(1, -1).str(), "x y^-1");
+    EXPECT_EQ(L::monomial(-1, 1).str(), "x^-1 y");
+    EXPECT_EQ(L::monomial(2, -2).str(), "x^2 y^-2");
+    EXPECT_EQ(L::monomial(-2, 2).str(), "x^-2 y^2");
+    EXPECT_EQ(L({{-2,3,-1}}).str(), "-x^-2 y^3");
+    EXPECT_EQ(L({{-2,3,5}}).str(), "5 x^-2 y^3");
+    EXPECT_EQ(L({{-2,3,-6}}).str(), "-6 x^-2 y^3");
+    EXPECT_EQ(L({{0,0,1}, {1,2,-2}, {-2,-1,3}}).str(),
+        "-2 x y^2 + 1 + 3 x^-2 y^-1");
+    EXPECT_EQ(L({{1,0,2}, {1,2,-4}, {0,-1,-2}}).str(),
+        "-4 x y^2 + 2 x - 2 y^-1");
+    EXPECT_EQ(L({{0,0,3}, {2,1,3}, {2,-1,-2}, {1,-1,5}}).str(),
+        "3 x^2 y - 2 x^2 y^-1 + 5 x y^-1 + 3");
+    EXPECT_EQ(L({{0,0,3}, {-2,1,3}, {-2,-1,-2}, {-1,-1,5}}).str(),
+        "3 + 5 x^-1 y^-1 + 3 x^-2 y - 2 x^-2 y^-1");
+    EXPECT_EQ(L({{0,0,-3}, {-2,1,3}, {-2,-1,-2}, {-1,-1,5}}).str(),
+        "-3 + 5 x^-1 y^-1 + 3 x^-2 y - 2 x^-2 y^-1");
+}
+
+namespace {
+    void verifyUtf8(const L& poly, const char8_t* expect) {
+        EXPECT_EQ(poly.utf8(),
+            std::string(reinterpret_cast<const char*>(expect)));
+    }
+}
+
+TEST_F(Laurent2Test, utf8) {
+    // Here we directly use unicode superscripts and minus signs in the C++
+    // source code.
+    verifyUtf8(L(), u8"0");
+    verifyUtf8(L(2), u8"2");
+    verifyUtf8(L(-1), u8"−1");
+    verifyUtf8(L::monomial(1, 0), u8"x");
+    verifyUtf8(L::monomial(2, 0), u8"x²");
+    verifyUtf8(L::monomial(-1, 0), u8"x⁻¹");
+    verifyUtf8(L::monomial(0, 1), u8"y");
+    verifyUtf8(L::monomial(0, 2), u8"y²");
+    verifyUtf8(L::monomial(0, -1), u8"y⁻¹");
+    verifyUtf8(L::monomial(1, -1), u8"x y⁻¹");
+    verifyUtf8(L::monomial(-1, 1), u8"x⁻¹ y");
+    verifyUtf8(L::monomial(2, -2), u8"x² y⁻²");
+    verifyUtf8(L::monomial(-2, 2), u8"x⁻² y²");
+    verifyUtf8(L({{-2,3,-1}}), u8"−x⁻² y³");
+    verifyUtf8(L({{-2,3,5}}), u8"5 x⁻² y³");
+    verifyUtf8(L({{-2,3,-6}}), u8"−6 x⁻² y³");
+    verifyUtf8(L({{0,0,1}, {1,2,-2}, {-2,-1,3}}),
+        u8"−2 x y² + 1 + 3 x⁻² y⁻¹");
+    verifyUtf8(L({{1,0,2}, {1,2,-4}, {0,-1,-2}}),
+        u8"−4 x y² + 2 x − 2 y⁻¹");
+    verifyUtf8(L({{0,0,3}, {2,1,3}, {2,-1,-2}, {1,-1,5}}),
+        u8"3 x² y − 2 x² y⁻¹ + 5 x y⁻¹ + 3");
+    verifyUtf8(L({{0,0,3}, {-2,1,3}, {-2,-1,-2}, {-1,-1,5}}),
+        u8"3 + 5 x⁻¹ y⁻¹ + 3 x⁻² y − 2 x⁻² y⁻¹");
+    verifyUtf8(L({{0,0,-3}, {-2,1,3}, {-2,-1,-2}, {-1,-1,5}}),
+        u8"−3 + 5 x⁻¹ y⁻¹ + 3 x⁻² y − 2 x⁻² y⁻¹");
 }
 
 TEST_F(Laurent2Test, tightEncoding) {

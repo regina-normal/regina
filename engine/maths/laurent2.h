@@ -405,10 +405,14 @@ class Laurent2 :
         template <CanConstruct<T> U>
         Laurent2(const Laurent<Laurent<U>>& poly) {
             for (long i = poly.minExp(); i <= poly.maxExp(); ++i) {
-                const auto& coeff = poly[i];
-                for (long j = coeff.minExp(); j <= coeff.maxExp(); ++j)
-                    coeff_.emplace_hint(coeff_.end(),
-                        Exponents(i, j), coeff[j]);
+                const auto& outer = poly[i];
+                if (! outer.isZero())
+                    for (long j = outer.minExp(); j <= outer.maxExp(); ++j) {
+                        const auto& inner = outer[j];
+                        if (inner != 0)
+                            coeff_.emplace_hint(coeff_.end(),
+                                Exponents(i, j), inner);
+                    }
             }
         }
 
@@ -427,6 +431,7 @@ class Laurent2 :
          */
         template <CanConstruct<T> U>
         Laurent2(Laurent<Laurent<U>>&& poly) {
+            // Note: Laurent::extract() only extracts non-zero coefficients.
             std::move(poly).extract([this](Laurent<U>&& yPoly, long xExp) {
                 std::move(yPoly).extract([this, xExp](U&& coeff, long yExp) {
                     coeff_.emplace_hint(coeff_.end(),
