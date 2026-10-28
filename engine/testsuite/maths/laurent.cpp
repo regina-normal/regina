@@ -484,6 +484,9 @@ TEST_F(LaurentTest, init) {
             L x(c);
             x.initExp(-2);
             validate(x, -2, { 1 });
+
+            // Here is as good a place as any to test monomial().
+            validate(L::monomial(-2), x);
         }
     }
 }

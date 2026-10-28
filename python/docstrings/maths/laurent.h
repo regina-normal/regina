@@ -563,10 +563,10 @@ static constexpr const char init[] = R"doc(Sets this to become the zero polynomi
 
 // Docstring regina::python::doc::Laurent::initExp
 static constexpr const char initExp[] =
-R"doc(Sets this to become the polynomial ``x^d`` for the given exponent *d*.
+R"doc(Sets this to become the monomial ``x^d`` for the given exponent *d*.
 
 Parameter ``exponent``:
-    the new exponent to use for this polynomial.)doc";
+    the exponent of *x* in the monomial.)doc";
 
 // Docstring regina::python::doc::Laurent::invertX
 static constexpr const char invertX[] =
@@ -599,6 +599,16 @@ routine returns 0.
 
 Returns:
     the smallest exponent.)doc";
+
+// Docstring regina::python::doc::Laurent::monomial
+static constexpr const char monomial[] =
+R"doc(Returns the monomial ``x^d`` for the given exponent *d*.
+
+Parameter ``exponent``:
+    the exponent of *x* in the monomial.
+
+Returns:
+    the requested monomial.)doc";
 
 // Docstring regina::python::doc::Laurent::negate
 static constexpr const char negate[] = R"doc(Negates this polynomial. This polynomial is changed directly.)doc";

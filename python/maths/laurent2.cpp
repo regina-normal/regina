@@ -66,6 +66,7 @@ void addLaurent2(pybind11::module_& m) {
                 const regina::Laurent<Integer>&>(), rdoc::__init_6)
         .def("init", overload_cast<>(&Laurent2<Integer>::init), rdoc::init)
         .def("initExp", &Laurent2<Integer>::initExp, rdoc::initExp)
+        .def_static("monomial", &Laurent2<Integer>::monomial, rdoc::monomial)
         .def("isZero", &Laurent2<Integer>::isZero, rdoc::isZero)
         .def("countTerms", &Laurent2<Integer>::countTerms, rdoc::countTerms)
         .def("set", &Laurent2<Integer>::set, rdoc::set)

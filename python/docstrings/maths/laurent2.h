@@ -614,14 +614,14 @@ static constexpr const char init[] = R"doc(Sets this to become the zero polynomi
 
 // Docstring regina::python::doc::Laurent2::initExp
 static constexpr const char initExp[] =
-R"doc(Sets this to become the polynomial ``x^d y^e`` for the given exponents
+R"doc(Sets this to become the monomial ``x^d y^e`` for the given exponents
 *d* and *e*.
 
 Parameter ``xExp``:
-    the new exponent *d*, which is attached to *x*.
+    the exponent of *x* in the monomial.
 
 Parameter ``yExp``:
-    the new exponent *e*, which is attached to *y*.)doc";
+    the exponent of *y* in the monomial.)doc";
 
 // Docstring regina::python::doc::Laurent2::invertX
 static constexpr const char invertX[] =
@@ -639,6 +639,19 @@ R"doc(Returns whether this is the zero polynomial.
 
 Returns:
     ``True`` if and only if this is the zero polynomial.)doc";
+
+// Docstring regina::python::doc::Laurent2::monomial
+static constexpr const char monomial[] =
+R"doc(Returns the monomial ``x^d y^e`` for the given exponents *d* and *e*.
+
+Parameter ``xExp``:
+    the exponent of *x* in the monomial.
+
+Parameter ``yExp``:
+    the exponent of *y* in the monomial.
+
+Returns:
+    the requested monomial.)doc";
 
 // Docstring regina::python::doc::Laurent2::negate
 static constexpr const char negate[] = R"doc(Negates this polynomial. This polynomial is changed directly.)doc";

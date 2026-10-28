@@ -51,21 +51,17 @@ class Laurent2Test : public testing::Test {
         // An integer that cannot fit into 128 bits.
         const Integer bigInt { BIG };
 
-        const L zero {};
-        const L one { {0, 0, 1} };
-        const L two { {0, 0, 2} };
-        const L minusOne { {0, 0, -1} };
-        const L x2 { {2, 0, 1} };
-        const L xy { {1, 1, 1} };
-        const L xy2 { {1, 2, 1} };
-        const L a { {0, 0, 1}, {1, 2, -2}, {-2, -1, 3} };
-        const L b { {1, 0, 2}, {1, 2, -4}, {0, -1, -2} };
-
-        const std::array<std::reference_wrapper<const L>, 9> cases {
-            std::cref(zero), std::cref(one), std::cref(two),
-            std::cref(minusOne),
-            std::cref(x2), std::cref(xy), std::cref(xy2),
-            std::cref(a), std::cref(b) };
+        const std::array<const L, 9> cases {
+            L(),
+            L({{0, 0, 1}}),
+            L({{0, 0, 2}}),
+            L({{0, 0, -1}}),
+            L({{2, 0, 1}}),
+            L({{1, 1, 1}}),
+            L({{1, 2, 1}}),
+            L({{0, 0, 1}, {1, 2, -2}, {-2, -1, 3}}),
+            L({{1, 0, 2}, {1, 2, -4}, {0, -1, -2}})
+        };
 };
 
 namespace {
@@ -139,6 +135,25 @@ namespace {
         }
     }
 } // anonymous namespace
+
+TEST_F(Laurent2Test, init) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        {
+            L x(c);
+            x.init();
+            validateZero(x);
+        }
+        {
+            L x(c);
+            x.initExp(-2, 3);
+            validate(x, {{-2, 3, 1}});
+
+            // Here is as good a place as any to test monomial().
+            validate(L::monomial(-2, 3), x);
+        }
+    }
+}
 
 TEST_F(Laurent2Test, moveThenAssign) {
     // Here we test both move-then-assign and move-then-init.
@@ -231,7 +246,7 @@ TEST_F(Laurent2Test, moveThenAssign) {
 
                 y = std::move(x);
                 x.initExp(1, 2);
-                validate(x, xy2);
+                validate(x, {{1,2,1}});
                 validate(y, c);
             }
 
@@ -649,6 +664,7 @@ TEST_F(Laurent2Test, addSubtract) {
         }
 
         // More expected arithmetic properties:
+        const L zero;
         validate(c + zero, c);
         validate(zero + c, c);
         validate(c - zero, c);
@@ -792,18 +808,17 @@ TEST_F(Laurent2Test, multiply) {
         }
 
         // More expected arithmetic properties:
-        validate(c * one, c);
-        validate(one * c, c);
-        validate(c * two, c + c);
-        validate(two * c, c + c);
-        validate(c * minusOne, -c);
-        validate(minusOne * c, -c);
-        validate(c * x2, c.shifted(2, 0));
-        validate(x2 * c, c.shifted(2, 0));
-        validate(c * xy, c.shifted(1, 1));
-        validate(xy * c, c.shifted(1, 1));
-        validate(c * xy2, c.shifted(1, 2));
-        validate(xy2 * c, c.shifted(1, 2));
+        validate(c * L(1), c);
+        validate(L(1) * c, c);
+        validate(c * L(2), c + c);
+        validate(L(2) * c, c + c);
+        validate(c * L(-1), -c);
+        validate(L(-1) * c, -c);
+        for (int xExp = -2; xExp <= 2; ++xExp)
+            for (int yExp = -2; yExp <= 2; ++yExp) {
+                validate(c * L::monomial(xExp, yExp), c.shifted(xExp, yExp));
+                validate(L::monomial(xExp, yExp) * c, c.shifted(xExp, yExp));
+            }
     }
 }
 

@@ -336,6 +336,7 @@ Version 8.0  [ TODO ]
             - New constructors, assignment operators and comparison operators
               that create or compare against a constant polynomial, given by a
               coefficient of type T or a native C++ integer.
+            - New static routine monomial().
             - New routine addProduct(), which optimises x ±= y * z.
             - New const routine shifted().
             - Now supports iteration over coefficients.
@@ -365,6 +366,7 @@ Version 8.0  [ TODO ]
             - New constructors, assignment operators and comparison operators
               that create or compare against a constant polynomial, given by a
               coefficient of type T or a native C++ integer.
+            - New static routine monomial().
             - New routine countTerms().
             - New routine addProduct(), which optimises x ±= y * z.
             - New routines shift() and shifted().

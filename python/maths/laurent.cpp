@@ -60,6 +60,7 @@ void addLaurent(pybind11::module_& m) {
         .def("init", static_cast<void (Laurent<Integer>::*)()>(
             &Laurent<Integer>::init), rdoc::init)
         .def("initExp", &Laurent<Integer>::initExp, rdoc::initExp)
+        .def_static("monomial", &Laurent<Integer>::monomial, rdoc::monomial)
         .def("minExp", &Laurent<Integer>::minExp, rdoc::minExp)
         .def("maxExp", &Laurent<Integer>::maxExp, rdoc::maxExp)
         .def("isZero", &Laurent<Integer>::isZero, rdoc::isZero)

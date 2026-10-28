@@ -445,10 +445,9 @@ class Laurent :
         }
 
         /**
-         * Sets this to become the polynomial `x^d` for the
-         * given exponent \a d.
+         * Sets this to become the monomial `x^d` for the given exponent \a d.
          *
-         * \param exponent the new exponent to use for this polynomial.
+         * \param exponent the exponent of \a x in the monomial.
          */
         void initExp(long exponent) {
             // Reuse any pre-allocated coeff_ array, if we can.
@@ -463,6 +462,18 @@ class Laurent :
                 *coeff_ = 1;
             }
             minExp_ = maxExp_ = exponent;
+        }
+
+        /**
+         * Returns the monomial `x^d` for the given exponent \a d.
+         *
+         * \param exponent the exponent of \a x in the monomial.
+         * \return the requested monomial.
+         */
+        static Laurent monomial(long exponent) {
+            T* c = new T[1];
+            *c = 1;
+            return Laurent(exponent, exponent, c);
         }
 
         /**

@@ -443,15 +443,28 @@ class Laurent2 :
         }
 
         /**
-         * Sets this to become the polynomial `x^d y^e` for the
+         * Sets this to become the monomial `x^d y^e` for the
          * given exponents \a d and \a e.
          *
-         * \param xExp the new exponent \a d, which is attached to \a x.
-         * \param yExp the new exponent \a e, which is attached to \a y.
+         * \param xExp the exponent of \a x in the monomial.
+         * \param yExp the exponent of \a y in the monomial.
          */
         void initExp(long xExp, long yExp) {
             coeff_.clear();
             coeff_.emplace(Exponents(xExp, yExp), 1);
+        }
+
+        /**
+         * Returns the monomial `x^d y^e` for the given exponents \a d and \a e.
+         *
+         * \param xExp the exponent of \a x in the monomial.
+         * \param yExp the exponent of \a y in the monomial.
+         * \return the requested monomial.
+         */
+        static Laurent2 monomial(long xExp, long yExp) {
+            Laurent2 ans;
+            ans.coeff_.emplace(Exponents(xExp, yExp), 1);
+            return ans;
         }
 
         /**
