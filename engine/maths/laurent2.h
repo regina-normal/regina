@@ -1032,10 +1032,11 @@ class Laurent2 :
          * \return a reference to this polynomial.
          */
         Laurent2& operator += (const Laurent2<T>& other) {
-            // TODO: the following statement is wrong over Z_2
             // This works even if &other == this, since in this case there are
-            // no insertions or deletions.
-            // TODO: do things in a good order
+            // no insertions or deletions (recall that T has no zero divisors),
+            // which means we need not worry about confusing the iteration loop.
+            //
+            // TODO: try to do map insertions in a good order?
             for (const auto& entry : other.coeff_) {
                 auto result = coeff_.emplace(entry);
                 if (! result.second)
@@ -1055,10 +1056,11 @@ class Laurent2 :
          * \return a reference to this polynomial.
          */
         Laurent2& operator += (Laurent2<T>&& other) {
-            // TODO: the following statement is wrong over Z_2
             // This works even if &other == this, since in this case there are
-            // no insertions or deletions.
-            // TODO: do things in a good order
+            // no insertions or deletions (recall that T has no zero divisors),
+            // which means we need not worry about confusing the iteration loop.
+            //
+            // TODO: try to do map insertions in a good order?
             for (auto&& entry : other.coeff_) {
                 auto result = coeff_.try_emplace(entry.first,
                     std::move(entry.second));
@@ -1082,7 +1084,7 @@ class Laurent2 :
             if (std::addressof(other) == this)
                 coeff_.clear();
             else {
-                // TODO: do things in a good order
+                // TODO: try to do map insertions in a good order?
                 for (auto entry : other.coeff_) {
                     auto result = coeff_.emplace(entry.first, T());
                     if (result.second) {
@@ -1109,7 +1111,7 @@ class Laurent2 :
             if (std::addressof(other) == this)
                 coeff_.clear();
             else {
-                // TODO: do things in a good order
+                // TODO: try to do map insertions in a good order?
                 for (auto entry : other.coeff_) {
                     auto result = coeff_.try_emplace(entry.first,
                         std::move(entry.second));
@@ -1150,7 +1152,7 @@ class Laurent2 :
                 for (const auto& right : other.coeff_) {
                     Exponents e(left.first.first + right.first.first,
                         left.first.second + right.first.second);
-                    // TODO: hint
+                    // TODO: position hint for emplace()?
                     auto result = ans.emplace(e, T());
                     if (result.second) {
                         result.first->second = left.second * right.second;
@@ -1167,7 +1169,7 @@ class Laurent2 :
             ans.swap(coeff_);
 
             // We might have zeroed out some coefficients.
-            removeZeroes(); // TODO: move this up?
+            removeZeroes(); // TODO: remove zeroes as we go instead?
             return *this;
         }
 
@@ -1184,14 +1186,14 @@ class Laurent2 :
          */
         void addProduct(const Laurent2<T>& x, const Laurent2<T>& y) {
             if (std::addressof(x) == this || std::addressof(y) == this) {
-                // TODO: *this *= (y + 1), or *this *= (x + 1)
                 *this += x * y; // here we _need_ the temporary to hold x * y
             } else {
-                // TODO: do this in the right order, use hint
+                // TODO: try to do map insertions in a good order?
                 for (const auto& cx : x.coeff_)
                     for (const auto& cy : y.coeff_) {
                         Exponents e(cx.first.first + cy.first.first,
                             cx.first.second + cy.first.second);
+                        // TODO: position hint for emplace()?
                         auto result = coeff_.emplace(e, T());
                         if (result.second) {
                             result.first->second = cx.second * cy.second;
@@ -1205,7 +1207,7 @@ class Laurent2 :
                     }
 
                 // We might have zeroed out some coefficients.
-                removeZeroes(); // TODO: move this up?
+                removeZeroes(); // TODO: remove zeroes as we go instead?
             }
         }
 
@@ -1393,7 +1395,7 @@ class Laurent2 :
 
                 long x = regina::tightDecode<long>(input);
                 long y = regina::tightDecode<long>(input);
-                // TODO: use insertion hints??
+                // TODO: use insertion hints for emplace()??
                 if (! ans.coeff_.emplace(Exponents(x, y),
                         std::move(coeff)).second)
                     throw InvalidInput("The tight encoding has a repeated "
@@ -1837,7 +1839,7 @@ Laurent2<T> operator * (const Laurent2<T>& lhs, const Laurent2<T>& rhs) {
             typename Laurent2<T>::Exponents e(
                 left.first.first + right.first.first,
                 left.first.second + right.first.second);
-            // TODO: hint
+            // TODO: position hint for emplace()?
             auto result = ans.coeff_.emplace(e, T());
             if (result.second) {
                 result.first->second = left.second * right.second;
@@ -1851,7 +1853,7 @@ Laurent2<T> operator * (const Laurent2<T>& lhs, const Laurent2<T>& rhs) {
         }
 
     // We might have zeroed out some coefficients.
-    ans.removeZeroes(); // TODO: move this up?
+    ans.removeZeroes(); // TODO: remove zeroes as we go instead?
     return ans;
 }
 
