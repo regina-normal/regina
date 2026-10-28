@@ -239,6 +239,9 @@ R"doc(Calculates the dot product of this vector and the given vector.
 Precondition:
     This and the given vector have the same size.
 
+Exception ``InvalidArgument``:
+    This and the given vector do not have the same size.
+
 Parameter ``other``:
     the vector with which this will be multiplied.
 
