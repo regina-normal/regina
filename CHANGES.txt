@@ -880,10 +880,10 @@ Version 8.0  [ TODO ]
         Concepts:
             - Many new concepts:
               + AssignableTo, CanConstruct, CoefficientDomain, CommutativeRing,
-                ConstAccessViaBracket, ConstAccessViaSubscript, Domain, Field,
-                HasAddProduct, IntegralDomain, Negatable, ReginaBitmask,
-                ReginaQitmask, Ring, RingLike, SameModCVRef, StrictWeakOrder,
-                TerminatingCallback, VoidCallback (defined in concepts/core.h)
+                Domain, Field, HasAddProduct, IntegralDomain, Negatable,
+                ReginaBitmask, ReginaQitmask, Ring, RingLike, SameModCVRef,
+                StrictWeakOrder, TerminatingCallback, VoidCallback
+                (defined in concepts/core.h)
               + InherentlyTightEncodable, Readable, RichStringifiable,
                 StandardStringifiable, Stringifiable, Writable (defined in
                 concepts/io.h)

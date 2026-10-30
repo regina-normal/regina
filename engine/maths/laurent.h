@@ -606,6 +606,90 @@ class Laurent :
         }
 
         /**
+         * Gives access to a deeper element within some coefficient of this
+         * polynomial.  This is intended for scenarios where the element type
+         * \a T is itself a container-like type whose elements are accessed
+         * via the square bracket (subscript) operator.
+         *
+         * In short, this operator allows you to use the syntax `poly(i, j)`
+         * to access the element `poly[i][j]`.  There are no restrictions on
+         * the "outer" exponent \a i, and the coefficient type \a T provides
+         * restrictions (if any) on the "inner" index \a j.
+         *
+         * This operator is intended for use with nested types, such as
+         * `Laurent<Laurent<T>>`.
+         *
+         * \nopython Python does not give access to any such nested types.
+         *
+         * \cpp This operator is read-only.  To _set_ elements, you must use
+         * the separate routine set().
+         *
+         * \param exp the "outer" exponent of the term of this Laurent
+         * polynomial whose coefficient we should access.
+         * \param index the "inner" index, indicating which element of
+         * the container-like object `this[exp]` should be returned.
+         * \return the corresponding "inner" element.
+         */
+        template <typename Index>
+        requires requires(const T x, Index i) { { x[i] }; }
+        auto&& operator () (long exp, Index&& index) const {
+            using Return = decltype((*coeff_)[index]);
+            if (exp >= minExp_ && exp <= maxExp_) // implies coeff_ is non-null
+                return coeff_[exp - base_][index];
+            else if constexpr (std::is_reference_v<Return>) {
+                // We need a reference to a zero of the deeper coefficient type.
+                // It's not clear whether T provides one, or if so how to
+                // access it; we therefore create our own here.
+                static const std::remove_reference_t<Return> zero;
+                return zero;
+            } else
+                return 0;
+        }
+
+        /**
+         * Gives access to a deeper element within some coefficient of this
+         * polynomial.  This is intended for scenarios where the element type
+         * \a T is itself a container-like type whose elements are accessed
+         * via the round bracket (call) operator.
+         *
+         * In short, this operator allows you to use the syntax
+         * `poly(i, a, ..., z)` to access the element `poly[i](a, ..., z)`.
+         * There are no restrictions on the "outer" exponent \a i, and the
+         * coefficient type \a T provides restrictions (if any) on the "inner"
+         * indices `a,...,z`.
+         *
+         * This operator is intended for use with nested types, such as
+         * `Laurent<Laurent2<T>>`.
+         *
+         * \nopython Python does not give access to any such nested types.
+         *
+         * \cpp This operator is read-only.  To _set_ elements, you must use
+         * the separate routine set().
+         *
+         * \param exp the "outer" exponent of the term of this Laurent
+         * polynomial whose coefficient we should access.
+         * \param index the "inner" index, indicating which element of
+         * the container-like object `this[exp]` should be returned.
+         * \return the corresponding "inner" element.
+         */
+        template <typename... Indices>
+        requires (sizeof...(Indices) > 0) &&
+            requires(const T x, Indices&&... i) { { x(i...) }; }
+        auto&& operator () (long exp, Indices&&... indices) const {
+            using Return = decltype((*coeff_)(indices...));
+            if (exp >= minExp_ && exp <= maxExp_) // implies coeff_ is non-null
+                return coeff_[exp - base_](indices...);
+            else if constexpr (std::is_reference_v<Return>) {
+                // We need a reference to a zero of the deeper coefficient type.
+                // It's not clear whether T provides one, or if so how to
+                // access it; we therefore create our own here.
+                static const std::remove_reference_t<Return> zero;
+                return zero;
+            } else
+                return 0;
+        }
+
+        /**
          * Changes the given coefficient of this polynomial.
          *
          * There are no restrictions on the exponent \a exp, and the

@@ -265,45 +265,6 @@ template <typename T, typename Arg>
 concept StrictWeakOrder = std::strict_weak_order<T, Arg, Arg>;
 
 /**
- * A container-like type whose members can be accessed via the square bracket
- * (subscript) operator.
- *
- * This concept ensures that, given a const container of type \a T and an
- * index argument of type \a Index, the square bracket operator returns the
- * corresponding member using the type \a Result (which will typically be
- * either a const reference or a value type).
- *
- * \nopython
- *
- * \ingroup concepts
- */
-template <typename T, typename Result, typename Index>
-concept ConstAccessViaSubscript =
-    requires(const T x, Index i) {
-        { x[i] } -> std::same_as<Result>;
-    };
-
-/**
- * A container-like type whose members can be accessed via the round bracket
- * (call) operator.
- *
- * This concept ensures that, given a const container of type \a T and one or
- * more indices of type \a Indices, the round bracket operator returns the
- * corresponding member using the type \a Result (which will typically be
- * either a const reference or a value type).
- *
- * \nopython
- *
- * \ingroup concepts
- */
-template <typename T, typename Result, typename... Indices>
-concept ConstAccessViaBracket =
-    (sizeof...(Indices) > 0) &&
-    requires(const T x, Indices&&... i) {
-        { x(i...) } -> std::same_as<Result>;
-    };
-
-/**
  * A callable type that takes the given argument types, and whose return value
  * is ignored.  Such objects are often passed into Regina's enumeration
  * routines (e.g., the various triangulation and link census generation

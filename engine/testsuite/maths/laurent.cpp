@@ -42,6 +42,8 @@ using regina::Laurent;
 using regina::polynomialProduct;
 
 using L = Laurent<Integer>;
+using LL = Laurent<Laurent<Integer>>;
+using LLL = Laurent<Laurent<Laurent<Integer>>>;
 
 // An integer that cannot fit into 128 bits, and some small multiples of it.
 // We split the digits into chunks to not break syntax highlighting.
@@ -1002,6 +1004,118 @@ TEST_F(LaurentTest, set) {
                 EXPECT_EQ(x.allocation(), alloc);
             }
         }
+    }
+}
+
+TEST_F(LaurentTest, nested) {
+    // This tests our convenience operations (e.g., element getters and setters)
+    // for nested types, such as Laurent<Laurent<T>>.
+
+    {
+        LL poly;
+        for (int i : { -1, 0, 1 })
+            for (int j : { -1, 0, 1 })
+                EXPECT_EQ(poly(i, j), 0);
+    }
+    {
+        LL poly(3, { L(-5) });
+        for (int i : { 0, 2, 3, 4 })
+            for (int j : { -1, 0, 1 })
+                EXPECT_EQ(poly(i, j), i == 3 && j == 0 ? -5 : 0);
+    }
+    {
+        LL poly(-5, { L(-2, {3,0,2,-1}) });
+        EXPECT_EQ(poly(-5, -3), 0);
+        EXPECT_EQ(poly(-5, -2), 3);
+        EXPECT_EQ(poly(-5, -1), 0);
+        EXPECT_EQ(poly(-5, 0), 2);
+        EXPECT_EQ(poly(-5, 1), -1);
+        EXPECT_EQ(poly(-5, 2), 0);
+
+        for (int i : { -6, -4 })
+            for (int j : { -1, 0, 1 })
+                EXPECT_EQ(poly(i, j), 0);
+    }
+    {
+        LL poly(-1, { 7, 0, 0, -3, 2 });
+
+        EXPECT_EQ(poly(-1, 0), 7);
+        EXPECT_EQ(poly(2, 0), -3);
+        EXPECT_EQ(poly(3, 0), 2);
+
+        for (int i : { -1, 2, 3 })
+            for (int j : { -1, 1 })
+                EXPECT_EQ(poly(i, j), 0);
+
+        for (int i : { -2, 0, 1, 4 })
+            for (int j : { -1, 0, 1 })
+                EXPECT_EQ(poly(i, j), 0);
+    }
+    {
+        LL poly(-1, { L(-5), L(), L(), L(-2, {3,0,2,-1}) });
+        EXPECT_EQ(poly(-1, -1), 0);
+        EXPECT_EQ(poly(-1, 0), -5);
+        EXPECT_EQ(poly(-1, 1), 0);
+        EXPECT_EQ(poly(2, -3), 0);
+        EXPECT_EQ(poly(2, -2), 3);
+        EXPECT_EQ(poly(2, -1), 0);
+        EXPECT_EQ(poly(2, 0), 2);
+        EXPECT_EQ(poly(2, 1), -1);
+        EXPECT_EQ(poly(2, 2), 0);
+
+        for (int i : { -2, 0, 1, 3 })
+            for (int j : { -1, 0, 1 })
+                EXPECT_EQ(poly(i, j), 0);
+    }
+    {
+        LLL poly;
+        for (int i : { -1, 0, 1 })
+            for (int j : { -1, 0, 1 })
+                for (int k : { -1, 0, 1 })
+                    EXPECT_EQ(poly(i, j, k), 0);
+    }
+    {
+        LLL poly(3, { LL(-2, { L(-5) })});
+        for (int i : { 0, 2, 3, 4 })
+            for (int j : { -3, -2, -1, 0 })
+                for (int k : { -1, 0, 1 })
+                    EXPECT_EQ(poly(i, j, k),
+                        i == 3 && j == -2 && k == 0 ? -5 : 0);
+    }
+    {
+        LLL poly(3, {
+            LL(-1, { L(-5), L(), L(), L(-2, {3,0,2,-1}) }),
+            LL(),
+            LL(-1, { 7, 0, 0, -3, 2 })
+        });
+
+        EXPECT_EQ(poly(3, -1, -1), 0);
+        EXPECT_EQ(poly(3, -1, 0), -5);
+        EXPECT_EQ(poly(3, -1, 1), 0);
+        EXPECT_EQ(poly(3, 2, -3), 0);
+        EXPECT_EQ(poly(3, 2, -2), 3);
+        EXPECT_EQ(poly(3, 2, -1), 0);
+        EXPECT_EQ(poly(3, 2, 0), 2);
+        EXPECT_EQ(poly(3, 2, 1), -1);
+        EXPECT_EQ(poly(3, 2, 2), 0);
+        for (int i : { -2, 0, 1, 3 })
+            for (int j : { -1, 0, 1 })
+                EXPECT_EQ(poly(3, i, j), 0);
+
+        EXPECT_EQ(poly(5, -1, 0), 7);
+        EXPECT_EQ(poly(5, 2, 0), -3);
+        EXPECT_EQ(poly(5, 3, 0), 2);
+        for (int i : { -1, 2, 3 })
+            for (int j : { -1, 1 })
+                EXPECT_EQ(poly(5, i, j), 0);
+        for (int i : { -2, 0, 1, 4 })
+            for (int j : { -1, 0, 1 })
+                EXPECT_EQ(poly(5, i, j), 0);
+
+        for (int i : { 0, 2, 4, 6 })
+            for (int j : { -1, 0, 1 })
+                for (int k : { -1, 0, 1 })
+                    EXPECT_EQ(poly(i, j, k), 0);
     }
 }
 

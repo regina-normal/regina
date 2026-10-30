@@ -320,15 +320,6 @@ static_assert(! regina::Field<regina::Laurent<Integer>>);
 static_assert(! regina::Field<regina::Laurent2<Integer>>);
 static_assert(! regina::Field<regina::Cyclotomic>);
 
-static_assert(regina::ConstAccessViaSubscript<
-    regina::Laurent<Integer>, const Integer&, size_t>);
-static_assert(! regina::ConstAccessViaBracket<
-    regina::Laurent<Integer>, const Integer&, size_t>);
-static_assert(regina::ConstAccessViaBracket<
-    regina::Laurent2<Integer>, const Integer&, size_t, size_t>);
-static_assert(regina::ConstAccessViaBracket<
-    regina::Matrix<Integer>, const Integer&, size_t, size_t>);
-
 static_assert(regina::StandardStringifiable<int>);
 static_assert(regina::StandardStringifiable<long>);
 static_assert(regina::StandardStringifiable<long long>);
