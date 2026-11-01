@@ -661,7 +661,8 @@ class Laurent :
          * This operator is intended for use with nested types, such as
          * `Laurent<Laurent2<T>>`.
          *
-         * \nopython Python does not give access to any such nested types.
+         * \nopython Python does not give access to any nested Laurent
+         * polynomial types.
          *
          * \cpp This operator is read-only.  To _set_ elements, you must use
          * the separate routine set().
@@ -674,11 +675,14 @@ class Laurent :
          */
         template <typename... Indices>
         requires (sizeof...(Indices) > 0) &&
-            requires(const T x, Indices&&... i) { { x(i...) }; }
+            requires(const T x, Indices&&... i) {
+                { x(std::forward<Indices>(i)...) };
+            }
         auto&& operator () (long exp, Indices&&... indices) const {
-            using Return = decltype((*coeff_)(indices...));
+            using Return =
+                decltype((*coeff_)(std::forward<Indices>(indices)...));
             if (exp >= minExp_ && exp <= maxExp_) // implies coeff_ is non-null
-                return coeff_[exp - base_](indices...);
+                return coeff_[exp - base_](std::forward<Indices>(indices)...);
             else if constexpr (std::is_reference_v<Return>) {
                 // We need a reference to a zero of the deeper coefficient type.
                 // It's not clear whether T provides one, or if so how to
@@ -805,6 +809,163 @@ class Laurent :
                 delete[] coeff_;
                 coeff_ = newCoeff;
             }
+        }
+
+        /**
+         * Changes a deeper element within some coefficient of this polynomial.
+         * This is intended for scenarios where the element type \a T is itself
+         * a container-like type whose elements can be set with its own set()
+         * function.
+         *
+         * In short, calling `poly.set(i, a, ..., z, value)` has the same effect
+         * as the following code:
+         *
+         * ```cpp
+         * T tmp = poly[i];
+         * tmp.set(a, ..., z, value);
+         * poly.set(i, tmp);
+         * ```
+         *
+         * There are no restrictions on the exponent \a exp.  The coefficient
+         * type \a T provides restrictions (if any) on the "inner" indices
+         * `a,...,z` and the new element \a value.  In particular, it is fine
+         * if your call to set() has the effect of setting the "outer"
+         * coefficient `poly[i]` to zero.
+         *
+         * The performance of this function has a similar profile to the
+         * simpler `set(i, value)`: it is expensive if your call creates a
+         * non-zero "outer" coefficient whose exponent is larger than maxExp()
+         * or smaller than minExp(), but it is cheap if your call has the effect
+         * of setting the "outer" coefficient at exponent maxExp() or minExp()
+         * to zero.
+         *
+         * This function is intended for use with nested types, such as
+         * `Laurent<Laurent2<T>>`.
+         *
+         * \pre It is assumed that, for an "outer" coefficient \a z of type
+         * \a T: (i) if \a z is currently set to zero, then calling
+         * `z.set(..., value)` will result in `z == 0` if and only if
+         * `value == 0`; and (ii) if `value != 0` then calling
+         * `z.set(..., value)` will never result in `z == 0`, regardless of
+         * the current value of \a z.  In particular, this assumption holds
+         * whenever \a T is one of Regina's polynomial, vector or matrix types.
+         *
+         * \nopython Python does not give access to any nested Laurent
+         * polynomial types.
+         *
+         * \param exp the "outer" exponent of the term of this Laurent
+         * polynomial whose coefficient should be changed.
+         * \param index the "inner" indices, indicating which element of
+         * the container-like object `this[exp]` should be changed.
+         * \param value the new value of the corresponding "inner" element.
+         */
+        template <typename... Indices, typename Value>
+        requires
+            CoefficientDomain<Value> &&
+            (sizeof...(Indices) > 0) &&
+            requires(T x, Indices&&... i, Value&& v) {
+                { x.set(std::forward<Indices>(i)..., std::forward<Value>(v)) };
+            }
+        void set(long exp, Indices&&... indices, Value&& value) {
+            if (value == 0) {
+                if (isZero() || exp < minExp_ || exp > maxExp_)
+                    return;
+
+                coeff_[exp - base_].set(std::forward<Indices>(indices)...,
+                    std::forward<Value>(value));
+
+                if (exp == maxExp_) {
+                    // Put the zero-coefficient test in a separate if statement
+                    // so that, if minExp_ == maxExp_, we do not test it twice.
+                    // (We do not know how expensive zero-testing is for the
+                    // coefficient type T.)
+                    if (coeff_[exp - base] == 0) {
+                        if (minExp_ == maxExp_) {
+                            // This becomes the zero polynomial.
+                            init();
+                        } else {
+                            // We know the lowest-exponent coefficient != 0.
+                            --maxExp_;
+                            while (coeff_[maxExp_ - base_] == 0)
+                                --maxExp_;
+                        }
+                    }
+                } else if (exp == minExp_ && coeff_[exp - base] == 0) {
+                    // Here we know the highest-exponent coefficient != 0.
+                    ++minExp_;
+                    while (coeff_[minExp_ - base_] == 0)
+                        ++minExp_;
+                }
+
+                return;
+            }
+
+            // From here, value is non-zero.
+
+            // We first ensure that coeff_[exp - base_] is allocated and
+            // initialised to zero if necessary, and that minExp_ and maxExp_
+            // are adjusted to reflect the fact that `this[exp]` will become
+            // non-zero.  We then finish with the inner call to set().
+            if (isZero()) {
+                // Reuse any pre-allocated coeff_ array, if we can.
+                if (coeff_) {
+                    if (exp < base_ ||
+                            exp >= base_ + static_cast<long>(capacity_)) {
+                        // Shift the range to cover the given exponent.
+                        size_t gap = capacity_ >> 1; // 0 ≤ gap < capacity_
+                        base_ = exp - gap;
+                    }
+                } else {
+                    capacity_ = 1;
+                    coeff_ = new T[1];
+                    base_ = exp;
+                }
+                minExp_ = maxExp_ = exp;
+            } else if (exp < base_) {
+                // The minimum exponent decreases, and we must reallocate.
+                size_t extra = std::max(growth(),
+                    static_cast<size_t>(base_ - exp));
+                capacity_ += extra;
+
+                T* newCoeff = new T[capacity_];
+                std::move(coeff_ + (minExp_ - base_),
+                    coeff_ + (maxExp_ - base_) + 1,
+                    newCoeff + (minExp_ - base_ + extra));
+                base_ -= extra;
+                minExp_ = exp;
+
+                delete[] coeff_;
+                coeff_ = newCoeff;
+            } else if (exp < minExp_) {
+                // The minimum exponent decreases, but we need not reallocate.
+                do {
+                    --minExp_;
+                    coeff_[minExp_ - base_] = 0;
+                } while (exp < minExp_)
+            } else if (exp >= base_ + static_cast<long>(capacity_)) {
+                // The maximum exponent increases, and we must reallocate.
+                size_t extra = std::max(growth(),
+                    static_cast<size_t>(exp - base_ - capacity_ + 1));
+                capacity_ += extra;
+
+                T* newCoeff = new T[capacity_];
+                std::move(coeff_ + (minExp_ - base_),
+                    coeff_ + (maxExp_ - base_) + 1,
+                    newCoeff + (minExp_ - base_));
+                maxExp_ = exp;
+
+                delete[] coeff_;
+                coeff_ = newCoeff;
+            } else if (exp > maxExp_) {
+                // The maximum exponent increases, but we need not reallocate.
+                do {
+                    ++maxExp_;
+                    coeff_[maxExp_ - base_] = 0;
+                } while (maxExp_ < exp)
+            }
+
+            coeff_[exp - base_].set(std::forward<Indices>(indices)...,
+                std::forward<Value>(value));
         }
 
         /**
