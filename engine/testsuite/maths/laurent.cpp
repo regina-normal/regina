@@ -207,6 +207,55 @@ namespace {
         EXPECT_FALSE(poly != cmp);
     }
 
+    void validate(const LL& poly, long minExp, std::initializer_list<
+            std::pair<long, std::initializer_list<Integer>>> coeffs) {
+        if (coeffs.size() == 0) { // initializer_list does not have empty()
+            validateZero(poly);
+        } else {
+            validate(poly);
+            EXPECT_FALSE(poly.isZero());
+            EXPECT_EQ(poly.minExp(), minExp);
+            EXPECT_EQ(poly.maxExp(), minExp + coeffs.size() - 1);
+
+            auto alloc = poly.allocation();
+            EXPECT_LE(alloc.first, minExp);
+            EXPECT_GE(alloc.first + static_cast<long>(alloc.second),
+                minExp + static_cast<long>(coeffs.size()));
+
+            EXPECT_NE(poly[poly.minExp()], 0);
+            EXPECT_NE(poly[poly.maxExp()], 0);
+
+            auto expect = coeffs.begin();
+            for (long e = minExp; expect != coeffs.end(); ++e, ++expect)
+                validate(poly[e], expect->first, expect->second);
+        }
+    }
+
+    void validate(const LLL& poly, long minExp, std::initializer_list<
+            std::pair<long, std::initializer_list<
+            std::pair<long, std::initializer_list<Integer>>>>> coeffs) {
+        if (coeffs.size() == 0) { // initializer_list does not have empty()
+            validateZero(poly);
+        } else {
+            validate(poly);
+            EXPECT_FALSE(poly.isZero());
+            EXPECT_EQ(poly.minExp(), minExp);
+            EXPECT_EQ(poly.maxExp(), minExp + coeffs.size() - 1);
+
+            auto alloc = poly.allocation();
+            EXPECT_LE(alloc.first, minExp);
+            EXPECT_GE(alloc.first + static_cast<long>(alloc.second),
+                minExp + static_cast<long>(coeffs.size()));
+
+            EXPECT_NE(poly[poly.minExp()], 0);
+            EXPECT_NE(poly[poly.maxExp()], 0);
+
+            auto expect = coeffs.begin();
+            for (long e = minExp; expect != coeffs.end(); ++e, ++expect)
+                validate(poly[e], expect->first, expect->second);
+        }
+    }
+
     template <std::ranges::sized_range Container>
     void validate(const L& poly, long minExp, const Container& coeffs) {
         if (coeffs.empty()) {
@@ -1038,18 +1087,24 @@ TEST_F(LaurentTest, nested) {
 
     {
         LL poly;
+        validateZero(poly);
+
         for (int i : { -1, 0, 1 })
             for (int j : { -1, 0, 1 })
                 EXPECT_EQ(poly(i, j), 0);
     }
     {
         LL poly(3, { L(-5) });
+        validate(poly, 3, { {0, {-5}} });
+
         for (int i : { 0, 2, 3, 4 })
             for (int j : { -1, 0, 1 })
                 EXPECT_EQ(poly(i, j), i == 3 && j == 0 ? -5 : 0);
     }
     {
         LL poly(-5, { L(-2, {3,0,2,-1}) });
+        validate(poly, -5, { {-2, {3,0,2,-1}} });
+
         EXPECT_EQ(poly(-5, -3), 0);
         EXPECT_EQ(poly(-5, -2), 3);
         EXPECT_EQ(poly(-5, -1), 0);
@@ -1063,6 +1118,7 @@ TEST_F(LaurentTest, nested) {
     }
     {
         LL poly(-1, { 7, 0, 0, -3, 2 });
+        validate(poly, -1, { {0, {7}}, {0, {}}, {0, {}}, {0, {-3}}, {0, {2}} });
 
         EXPECT_EQ(poly(-1, 0), 7);
         EXPECT_EQ(poly(2, 0), -3);
@@ -1078,6 +1134,8 @@ TEST_F(LaurentTest, nested) {
     }
     {
         LL poly(-1, { L(-5), L(), L(), L(-2, {3,0,2,-1}) });
+        validate(poly, -1, { {0, {-5}}, {0, {}}, {0, {}}, {-2, {3,0,2,-1}} });
+
         EXPECT_EQ(poly(-1, -1), 0);
         EXPECT_EQ(poly(-1, 0), -5);
         EXPECT_EQ(poly(-1, 1), 0);
@@ -1094,6 +1152,8 @@ TEST_F(LaurentTest, nested) {
     }
     {
         LLL poly;
+        validateZero(poly);
+
         for (int i : { -1, 0, 1 })
             for (int j : { -1, 0, 1 })
                 for (int k : { -1, 0, 1 })
@@ -1101,6 +1161,10 @@ TEST_F(LaurentTest, nested) {
     }
     {
         LLL poly(3, { LL(-2, { L(-5) })});
+        validate(poly, 3, {
+            { -2, { {0, {-5}} } }
+        });
+
         for (int i : { 0, 2, 3, 4 })
             for (int j : { -3, -2, -1, 0 })
                 for (int k : { -1, 0, 1 })
@@ -1112,6 +1176,11 @@ TEST_F(LaurentTest, nested) {
             LL(-1, { L(-5), L(), L(), L(-2, {3,0,2,-1}) }),
             LL(),
             LL(-1, { 7, 0, 0, -3, 2 })
+        });
+        validate(poly, 3, {
+            { -1, { {0, {-5}}, {0, {}}, {0, {}}, {-2, {3,0,2,-1}} } },
+            { 0, {} },
+            { -1, { {0, {7}}, {0, {}}, {0, {}}, {0, {-3}}, {0, {2}} } }
         });
 
         EXPECT_EQ(poly(3, -1, -1), 0);
