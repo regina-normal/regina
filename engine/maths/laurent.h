@@ -879,7 +879,7 @@ class Laurent :
                     // so that, if minExp_ == maxExp_, we do not test it twice.
                     // (We do not know how expensive zero-testing is for the
                     // coefficient type T.)
-                    if (coeff_[exp - base] == 0) {
+                    if (coeff_[exp - base_] == 0) {
                         if (minExp_ == maxExp_) {
                             // This becomes the zero polynomial.
                             init();
@@ -890,7 +890,7 @@ class Laurent :
                                 --maxExp_;
                         }
                     }
-                } else if (exp == minExp_ && coeff_[exp - base] == 0) {
+                } else if (exp == minExp_ && coeff_[exp - base_] == 0) {
                     // Here we know the highest-exponent coefficient != 0.
                     ++minExp_;
                     while (coeff_[minExp_ - base_] == 0)
@@ -941,7 +941,7 @@ class Laurent :
                 do {
                     --minExp_;
                     coeff_[minExp_ - base_] = 0;
-                } while (exp < minExp_)
+                } while (exp < minExp_);
             } else if (exp >= base_ + static_cast<long>(capacity_)) {
                 // The maximum exponent increases, and we must reallocate.
                 size_t extra = std::max(growth(),
@@ -961,7 +961,7 @@ class Laurent :
                 do {
                     ++maxExp_;
                     coeff_[maxExp_ - base_] = 0;
-                } while (maxExp_ < exp)
+                } while (maxExp_ < exp);
             }
 
             coeff_[exp - base_].set(std::forward<Indices>(indices)...,
