@@ -140,12 +140,31 @@ namespace {
         EXPECT_NO_THROW({ poly.validate(); });
     }
 
-    void validateZero(const L& poly) {
+
+    void validate(const LL& poly) {
+        EXPECT_NO_THROW({ poly.validate(); });
+        for (const L& c : poly)
+            validate(c);
+    }
+
+    void validate(const LLL& poly) {
+        EXPECT_NO_THROW({ poly.validate(); });
+        for (const LL& c : poly)
+            validate(c);
+    }
+
+    void validateZero(const Integer& coeff) {
+        coeff.validate();
+        EXPECT_EQ(coeff, 0);
+    }
+
+    template <regina::CoefficientDomain T>
+    void validateZero(const Laurent<T>& poly) {
         validate(poly);
         EXPECT_TRUE(poly.isZero());
         EXPECT_EQ(poly.minExp(), 0);
         EXPECT_EQ(poly.maxExp(), 0);
-        EXPECT_EQ(poly[0], 0);
+        validateZero(poly[0]);
         EXPECT_EQ(poly, 0);
 
         auto alloc = poly.allocation();
@@ -155,7 +174,7 @@ namespace {
         // but with memory pre-allocated, which means alloc.first
         // (the base exponent) is arbitrary.
 
-        const L zero;
+        const Laurent<T> zero;
         EXPECT_EQ(poly, zero);
         EXPECT_FALSE(poly != zero);
     }
@@ -215,7 +234,13 @@ namespace {
         EXPECT_FALSE(poly != cmp);
     }
 
-    void validate(const L& poly, const L& expect) {
+    void validate(const Integer& coeff, const Integer& expect) {
+        coeff.validate();
+        EXPECT_EQ(coeff, expect);
+    }
+
+    template <regina::CoefficientDomain T>
+    void validate(const Laurent<T>& poly, const Laurent<T>& expect) {
         if (expect.isZero()) {
             validateZero(poly);
         } else {
@@ -233,7 +258,7 @@ namespace {
             EXPECT_NE(poly[poly.maxExp()], 0);
 
             for (long e = expect.minExp(); e != expect.maxExp(); ++e)
-                EXPECT_EQ(poly[e], expect[e]);
+                validate(poly[e], expect[e]);
         }
 
         EXPECT_EQ(poly, expect);
@@ -512,7 +537,7 @@ TEST_F(LaurentTest, moveThenAssign) {
                 L y;
                 if (junk != cases.end()) {
                     y = *junk;
-                    validate(y, *junk);
+                    validate(y, junk->get());
                 } else {
                     validateZero(y);
                 }
@@ -528,7 +553,7 @@ TEST_F(LaurentTest, moveThenAssign) {
                 L y;
                 if (junk != cases.end()) {
                     y = *junk;
-                    validate(y, *junk);
+                    validate(y, junk->get());
                 } else {
                     validateZero(y);
                 }
@@ -544,7 +569,7 @@ TEST_F(LaurentTest, moveThenAssign) {
                 L y;
                 if (junk != cases.end()) {
                     y = *junk;
-                    validate(y, *junk);
+                    validate(y, junk->get());
                 } else {
                     validateZero(y);
                 }
@@ -561,7 +586,7 @@ TEST_F(LaurentTest, moveThenAssign) {
                 L y;
                 if (junk != cases.end()) {
                     y = *junk;
-                    validate(y, *junk);
+                    validate(y, junk->get());
                 } else {
                     validateZero(y);
                 }
@@ -577,7 +602,7 @@ TEST_F(LaurentTest, moveThenAssign) {
                 L y;
                 if (junk != cases.end()) {
                     y = *junk;
-                    validate(y, *junk);
+                    validate(y, junk->get());
                 } else {
                     validateZero(y);
                 }
@@ -596,7 +621,7 @@ TEST_F(LaurentTest, moveThenAssign) {
                     L y;
                     if (junk != cases.end()) {
                         y = *junk;
-                        validate(y, *junk);
+                        validate(y, junk->get());
                     } else {
                         validateZero(y);
                     }
@@ -612,7 +637,7 @@ TEST_F(LaurentTest, moveThenAssign) {
                     L y;
                     if (junk != cases.end()) {
                         y = *junk;
-                        validate(y, *junk);
+                        validate(y, junk->get());
                     } else {
                         validateZero(y);
                     }
