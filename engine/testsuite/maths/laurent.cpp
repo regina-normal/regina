@@ -1081,10 +1081,8 @@ TEST_F(LaurentTest, set) {
     }
 }
 
-TEST_F(LaurentTest, nested) {
-    // This tests our convenience operations (e.g., element getters and setters)
-    // for nested types, such as Laurent<Laurent<T>>.
-
+TEST_F(LaurentTest, nestedElement) {
+    // This tests element getters for nested types, such as Laurent<Laurent<T>>.
     {
         LL poly;
         validateZero(poly);
@@ -1210,6 +1208,68 @@ TEST_F(LaurentTest, nested) {
             for (int j : { -1, 0, 1 })
                 for (int k : { -1, 0, 1 })
                     EXPECT_EQ(poly(i, j, k), 0);
+    }
+}
+
+TEST_F(LaurentTest, nestedSet) {
+    // This tests element setters for nested types, such as Laurent<Laurent<T>>.
+    {
+        LL x;
+        const auto alloc = x.allocation();
+        EXPECT_EQ(alloc.second, 0);
+        x.set(0, 0, 0);
+        validateZero(x);
+        EXPECT_EQ(x.allocation(), alloc);
+    }
+    {
+        LL x;
+        x.reserveRange(-5, 5);
+        const auto alloc = x.allocation();
+        EXPECT_GT(alloc.second, 0);
+        x.set(0, 0, 0);
+        validateZero(x);
+        EXPECT_EQ(x.allocation(), alloc);
+    }
+    {
+        LL x;
+        x.reserveRange(10, 20);
+        const auto alloc = x.allocation();
+        EXPECT_GT(alloc.second, 0);
+        x.set(0, 0, 0);
+        validateZero(x);
+        EXPECT_EQ(x.allocation(), alloc);
+    }
+    {
+        LL x;
+        x.set(2, -1, -7);
+        validate(x, 2, { {-1, {-7}} });
+    }
+    {
+        LL x;
+        x.reserveRange(-5, 5);
+        const auto alloc = x.allocation();
+        EXPECT_GT(alloc.second, 0);
+        x.set(2, -1, -7);
+        validate(x, 2, { {-1, {-7}} });
+        EXPECT_EQ(x.allocation(), alloc);
+    }
+    {
+        LL x;
+        x.reserveRange(10, 20);
+        const auto alloc = x.allocation();
+        EXPECT_GT(alloc.second, 0);
+        x.set(2, -1, -7);
+        validate(x, 2, { {-1, {-7}} });
+        EXPECT_NE(x.allocation(), alloc);
+    }
+    {
+        LL x;
+        x.reserveRange(-20, -10);
+        const auto alloc = x.allocation();
+        EXPECT_GT(alloc.second, 0);
+        x.set(2, -1, -7);
+        validate(x, 2, { {-1, {-7}} });
+        EXPECT_NE(x.allocation(), alloc);
     }
 }
 

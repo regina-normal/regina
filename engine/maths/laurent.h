@@ -171,6 +171,30 @@ class Laurent :
             return (capacity_ >> 1) + 1;
         }
 
+        /**
+         * Determines whether the given argument is zero.
+         *
+         * This routine is internal to set(), and forms the base case of the
+         * recursive template function `lastArgIsZero(...)`.  It allows us to
+         * test whether `value == 0` when calling `set(indices..., value)`.
+         */
+        template <IntegerCompatible Arg>
+        static bool lastArgIsZero(const Arg& arg) {
+            return arg == 0;
+        }
+
+        /**
+         * Determines whether the last argument in the given argument pack
+         * is zero.
+         *
+         * This routine is internal to set().  It allows us to test whether
+         * `value == 0` when calling `set(indices..., value)`.
+         */
+        template <typename Arg, typename...Args> requires (sizeof...(Args) > 0)
+        static bool lastArgIsZero(Arg&&, Args&&... args) {
+            return lastArgIsZero(std::forward<Args>(args)...);
+        }
+
     public:
         /**
          * Creates the zero polynomial.
@@ -818,7 +842,7 @@ class Laurent :
          * function.
          *
          * In short, calling `poly.set(i, a, ..., z, value)` has the same effect
-         * as the following code:
+         * as, but is both cleaner and faster than, the following code:
          *
          * ```cpp
          * T tmp = poly[i];
@@ -855,24 +879,22 @@ class Laurent :
          *
          * \param exp the "outer" exponent of the term of this Laurent
          * polynomial whose coefficient should be changed.
-         * \param index the "inner" indices, indicating which element of
-         * the container-like object `this[exp]` should be changed.
-         * \param value the new value of the corresponding "inner" element.
+         * \param args the sequence of "inner" indices, indicating which element
+         * of the container-like object `this[exp]` should be changed, followed
+         * by the new value of the corresponding "inner" element.
          */
-        template <typename... Indices, typename Value>
+        template <typename... Args>
         requires
-            CoefficientDomain<Value> &&
-            (sizeof...(Indices) > 0) &&
-            requires(T x, Indices&&... i, Value&& v) {
-                { x.set(std::forward<Indices>(i)..., std::forward<Value>(v)) };
+            (sizeof...(Args) >= 2) &&
+            requires(T x, Args&&... args) {
+                { x.set(std::forward<Args>(args)...) };
             }
-        void set(long exp, Indices&&... indices, Value&& value) {
-            if (value == 0) {
+        void set(long exp, Args&&... args) {
+            if (lastArgIsZero(std::forward<Args>(args)...)) {
                 if (isZero() || exp < minExp_ || exp > maxExp_)
                     return;
 
-                coeff_[exp - base_].set(std::forward<Indices>(indices)...,
-                    std::forward<Value>(value));
+                coeff_[exp - base_].set(std::forward<Args>(args)...);
 
                 if (exp == maxExp_) {
                     // Put the zero-coefficient test in a separate if statement
@@ -900,7 +922,7 @@ class Laurent :
                 return;
             }
 
-            // From here, value is non-zero.
+            // From here, the element value we are assigning is non-zero.
 
             // We first ensure that coeff_[exp - base_] is allocated and
             // initialised to zero if necessary, and that minExp_ and maxExp_
@@ -964,8 +986,7 @@ class Laurent :
                 } while (maxExp_ < exp);
             }
 
-            coeff_[exp - base_].set(std::forward<Indices>(indices)...,
-                std::forward<Value>(value));
+            coeff_[exp - base_].set(std::forward<Args>(args)...);
         }
 
         /**
