@@ -1213,6 +1213,8 @@ TEST_F(LaurentTest, nestedElement) {
 
 TEST_F(LaurentTest, nestedSet) {
     // This tests element setters for nested types, such as Laurent<Laurent<T>>.
+
+    // Tests that begin with the zero polynomial:
     {
         LL x;
         const auto alloc = x.allocation();
@@ -1269,6 +1271,85 @@ TEST_F(LaurentTest, nestedSet) {
         EXPECT_GT(alloc.second, 0);
         x.set(2, -1, -7);
         validate(x, 2, { {-1, {-7}} });
+        EXPECT_NE(x.allocation(), alloc);
+    }
+
+    // Tests that begin with a non-zero polynomial, setting an element to 0:
+    {
+        const LL mix(-1, { L(1, {-5,0,3}), L(), L(-3, {1,0,-1}), L(),
+            L(-2, {3,0,2}) });
+        validate(mix, -1, { {1, {-5,0,3}}, {0, {}}, {-3, {1,0,-1}}, {0, {}},
+            {-2, {3,0,2}} });
+
+        LL x(mix);
+        const auto initAlloc = x.allocation();
+        x.reserveRange(-5, 5); // to distinguish between base vs minExp
+        const auto alloc = x.allocation();
+        EXPECT_NE(alloc, initAlloc);
+        validate(x, mix);
+
+        x.set(-2, 0, 0);
+        validate(x, mix);
+        x.set(-100, 0, 0);
+        validate(x, mix);
+        x.set(4, 0, 0);
+        validate(x, mix);
+        x.set(100, 0, 0);
+        validate(x, mix);
+        x.set(100, 0, 0);
+        validate(x, mix);
+
+        x.set(-1, 1, 0);
+        validate(x, -1, { {3, {3}}, {0, {}}, {-3, {1,0,-1}}, {0, {}},
+            {-2, {3,0,2}} });
+        x.set(-1, 3, 0);
+        validate(x, 1, { {-3, {1,0,-1}}, {0, {}}, {-2, {3,0,2}} });
+        x.set(3, 0, 0);
+        validate(x, 1, { {-3, {1,0,-1}}, {0, {}}, {-2, {3}} });
+        x.set(3, -2, 0);
+        validate(x, 1, { {-3, {1,0,-1}} });
+        x.set(1, -3, 0);
+        validate(x, 1, { {-1, {-1}} });
+        x.set(1, -1, 0);
+        validateZero(x);
+
+        EXPECT_EQ(x.allocation(), alloc);
+    }
+
+    // Tests that begin with a non-zero polynomial, setting an element to ≠ 0:
+    {
+        LL mix(-1, { 7, 0, -3 });
+        validate(mix, -1, { {0, {7}}, {0, {}}, {0, {-3}} });
+
+        LL x(mix);
+        const auto initAlloc = x.allocation();
+        x.reserveRange(-3, 3); // to distinguish between base vs minExp
+        const auto alloc = x.allocation();
+        EXPECT_NE(alloc, initAlloc);
+        validate(x, mix);
+
+        x.set(-1, 2, 3);
+        x.set(0, -3, 4);
+        x.set(1, -1, 5);
+        validate(x, -1, { {0, {7,0,3}}, {-3, {4}}, {-1, {5,-3}} });
+        EXPECT_EQ(x.allocation(), alloc);
+
+        x.set(-3, 1, 6);
+        validate(x, -3, { {1, {6}}, {0, {}}, {0, {7,0,3}}, {-3, {4}},
+            {-1, {5,-3}} });
+        EXPECT_EQ(x.allocation(), alloc);
+
+        x.set(-3, 1, 6);
+        x.set(3, -4, 2);
+        validate(x, -3, { {1, {6}}, {0, {}}, {0, {7,0,3}}, {-3, {4}},
+            {-1, {5,-3}}, {0, {}}, {-4, {2}} });
+        EXPECT_EQ(x.allocation(), alloc);
+
+        x.set(-6, 1, 6);
+        x.set(6, -4, 2);
+        validate(x, -6, { {1, {6}}, {0, {}}, {0, {}}, {1, {6}}, {0, {}},
+            {0, {7,0,3}}, {-3, {4}}, {-1, {5,-3}}, {0, {}}, {-4, {2}},
+            {0, {}}, {0, {}}, {-4, {2}} });
         EXPECT_NE(x.allocation(), alloc);
     }
 }
