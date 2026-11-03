@@ -1352,6 +1352,36 @@ TEST_F(LaurentTest, nestedSet) {
             {0, {}}, {0, {}}, {-4, {2}} });
         EXPECT_NE(x.allocation(), alloc);
     }
+
+    // Some very basic tests on thrice-nested Laurent polynomials:
+    {
+        LLL x;
+        validateZero(x);
+        x.set(0, 0, 0);
+        validateZero(x);
+        x.set(3, -2, 4, -5);
+        validate(x, 3, {
+            { -2, { {4, {-5}} } }
+        });
+        x.set(1, -1, 2, 6);
+        validate(x, 1, {
+            { -1, { {2, {6}} } },
+            { 0, {} },
+            { -2, { {4, {-5}} } }
+        });
+        x.set(3, -2, 5, 0);
+        validate(x, 1, {
+            { -1, { {2, {6}} } },
+            { 0, {} },
+            { -2, { {4, {-5}} } }
+        });
+        x.set(3, -2, 4, 0);
+        validate(x, 1, {
+            { -1, { {2, {6}} } }
+        });
+        x.set(1, -1, 2, 0);
+        validateZero(x);
+    }
 }
 
 TEST_F(LaurentTest, iterators) {
