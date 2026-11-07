@@ -47,6 +47,8 @@ using regina::python::doc::common::neq_value;
 void addLaurent(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Laurent)
 
+    // overload_cast has trouble with templated vs non-templated overloads,
+    // and so there are several places below where we just static_cast directly.
     auto c = pybind11::class_<Laurent<Integer>>(m, "Laurent", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Laurent<Integer>&>(), rdoc::__copy)
@@ -55,8 +57,6 @@ void addLaurent(pybind11::module_& m) {
         }), "minExp"_a, "coefficients"_a, rdoc::__init)
         .def(pybind11::init<const Integer&>(), rdoc::__init_2)
         .def(pybind11::init<long>(), rdoc::__init_3)
-        // overload_cast has trouble with templated vs non-templated overloads.
-        // Just cast directly.
         .def("init", static_cast<void (Laurent<Integer>::*)()>(
             &Laurent<Integer>::init), rdoc::init)
         .def("initExp", &Laurent<Integer>::initExp, rdoc::initExp)
@@ -80,9 +80,13 @@ void addLaurent(pybind11::module_& m) {
                 pybind11::make_iterator<pybind11::return_value_policy::copy>(p);
         }, pybind11::keep_alive<0, 1>(), // iterator keeps polynomial alive
             rdoc::__iter__)
-        .def("set", &Laurent<Integer>::set, rdoc::set)
+        .def("set", static_cast<void (Laurent<Integer>::*)(
+                long, const Integer&)>(&Laurent<Integer>::set),
+            rdoc::set)
         .def("swap", &Laurent<Integer>::swap, rdoc::swap)
-        .def("shift", &Laurent<Integer>::shift, rdoc::shift)
+        .def("shift", static_cast<void (Laurent<Integer>::*)(long)>(
+                &Laurent<Integer>::shift),
+            rdoc::shift)
         .def("shifted",
             static_cast<Laurent<Integer> (Laurent<Integer>::*)(long) const&>(
                 &Laurent<Integer>::shifted),
