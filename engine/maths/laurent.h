@@ -641,7 +641,7 @@ class Laurent :
          * restrictions (if any) on the "inner" index \a j.
          *
          * This operator is intended for use with nested types, such as
-         * `Laurent<Laurent<T>>`.
+         * `Laurent<Laurent<U>>`.
          *
          * \nopython Python does not give access to any such nested types.
          *
@@ -683,7 +683,7 @@ class Laurent :
          * indices `a,...,z`.
          *
          * This operator is intended for use with nested types, such as
-         * `Laurent<Laurent2<T>>`.
+         * `Laurent<Laurent<U>>`.
          *
          * \nopython Python does not give access to any nested Laurent
          * polynomial types.
@@ -864,7 +864,7 @@ class Laurent :
          * to zero.
          *
          * This function is intended for use with nested types, such as
-         * `Laurent<Laurent2<T>>`.
+         * `Laurent<Laurent<U>>`.
          *
          * \pre It is assumed that, for an "outer" coefficient \a z of type
          * \a T: (i) if \a z is currently set to zero, then calling
@@ -1415,6 +1415,125 @@ class Laurent :
          */
         Laurent shifted(long s) && {
             shift(s);
+            return std::move(*this);
+        }
+
+        /**
+         * Multiplies this polynomial by `x^s` for some integer \a s, and
+         * also calls `shift()` on each coefficient of type \a T.
+         * This polynomial will be changed directly.
+         *
+         * This function is intended for use with nested polynomial types,
+         * such as `Laurent<Laurent<U>>`, where the "outer" coefficient type
+         * \a T is itself a container-like type that can shift its "inner"
+         * elements via its own shift() function.
+         *
+         * In short, calling `poly.shift(s, t, ..., z)` has the same effect
+         * as the following code:
+         *
+         * ```cpp
+         * poly.shift(s);
+         * poly.transform([](T& coeff) { coeff.shift(t, ..., z); });
+         * ```
+         *
+         * \nopython Python does not give access to any nested Laurent
+         * polynomial types.
+         *
+         * \param s the power of \a x to multiply by.
+         * \param args the arguments to pass to `shift()` for each coefficient
+         * of type \a T.
+         */
+        template <typename... Args>
+        requires
+            (sizeof...(Args) >= 1) &&
+            requires(T x, Args&&... args) {
+                { x.shift(std::forward<Args>(args)...) };
+            }
+        void shift(long s, Args&&... args) {
+            if (! isZero()) {
+                base_ += s;
+                minExp_ += s;
+                maxExp_ += s;
+
+                for (auto it = coeff_ + minExp_ - base_;
+                        it <= coeff_ + maxExp_ - base_; ++it)
+                    if (*it != 0)
+                        it->shift(std::forward<Args>(args)...);
+            }
+        }
+
+        /**
+         * Returns the product of this polynomial with `x^s` for some integer
+         * \a s, but with `shift()` also called on each coefficient of type
+         * \a T.  This polynomial is not changed.
+         *
+         * This function is intended for use with nested polynomial types,
+         * such as `Laurent<Laurent<U>>`, where the "outer" coefficient type
+         * \a T is itself a container-like type that can shift its "inner"
+         * elements via its own shift() function.
+         *
+         * In short, calling `result = poly.shifted(s, t, ..., z)` has the
+         * same effect as the following code:
+         *
+         * ```cpp
+         * result = poly.shift(s);
+         * result.transform([](T& coeff) { coeff.shift(t, ..., z); });
+         * ```
+         *
+         * Be aware that the rvalue variant of shifted() is typically _much_
+         * faster than this const version.
+         *
+         * \nopython Python does not give access to any nested Laurent
+         * polynomial types.
+         *
+         * \param s the power of \a x to multiply by.
+         * \param args the arguments to pass to `shift()` for each coefficient
+         * of type \a T.
+         * \return the resulting shifted polynomial.
+         */
+        template <typename... Args>
+        requires
+            (sizeof...(Args) >= 1) &&
+            requires(T x, Args&&... args) {
+                { x.shift(std::forward<Args>(args)...) };
+            }
+        Laurent shifted(long s, Args&&... args) const& {
+            Laurent ans(*this);
+            ans.shift(s, std::forward<Args>(args)...);
+            return ans;
+        }
+
+        /**
+         * Returns the product of this polynomial with `x^s` for some integer
+         * \a s, but with `shift()` also called on each coefficient of type
+         * \a T.
+         *
+         * This function is intended for use with nested polynomial types,
+         * such as `Laurent<Laurent<U>>`, where the "outer" coefficient type
+         * \a T is itself a container-like type that can shift its "inner"
+         * elements via its own shift() function.
+         *
+         * In short, calling `result = poly.shifted(s, t, ..., z)` has the
+         * same effect as the following code:
+         *
+         * ```cpp
+         * result = poly.shift(s);
+         * result.transform([](T& coeff) { coeff.shift(t, ..., z); });
+         * ```
+         *
+         * \param s the power of \a x to multiply by.
+         * \param args the arguments to pass to `shift()` for each coefficient
+         * of type \a T.
+         * \return the resulting shifted polynomial.
+         */
+        template <typename... Args>
+        requires
+            (sizeof...(Args) >= 1) &&
+            requires(T x, Args&&... args) {
+                { x.shift(std::forward<Args>(args)...) };
+            }
+        Laurent shifted(long s, Args&&... args) && {
+            shift(s, std::forward<Args>(args)...);
             return std::move(*this);
         }
 

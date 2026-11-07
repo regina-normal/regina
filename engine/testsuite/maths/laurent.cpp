@@ -1384,6 +1384,167 @@ TEST_F(LaurentTest, nestedSet) {
     }
 }
 
+TEST_F(LaurentTest, nestedShift) {
+    // This tests shift() and shifted() for nested types, such as
+    // Laurent<Laurent<T>>.
+
+    static constexpr int shifts[5] = { -100, -5, 0, 5, 100 };
+    for (int s : shifts) {
+        for (int t : shifts) {
+            {
+                LL x;
+                validateZero(x.shifted(s, t));
+                validateZero(LL(x).shifted(s, t));
+
+                x.shift(s, t);
+                validateZero(x);
+            }
+            for (int u : shifts) {
+                LLL x;
+                validateZero(x.shifted(s, t, u));
+                validateZero(LLL(x).shifted(s, t, u));
+
+                x.shift(s, t, u);
+                validateZero(x);
+            }
+        }
+    }
+
+    {
+        LL poly(-1, { L(-5), L(), L(), L(-2, {3,0,2,-1}) });
+        validate(poly, -1, { {0, {-5}}, {0, {}}, {0, {}}, {-2, {3,0,2,-1}} });
+
+        {
+            validate(poly.shifted(0, 0), poly);
+            validate(LL(poly).shifted(0, 0), poly);
+
+            LL y(poly);
+            auto alloc = y.allocation();
+            y.shift(0, 0);
+            validate(y, poly);
+            EXPECT_EQ(y.allocation(), alloc);
+        }
+        {
+            LL x = poly.shifted(3, 0);
+            validate(x, 2, { {0, {-5}}, {0, {}}, {0, {}}, {-2, {3,0,2,-1}} });
+            validate(LL(poly).shifted(3, 0), x);
+
+            LL y(poly);
+            size_t capacity = y.allocation().second;
+            y.shift(3, 0);
+            validate(y, x);
+            EXPECT_EQ(y.allocation().second, capacity);
+        }
+        {
+            LL x = poly.shifted(0, -3);
+            validate(x, -1, { {-3, {-5}}, {0, {}}, {0, {}}, {-5, {3,0,2,-1}} });
+            validate(LL(poly).shifted(0, -3), x);
+
+            LL y(poly);
+            size_t capacity = y.allocation().second;
+            y.shift(0, -3);
+            validate(y, x);
+            EXPECT_EQ(y.allocation().second, capacity);
+        }
+        {
+            LL x = poly.shifted(30, -50);
+            validate(x, 29,
+                { {-50, {-5}}, {0, {}}, {0, {}}, {-52, {3,0,2,-1}} });
+            validate(LL(poly).shifted(30, -50), x);
+
+            LL y(poly);
+            size_t capacity = y.allocation().second;
+            y.shift(30, -50);
+            validate(y, x);
+            EXPECT_EQ(y.allocation().second, capacity);
+        }
+    }
+
+    {
+        LLL poly(3, {
+            LL(-1, { L(-5), L(), L(), L(-2, {3,0,2,-1}) }),
+            LL(),
+            LL(-1, { 7, 0, 0, -3, 2 })
+        });
+        validate(poly, 3, {
+            { -1, { {0, {-5}}, {0, {}}, {0, {}}, {-2, {3,0,2,-1}} } },
+            { 0, {} },
+            { -1, { {0, {7}}, {0, {}}, {0, {}}, {0, {-3}}, {0, {2}} } }
+        });
+
+        {
+            validate(poly.shifted(0, 0, 0), poly);
+            validate(LLL(poly).shifted(0, 0, 0), poly);
+
+            LLL y(poly);
+            auto alloc = y.allocation();
+            y.shift(0, 0, 0);
+            validate(y, poly);
+            EXPECT_EQ(y.allocation(), alloc);
+        }
+        {
+            LLL x = poly.shifted(3, 0, 0);
+            validate(x, 6, {
+                { -1, { {0, {-5}}, {0, {}}, {0, {}}, {-2, {3,0,2,-1}} } },
+                { 0, {} },
+                { -1, { {0, {7}}, {0, {}}, {0, {}}, {0, {-3}}, {0, {2}} } }
+            });
+            validate(LLL(poly).shifted(3, 0, 0), x);
+
+            LLL y(poly);
+            size_t capacity = y.allocation().second;
+            y.shift(3, 0, 0);
+            validate(y, x);
+            EXPECT_EQ(y.allocation().second, capacity);
+        }
+        {
+            LLL x = poly.shifted(0, -3, 0);
+            validate(x, 3, {
+                { -4, { {0, {-5}}, {0, {}}, {0, {}}, {-2, {3,0,2,-1}} } },
+                { 0, {} },
+                { -4, { {0, {7}}, {0, {}}, {0, {}}, {0, {-3}}, {0, {2}} } }
+            });
+            validate(LLL(poly).shifted(0, -3, 0), x);
+
+            LLL y(poly);
+            size_t capacity = y.allocation().second;
+            y.shift(0, -3, 0);
+            validate(y, x);
+            EXPECT_EQ(y.allocation().second, capacity);
+        }
+        {
+            LLL x = poly.shifted(0, 0, 5);
+            validate(x, 3, {
+                { -1, { {5, {-5}}, {0, {}}, {0, {}}, {3, {3,0,2,-1}} } },
+                { 0, {} },
+                { -1, { {5, {7}}, {0, {}}, {0, {}}, {5, {-3}}, {5, {2}} } }
+            });
+            validate(LLL(poly).shifted(0, 0, 5), x);
+
+            LLL y(poly);
+            size_t capacity = y.allocation().second;
+            y.shift(0, 0, 5);
+            validate(y, x);
+            EXPECT_EQ(y.allocation().second, capacity);
+        }
+        {
+            LLL x = poly.shifted(20, -30, 40);
+            validate(x, 23, {
+                { -31, { {40, {-5}}, {0, {}}, {0, {}}, {38, {3,0,2,-1}} } },
+                { 0, {} },
+                { -31, { {40, {7}}, {0, {}}, {0, {}}, {40, {-3}}, {40, {2}} } }
+            });
+            validate(LLL(poly).shifted(20, -30, 40), x);
+
+            LLL y(poly);
+            size_t capacity = y.allocation().second;
+            y.shift(20, -30, 40);
+            validate(y, x);
+            EXPECT_EQ(y.allocation().second, capacity);
+        }
+    }
+}
+
 TEST_F(LaurentTest, iterators) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);

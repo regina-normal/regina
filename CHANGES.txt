@@ -344,6 +344,9 @@ Version 8.0  [ TODO ]
               extracting coefficients in bulk.
             - New overloads for scalar multiplication and division that take
               native C++ integers.
+            - Several new native operations for nested polynomial types (e.g.,
+              Laurent<Laurent<T>>), including operator(), set(), shift(), and
+              shifted().
             - Functions scaleUp() and scaleDown() now throw an InvalidArgument
               exception if the scaling factor is zero.  Note that this changes
               the exception type for scaleDown() (which will still throw a
