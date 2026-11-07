@@ -36,6 +36,13 @@
 #include <algorithm>
 #include <thread>
 
+/**
+ * Uncomment the following definition to use Laurent<Laurent<Integer>> (which
+ * uses C-style arrays without gaps) instead of Laurent2<Integer> (which uses
+ * a std::map) for some of our intermediate calculations.
+ */
+#define REGINA_ALT_LAURENT2
+
 // #define DUMP_STATES
 // #define DUMP_STAGES
 // #define IDENTIFY_NONVIABLE_KEYS
@@ -56,6 +63,25 @@ static constexpr long PROGRESS_TOT = ((long)1 << PROGRESS_POS);
 namespace regina {
 
 namespace {
+    #ifdef REGINA_ALT_LAURENT2
+    /**
+     * The type to use for two-variable Laurent polynomials during our
+     * intermediate calculations.
+     *
+     * Here we store these as Laurent polynomials in \a x, whose coefficients
+     * are Laurent polynomials in \a y.
+     */
+    using WorkingL2 = Laurent<Laurent<Integer>>;
+    #else
+    /**
+     * The type to use for two-variable Laurent polynomials during our
+     * intermediate calculations.
+     *
+     * Here we simply use Regina's native Laurent2 type.
+     */
+    using WorkingL2 = Laurent2<Integer>;
+    #endif
+
     /**
      * Used as a return value when the HOMFLY-PT calculation has been cancelled.
      */
@@ -887,20 +913,20 @@ namespace {
     // Convenience functions for the treewidth HOMFLY-PT algorithm:
 
     inline void aggregate(
-            std::map<LightweightSequence<int>, Laurent2<Integer>>* solns,
-            LightweightSequence<int>&& key, Laurent2<Integer> value) {
+            std::map<LightweightSequence<int>, WorkingL2>* solns,
+            LightweightSequence<int>&& key, WorkingL2 value) {
         auto existingSoln = solns->try_emplace(
             std::move(key), std::move(value));
         if (! existingSoln.second)
             existingSoln.first->second += std::move(value);
     }
 
-    inline Laurent2<Integer> switchValue(const Laurent2<Integer>& from,
+    inline WorkingL2 switchValue(const WorkingL2& from,
             Crossing* c) {
         return from.shifted((c->sign() > 0 ? -2 : 2), 0);
     }
 
-    inline Laurent2<Integer> spliceValue(const Laurent2<Integer>& from,
+    inline WorkingL2 spliceValue(const WorkingL2& from,
             Crossing* c) {
         auto ans = from.shifted((c->sign() > 0 ? -1 : 1), 1);
         if (c->sign() < 0)
@@ -982,14 +1008,13 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
     // Since we are assured at least one crossing at this point,
     // we have 0 <= i <= #components + #crossings - 1.
     size_t maxComp = 0;
-    FixedArray<Laurent2<Integer>> coeff(n + components_.size());
+    FixedArray<WorkingL2> coeff(n + components_.size());
 
     // Iterate through a tree of states:
     FixedArray<CrossingState> state(n, CrossingState::Unseen);
     FixedArray<StrandRef> first(n + components_.size(), StrandRef());
     FixedArray<bool> seen(2 * n, false); // index = strand ID
 
-    Laurent2<Integer> term;
     s = start;
     ssize_t pos = 0;
     int branchDepth = 0; // This is only ever compared against PROGRESS_POS.
@@ -1041,11 +1066,17 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
                 //     delta^(#components-1).
                 // Note that delta^(#components-1) will be computed later;
                 // here we just store the rest of the term in coeff[comp-1].
-                term.initExp(writheAdj, splices);
+                #ifdef REGINA_ALT_LAURENT2
                 if (splicesNeg % 2)
-                    term.negate();
-
-                coeff[comp - 1] += term;
+                    coeff[comp - 1] -= WorkingL2(1).shifted(writheAdj, splices);
+                else
+                    coeff[comp - 1] += WorkingL2(1).shifted(writheAdj, splices);
+                #else
+                if (splicesNeg % 2)
+                    coeff[comp - 1] -= WorkingL2::monomial(writheAdj, splices);
+                else
+                    coeff[comp - 1] += WorkingL2::monomial(writheAdj, splices);
+                #endif
                 if (comp > maxComp)
                     maxComp = comp;
 
@@ -1219,10 +1250,14 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
 
     // Piece together the final polynomial.
 
-    Laurent2<Integer> ans;
+    WorkingL2 ans;
 
-    Laurent2<Integer> delta { { 1, -1, 1 }, { -1, -1, -1 } };
-    Laurent2<Integer> deltaPow = RingTraits<Laurent2<Integer>>::one;
+    #ifdef REGINA_ALT_LAURENT2
+    const WorkingL2 delta(-1, { {-1, {-1}}, {}, {-1, {1}} });
+    #else
+    const WorkingL2 delta { { 1, -1, 1 }, { -1, -1, -1 } };
+    #endif
+    WorkingL2 deltaPow = RingTraits<WorkingL2>::one;
     for (size_t i = 0; i < unknots; ++i)
         deltaPow *= delta;
     for (size_t i = 0; i < maxComp; ++i) {
@@ -1239,7 +1274,11 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
 Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
     // We know from the precondition that there is at least one crossing.
 
-    Laurent2<Integer> delta { { 1, -1, 1 }, { -1, -1, -1 } };
+    #ifdef REGINA_ALT_LAURENT2
+    const WorkingL2 delta(-1, { {-1, {-1}}, {}, {-1, {1}} });
+    #else
+    const WorkingL2 delta { { 1, -1, 1 }, { -1, -1, -1 } };
+    #endif
 
     // Build a nice tree decomposition.
     if (tracker)
@@ -1299,7 +1338,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
     // our preconditions.
 
     using Key = LightweightSequence<int>;
-    using Value = Laurent2<Integer>;
+    using Value = WorkingL2;
     using SolnSet = std::map<Key, Value>;
 
     FixedArray<SolnSet*> partial(nBags, nullptr);
@@ -1326,7 +1365,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
             }
 
             partial[index] = new SolnSet;
-            partial[index]->emplace(Key(), RingTraits<Laurent2<Integer>>::one);
+            partial[index]->emplace(Key(), RingTraits<WorkingL2>::one);
         } else if (bag->niceType() == NiceType::Introduce) {
             // Introduce bag.
             child = bag->children();
