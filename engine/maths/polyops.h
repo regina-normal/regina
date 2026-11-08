@@ -39,15 +39,12 @@
  */
 
 #include "concepts/core.h"
+#include "maths/forward.h"
 #include "utilities/fixedarray.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
-
-template <CoefficientDomain> class Laurent;
-template <CoefficientDomain> class Laurent2;
-template <CoefficientDomain> class Polynomial;
 
 /**
  * Represents different algorithms for multiplying polynomials.

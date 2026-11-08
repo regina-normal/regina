@@ -42,8 +42,8 @@ using regina::Laurent;
 using regina::polynomialProduct;
 
 using L = Laurent<Integer>;
-using LL = Laurent<Laurent<Integer>>;
-using LLL = Laurent<Laurent<Laurent<Integer>>>;
+using LL = Laurent<Integer, 2>;
+using LLL = Laurent<Integer, 3>;
 
 // An integer that cannot fit into 128 bits, and some small multiples of it.
 // We split the digits into chunks to not break syntax highlighting.
@@ -136,21 +136,10 @@ class LaurentTest : public testing::Test {
 };
 
 namespace {
-    void validate(const L& poly) {
+    template <regina::CoefficientDomain T, int vars>
+    requires (vars > 0 && vars <= 3)
+    void validate(const Laurent<T, vars>& poly) {
         EXPECT_NO_THROW({ poly.validate(); });
-    }
-
-
-    void validate(const LL& poly) {
-        EXPECT_NO_THROW({ poly.validate(); });
-        for (const L& c : poly)
-            validate(c);
-    }
-
-    void validate(const LLL& poly) {
-        EXPECT_NO_THROW({ poly.validate(); });
-        for (const LL& c : poly)
-            validate(c);
     }
 
     void validateZero(const Integer& coeff) {
@@ -158,13 +147,20 @@ namespace {
         EXPECT_EQ(coeff, 0);
     }
 
-    template <regina::CoefficientDomain T>
-    void validateZero(const Laurent<T>& poly) {
+    template <regina::CoefficientDomain T, int vars>
+    requires (vars > 0 && vars <= 3)
+    void validateZero(const Laurent<T, vars>& poly) {
         validate(poly);
         EXPECT_TRUE(poly.isZero());
-        EXPECT_EQ(poly.minExp(), 0);
-        EXPECT_EQ(poly.maxExp(), 0);
-        validateZero(poly[0]);
+        if constexpr (vars == 1) {
+            EXPECT_EQ(poly.minExp(), 0);
+            EXPECT_EQ(poly.maxExp(), 0);
+            validateZero(poly[0]);
+        } else if constexpr (vars == 2) {
+            validateZero(poly(0, 0));
+        } else { // vars == 3
+            validateZero(poly(0, 0, 0));
+        }
         EXPECT_EQ(poly, 0);
 
         auto alloc = poly.allocation();
@@ -174,7 +170,7 @@ namespace {
         // but with memory pre-allocated, which means alloc.first
         // (the base exponent) is arbitrary.
 
-        const Laurent<T> zero;
+        const Laurent<T, vars> zero;
         EXPECT_EQ(poly, zero);
         EXPECT_FALSE(poly != zero);
     }
@@ -283,31 +279,40 @@ namespace {
         EXPECT_FALSE(poly != cmp);
     }
 
-    void validate(const Integer& coeff, const Integer& expect) {
-        coeff.validate();
-        EXPECT_EQ(coeff, expect);
-    }
-
-    template <regina::CoefficientDomain T>
-    void validate(const Laurent<T>& poly, const Laurent<T>& expect) {
+    template <regina::CoefficientDomain T, int vars>
+    requires (vars > 0 && vars <= 3)
+    void validate(const Laurent<T, vars>& poly,
+            const Laurent<T, vars>& expect) {
         if (expect.isZero()) {
             validateZero(poly);
         } else {
+            // Note: validate() already verifies the internal array allocation
+            // against the polynomial's own min/max exponents.
             validate(poly);
+
             EXPECT_FALSE(poly.isZero());
-            EXPECT_EQ(poly.minExp(), expect.minExp());
-            EXPECT_EQ(poly.maxExp(), expect.maxExp());
+            if constexpr (vars == 1) {
+                EXPECT_EQ(poly.minExp(), expect.minExp());
+                EXPECT_EQ(poly.maxExp(), expect.maxExp());
+            }
 
-            auto alloc = poly.allocation();
-            EXPECT_LE(alloc.first, poly.minExp());
-            EXPECT_GT(alloc.first + static_cast<long>(alloc.second),
-                poly.maxExp());
+            EXPECT_NE(*poly.first(), 0);
+            EXPECT_NE(*poly.last(), 0);
+            if constexpr (vars == 1) {
+                EXPECT_NE(poly[poly.minExp()], 0);
+                EXPECT_NE(poly[poly.maxExp()], 0);
+            }
 
-            EXPECT_NE(poly[poly.minExp()], 0);
-            EXPECT_NE(poly[poly.maxExp()], 0);
-
-            for (long e = expect.minExp(); e != expect.maxExp(); ++e)
-                validate(poly[e], expect[e]);
+            auto pc = poly.first();
+            auto ec = expect.first();
+            for ( ; pc && ec; ++pc, ++ec) {
+                regina::for_constexpr<0, vars>([&pc, &ec](auto i) {
+                    EXPECT_EQ(pc.template exp<i>(), ec.template exp<i>());
+                });
+                EXPECT_EQ(*pc, *ec);
+            }
+            EXPECT_FALSE(pc);
+            EXPECT_FALSE(ec);
         }
 
         EXPECT_EQ(poly, expect);
@@ -318,10 +323,11 @@ namespace {
      * Returns a polynomial equal to \a poly, but with more space for
      * coefficients allocated on each end than is necessary.
      */
-    L padded(const L& poly) {
+    template <regina::CoefficientDomain T>
+    Laurent<T> padded(const Laurent<T>& poly) {
         // Note: this still works if poly is the zero polynomial (in which
         // case the first call to set() changes _both_ minExp and maxExp).
-        L ans(poly);
+        Laurent<T> ans(poly);
         ans.set(ans.minExp() - 3, 1); // changes minExp
         ans.set(ans.maxExp() + 2, 1); // changes maxExp
         ans.set(ans.minExp(), 0);
@@ -1843,8 +1849,9 @@ TEST_F(LaurentTest, transform) {
         {
             // A transformation that preserves minExp/maxExp:
             L x(c);
-            x.transform([&c](Integer& i) {
+            x.transform([&c](Integer& i, long) {
                 EXPECT_FALSE(c.isZero());
+                EXPECT_NE(i, 0);
                 i *= 2;
             });
             validate(x, c * 2);
@@ -1853,8 +1860,9 @@ TEST_F(LaurentTest, transform) {
             // A transformation that could change minExp/maxExp or even make
             // the entire polynomial zero:
             L x(c);
-            x.transform([&c](Integer& i) {
+            x.transform([&c](Integer& i, long) {
                 EXPECT_FALSE(c.isZero());
+                EXPECT_NE(i, 0);
                 i /= 2;
             });
             validate(x, c / 2);
@@ -1866,8 +1874,7 @@ TEST_F(LaurentTest, transform) {
                 EXPECT_FALSE(c.isZero());
                 EXPECT_GE(exp, c.minExp());
                 EXPECT_LE(exp, c.maxExp());
-                if (exp == c.minExp() || exp == c.maxExp())
-                    EXPECT_NE(i, 0);
+                EXPECT_NE(i, 0);
 
                 y.set(exp, i);
                 i /= 2;
@@ -1875,28 +1882,6 @@ TEST_F(LaurentTest, transform) {
             validate(x, c / 2);
             validate(y, c);
         }
-    }
-}
-
-TEST_F(LaurentTest, extract) {
-    for (const L& c : cases) {
-        SCOPED_TRACE_REGINA(c);
-
-        L x(c);
-        std::vector<Integer> coeffs;
-        if (! c.isZero())
-            coeffs.resize(c.maxExp() - c.minExp() + 1);
-
-        std::move(x).extract([&c, &coeffs](Integer&& i, long exp) {
-            EXPECT_FALSE(c.isZero());
-            EXPECT_NE(i, 0);
-            EXPECT_GE(exp, c.minExp());
-            EXPECT_LE(exp, c.maxExp());
-            coeffs[exp - c.minExp()] = std::move(i);
-        });
-
-        EXPECT_TRUE(std::equal(c.begin(), c.end(),
-            coeffs.begin(), coeffs.end()));
     }
 }
 

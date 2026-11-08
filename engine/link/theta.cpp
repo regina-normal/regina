@@ -712,7 +712,7 @@ const Laurent2<Integer>& Link::theta() const {
         if (det.isZero()) {
             alexander_ = Polynomial<Integer>();
         } else {
-            alexander_ = Polynomial<Integer>(det.begin(), det.end());
+            alexander_ = det.polynomial().first; // constant coefficient ≠ 0
             if ((*alexander_)[0] < 0)
                 alexander_->negate();
         }

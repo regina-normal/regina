@@ -1277,7 +1277,7 @@ TEST_F(LinkTest, jones) {
 }
 
 static void verifyHomflyAZ(const TestCase& test,
-        const regina::Laurent2<regina::Integer>& expected) {
+        const regina::Laurent<regina::Integer, 2>& expected) {
     SCOPED_TRACE_CSTRING(test.name);
 
     // Since we are computing the HOMFLY-PT polynomial multiple times
@@ -1295,7 +1295,7 @@ static void verifyHomflyAZ(const TestCase& test,
 }
 
 static void verifyHomflyLM(const TestCase& test,
-        const regina::Laurent2<regina::Integer>& expected) {
+        const regina::Laurent<regina::Integer, 2>& expected) {
     SCOPED_TRACE_CSTRING(test.name);
 
     // Since we are computing the HOMFLY-PT polynomial multiple times
@@ -1316,83 +1316,87 @@ TEST_F(LinkTest, homfly) {
     verifyHomflyAZ(empty, {});
     verifyHomflyLM(empty, {});
 
-    verifyHomflyAZ(unknot0, {{0,0,1}});
-    verifyHomflyLM(unknot0, {{0,0,1}});
-    verifyHomflyAZ(unknot1, {{0,0,1}});
-    verifyHomflyLM(unknot1, {{0,0,1}});
-    verifyHomflyAZ(unknot3, {{0,0,1}});
-    verifyHomflyLM(unknot3, {{0,0,1}});
-    verifyHomflyAZ(unknotMonster, {{0,0,1}});
-    verifyHomflyLM(unknotMonster, {{0,0,1}});
+    verifyHomflyAZ(unknot0, {{{0,0},1}});
+    verifyHomflyLM(unknot0, {{{0,0},1}});
+    verifyHomflyAZ(unknot1, {{{0,0},1}});
+    verifyHomflyLM(unknot1, {{{0,0},1}});
+    verifyHomflyAZ(unknot3, {{{0,0},1}});
+    verifyHomflyLM(unknot3, {{{0,0},1}});
+    verifyHomflyAZ(unknotMonster, {{{0,0},1}});
+    verifyHomflyLM(unknotMonster, {{{0,0},1}});
     // Let's not attempt this with the (enormous) Gordian unknot.
 
-    verifyHomflyLM(trefoilLeft, {{4,0,-1}, {2,2,1}, {2,0,-2}});
-    verifyHomflyLM(trefoilRight, {{-2,2,1}, {-2,0,-2}, {-4,0,-1}});
-    verifyHomflyAZ(trefoilRight, {{-2,2,1}, {-2,0,2}, {-4,0,-1}});
-    verifyHomflyLM(trefoil_r1x2, {{-2,2,1}, {-2,0,-2}, {-4,0,-1}});
-    verifyHomflyLM(trefoil_r1x6, {{-2,2,1}, {-2,0,-2}, {-4,0,-1}});
-    verifyHomflyLM(figureEight, {{2,0,-1}, {0,2,1}, {0,0,-1}, {-2,0,-1}});
-    verifyHomflyLM(figureEight_r1x2, {{2,0,-1}, {0,2,1}, {0,0,-1}, {-2,0,-1}});
+    verifyHomflyLM(trefoilLeft, {{{4,0},-1}, {{2,2},1}, {{2,0},-2}});
+    verifyHomflyLM(trefoilRight, {{{-2,2},1}, {{-2,0},-2}, {{-4,0},-1}});
+    verifyHomflyAZ(trefoilRight, {{{-2,2},1}, {{-2,0},2}, {{-4,0},-1}});
+    verifyHomflyLM(trefoil_r1x2, {{{-2,2},1}, {{-2,0},-2}, {{-4,0},-1}});
+    verifyHomflyLM(trefoil_r1x6, {{{-2,2},1}, {{-2,0},-2}, {{-4,0},-1}});
+    verifyHomflyLM(figureEight,
+        {{{2,0},-1}, {{0,2},1}, {{0,0},-1}, {{-2,0},-1}});
+    verifyHomflyLM(figureEight_r1x2,
+        {{{2,0},-1}, {{0,2},1}, {{0,0},-1}, {{-2,0},-1}});
 
     // These two polynomials (which form a mutant pair) were computed using an
     // old version of Regina, using Kauffman's algorithm (Algorithm::Backtrack).
     verifyHomflyLM(conway,
-        {{4,4,1}, {4,2,-3}, {4,0,2}, {2,6,-1}, {2,4,6}, {2,2,-11}, {2,0,6},
-         {0,6,-1}, {0,4,6}, {0,2,-11}, {0,0,7}, {-2,4,1}, {-2,2,-3}, {-2,0,2}});
+        {{{4,4},1}, {{4,2},-3}, {{4,0},2}, {{2,6},-1}, {{2,4},6}, {{2,2},-11},
+        {{2,0},6}, {{0,6},-1}, {{0,4},6}, {{0,2},-11}, {{0,0},7}, {{-2,4},1},
+        {{-2,2},-3}, {{-2,0},2}});
     verifyHomflyLM(kinoshitaTerasaka,
-        {{4,4,1}, {4,2,-3}, {4,0,2}, {2,6,-1}, {2,4,6}, {2,2,-11}, {2,0,6},
-         {0,6,-1}, {0,4,6}, {0,2,-11}, {0,0,7}, {-2,4,1}, {-2,2,-3}, {-2,0,2}});
+        {{{4,4},1}, {{4,2},-3}, {{4,0},2}, {{2,6},-1}, {{2,4},6}, {{2,2},-11},
+        {{2,0},6}, {{0,6},-1}, {{0,4},6}, {{0,2},-11}, {{0,0},7}, {{-2,4},1},
+        {{-2,2},-3}, {{-2,0},2}});
 
     // Again, this was computed with an old Regina using Kauffman's algorithm.
     // We skip the test here because (on my machine) it takes around 5s to run
     // with Algorithm::Treewidth and around 50s to run with Algorithm::Naive.
 #if 0
-    verifyHomflyLM(gst,
-        {{4,8,-1}, {4,6,6}, {4,4,-11}, {4,2,8}, {4,0,-2}, {2,12,-1}, {2,10,10},
-         {2,8,-35}, {2,6,49}, {2,4,-21}, {2,2,-7}, {2,0,5}, {0,14,1},
-         {0,12,-12}, {0,10,53}, {0,8,-102}, {0,6,67}, {0,4,36}, {0,2,-63},
-         {0,0,21}, {-2,16,-1}, {-2,14,16}, {-2,12,-104}, {-2,10,355},
-         {-2,8,-685}, {-2,6,744}, {-2,4,-422}, {-2,2,100}, {-2,0,-3},
-         {-4,18,1}, {-4,16,-18}, {-4,14,137}, {-4,12,-575}, {-4,10,1457},
-         {-4,8,-2296}, {-4,6,2233}, {-4,4,-1279}, {-4,2,385}, {-4,0,-45},
-         {-6,18,1}, {-6,16,-17}, {-6,14,122}, {-6,12,-484}, {-6,10,1168},
-         {-6,8,-1776}, {-6,6,1698}, {-6,4,-978}, {-6,2,304}, {-6,0,-38},
-         {-8,16,-1}, {-8,14,14}, {-8,12,-79}, {-8,10,233}, {-8,8,-393},
-         {-8,6,392}, {-8,4,-228}, {-8,2,71}, {-8,0,-9}});
+    verifyHomflyLM(gst, {{{4,8},-1}, {{4,6},6}, {{4,4},-11}, {4,2},8},
+        {4,0},-2}, {2,12},-1}, {2,10},10}, {{2,8},-35}, {{2,6},49}, {{2,4},-21},
+        {{2,2},-7}, {{2,0},5}, {{0,14},1}, {{0,12},-12}, {{0,10},53},
+        {{0,8},-102}, {{0,6},67}, {{0,4},36}, {{0,2},-63}, {{0,0},21},
+        {{-2,16},-1}, {{-2,14},16}, {{-2,12},-104}, {{-2,10},355},
+        {{-2,8},-685}, {{-2,6},744}, {{-2,4},-422}, {{-2,2},100}, {{-2,0},-3},
+        {{-4,18},1}, {{-4,16},-18}, {{-4,14},137}, {{-4,12},-575},
+        {{-4,10},1457}, {{-4,8},-2296}, {{-4,6},2233}, {{-4,4},-1279},
+        {{-4,2},385}, {{-4,0},-45}, {{-6,18},1}, {{-6,16},-17}, {{-6,14},122},
+        {{-6,12},-484}, {{-6,10},1168}, {{-6,8},-1776}, {{-6,6},1698},
+        {{-6,4},-978}, {{-6,2},304}, {{-6,0},-38}, {{-8,16},-1}, {{-8,14},14},
+        {{-8,12},-79}, {{-8,10},233}, {{-8,8},-393}, {{-8,6},392},
+        {{-8,4},-228}, {{-8,2},71}, {{-8,0},-9}});
 #endif
 
-    verifyHomflyLM(rht_rht,
-        {{-4,4,1}, {-4,2,-4}, {-4,0,4}, {-6,2,-2}, {-6,0,4}, {-8,0,1}});
-    verifyHomflyLM(rht_lht,
-        {{2,2,-1}, {2,0,2}, {0,4,1}, {0,2,-4}, {0,0,5}, {-2,2,-1}, {-2,0,2}});
+    verifyHomflyLM(rht_rht, {{{-4,4},1}, {{-4,2},-4}, {{-4,0},4}, {{-6,2},-2},
+        {{-6,0},4}, {{-8,0},1}});
+    verifyHomflyLM(rht_lht, {{{2,2},-1}, {{2,0},2}, {{0,4},1}, {{0,2},-4},
+        {{0,0},5}, {{-2,2},-1}, {{-2,0},2}});
 
-    verifyHomflyLM(unlink2_0, {{1,-1,-1}, {-1,-1,-1}});
-    verifyHomflyLM(unlink3_0, {{2,-2,1}, {0,-2,2}, {-2,-2,1}});
-    verifyHomflyLM(unlink2_r2, {{1,-1,-1}, {-1,-1,-1}});
-    verifyHomflyLM(unlink2_r1r1, {{1,-1,-1}, {-1,-1,-1}});
+    verifyHomflyLM(unlink2_0, {{{1,-1},-1}, {{-1,-1},-1}});
+    verifyHomflyLM(unlink3_0, {{{2,-2},1}, {{0,-2},2}, {{-2,-2},1}});
+    verifyHomflyLM(unlink2_r2, {{{1,-1},-1}, {{-1,-1},-1}});
+    verifyHomflyLM(unlink2_r1r1, {{{1,-1},-1}, {{-1,-1},-1}});
 
-    verifyHomflyLM(hopf, {{-1,1,-1}, {-1,-1,1}, {-3,-1,1}});
+    verifyHomflyLM(hopf, {{{-1,1},-1}, {{-1,-1},1}, {{-3,-1},1}});
 
     // Computed with old Regina using Kauffman's algorithm:
-    verifyHomflyLM(whitehead,
-        {{3,1,1}, {1,3,-1}, {1,1,2}, {1,-1,-1}, {-1,1,1}, {-1,-1,-1}});
-    verifyHomflyLM(borromean,
-        {{2,2,-1}, {2,-2,1}, {0,4,1}, {0,2,-2}, {0,-2,2},
-        {-2,2,-1}, {-2,-2,1}});
+    verifyHomflyLM(whitehead, {{{3,1},1}, {{1,3},-1}, {{1,1},2}, {{1,-1},-1},
+        {{-1,1},1}, {{-1,-1},-1}});
+    verifyHomflyLM(borromean, {{{2,2},-1}, {{2,-2},1}, {{0,4},1}, {{0,2},-2},
+        {{0,-2},2}, {{-2,2},-1}, {{-2,-2},1}});
 
     verifyHomflyLM(trefoil_unknot0,
-        {{-1,1,-1}, {-1,-1,2}, {-3,1,-1}, {-3,-1,3}, {-5,-1,1}});
+        {{{-1,1},-1}, {{-1,-1},2}, {{-3,1},-1}, {{-3,-1},3}, {{-5,-1},1}});
     verifyHomflyLM(trefoil_unknot1,
-        {{-1,1,-1}, {-1,-1,2}, {-3,1,-1}, {-3,-1,3}, {-5,-1,1}});
+        {{{-1,1},-1}, {{-1,-1},2}, {{-3,1},-1}, {{-3,-1},3}, {{-5,-1},1}});
     verifyHomflyLM(trefoil_unknot_overlap,
-        {{-1,1,-1}, {-1,-1,2}, {-3,1,-1}, {-3,-1,3}, {-5,-1,1}});
+        {{{-1,1},-1}, {{-1,-1},2}, {{-3,1},-1}, {{-3,-1},3}, {{-5,-1},1}});
 
     // This is different from Adams' claim regarding the HOMFLY-PT polynomial of
     // this link.  But... Adams does get his arithmetic wrong elsewhere, and a
     // calculation by hand using the Skein relation agrees with the polynomial
     // below.
-    verifyHomflyLM(adams6_28,
-        {{1,1,1}, {-1,3,-1}, {-1,1,1}, {-3,1,2}, {-3,-1,-1}, {-5,-1,-1}});
+    verifyHomflyLM(adams6_28, {{{1,1},1}, {{-1,3},-1}, {{-1,1},1}, {{-3,1},2},
+        {{-3,-1},-1}, {{-5,-1},-1}});
 
     // TODO: Verify that knot composition multiplies HOMFLY-PT polynomials
     // TODO: Verify that HOMFLY-PT gives Jones by:

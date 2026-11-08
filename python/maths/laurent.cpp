@@ -34,6 +34,7 @@
 #include <pybind11/stl.h>
 #include "maths/integer.h"
 #include "maths/laurent.h"
+#include "maths/polynomial.h"
 #include "../helpers.h"
 #include "../docstrings/maths/laurent.h"
 
@@ -47,8 +48,9 @@ using regina::python::doc::common::neq_value;
 void addLaurent(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Laurent)
 
-    // overload_cast has trouble with templated vs non-templated overloads,
-    // and so there are several places below where we just static_cast directly.
+    // overload_cast has trouble with templated vs non-templated overloads
+    // and also overloads in the presence of perfect forwarding, and so there
+    // are several places below where we just static_cast directly.
     auto c = pybind11::class_<Laurent<Integer>>(m, "Laurent", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Laurent<Integer>&>(), rdoc::__copy)
@@ -59,8 +61,9 @@ void addLaurent(pybind11::module_& m) {
         .def(pybind11::init<long>(), rdoc::__init_3)
         .def("init", static_cast<void (Laurent<Integer>::*)()>(
             &Laurent<Integer>::init), rdoc::init)
-        .def("initExp", &Laurent<Integer>::initExp, rdoc::initExp)
-        .def_static("monomial", &Laurent<Integer>::monomial, rdoc::monomial)
+        .def("initExp", &Laurent<Integer>::initExp<>, rdoc::initExp)
+        .def_static("monomial", &Laurent<Integer>::monomial<>,
+            rdoc::monomial)
         .def("minExp", &Laurent<Integer>::minExp, rdoc::minExp)
         .def("maxExp", &Laurent<Integer>::maxExp, rdoc::maxExp)
         .def("isZero", &Laurent<Integer>::isZero, rdoc::isZero)
@@ -84,12 +87,10 @@ void addLaurent(pybind11::module_& m) {
                 long, const Integer&)>(&Laurent<Integer>::set),
             rdoc::set)
         .def("swap", &Laurent<Integer>::swap, rdoc::swap)
-        .def("shift", static_cast<void (Laurent<Integer>::*)(long)>(
-                &Laurent<Integer>::shift),
-            rdoc::shift)
+        .def("shift", &Laurent<Integer>::shift<>, rdoc::shift)
         .def("shifted",
-            static_cast<Laurent<Integer> (Laurent<Integer>::*)(long) const&>(
-                &Laurent<Integer>::shifted),
+            static_cast<Laurent<Integer> (Laurent<Integer>::*)(long&&) const&>(
+                &Laurent<Integer>::shifted<long>),
             rdoc::shifted)
         .def("scaleUp", &Laurent<Integer>::scaleUp, rdoc::scaleUp)
         .def("scaleDown", &Laurent<Integer>::scaleDown, rdoc::scaleDown)
@@ -103,10 +104,9 @@ void addLaurent(pybind11::module_& m) {
             overload_cast<const Laurent<Integer>&, const Integer&>(
                 &Laurent<Integer>::addProduct),
             rdoc::addProduct_2)
-        .def("str", overload_cast<const char*>(
-            &Laurent<Integer>::str, pybind11::const_), rdoc::str)
-        .def("utf8", overload_cast<const char*>(
-            &Laurent<Integer>::utf8, pybind11::const_), rdoc::utf8)
+        .def("polynomial", &Laurent<Integer>::polynomial, rdoc::polynomial)
+        .def("str", &Laurent<Integer>::str<const char*>, rdoc::str)
+        .def("utf8", &Laurent<Integer>::utf8<const char*>, rdoc::utf8)
         .def("validate", &Laurent<Integer>::validate, rdoc::validate)
         .def(pybind11::self *= Integer(), rdoc::__imul)
         .def(pybind11::self *= long(), rdoc::__imul_2)

@@ -159,6 +159,8 @@ Version 8.0  [ TODO ]
               exception if the surface coordinates are too large.
         Class DivisionByZero:
             - New exception class.
+        Struct Empty:
+            - New empty type, to support conditional member variables.
         Class Face<dim, subdim>, FaceNumbering<dim, subdim>, :
             - Now has a unified implementation across all dimensions.  There
               are no more dimension-specific class specialisations or headers,
@@ -326,7 +328,10 @@ Version 8.0  [ TODO ]
               ArbitraryPrecisionInteger<T> and ReginaInteger<T>.
         Class LargeInteger:
             - See the changes listed under the sister class Integer above.
-        Class Laurent<T>:
+        Class Laurent<T, vars>:
+            - Now supports multivariate polynomials through the second *vars*
+              parameter (which defaults to 1).  In particular, Laurent<T, 2>
+              replaces the old class Laurent2<T>, which has now been removed.
             - For the iterator-based constructor and init() routine, the
               iterator type is now required to be random access.
             - Removed the exponent-based constructor Laurent(exp) and
@@ -339,14 +344,13 @@ Version 8.0  [ TODO ]
             - New static routine monomial().
             - New routine addProduct(), which optimises x ±= y * z.
             - New const routine shifted().
-            - Now supports iteration over coefficients.
-            - New routines transform() and extract() for transforming and
-              extracting coefficients in bulk.
+            - Now supports iteration over non-zero coefficients via the new
+              routines first() and last() and the new helper type
+              LaurentCoefficient<T, vars>.
+            - New routine transform() for transforming coefficients in bulk.
             - New overloads for scalar multiplication and division that take
               native C++ integers.
-            - Several new native operations for nested polynomial types (e.g.,
-              Laurent<Laurent<T>>), including operator(), set(), shift(), and
-              shifted().
+            - New routine polynomial().
             - Functions scaleUp() and scaleDown() now throw an InvalidArgument
               exception if the scaling factor is zero.  Note that this changes
               the exception type for scaleDown() (which will still throw a
@@ -362,8 +366,6 @@ Version 8.0  [ TODO ]
               into a two-variable Laurent polynomial.
             - New constructor that builds the product of a Laurent polynomial
               in x with a Laurent polynomial in y.
-            - New constructors that convert a "nested" Laurent<Laurent<U>>
-              into type Laurent2<T>.
             - Removed the exponent-based constructor Laurent2(xExp, yExp) and
               initialiser init(xExp, yExp), which were deprecated in Regina 7.4.
             - New constructors, assignment operators and comparison operators
@@ -382,6 +384,9 @@ Version 8.0  [ TODO ]
             - Many optimisations to this class, including rvalue variants of
               many operations.
             - New routine validate(), for use in test suites.
+        Class LaurentCoefficient<T, vars>:
+            - New lightweight type to support iteration over the non-zero
+              coefficients of a Laurent polynomial.
         Class LightweightSequence<T>:
             - Removed the inner class SubsequenceCompareFirst<...>.
               This was a very specialised class designed specifically for
@@ -882,10 +887,10 @@ Version 8.0  [ TODO ]
               the new type aliases Int128 and UInt128.
         Concepts:
             - Many new concepts:
-              + AssignableTo, CanConstruct, CoefficientDomain, CommutativeRing,
-                Domain, Field, HasAddProduct, IntegralDomain, Negatable,
-                ReginaBitmask, ReginaQitmask, Ring, RingLike, SameModCVRef,
-                StrictWeakOrder, TerminatingCallback, VoidCallback
+              + AssignableTo, CanConstruct, CanValidate, CoefficientDomain,
+                CommutativeRing, Domain, Field, HasAddProduct, IntegralDomain,
+                Negatable, ReginaBitmask, ReginaQitmask, Ring, RingLike,
+                SameModCVRef, StrictWeakOrder, TerminatingCallback, VoidCallback
                 (defined in concepts/core.h)
               + InherentlyTightEncodable, Readable, RichStringifiable,
                 StandardStringifiable, Stringifiable, Writable (defined in

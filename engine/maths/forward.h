@@ -35,7 +35,7 @@
 
 /*! \file maths/forward.h
  *  \brief Forward declarations for some mathematical classes, including
- *  integer, ring, vector and matrix types.
+ *  integer, ring, vector, matrix, and polynomial types.
  */
 
 #include "concepts/core.h"
@@ -63,6 +63,14 @@ class Vector;
 template <typename T>
 requires std::semiregular<T> && Writeable<T>
 class Matrix;
+
+template <CoefficientDomain T, int vars = 1>
+requires (vars > 0 && vars <= 3)
+class Laurent;
+
+template <CoefficientDomain> class Laurent2;
+
+template <CoefficientDomain> class Polynomial;
 
 } // namespace regina
 

@@ -812,12 +812,12 @@ class Link :
                  This is std::nullopt if it has not yet been computed.
                  We insist that jones_ is non-null if and only if bracket_
                  is non-null. */
-        mutable std::optional<Laurent2<Integer>> homflyLM_;
+        mutable std::optional<Laurent<Integer, 2>> homflyLM_;
             /**< The HOMFLY-PT polynomial of the link, as a polynomial in
                  \a l and \a m.  This property will be known if and only
                  if \a homflyAZ_ is known.
                  This is std::nullopt if it has not yet been computed. */
-        mutable std::optional<Laurent2<Integer>> homflyAZ_;
+        mutable std::optional<Laurent<Integer, 2>> homflyAZ_;
             /**< The HOMFLY-PT polynomial of the link, as a polynomial in
                  \a alpha and \a z.  This property will be known if and
                  only if \a homflyLM_ is known.
@@ -886,7 +886,7 @@ class Link :
          * (encoded in UTF-8).
          *
          * To pretty-print this HOMFLY-PT polynomial for human consumption, you
-         * can call `Laurent2::str(Link::homflyAZVarX, Link::homflyAZVarY)`.
+         * can call `Laurent::str(Link::homflyAZVarX, Link::homflyAZVarY)`.
          */
         static constexpr const char* homflyAZVarX = "\u03B1"; // alpha
 
@@ -899,7 +899,7 @@ class Link :
          * this string just contains the single character \a z.
          *
          * To pretty-print this HOMFLY-PT polynomial for human consumption, you
-         * can call `Laurent2::str(Link::homflyAZVarX, Link::homflyAZVarY)`.
+         * can call `Laurent::str(Link::homflyAZVarX, Link::homflyAZVarY)`.
          */
         static constexpr const char* homflyAZVarY = "z";
 
@@ -913,7 +913,7 @@ class Link :
          * (encoded in UTF-8).
          *
          * To pretty-print this HOMFLY-PT polynomial for human consumption, you
-         * can call `Laurent2::str(Link::homflyLMVarX, Link::homflyLMVarY)`.
+         * can call `Laurent::str(Link::homflyLMVarX, Link::homflyLMVarY)`.
          */
         static constexpr const char* homflyLMVarX = "\U0001D4C1"; // $\ell$
 
@@ -926,7 +926,7 @@ class Link :
          * this string just contains the single character \a m.
          *
          * To pretty-print this HOMFLY-PT polynomial for human consumption, you
-         * can call `Laurent2::str(Link::homflyLMVarX, Link::homflyLMVarY)`.
+         * can call `Laurent::str(Link::homflyLMVarX, Link::homflyLMVarY)`.
          */
         static constexpr const char* homflyLMVarY = "m";
 
@@ -4092,13 +4092,13 @@ class Link :
          *
          * This routine returns a Laurent polynomial in the two variables
          * \a alpha and \a z (which are represented by \a x and \a y
-         * respectively in the class Laurent2).
+         * respectively in the class `Laurent<Integer, 2>`).
          *
          * If this is the empty link, then this routine will return the zero
          * polynomial.
          *
          * To pretty-print this polynomial for human consumption, you can call
-         * `Laurent2::str(Link::homflyAZVarX, Link::homflyAZVarY)`.
+         * `Laurent::str(Link::homflyAZVarX, Link::homflyAZVarY)`.
          *
          * The default implementation uses Kauffman's skein-template algorithm;
          * see L. H. Kauffman, "State models for link polynomials",
@@ -4152,7 +4152,7 @@ class Link :
          * \return the HOMFLY-PT polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
          */
-        const Laurent2<Integer>& homflyAZ(Algorithm alg = Algorithm::Default,
+        const Laurent<Integer, 2>& homflyAZ(Algorithm alg = Algorithm::Default,
             ProgressTracker* tracker = nullptr) const;
         /**
          * Returns the HOMFLY-PT polynomial of this classical link, as a
@@ -4172,13 +4172,13 @@ class Link :
          *
          * This routine returns a Laurent polynomial in the two variables
          * \a l and \a m (which are represented by \a x and \a y
-         * respectively in the class Laurent2).
+         * respectively in the class `Laurent<Integer, 2>`).
          *
          * If this is the empty link, then this routine will return the zero
          * polynomial.
          *
          * To pretty-print this polynomial for human consumption, you can call
-         * `Laurent2::str(Link::homflyLMVarX, Link::homflyLMVarY)`.
+         * `Laurent::str(Link::homflyLMVarX, Link::homflyLMVarY)`.
          *
          * The default implementation uses Kauffman's skein-template algorithm;
          * see L. H. Kauffman, "State models for link polynomials",
@@ -4232,7 +4232,7 @@ class Link :
          * \return the HOMFLY-PT polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
          */
-        const Laurent2<Integer>& homflyLM(Algorithm alg = Algorithm::Default,
+        const Laurent<Integer, 2>& homflyLM(Algorithm alg = Algorithm::Default,
             ProgressTracker* tracker = nullptr) const;
         /**
          * Returns the HOMFLY-PT polynomial of this classical link, as a
@@ -4246,7 +4246,7 @@ class Link :
          * throw an exception.
          *
          * To pretty-print this polynomial for human consumption, you can call
-         * `Laurent2::str(Link::homflyVarX, Link::homflyVarY)`.
+         * `Laurent::str(Link::homflyVarX, Link::homflyVarY)`.
          *
          * Bear in mind that each time a link changes, all of its polynomials
          * will be deleted.  Thus the reference that is returned from this
@@ -4280,7 +4280,7 @@ class Link :
          * \return the HOMFLY-PT polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
          */
-        const Laurent2<Integer>& homfly(Algorithm alg = Algorithm::Default,
+        const Laurent<Integer, 2>& homfly(Algorithm alg = Algorithm::Default,
             ProgressTracker* tracker = nullptr) const;
         /**
          * Is the HOMFLY-PT polynomial of this link already known (or trivial
@@ -4319,12 +4319,12 @@ class Link :
          *
          * \param homflyAZ the HOMFLY-PT polynomial of a link as a polynomial
          * in \a alpha and \a z, where (\a alpha, \a z) are represented by
-         * (\a x, \a y) in the class Laurent2<Integer>.
+         * (\a x, \a y) in the class `Laurent<Integer, 2>`.
          * \return the HOMFLY-PT polynomial of the same link as a polynomial
          * in \a l and \a m, where (\a l, \a m) are represented by (\a x, \a y)
-         * in the class Laurent2<Integer>.
+         * in the class `Laurent<Integer, 2>`.
          */
-        static Laurent2<Integer> homflyAZtoLM(Laurent2<Integer> homflyAZ);
+        static Laurent<Integer, 2> homflyAZtoLM(Laurent<Integer, 2> homflyAZ);
 
         /**
          * Returns the theta polynomial of this classical knot.
@@ -7420,7 +7420,7 @@ class Link :
          *
          * \pre This link contains at least one crossing.
          */
-        Laurent2<Integer> homflyKauffman(ProgressTracker* tracker) const;
+        Laurent<Integer, 2> homflyKauffman(ProgressTracker* tracker) const;
 
         /**
          * Compute the HOMFLY-PT polynomial of this link, as a polynomial
@@ -7435,7 +7435,7 @@ class Link :
          * In other words, if an \c int contains \a b bits, then the
          * number of crossings is less than `2^(b-2)`.
          */
-        Laurent2<Integer> homflyTreewidth(ProgressTracker* tracker) const;
+        Laurent<Integer, 2> homflyTreewidth(ProgressTracker* tracker) const;
 
         /**
          * Optimises the given tree decomposition for computing the
@@ -7962,7 +7962,7 @@ inline const Laurent<Integer>& Link::jones(Algorithm alg,
         ProgressTracker* tracker) const {
     return jones(alg, 1 /* single-threaded */, tracker);
 }
-inline const Laurent2<Integer>& Link::homfly(Algorithm alg,
+inline const Laurent<Integer, 2>& Link::homfly(Algorithm alg,
         ProgressTracker* tracker) const {
     return homflyAZ(alg, tracker);
 }

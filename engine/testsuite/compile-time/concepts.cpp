@@ -98,6 +98,21 @@ static_assert(regina::SameModCVRef<int, const int&>);
 static_assert(! std::same_as<const int&, int>);
 static_assert(! std::same_as<int, const int&>);
 
+static_assert(! regina::CanValidate<int>);
+static_assert(! regina::CanValidate<unsigned>);
+static_assert(regina::CanValidate<Integer>);
+static_assert(regina::CanValidate<LargeInteger>);
+static_assert(! regina::CanValidate<Rational>);
+static_assert(! regina::CanValidate<regina::Vector<int>>);
+static_assert(! regina::CanValidate<regina::Matrix2>);
+static_assert(regina::CanValidate<regina::Matrix<int>>);
+static_assert(! regina::CanValidate<regina::Arrow>);
+static_assert(! regina::CanValidate<regina::Polynomial<Integer>>);
+static_assert(! regina::CanValidate<regina::Polynomial<Rational>>);
+static_assert(regina::CanValidate<regina::Laurent<Integer>>);
+static_assert(regina::CanValidate<regina::Laurent2<Integer>>);
+static_assert(! regina::CanValidate<regina::Cyclotomic>);
+
 static_assert(CppInteger<char>);
 static_assert(StandardCppInteger<char>);
 

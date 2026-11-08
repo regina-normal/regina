@@ -41,6 +41,7 @@
 #include "utilities/tightencoding.h"
 #include "concepts/io.h"
 #include "core/output.h"
+#include "maths/forward.h"
 #include <iostream>
 #include <iterator>
 #include <map>
@@ -48,8 +49,6 @@
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
-
-template <CoefficientDomain T> class Laurent;
 
 /**
  * Represents a Laurent polynomial in the two variables \e x, \e y with
@@ -390,54 +389,6 @@ class Laurent2 :
                                 Exponents(x, y), xCoeff * yCoeff);
                     }
             }
-        }
-
-        /**
-         * Creates a new two-variable Laurent polynomial from a "nested"
-         * one-variable Laurent polynomial type.  The input will be treated as
-         * a Laurent polynomial over \a x, whose coefficients are Laurent
-         * polynomials over \a y.
-         *
-         * \nopython
-         *
-         * \param poly the "nested" one-variable polynomial to convert.
-         */
-        template <CanConstruct<T> U>
-        Laurent2(const Laurent<Laurent<U>>& poly) {
-            for (long i = poly.minExp(); i <= poly.maxExp(); ++i) {
-                const auto& outer = poly[i];
-                if (! outer.isZero())
-                    for (long j = outer.minExp(); j <= outer.maxExp(); ++j) {
-                        const auto& inner = outer[j];
-                        if (inner != 0)
-                            coeff_.emplace_hint(coeff_.end(),
-                                Exponents(i, j), inner);
-                    }
-            }
-        }
-
-        /**
-         * Creates a new two-variable Laurent polynomial by moving the data
-         * from a "nested" one-variable Laurent polynomial type.  The input
-         * will be treated as a Laurent polynomial over \a x, whose
-         * coefficients are Laurent polynomials over \a y.
-         *
-         * After calling this constructor, the input polynomial will be
-         * unusable.
-         *
-         * \nopython
-         *
-         * \param poly the "nested" one-variable polynomial to convert.
-         */
-        template <CanConstruct<T> U>
-        Laurent2(Laurent<Laurent<U>>&& poly) {
-            // Note: Laurent::extract() only extracts non-zero coefficients.
-            std::move(poly).extract([this](Laurent<U>&& yPoly, long xExp) {
-                std::move(yPoly).extract([this, xExp](U&& coeff, long yExp) {
-                    coeff_.emplace_hint(coeff_.end(),
-                        Exponents(xExp, yExp), std::move(coeff));
-                });
-            });
         }
 
         /**
@@ -1447,10 +1398,6 @@ class Laurent2 :
     friend Laurent2<U> operator - (Laurent2<U>&&, Laurent2<U>&&);
     template <CoefficientDomain U>
     friend Laurent2<U> operator * (const Laurent2<U>&, const Laurent2<U>&);
-
-    // For the time being, allow Link::homflyAZtoLM() to do low-level
-    // operations on these polynomials.
-    friend class Link;
 };
 
 /**
