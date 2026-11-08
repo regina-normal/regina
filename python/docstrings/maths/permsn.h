@@ -188,7 +188,7 @@ equal to ``Perm<n>::Sn.begin()``.)doc";
 static constexpr const char __eq[] =
 R"doc(Compares this with the given iterator for equality.
 
-To be considered equal, two iterators must both be dereferencable and
+To be considered equal, two iterators must both be dereferenceable and
 pointing to the same permutation, or must both be past-the-end.
 
 Returns:

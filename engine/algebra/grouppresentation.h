@@ -1076,7 +1076,7 @@ class SplayedExpression : public ShortOutput<SplayedExpression, true> {
          * to the last element of the sequence then it will wrap around and
          * point to the first.
          *
-         * \pre The given iterator is dereferencable, and points to an element
+         * \pre The given iterator is dereferenceable, and points to an element
          * of the underlying sequence.
          *
          * \nopython
@@ -1093,7 +1093,7 @@ class SplayedExpression : public ShortOutput<SplayedExpression, true> {
          * to the first element of the sequence then it will wrap around and
          * point to the last.
          *
-         * \pre The given iterator is dereferencable, and points to an element
+         * \pre The given iterator is dereferenceable, and points to an element
          * of the underlying sequence.
          *
          * \nopython
