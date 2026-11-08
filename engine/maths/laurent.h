@@ -980,10 +980,8 @@ class Laurent :
          * \param otherExp the exponents of the remaining `(vars - 1)`
          * polynomial variables `y,…`.
          */
-        template <typename... Exponents>
-        requires
-            (sizeof...(Exponents) == vars - 1) &&
-            (std::convertible_to<Exponents, long> && ...)
+        template <std::convertible_to<long>... Exponents>
+        requires (sizeof...(Exponents) == vars - 1)
         void initExp(long firstExp, Exponents&&... otherExp) {
             // Reuse any pre-allocated term_ array, if we can.
             if (term_) {
@@ -1018,10 +1016,8 @@ class Laurent :
          * polynomial variables `y,…`.
          * \return the requested monomial.
          */
-        template <typename... Exponents>
-        requires
-            (sizeof...(Exponents) == vars - 1) &&
-            (std::convertible_to<Exponents, long> && ...)
+        template <std::convertible_to<long>... Exponents>
+        requires (sizeof...(Exponents) == vars - 1)
         static Laurent monomial(long firstExp, Exponents&&... otherExp) {
             Term* c = new Term[1];
             if constexpr (vars == 1)
@@ -1206,11 +1202,8 @@ class Laurent :
          * explanation above).
          * \return the requested coefficient.
          */
-        template <typename... Exponents>
-        requires
-            (vars > 1) &&
-            (sizeof...(Exponents) == vars - 1) &&
-            (std::convertible_to<Exponents, long> && ...)
+        template <std::convertible_to<long>... Exponents>
+        requires (vars > 1) && (sizeof...(Exponents) == vars - 1)
         const T& operator () (long firstExp, Exponents&&... otherExp) const {
             // TODO: Once we move to C++23, we can use the subscript operator.
             if (firstExp >= minExp_ && firstExp <= maxExp_) {
@@ -1878,10 +1871,8 @@ class Laurent :
          * \param otherShifts the powers of the remaining `(vars - 1)`
          * polynomial variables `y,…` to multiply by.
          */
-        template <typename... Exponents>
-        requires
-            (sizeof...(Exponents) == vars - 1) &&
-            (std::convertible_to<Exponents, long> && ...)
+        template <std::convertible_to<long>... Exponents>
+        requires (sizeof...(Exponents) == vars - 1)
         void shift(long firstShift, Exponents&&... otherShifts) {
             if (! isZero()) {
                 base_ += firstShift;
@@ -1911,10 +1902,8 @@ class Laurent :
          * above.
          * \return the product of this with `x^s y^t …`.
          */
-        template <typename... Exponents>
-        requires
-            (sizeof...(Exponents) == vars) &&
-            (std::convertible_to<Exponents, long> && ...)
+        template <std::convertible_to<long>... Exponents>
+        requires (sizeof...(Exponents) == vars)
         Laurent shifted(Exponents&&... shifts) const& {
             Laurent ans(*this);
             ans.shift(std::forward<Exponents>(shifts)...);
@@ -1934,10 +1923,8 @@ class Laurent :
          * above.
          * \return the product of this with `x^s y^t …`.
          */
-        template <typename... Exponents>
-        requires
-            (sizeof...(Exponents) == vars) &&
-            (std::convertible_to<Exponents, long> && ...)
+        template <std::convertible_to<long>... Exponents>
+        requires (sizeof...(Exponents) == vars)
         Laurent shifted(Exponents&&... shifts) && {
             shift(std::forward<Exponents>(shifts)...);
             return std::move(*this);
