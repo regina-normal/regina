@@ -580,6 +580,24 @@ Returns:
     a pair ``(base, capacity)`` as described above, or ``(0, 0)`` if
     this is the zero polynomial _and_ no memory is allocated at all.)doc";
 
+// Docstring regina::python::doc::Laurent::first
+static constexpr const char first[] =
+R"doc(Returns an iterator pointing to the first non-zero coefficient of this
+polynomial. This can be used as a starting point for forward iteration
+(via operator ``++``) through all non-zero coefficients.
+
+Such iterators provide read-only access to the coefficients: to modify
+coefficients you will need to call different routines, such as set().
+
+If this is the zero polynomial, then the iterator that is returned
+will be non-deferenceable.
+
+See the LaurentCoefficient class notes for further details and
+examples on how iteration works for Laurent polynomials.
+
+Returns:
+    an iterator pointing to the first non-zero coefficient.)doc";
+
 // Docstring regina::python::doc::Laurent::global_swap
 static constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given polynomials.
@@ -629,6 +647,24 @@ R"doc(Returns whether this is the zero polynomial.
 
 Returns:
     ``True`` if and only if this is the zero polynomial.)doc";
+
+// Docstring regina::python::doc::Laurent::last
+static constexpr const char last[] =
+R"doc(Returns an iterator pointing to the last non-zero coefficient of this
+polynomial. This can be used as a starting point for backward
+iteration (via operator ``--``) through all non-zero coefficients.
+
+Such iterators provide read-only access to the coefficients: to modify
+coefficients you will need to call different routines, such as set().
+
+If this is the zero polynomial, then the iterator that is returned
+will be non-deferenceable.
+
+See the LaurentCoefficient class notes for further details and
+examples on how iteration works for Laurent polynomials.
+
+Returns:
+    an iterator pointing to the last non-zero coefficient.)doc";
 
 // Docstring regina::python::doc::Laurent::maxExp
 static constexpr const char maxExp[] =
@@ -768,29 +804,130 @@ Parameter ``k``:
 
 // Docstring regina::python::doc::Laurent::set
 static constexpr const char set[] =
-R"doc(Changes the given coefficient of this polynomial.
+R"doc(Changes the given coefficient of a single-variable Laurent polynomial.
 
-There are no restrictions on the exponent *exp*, and the new
-coefficient *value* may be zero.
+Calling ``poly.set(exp, value)`` is identical to calling the generic
+function ``poly.setTo(value, exp)``; the only difference is that the
+new value is passed as the last argument instead of the first. See the
+setTo() documentation for further details.
 
-Note, however, that it is expensive to set a non-zero coefficient
-whose exponent is larger than maxExp() or smaller than minExp(), since
-this will typically require deallocating and reallocating the full
-list of coefficients.
-
-In contrast, setting a zero coefficient for the exponent maxExp() or
-minExp() is cheap, even though the range of non-zero coefficients
-changes as a result.
+The reason Laurent offers both set() and setTo() is that the argument
+order for setTo() greatly simplifies the C++ template implementation,
+whereas set() is consistent with other classes such as Polynomial and
+Bitmask. If you are not sure which routine to use, just use set().
 
 Python:
     This set() routine is available, but you can also set coefficients
     directly using syntax of the form ``p[exp] = value``.
 
 Parameter ``exp``:
-    the exponent of the term whose coefficient should be changed.
+    the exponent of the polynomial variable for the coefficient that
+    we should set.
 
 Parameter ``value``:
-    the new value of this coefficient.)doc";
+    the new value to assign to the given coefficient.)doc";
+
+// Docstring regina::python::doc::Laurent::set_2
+static constexpr const char set_2[] =
+R"doc(Changes the given coefficient of a two-variable Laurent polynomial.
+
+Calling ``poly.set(exp0, exp1, value)`` is identical to calling the
+generic function ``poly.setTo(value, exp0, exp1)``; the only
+difference is that the new value is passed as the last argument
+instead of the first. See the setTo() documentation for further
+details.
+
+The reason Laurent offers both set() and setTo() is that the argument
+order for setTo() greatly simplifies the C++ template implementation,
+whereas set() is consistent with other classes such as Polynomial and
+Bitmask. If you are not sure which routine to use, just use set().
+
+Python:
+    This set() routine is available, but you can also set coefficients
+    directly using syntax of the form ``p[exp0, exp1] = value``.
+
+Parameter ``exp0``:
+    the exponent of the first polynomial variable for the coefficient
+    that we should set.
+
+Parameter ``exp1``:
+    the exponent of the second polynomial variable for the coefficient
+    that we should set.
+
+Parameter ``value``:
+    the new value to assign to the given coefficient.)doc";
+
+// Docstring regina::python::doc::Laurent::set_3
+static constexpr const char set_3[] =
+R"doc(Changes the given coefficient of a three-variable Laurent polynomial.
+
+Calling ``poly.set(exp0, exp1, exp2, value)`` is identical to calling
+the generic function ``poly.setTo(value, exp0, exp1, exp2)``; the only
+difference is that the new value is passed as the last argument
+instead of the first. See the setTo() documentation for further
+details.
+
+The reason Laurent offers both set() and setTo() is that the argument
+order for setTo() greatly simplifies the C++ template implementation,
+whereas set() is consistent with other classes such as Polynomial and
+Bitmask. If you are not sure which routine to use, just use set().
+
+Python:
+    This set() routine is available, but you can also set coefficients
+    directly using syntax of the form ``p[exp0, exp1, exp2] = value``.
+
+Parameter ``exp0``:
+    the exponent of the first polynomial variable for the coefficient
+    that we should set.
+
+Parameter ``exp1``:
+    the exponent of the second polynomial variable for the coefficient
+    that we should set.
+
+Parameter ``exp2``:
+    the exponent of the third polynomial variable for the coefficient
+    that we should set.
+
+Parameter ``value``:
+    the new value to assign to the given coefficient.)doc";
+
+// Docstring regina::python::doc::Laurent::setTo
+static constexpr const char setTo[] =
+R"doc(Changes the given coefficient of this polynomial.
+
+Specifically, for a polynomial *p*, calling ``p.setTo(value,a,b,…)``
+will set the coefficient of ``x^a y^b …`` to *value*, where ``x,y,…``
+are the polynomial variables. There are no restrictions on the
+exponents ``a,b,…``, and the new coefficient *value* may be zero.
+
+Note that it may be expensive to set a non-zero coefficient outside
+the current span of exponents, since this may require allocating more
+space and/or moving coefficients around in memory. The Laurent class
+does, however, use an exponential growth strategy that attempts to
+minimise the cost of this.
+
+The only difference between setTo() and set() is the order of
+arguments: in setTo() the value comes first, since this greatly
+simplifies the recursive C++ template implementation. If you are not
+sure which routine to use, just use set(): if Regina ever moves to a
+C++ standard with better handling of template parameter packs then
+setTo() may eventually be deprecated and later removed.
+
+Python:
+    This setTo() routine is available, but you can also set
+    coefficients directly using syntax of the form ``p[a,b,…] =
+    value``.
+
+Parameter ``value``:
+    the new value to assign to the given coefficient.
+
+Parameter ``firstExp``:
+    the exponent of the first polynomial variable *x* for the
+    coefficient that we should set.
+
+Parameter ``otherExp``:
+    the exponents of the remaining ``(vars - 1)`` polynomial variables
+    ``y,…`` for the coefficient that we should set.)doc";
 
 // Docstring regina::python::doc::Laurent::shift
 static constexpr const char shift[] =
@@ -833,15 +970,16 @@ Returns:
 // Docstring regina::python::doc::Laurent::str
 static constexpr const char str[] =
 R"doc(Returns this polynomial as a human-readable string, using the given
-variable name instead of ``x``.
+variable names instead of ``x,y,…``.
 
 .. note::
     There is also the usual variant of str() which takes no arguments;
     that variant is inherited from the Output class.
 
-Parameter ``variable``:
-    the symbol to use for the variable in this polynomial. This may be
-    ``None``, in which case the default variable ``x`` will be used.
+Parameter ``variables``:
+    a sequence of *vars* C-style strings to use for the polynomial
+    variables. Any (or all) of these may be ``None``, in which case
+    the defaults ``x,y,…`` will be used for those variable(s).
 
 Returns:
     this polynomial as a human-readable string.)doc";
@@ -860,7 +998,7 @@ Parameter ``other``:
 // Docstring regina::python::doc::Laurent::utf8
 static constexpr const char utf8[] =
 R"doc(Returns this polynomial as a human-readable string using unicode
-characters, using the given variable name instead of ``x``.
+characters, using the given variable names instead of ``x,y,…``.
 
 This is similar to the output from str(), except that it uses unicode
 characters to make the output more pleasant to read. In particular, it
@@ -872,9 +1010,10 @@ The string is encoded in UTF-8.
     There is also the usual variant of utf8() which takes no
     arguments; that variant is inherited from the Output class.
 
-Parameter ``variable``:
-    the symbol to use for the variable in this polynomial. This may be
-    ``None``, in which case the default variable ``x`` will be used.
+Parameter ``variables``:
+    a sequence of *vars* C-style strings to use for the polynomial
+    variables. Any (or all) of these may be ``None``, in which case
+    the defaults ``x,y,…`` will be used for those variable(s).
 
 Returns:
     this polynomial as a unicode-enabled human-readable string.)doc";
@@ -895,6 +1034,201 @@ Exception ``ImpossibleScenario``:
     The internal state of this polynomial is invalid.)doc";
 
 }; // struct Laurent
+
+struct LaurentCoefficient {
+
+// Docstring regina::python::doc::LaurentCoefficient::__as_bool
+static constexpr const char __as_bool[] =
+R"doc(Tests whether this iterator is dereferenceable.
+
+Returns:
+    ``True`` if and only if this iterator is dereferenceable.)doc";
+
+// Docstring regina::python::doc::LaurentCoefficient::__class
+static constexpr const char __class[] =
+R"doc(A bidirectional iterator that steps through the non-zero coefficients
+of a Laurent polynomial.
+
+This class works with ``Laurent<T, vars>``. It behaves like a
+bidirectional iterator over the non-zero coefficients of a (possibly
+multivariate) polynomial, but also offers extra member functions for
+identifying which monomial the current cofficient is attached to
+(i.e., for identifying the current exponents of the polynomial
+variables).
+
+For a Laurent polynomial *p*, you begin iteration by calling either
+``p.first()`` or ``p.last()`` (for forward or backward iteration
+respectively), which returns a LaurentCoefficient *c*. You can then
+dereference *c* to extract the coefficient, call ``c.exp()`` to
+identify the current exponents of the polynomial variables, and/or
+move the iterator forwards or backwards using the usual operators
+``++c`` and ``--c``. To test whether iteration has finished (i.e.,
+whether *c* is no longer dereferenceable), you can test whether *c*
+evaluates to ``False`` in a boolean context, or you can compare *c* to
+a default-constructed ``LaurentCoefficient()`` (which behaves like an
+end iterator).
+
+As an example, you could print all of the non-zero terms of a single-
+variable Laurent polynomial using the following loop:
+
+```
+cpp
+for (auto c = p.first(); c; ++c) {
+    std::cout << "Term: " << *c << " x^" << c.exp() << std::endl;
+}
+```
+
+LaurentCoefficient objects are small enough to pass by value and swap
+with std::swap(), with no need for any specialised move operations or
+swap functions.
+
+Python:
+    In Python, the classes LaurentCoefficient, LaurentCoefficient2,
+    and LaurentCoefficient3 refer to the specific template classes
+    ``LaurentCoefficient<Integer, 1>``, ``LaurentCoefficient<Integer,
+    2>``, and ``LaurentCoefficient<Integer, 3>`` respectively.
+
+Template parameter ``T``:
+    the coefficient type of the corresponding Laurent polynomial.
+
+Template parameter ``vars``:
+    the number of variables in the corresponding Laurent polynomial.)doc";
+
+// Docstring regina::python::doc::LaurentCoefficient::__copy
+static constexpr const char __copy[] = R"doc(Creates a copy of the given iterator.)doc";
+
+// Docstring regina::python::doc::LaurentCoefficient::__dec
+static constexpr const char __dec[] =
+R"doc(Predecrement operator. This iterator will step backward to point to
+the previous non-zero coefficient of the underlying Laurent
+polynomial, or will become non-dereferenceable if there are no prior
+non-zero coefficients.
+
+Precondition:
+    This iterator is dereferenceable.
+
+Returns:
+    a reference to this iterator.)doc";
+
+// Docstring regina::python::doc::LaurentCoefficient::__dec_2
+static constexpr const char __dec_2[] =
+R"doc(Postdecrement operator. This iterator will step backward to point to
+the previous non-zero coefficient of the underlying Laurent
+polynomial, or will become non-dereferenceable if there are no prior
+non-zero coefficients.
+
+Precondition:
+    This iterator is dereferenceable.
+
+Returns:
+    a copy of this iterator before it was decremented.)doc";
+
+// Docstring regina::python::doc::LaurentCoefficient::__default
+static constexpr const char __default[] =
+R"doc(Creates an iterator that is not dereferenceable.
+
+This will compare as equal to any other non-dereferenceable iterator,
+and so it can be used as an end iterator in a begin/end pair.)doc";
+
+// Docstring regina::python::doc::LaurentCoefficient::__eq
+static constexpr const char __eq[] =
+R"doc(Tests whether this and the given iterator point to the same non-zero
+coefficient of the same Laurent polynomial.
+
+Iterators that point to coefficients attached to different monomials
+within the same polynomial will compare as different, even if both
+coefficients take the same numerical value of type *T*.
+
+A non-dereferenceable iterator will compare as equal to any other non-
+dereferenceable iterator (even if they came from different Laurent
+polynomials, or if they were default constructed and therefore have no
+associated polynomial at all).
+
+Parameter ``rhs``:
+    the iterator to compare to this.
+
+Returns:
+    ``True`` if and only if the iterators are equal as described
+    above.)doc";
+
+// Docstring regina::python::doc::LaurentCoefficient::__inc
+static constexpr const char __inc[] =
+R"doc(Preincrement operator. This iterator will step forward to point to the
+next non-zero coefficient of the underlying Laurent polynomial, or
+will become non-dereferenceable if there are no more non-zero
+coefficients.
+
+Precondition:
+    This iterator is dereferenceable.
+
+Returns:
+    a reference to this iterator.)doc";
+
+// Docstring regina::python::doc::LaurentCoefficient::__inc_2
+static constexpr const char __inc_2[] =
+R"doc(Postincrement operator. This iterator will step forward to point to
+the next non-zero coefficient of the underlying Laurent polynomial, or
+will become non-dereferenceable if there are no more non-zero
+coefficients.
+
+Precondition:
+    This iterator is dereferenceable.
+
+Returns:
+    a copy of this iterator before it was incremented.)doc";
+
+// Docstring regina::python::doc::LaurentCoefficient::__mul
+static constexpr const char __mul[] =
+R"doc(Returns a read-only reference to the current non-zero coefficient of
+the underlying Laurent polynomial.
+
+Precondition:
+    This iterator is dereferenceable.
+
+Returns:
+    the current non-zero coefficient.)doc";
+
+// Docstring regina::python::doc::LaurentCoefficient::__sub_
+static constexpr const char __sub_[] =
+R"doc(Gives read-only member access to the current non-zero coefficient of
+the underlying Laurent polynomial.
+
+Precondition:
+    This iterator is dereferenceable.
+
+Returns:
+    member access to the current non-zero coefficient.)doc";
+
+// Docstring regina::python::doc::LaurentCoefficient::constantTerm
+static constexpr const char constantTerm[] =
+R"doc(Identifies whether the current non-zero coefficient is in fact the
+constant term of the underlying Laurent polynomial.
+
+This is true if and only if ``exp<i>() == 0`` for all *i*.
+
+Precondition:
+    This iterator is dereferenceable.
+
+Returns:
+    ``True`` if and only if this iterator is currently pointing to the
+    constant coefficient.)doc";
+
+// Docstring regina::python::doc::LaurentCoefficient::exp
+static constexpr const char exp[] =
+R"doc(Identifies which exponent of the given polynomial variable corresponds
+to the current non-zero coefficient. This allows you to determine
+which monomial the current coefficient is attached to.
+
+Precondition:
+    This iterator is dereferenceable.
+
+Template parameter ``var``:
+    indicates which variable of the polynomial you wish to query.
+
+Returns:
+    the current exponent of the given polynomial variable.)doc";
+
+}; // struct LaurentCoefficient
 
 } // namespace regina::python::doc
 

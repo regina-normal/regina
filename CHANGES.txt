@@ -350,7 +350,11 @@ Version 8.0  [ TODO ]
             - New routine transform() for transforming coefficients in bulk.
             - New overloads for scalar multiplication and division that take
               native C++ integers.
-            - New routine polynomial().
+            - New routine polynomial() for converting Laurent<T, 1> to
+              Polynomial<T>.
+            - New routine setTo(), which changes the argument order of set().
+              This mainly exists to simplify the C++ template implementation.
+              The set() routine is still available and recommended for use.
             - Functions scaleUp() and scaleDown() now throw an InvalidArgument
               exception if the scaling factor is zero.  Note that this changes
               the exception type for scaleDown() (which will still throw a

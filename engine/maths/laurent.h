@@ -88,37 +88,6 @@ namespace detail {
         using Term = T;
     };
     #endif
-
-    /**
-     * Determines whether the given argument is zero.
-     *
-     * This routine forms the base case of the recursive template function
-     * `lastArgIsZero(...)`.  It allows us to test whether `value == 0` when
-     * calling `Laurent::set(indices..., value)`.
-     *
-     * \nopython
-     *
-     * \ingroup detail
-     */
-    template <IntegerCompatible Arg>
-    inline bool lastArgIsZero(const Arg& arg) {
-        return arg == 0;
-    }
-
-    /**
-     * Determines whether the last argument in the given argument pack is zero.
-     *
-     * This routine allows us to test whether `value == 0` when calling
-     * `Laurent::set(indices..., value)`.
-     *
-     * \nopython
-     *
-     * \ingroup detail
-     */
-    template <typename Arg, typename...Args> requires (sizeof...(Args) > 0)
-    inline bool lastArgIsZero(Arg&&, Args&&... args) {
-        return lastArgIsZero(std::forward<Args>(args)...);
-    }
 } // namespace detail
 
 /**
@@ -875,9 +844,9 @@ class Laurent :
                 Laurent() {
             for (const auto& d : data)
                 if constexpr (vars == 2)
-                    set(d.first[0], d.first[1], d.second);
+                    setTo(d.second, d.first[0], d.first[1]);
                 else // vars == 3
-                    set(d.first[0], d.first[1], d.first[2], d.second);
+                    setTo(d.second, d.first[0], d.first[1], d.first[2]);
         }
 
         /**
@@ -1222,31 +1191,46 @@ class Laurent :
         /**
          * Changes the given coefficient of this polynomial.
          *
-         * There are no restrictions on the exponent \a exp, and the
-         * new coefficient \a value may be zero.
+         * Specifically, for a polynomial \a p, calling `p.setTo(value,a,b,…)`
+         * will set the coefficient of `x^a y^b …` to \a value, where `x,y,…`
+         * are the polynomial variables.  There are no restrictions on the
+         * exponents `a,b,…`, and the new coefficient \a value may be zero.
          *
-         * Note, however, that it is expensive to set a non-zero coefficient
-         * whose exponent is larger than maxExp() or smaller than minExp(),
-         * since this will typically require deallocating and reallocating
-         * the full list of coefficients.
+         * Note that it may be expensive to set a non-zero coefficient outside
+         * the current span of exponents, since this may require allocating
+         * more space and/or moving coefficients around in memory.  The Laurent
+         * class does, however, use an exponential growth strategy that attempts
+         * to minimise the cost of this.
          *
-         * In contrast, setting a zero coefficient for the exponent
-         * maxExp() or minExp() is cheap, even though the range of
-         * non-zero coefficients changes as a result.
+         * The only difference between setTo() and set() is the order of
+         * arguments: in setTo() the value comes first, since this greatly
+         * simplifies the recursive C++ template implementation.  If you are
+         * not sure which routine to use, just use set(): if Regina ever moves
+         * to a C++ standard with better handling of template parameter packs
+         * then setTo() may eventually be deprecated and later removed.
          *
-         * \python This set() routine is available, but you can
-         * also set coefficients directly using syntax of the form
-         * `p[exp] = value`.
+         * \python This setTo() routine is available, but you can also set
+         * coefficients directly using syntax of the form `p[a,b,…] = value`.
          *
-         * \param exp the exponent of the term whose coefficient should
-         * be changed.
-         * \param value the new value of this coefficient.
+         * \param value the new value to assign to the given coefficient.
+         * \param firstExp the exponent of the first polynomial variable \a x
+         * for the coefficient that we should set.
+         * \param otherExp the exponents of the remaining `(vars - 1)`
+         * polynomial variables `y,…` for the coefficient that we should set.
          */
-        void set(long exp, const T& value) requires (vars == 1) {
-            // TODO: We should probably offer set(long, T&&) also.
+        template <std::convertible_to<long>... Exponents>
+        requires (sizeof...(Exponents) == vars - 1)
+        void setTo(const T& value, long firstExp, Exponents&&... otherExp) {
+            // TODO: We should probably offer a T&& variant also.
             if (value == 0) {
-                if (! isZero()) {
-                    if (exp == maxExp_) {
+                if (isZero() || firstExp < minExp_ || firstExp > maxExp_)
+                    return;
+
+                // Separate out implementations for vars == 1 vs vars > 1,
+                // since for vars == 1 this will erase the entire term but
+                // for vars > 1 it might not.
+                if constexpr (vars == 1) {
+                    if (firstExp == maxExp_) {
                         if (minExp_ == maxExp_) {
                             // This becomes the zero polynomial.
                             init();
@@ -1256,47 +1240,74 @@ class Laurent :
                             while (term_[maxExp_ - base_] == 0)
                                 --maxExp_;
                         }
-                    } else if (exp == minExp_) {
+                    } else if (firstExp == minExp_) {
                         // Here we know the highest-exponent coefficient != 0.
                         ++minExp_;
                         while (term_[minExp_ - base_] == 0)
                             ++minExp_;
-                    } else if (exp > minExp_ && exp < maxExp_) {
-                        term_[exp - base_] = 0;
+                    } else {
+                        // We are setting an interior coefficient.
+                        term_[firstExp - base_] = 0;
+                    }
+                } else {
+                    // Our term is within the [minExp_, maxExp_] range.
+                    // Set the coefficient to zero now, and then - only if it
+                    // might matter - see whether the entire term was erased.
+                    term_[firstExp - base_].setTo(value,
+                        std::forward<Exponents>(otherExp)...);
+
+                    if (firstExp == maxExp_) {
+                        // Put the zero-coefficient test in a separate `if`
+                        // statement so that, if minExp_ == maxExp_, we do not
+                        // test it twice.  (We do not know how expensive
+                        // zero-testing is for the coefficient type T.)
+                        if (term_[firstExp - base_] == 0) {
+                            if (minExp_ == maxExp_) {
+                                // This becomes the zero polynomial.
+                                init();
+                            } else {
+                                // We know the lowest-exponent coefficient != 0.
+                                --maxExp_;
+                                while (term_[maxExp_ - base_] == 0)
+                                    --maxExp_;
+                            }
+                        }
+                    } else if (firstExp == minExp_ &&
+                            term_[firstExp - base_] == 0) {
+                        // Here we know the highest-exponent coefficient != 0.
+                        ++minExp_;
+                        while (term_[minExp_ - base_] == 0)
+                            ++minExp_;
                     }
                 }
                 return;
             }
 
-            // From here, value is non-zero.
+            // From here, the value we are assigning is non-zero.
+
+            // We first ensure that term_[firstExp - base_] is allocated and
+            // initialised to zero if necessary, and that minExp_ and maxExp_
+            // are adjusted to reflect the fact that `this[firstExp]` will
+            // become non-zero.  We then finish by setting the actual value.
             if (isZero()) {
                 // Reuse any pre-allocated term_ array, if we can.
                 if (term_) {
-                    if (exp >= base_ &&
-                            exp < base_ + static_cast<long>(capacity_)) {
-                        // The given exponent already sits within the
-                        // pre-allocated range.
-                        term_[exp - base_] = value;
-                    } else {
-                        // We will need to shift the range so that it covers
-                        // the given exponent.
+                    if (firstExp < base_ ||
+                            firstExp >= base_ + static_cast<long>(capacity_)) {
+                        // Shift the range to cover the given exponent.
                         size_t gap = capacity_ >> 1; // 0 ≤ gap < capacity_
-                        base_ = exp - gap;
-                        term_[gap] = value;
+                        base_ = firstExp - gap;
                     }
                 } else {
                     capacity_ = 1;
                     term_ = new Term[1];
-                    base_ = exp;
-                    *term_ = value;
+                    base_ = firstExp;
                 }
-                minExp_ = maxExp_ = exp;
-            } else if (exp >= minExp_ && exp <= maxExp_) {
-                term_[exp - base_] = value;
-            } else if (exp < base_) {
+                minExp_ = maxExp_ = firstExp;
+            } else if (firstExp < base_) {
                 // The minimum exponent decreases, and we must reallocate.
                 size_t extra = std::max(growth(),
-                    static_cast<size_t>(base_ - exp));
+                    static_cast<size_t>(base_ - firstExp));
                 capacity_ += extra;
 
                 Term* newTerm = new Term[capacity_];
@@ -1304,188 +1315,129 @@ class Laurent :
                     term_ + (maxExp_ - base_) + 1,
                     newTerm + (minExp_ - base_ + extra));
                 base_ -= extra;
-                newTerm[exp - base_] = value;
-                minExp_ = exp;
+                minExp_ = firstExp;
 
                 delete[] term_;
                 term_ = newTerm;
-            } else if (exp < minExp_) {
+            } else if (firstExp < minExp_) {
                 // The minimum exponent decreases, but we need not reallocate.
-                for (--minExp_; minExp_ > exp; --minExp_)
+                for (--minExp_; minExp_ > firstExp; --minExp_)
                     term_[minExp_ - base_] = 0;
-                term_[exp - base_] = value;
-            } else if (exp < static_cast<long>(base_ + capacity_)) {
-                // The maximum exponent increases, but we need not reallocate.
-                for (++maxExp_; maxExp_ < exp; ++maxExp_)
-                    term_[maxExp_ - base_] = 0;
-                term_[exp - base_] = value;
-            } else {
+                if constexpr (vars > 1)
+                    term_[firstExp - base_] = 0;
+            } else if (firstExp >= base_ + static_cast<long>(capacity_)) {
                 // The maximum exponent increases, and we must reallocate.
                 size_t extra = std::max(growth(),
-                    static_cast<size_t>(exp - base_ - capacity_ + 1));
+                    static_cast<size_t>(firstExp - base_ - capacity_ + 1));
                 capacity_ += extra;
 
                 Term* newTerm = new Term[capacity_];
                 std::move(term_ + (minExp_ - base_),
                     term_ + (maxExp_ - base_) + 1,
                     newTerm + (minExp_ - base_));
-                newTerm[exp - base_] = value;
-                maxExp_ = exp;
+                maxExp_ = firstExp;
 
                 delete[] term_;
                 term_ = newTerm;
+            } else if (firstExp > maxExp_) {
+                // The maximum exponent increases, but we need not reallocate.
+                for (++maxExp_; maxExp_ < firstExp; ++maxExp_)
+                    term_[maxExp_ - base_] = 0;
+                if constexpr (vars > 1)
+                    term_[firstExp - base_] = 0;
             }
+
+            if constexpr (vars == 1)
+                term_[firstExp - base_] = value;
+            else
+                term_[firstExp - base_].setTo(value,
+                    std::forward<Exponents>(otherExp)...);
         }
 
         /**
-         * Changes a deeper element within some coefficient of this polynomial.
-         * This is intended for scenarios where the element type \a T is itself
-         * a container-like type whose elements can be set with its own set()
-         * function.
+         * Changes the given coefficient of a single-variable Laurent
+         * polynomial.
          *
-         * In short, calling `poly.set(i, a, ..., z, value)` has the same effect
-         * as, but is both cleaner and faster than, the following code:
+         * Calling `poly.set(exp, value)` is identical to calling the generic
+         * function `poly.setTo(value, exp)`; the only difference is that the
+         * new value is passed as the last argument instead of the first.
+         * See the setTo() documentation for further details.
          *
-         * ```cpp
-         * T tmp = poly[i];
-         * tmp.set(a, ..., z, value);
-         * poly.set(i, tmp);
-         * ```
+         * The reason Laurent offers both set() and setTo() is that the
+         * argument order for setTo() greatly simplifies the C++ template
+         * implementation, whereas set() is consistent with other classes
+         * such as Polynomial and Bitmask.  If you are not sure which routine
+         * to use, just use set().
          *
-         * There are no restrictions on the exponent \a exp.  The coefficient
-         * type \a T provides restrictions (if any) on the "inner" indices
-         * `a,...,z` and the new element \a value.  In particular, it is fine
-         * if your call to set() has the effect of setting the "outer"
-         * coefficient `poly[i]` to zero.
+         * \python This set() routine is available, but you can also set
+         * coefficients directly using syntax of the form `p[exp] = value`.
          *
-         * The performance of this function has a similar profile to the
-         * simpler `set(i, value)`: it is expensive if your call creates a
-         * non-zero "outer" coefficient whose exponent is larger than maxExp()
-         * or smaller than minExp(), but it is cheap if your call has the effect
-         * of setting the "outer" coefficient at exponent maxExp() or minExp()
-         * to zero.
-         *
-         * This function is intended for use with nested types, such as
-         * `Laurent<Laurent<U>>`.
-         *
-         * \pre It is assumed that, for an "outer" coefficient \a z of type
-         * \a T: (i) if \a z is currently set to zero, then calling
-         * `z.set(..., value)` will result in `z == 0` if and only if
-         * `value == 0`; and (ii) if `value != 0` then calling
-         * `z.set(..., value)` will never result in `z == 0`, regardless of
-         * the current value of \a z.  In particular, this assumption holds
-         * whenever \a T is one of Regina's polynomial, vector or matrix types.
-         *
-         * \nopython Python does not give access to any nested Laurent
-         * polynomial types.
-         *
-         * \param exp the "outer" exponent of the term of this Laurent
-         * polynomial whose coefficient should be changed.
-         * \param args the sequence of "inner" indices, indicating which element
-         * of the container-like object `this[exp]` should be changed, followed
-         * by the new value of the corresponding "inner" element.
+         * \param exp the exponent of the polynomial variable for the
+         * coefficient that we should set.
+         * \param value the new value to assign to the given coefficient.
          */
-        template <typename... Args>
-        requires (vars > 1) &&
-            (sizeof...(Args) == vars) // TODO: types, etc
-        void set(long exp, Args&&... args) {
-            if (detail::lastArgIsZero(std::forward<Args>(args)...)) {
-                if (isZero() || exp < minExp_ || exp > maxExp_)
-                    return;
+        void set(long exp, const T& value) requires (vars == 1) {
+            setTo(value, exp);
+        }
 
-                term_[exp - base_].set(std::forward<Args>(args)...);
+        /**
+         * Changes the given coefficient of a two-variable Laurent polynomial.
+         *
+         * Calling `poly.set(exp0, exp1, value)` is identical to calling the
+         * generic function `poly.setTo(value, exp0, exp1)`; the only difference
+         * is that the new value is passed as the last argument instead of the
+         * first.  See the setTo() documentation for further details.
+         *
+         * The reason Laurent offers both set() and setTo() is that the
+         * argument order for setTo() greatly simplifies the C++ template
+         * implementation, whereas set() is consistent with other classes
+         * such as Polynomial and Bitmask.  If you are not sure which routine
+         * to use, just use set().
+         *
+         * \python This set() routine is available, but you can also set
+         * coefficients directly using syntax of the form
+         * `p[exp0, exp1] = value`.
+         *
+         * \param exp0 the exponent of the first polynomial variable for the
+         * coefficient that we should set.
+         * \param exp1 the exponent of the second polynomial variable for the
+         * coefficient that we should set.
+         * \param value the new value to assign to the given coefficient.
+         */
+        void set(long exp0, long exp1, const T& value) requires (vars == 2) {
+            setTo(value, exp0, exp1);
+        }
 
-                if (exp == maxExp_) {
-                    // Put the zero-coefficient test in a separate if statement
-                    // so that, if minExp_ == maxExp_, we do not test it twice.
-                    // (We do not know how expensive zero-testing is for the
-                    // coefficient type T.)
-                    if (term_[exp - base_] == 0) {
-                        if (minExp_ == maxExp_) {
-                            // This becomes the zero polynomial.
-                            init();
-                        } else {
-                            // We know the lowest-exponent coefficient != 0.
-                            --maxExp_;
-                            while (term_[maxExp_ - base_] == 0)
-                                --maxExp_;
-                        }
-                    }
-                } else if (exp == minExp_ && term_[exp - base_] == 0) {
-                    // Here we know the highest-exponent coefficient != 0.
-                    ++minExp_;
-                    while (term_[minExp_ - base_] == 0)
-                        ++minExp_;
-                }
-
-                return;
-            }
-
-            // From here, the element value we are assigning is non-zero.
-
-            // We first ensure that term_[exp - base_] is allocated and
-            // initialised to zero if necessary, and that minExp_ and maxExp_
-            // are adjusted to reflect the fact that `this[exp]` will become
-            // non-zero.  We then finish with the inner call to set().
-            if (isZero()) {
-                // Reuse any pre-allocated term_ array, if we can.
-                if (term_) {
-                    if (exp < base_ ||
-                            exp >= base_ + static_cast<long>(capacity_)) {
-                        // Shift the range to cover the given exponent.
-                        size_t gap = capacity_ >> 1; // 0 ≤ gap < capacity_
-                        base_ = exp - gap;
-                    }
-                } else {
-                    capacity_ = 1;
-                    term_ = new Term[1];
-                    base_ = exp;
-                }
-                minExp_ = maxExp_ = exp;
-            } else if (exp < base_) {
-                // The minimum exponent decreases, and we must reallocate.
-                size_t extra = std::max(growth(),
-                    static_cast<size_t>(base_ - exp));
-                capacity_ += extra;
-
-                Term* newTerm = new Term[capacity_];
-                std::move(term_ + (minExp_ - base_),
-                    term_ + (maxExp_ - base_) + 1,
-                    newTerm + (minExp_ - base_ + extra));
-                base_ -= extra;
-                minExp_ = exp;
-
-                delete[] term_;
-                term_ = newTerm;
-            } else if (exp < minExp_) {
-                // The minimum exponent decreases, but we need not reallocate.
-                do {
-                    --minExp_;
-                    term_[minExp_ - base_] = 0;
-                } while (exp < minExp_);
-            } else if (exp >= base_ + static_cast<long>(capacity_)) {
-                // The maximum exponent increases, and we must reallocate.
-                size_t extra = std::max(growth(),
-                    static_cast<size_t>(exp - base_ - capacity_ + 1));
-                capacity_ += extra;
-
-                Term* newTerm = new Term[capacity_];
-                std::move(term_ + (minExp_ - base_),
-                    term_ + (maxExp_ - base_) + 1,
-                    newTerm + (minExp_ - base_));
-                maxExp_ = exp;
-
-                delete[] term_;
-                term_ = newTerm;
-            } else if (exp > maxExp_) {
-                // The maximum exponent increases, but we need not reallocate.
-                do {
-                    ++maxExp_;
-                    term_[maxExp_ - base_] = 0;
-                } while (maxExp_ < exp);
-            }
-
-            term_[exp - base_].set(std::forward<Args>(args)...);
+        /**
+         * Changes the given coefficient of a three-variable Laurent polynomial.
+         *
+         * Calling `poly.set(exp0, exp1, exp2, value)` is identical to calling
+         * the generic function `poly.setTo(value, exp0, exp1, exp2)`; the only
+         * difference is that the new value is passed as the last argument
+         * instead of the first.  See the setTo() documentation for further
+         * details.
+         *
+         * The reason Laurent offers both set() and setTo() is that the
+         * argument order for setTo() greatly simplifies the C++ template
+         * implementation, whereas set() is consistent with other classes
+         * such as Polynomial and Bitmask.  If you are not sure which routine
+         * to use, just use set().
+         *
+         * \python This set() routine is available, but you can also set
+         * coefficients directly using syntax of the form
+         * `p[exp0, exp1, exp2] = value`.
+         *
+         * \param exp0 the exponent of the first polynomial variable for the
+         * coefficient that we should set.
+         * \param exp1 the exponent of the second polynomial variable for the
+         * coefficient that we should set.
+         * \param exp2 the exponent of the third polynomial variable for the
+         * coefficient that we should set.
+         * \param value the new value to assign to the given coefficient.
+         */
+        void set(long exp0, long exp1, long exp2, const T& value)
+                requires (vars == 3) {
+            setTo(value, exp0, exp1, exp2);
         }
 
         /**
