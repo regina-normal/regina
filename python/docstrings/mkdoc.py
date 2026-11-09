@@ -91,7 +91,7 @@ TYPE_RANK = [
     # be the one with the larger index in this list.  Any type _not_ in this
     # list is treated as being simpler than all of the others.
     'IntegerBase', 'Rational', 'Cyclotomic', 'Polynomial',
-    'Laurent', 'Laurent2', 'Arrow'
+    'Laurent', 'Arrow'
 ]
 def type_rank(name):
     try:

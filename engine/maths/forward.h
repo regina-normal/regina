@@ -68,8 +68,6 @@ template <CoefficientDomain T, int vars = 1>
 requires (vars > 0 && vars <= 3)
 class Laurent;
 
-template <CoefficientDomain> class Laurent2;
-
 template <CoefficientDomain> class Polynomial;
 
 } // namespace regina

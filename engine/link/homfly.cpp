@@ -29,7 +29,6 @@
  **************************************************************************/
 
 #include "link/link.h"
-#include "maths/laurent2.h"
 #include "utilities/bitmask.h"
 #include "utilities/bitmanip.h"
 #include "utilities/sequence.h"

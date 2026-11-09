@@ -102,17 +102,6 @@ enum class PolynomialProductAlgorithm {
 template <CoefficientDomain T>
 static constexpr size_t karatsubaThreshold = 16;
 
-#ifndef __DOXYGEN
-// For now, do not use Karatsuba multiplication when working with "nested"
-// polynomials (e.g., Laurent<Laurent<T>>).
-template <CoefficientDomain T>
-static constexpr size_t karatsubaThreshold<Laurent<T>> = 0;
-template <CoefficientDomain T>
-static constexpr size_t karatsubaThreshold<Laurent2<T>> = 0;
-template <CoefficientDomain T>
-static constexpr size_t karatsubaThreshold<Polynomial<T>> = 0;
-#endif
-
 namespace detail {
 
 /**

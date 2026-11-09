@@ -52,7 +52,6 @@
 #include "maths/arrow.h"
 #include "maths/integer.h"
 #include "maths/laurent.h"
-#include "maths/laurent2.h"
 #include "packet/packet.h"
 #include "progress/progresstracker.h"
 #include "treewidth/treedecomposition.h"

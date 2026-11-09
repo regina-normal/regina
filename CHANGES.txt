@@ -329,9 +329,11 @@ Version 8.0  [ TODO ]
         Class LargeInteger:
             - See the changes listed under the sister class Integer above.
         Class Laurent<T, vars>:
-            - Now supports multivariate polynomials through the second *vars*
-              parameter (which defaults to 1).  In particular, Laurent<T, 2>
-              replaces the old class Laurent2<T>, which has now been removed.
+            - Now supports multivariate polynomials through a new second *vars*
+              template parameter (which defaults to 1).  In particular,
+              Laurent<T, 2> replaces the old class Laurent2<T>, which has now
+              been removed.  As a result, Laurent<T, vars> now has several new
+              routines that are specific only to multivariate polynomials.
             - For the iterator-based constructor and init() routine, the
               iterator type is now required to be random access.
             - Removed the exponent-based constructor Laurent(exp) and
@@ -366,28 +368,19 @@ Version 8.0  [ TODO ]
               manage the range of exponents for which memory is allocated.
             - New routine validate(), for use in test suites.
         Class Laurent2<T>:
-            - New constructor that converts a single-variable Laurent polynomial
-              into a two-variable Laurent polynomial.
-            - New constructor that builds the product of a Laurent polynomial
-              in x with a Laurent polynomial in y.
-            - Removed the exponent-based constructor Laurent2(xExp, yExp) and
-              initialiser init(xExp, yExp), which were deprecated in Regina 7.4.
-            - New constructors, assignment operators and comparison operators
-              that create or compare against a constant polynomial, given by a
-              coefficient of type T or a native C++ integer.
-            - New static routine monomial().
-            - New routine countTerms().
-            - New routine addProduct(), which optimises x ±= y * z.
-            - New routines shift() and shifted().
-            - Deprecated the shift constructor Laurent2(poly, xShift, yShift);
-              just use poly.shifted() instead.
-            - Now supports iteration over non-zero coefficients and their
-              corresponding exponent pairs.
-            - New overloads for scalar multiplication and division that take
-              native C++ integers.
-            - Many optimisations to this class, including rvalue variants of
-              many operations.
-            - New routine validate(), for use in test suites.
+            - Removed completely, in favour of the new "unified" class
+              Laurent<T, 2>.  This brings many new functions and optimisations;
+              please browse through the Laurent class API for details.
+            - Mostly, the new class Laurent<T, 2> should be a drop-in
+              replacement for the old class Laurent2<T>.  The exceptions are:
+              + Removed the constructor Laurent2(xExp, yExp) and initialiser
+                init(xExp, yExp), which were deprecated in Regina 7.4; you can
+                now use initExp(xExp, yExp) or monomial(xExp, yExp) instead.
+              + Removed the shift constructor Laurent2(poly, xShift, yShift);
+                now use poly.shifted(xShift, yShift) instead.
+              + The std::initializer_list constructor has changed slightly:
+                each term is now a pair {{xExp, yExp}, value} instead of a
+                triple {xExp, yExp, value}.
         Class LaurentCoefficient<T, vars>:
             - New lightweight type to support iteration over the non-zero
               coefficients of a Laurent polynomial.

@@ -30,7 +30,6 @@
 
 #include "maths/integer.h"
 #include "maths/laurent.h"
-#include "maths/laurent2.h"
 #include "utilities/stringutils.h"
 #include <array>
 
@@ -39,7 +38,7 @@
 using regina::Integer;
 using regina::Laurent2;
 
-using L = Laurent2<Integer>;
+using L = Laurent<Integer, 2>;
 using Term = std::pair<std::pair<long, long>, Integer>;
 
 // An integer that cannot fit into 128 bits.

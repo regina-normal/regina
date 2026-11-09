@@ -33,9 +33,8 @@
 #include <pybind11/stl.h>
 #include "maths/integer.h"
 #include "maths/laurent.h"
-#include "maths/laurent2.h"
 #include "../helpers.h"
-#include "../docstrings/maths/laurent2.h"
+#include "../docstrings/maths/laurent.h"
 
 using namespace pybind11::literals;
 

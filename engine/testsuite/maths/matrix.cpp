@@ -30,7 +30,6 @@
 
 #include "maths/integer.h"
 #include "maths/laurent.h"
-#include "maths/laurent2.h"
 #include "maths/matrix.h"
 #include "maths/vector.h"
 #include "maths/polynomial.h"
@@ -41,7 +40,6 @@
 using regina::AdjugateAlgorithm;
 using regina::Integer;
 using regina::Laurent;
-using regina::Laurent2;
 using regina::Matrix;
 using regina::MatrixInt;
 using regina::Polynomial;
@@ -1537,7 +1535,7 @@ TEST(MatrixTest, determinantAdjugate) {
     // element types.
     using P = Polynomial<Integer>;
     using L = Laurent<Integer>;
-    using L2 = Laurent2<Integer>;
+    using L2 = Laurent<Integer, 2>;
 
     // Empty matrices:
     verifyAdjugate<Integer>({0}, 1);
@@ -1549,7 +1547,7 @@ TEST(MatrixTest, determinantAdjugate) {
         verifyAdjugate<Rational>({size}, 0);
         verifyAdjugate<Polynomial<Integer>>({size}, {});
         verifyAdjugate<Laurent<Integer>>({size}, {});
-        verifyAdjugate<Laurent2<Integer>>({size}, {});
+        verifyAdjugate<Laurent<Integer, 2>>({size}, {});
     }
 
     // Some ad-hoc 1x1 cases:
@@ -1558,7 +1556,7 @@ TEST(MatrixTest, determinantAdjugate) {
     verifyAdjugate<Polynomial<Integer>>({ { {3,-1} } }, {3,-1});
     verifyAdjugate<Laurent<Integer>>({ { {-2, {-1,0,3,2}} } },
         {-2, {-1,0,3,2}});
-    verifyAdjugate<Laurent2<Integer>>({ { {{-3,2,5}} } }, {{-3,2,5}});
+    verifyAdjugate<Laurent<Integer, 2>>({ { {{{-3,2},5}} } }, {{{-3,2},5}});
 
     // Some ad-hoc 2x2 cases:
     // [ 1, 2, -3, 4 ] -> 10
@@ -1578,9 +1576,9 @@ TEST(MatrixTest, determinantAdjugate) {
         { { {0, {1}}, {-1, {1,0,1}} }, { {-1, {-1,0,1}}, {0, {-1}} } },
         {-2, {1,0,-1,0,-1}});
     // [ xy, y^-1 | -y^2x, x^-1 ] -> y + xy
-    verifyAdjugate<Laurent2<Integer>>(
-        { { {{1,1,1}}, {{0,-1,1}} }, { {{1,2,-1}}, {{-1,0,1}} } },
-        {{ {0, 1, 1}, {1, 1, 1} }});
+    verifyAdjugate<Laurent<Integer, 2>>(
+        { { {{{1,1},1}}, {{{0,-1},1}} }, { {{{1,2},-1}}, {{{-1,0},1}} } },
+        { {{0, 1}, 1}, {{1, 1}, 1} });
 
     // Some slightly larger cases, now just using integers:
     for (size_t size = 3; size <= 10; ++size) {
