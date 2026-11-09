@@ -418,12 +418,13 @@ class LaurentCoefficient {
          * corresponds to the current non-zero coefficient.  This allows you
          * to determine which monomial the current coefficient is attached to.
          *
-         * This is the fastest way to obtain the current exponent if you know
-         * \a var at compile time.
+         * This template function is the fastest way to obtain the current
+         * exponent if you know \a var at compile time.
          *
          * \pre This iterator is dereferenceable.
          *
-         * \nopython Instead use the variant `exp(int)`.
+         * \nopython Instead use the variant `exp(var)`, where \a var is
+         * passed at runtime.
          *
          * \tparam var indicates which variable of the polynomial you wish to
          * query.
@@ -727,6 +728,9 @@ class Laurent :
          * Creates the zero polynomial.
          */
         Laurent() : term_(nullptr), minExp_(0), maxExp_(-1) {
+            // Note: if we ever change the implementation so that term_ is NOT
+            // null under default construction, we will need to update the
+            // implementation of diagonalise (which relies on this behaviour).
         }
 
         /**
@@ -1020,6 +1024,96 @@ class Laurent :
         }
 
         /**
+         * Creates the product of two Laurent polynomials that use independent
+         * sets of variables.  Specifically, this creates a `(v + w)`-variable
+         * polynomial that is the product `p(…) q(…)`, where \a p uses the first
+         * \a v variables of the resulting polynomial, and \a q uses the last
+         * \a w variables of the resulting polynomial.
+         *
+         * For example, if \a p is the single-variable polynomial `x^3 + 2 x`
+         * and \a q is the two-variable polynomial `x y - y`, then
+         * `Laurent<Integer, 3>(p, q)` will be the three-variable product
+         * `(x^3 + 2 x)(y z - z)`.
+         *
+         * \param p the first of the two polynomials to multiply; this will
+         * use the first \a v of the available \a vars variables in the
+         * resulting polynomial.
+         * \param q the second of the two polynomials to multiply; this will
+         * use the last \a w of the available \a vars variables in the
+         * resulting polynomial.
+         */
+        template <int v, int w> requires (v + w == vars)
+        Laurent(const Laurent<T, v>& p, const Laurent<T, w>& q) {
+            if (p.isZero() || q.isZero()) {
+                term_ = nullptr;
+                minExp_ = 0;
+                maxExp_ = -1;
+            } else {
+                minExp_ = base_ = p.minExp_;
+                maxExp_ = p.maxExp_;
+                capacity_ = p.maxExp_ - p.minExp_ + 1;
+                term_ = new Term[capacity_];
+
+                Term* dest = term_;
+                for (const T* src = p.term_ + p.minExp_ - p.base_;
+                        src != p.term_ + p.maxExp_ - p.base_ + 1;
+                        ++src, ++dest) {
+                    if constexpr (v == 1) {
+                        if (*src != 0)
+                            *dest = *src * q;
+                    } else {
+                        if (! src->isZero())
+                            *dest = Term(*src, q);
+                    }
+                }
+            }
+        }
+
+        /**
+         * Creates the product of two Laurent polynomials that use independent
+         * sets of variables.  Specifically, this creates a `(v + w)`-variable
+         * polynomial that is the product `p(…) q(…)`, where \a p uses the first
+         * \a v variables of the resulting polynomial, and \a q uses the last
+         * \a w variables of the resulting polynomial.
+         *
+         * See the version of this constructor with const arguments for more
+         * information and examples.
+         *
+         * \param p the first of the two polynomials to multiply; this will
+         * use the first \a v of the available \a vars variables in the
+         * resulting polynomial.
+         * \param q the second of the two polynomials to multiply; this will
+         * use the last \a w of the available \a vars variables in the
+         * resulting polynomial.
+         */
+        template <int v, int w> requires (v + w == vars)
+        Laurent(Laurent<T, v>&& p, const Laurent<T, w>& q) {
+            if (p.isZero() || q.isZero()) {
+                term_ = nullptr;
+                minExp_ = 0;
+                maxExp_ = -1;
+            } else {
+                minExp_ = base_ = p.minExp_;
+                maxExp_ = p.maxExp_;
+                capacity_ = p.maxExp_ - p.minExp_ + 1;
+                term_ = new Term[capacity_];
+
+                Term* dest = term_;
+                for (T* src = p.term_ + p.minExp_ - p.base_;
+                        src != p.term_ + p.maxExp_ - p.base_ + 1;
+                        ++src, ++dest) {
+                    if constexpr (v == 1) {
+                        if (*src != 0)
+                            *dest = std::move(*src) * q;
+                    } else {
+                        if (! src->isZero())
+                            *dest = Term(std::move(*src), q);
+                    }
+                }
+            }
+        }
+
+        /**
          * Destroys this polynomial.
          */
         ~Laurent() {
@@ -1094,6 +1188,208 @@ class Laurent :
             else
                 c->initExp(std::forward<Exponents>(otherExp)...);
             return Laurent(firstExp, firstExp, c);
+        }
+
+        /**
+         * Converts a single-variable polynomial `p(⋅)` into a multivariate
+         * polynomial `p(v)` for a given variable \a v.  The other `(vars - 1)`
+         * variables do not appear in the resulting polynomial at all.
+         *
+         * For example, if \a p is the single-variable polynomial `x^3 + 2 x`,
+         * then `Laurent<Integer, 2>::embed<0>(p)` will be `x^3 + 2 x`, and
+         * `Laurent<Integer, 2>::embed<1>(p)` will be `y^3 + 2 y`, where `x,y`
+         * denote the two variables of the resulting multivariate polynomials.
+         *
+         * This template function (and its rvalue counterpart) are the fastest
+         * ways to perform such a conversion if you know \a var at compile time.
+         *
+         * \nopython Instead use the variant `embed(p, var)`, where \a var is
+         * passed at runtime.
+         *
+         * \tparam var indicates which variable of the resulting multivariate
+         * polynomial should be substituted into \a p.
+         *
+         * \param p the single-variable polynomial `p(⋅)` to convert.
+         * \result the resulting multivariate polynomial `p(v)`.
+         */
+        template <int var> requires (0 <= var && var < vars)
+        static Laurent embed(const Laurent<T, 1>& p) requires (vars > 1) {
+            if (p.isZero())
+                return {};
+
+            if constexpr (var == 0) {
+                // Mirror the copy constructor.
+                Term* terms = new Term[p.maxExp_ - p.minExp_ + 1];
+                std::copy(
+                    p.term_ + p.minExp_ - p.base_,
+                    p.term_ + p.maxExp_ - p.base_ + 1, terms);
+                return { p.minExp_, p.maxExp_, terms };
+            } else {
+                // Mirror the single-element constructor.
+                Term* terms = new Term[1];
+                if constexpr (vars == 2)
+                    *terms = p;
+                else
+                    *terms = Term::embed<var - 1>(p);
+                return { 0, 0, terms };
+            }
+        }
+
+        /**
+         * Converts a single-variable polynomial `p(⋅)` into a multivariate
+         * polynomial `p(v)` for a given variable \a v.  The other `(vars - 1)`
+         * variables do not appear in the resulting polynomial at all.
+         *
+         * See the const version of this function for more information and
+         * examples.
+         *
+         * \tparam var indicates which variable of the resulting multivariate
+         * polynomial should be substituted into \a p.
+         *
+         * \param p the single-variable polynomial `p(⋅)` to convert.
+         * \result the resulting multivariate polynomial `p(v)`.
+         */
+        template <int var> requires (0 <= var && var < vars)
+        static Laurent embed(Laurent<T, 1>&& p) requires (vars > 1) {
+            if (p.isZero())
+                return {};
+
+            if constexpr (var == 0) {
+                // Mirror the copy constructor.
+                Term* terms = new Term[p.maxExp_ - p.minExp_ + 1];
+                std::move(
+                    p.term_ + p.minExp_ - p.base_,
+                    p.term_ + p.maxExp_ - p.base_ + 1, terms);
+                return { p.minExp_, p.maxExp_, terms };
+            } else {
+                // Mirror the single-element constructor.
+                Term* terms = new Term[1];
+                if constexpr (vars == 2)
+                    *terms = std::move(p);
+                else
+                    *terms = Term::embed<var - 1>(std::move(p));
+                return { 0, 0, terms };
+            }
+        }
+
+        /**
+         * Converts a single-variable polynomial `p(⋅)` into a multivariate
+         * polynomial `p(v)` for a given variable \a v, where the variable \a v
+         * does not need to be known until runtime.  The other `(vars - 1)`
+         * variables do not appear in the resulting polynomial at all.
+         *
+         * For example, if \a p is the single-variable polynomial `x^3 + 2 x`,
+         * then `Laurent<Integer, 2>::embed(p, 0)` will be `x^3 + 2 x`, and
+         * `Laurent<Integer, 2>::embed(p, 1)` will be `y^3 + 2 y`, where `x,y`
+         * denote the two variables of the resulting multivariate polynomials.
+         *
+         * For C++ programmers who know the argument \a var at compile time,
+         * you are better off using the template function `embed<var>()`
+         * instead, which is slightly faster (and which also offers an rvalue
+         * variant).
+         *
+         * \exception InvalidArgument The argument \a var is not within the
+         * allowed range (from 0 to `vars-1` inclusive).
+         *
+         * \param p the single-variable polynomial `p(⋅)` to convert.
+         * \param var indicates which variable of the resulting multivariate
+         * polynomial should be substituted into \a p; this must be between
+         * 0 and `vars-1` inclusive.
+         * \result the resulting multivariate polynomial `p(v)`.
+         */
+        static Laurent embed(const Laurent<T, 1>& p, int var)
+                requires (vars > 1) {
+            if (var < 0 || var >= vars)
+                throw InvalidArgument("embed(): unsupported variable index");
+
+            return select_constexpr<0, vars, Laurent>(var, [&p](auto k) {
+                return embed<k>(p);
+            });
+        }
+
+        /**
+         * Converts a single-variable polynomial `p(⋅)` into the multivariate
+         * polynomial `p(x y …)`, where `x,y,…` are the \a vars variables of
+         * the resulting multivariate polynomial.
+         *
+         * For example, if \a p is the single-variable polynomial `x^3 + 2 x`,
+         * then `Laurent<Integer, 2>::diagonalise(p)` will be the two-variable
+         * polynomial `x^3 y^3 + 2 x y`.
+         *
+         * \param p the single-variable polynomial `p(⋅)` to convert.
+         * \result the resulting polynomial `p(x y …)`.
+         */
+        static Laurent diagonalise(const Laurent<T, 1>& p) requires (vars > 1) {
+            if (p.isZero())
+                return {};
+
+            Term* terms = new Term[p.maxExp_ - p.minExp_ + 1];
+
+            long exp = p.minExp_;
+            const T* src = p.term_ + p.minExp_ - p.base_;
+            Term* dest = terms;
+            for ( ; exp <= p.maxExp_; ++exp, ++src, ++dest)
+                if (*src != 0) {
+                    // At this point, we know that *dest has been default
+                    // constructed - this means its own term_ array is null.
+                    dest->minExp_ = dest->maxExp_ = dest->base_ = exp;
+                    dest->capacity_ = 1;
+                    dest->term_ = new Term::Term[1];
+
+                    if constexpr (vars == 2) {
+                        *dest->term_ = *src;
+                    } else { // vars == 3
+                        T* next = dest->term_;
+                        next->minExp_ = next->maxExp_ = next->base_ = exp;
+                        next->capacity_ = 1;
+                        next->term_ = new T[1];
+                        *next->term_ = *src;
+                    }
+                }
+
+            return { p.minExp_, p.maxExp_, terms };
+        }
+
+        /**
+         * Converts a single-variable polynomial `p(⋅)` into the multivariate
+         * polynomial `p(x y …)`, where `x,y,…` are the \a vars variables of
+         * the resulting multivariate polynomial.
+         *
+         * See the const version of this function for more information and
+         * examples.
+         *
+         * \param p the single-variable polynomial `p(⋅)` to convert.
+         * \result the resulting polynomial `p(x y …)`.
+         */
+        static Laurent diagonalise(Laurent<T, 1>&& p) requires (vars > 1) {
+            if (p.isZero())
+                return {};
+
+            Term* terms = new Term[p.maxExp_ - p.minExp_ + 1];
+
+            long exp = p.minExp_;
+            T* src = p.term_ + p.minExp_ - p.base_;
+            Term* dest = terms;
+            for ( ; exp <= p.maxExp_; ++exp, ++src, ++dest)
+                if (*src != 0) {
+                    // At this point, we know that *dest has been default
+                    // constructed - this means its own term_ array is null.
+                    dest->minExp_ = dest->maxExp_ = dest->base_ = exp;
+                    dest->capacity_ = 1;
+                    dest->term_ = new Term::Term[1];
+
+                    if constexpr (vars == 2) {
+                        *dest->term_ = std::move(*src);
+                    } else { // vars == 3
+                        T* next = dest->term_;
+                        next->minExp_ = next->maxExp_ = next->base_ = exp;
+                        next->capacity_ = 1;
+                        next->term_ = new Term[1];
+                        *next->term_ = std::move(*src);
+                    }
+                }
+
+            return { p.minExp_, p.maxExp_, terms };
         }
 
         /**
@@ -3924,12 +4220,22 @@ Laurent<T, vars> operator * (Laurent<T, vars>&& lhs, Laurent<T, vars>&& rhs) {
     if (lhs.isZero() || rhs.isZero()) {
         return {}; // zero
     } else if (lhs.minExp_ == lhs.maxExp_) {
-        rhs *= lhs.term_[lhs.minExp_ - lhs.base_];
-        rhs.shift(lhs.minExp_);
+        const Term& single = lhs.term_[lhs.minExp_ - lhs.base_];
+        for (auto it = rhs.term_ + rhs.minExp_ - rhs.base_;
+                it <= rhs.term_ + rhs.maxExp_ - rhs.base_; ++it)
+            (*it) *= single;
+        rhs.base_ += lhs.minExp_;
+        rhs.minExp_ += lhs.minExp_;
+        rhs.maxExp_ += lhs.minExp_;
         return std::move(rhs);
     } else if (rhs.minExp_ == rhs.maxExp_) {
-        lhs *= rhs.term_[rhs.minExp_ - rhs.base_];
-        lhs.shift(rhs.minExp_);
+        const Term& single = rhs.term_[rhs.minExp_ - rhs.base_];
+        for (auto it = lhs.term_ + lhs.minExp_ - lhs.base_;
+                it <= lhs.term_ + lhs.maxExp_ - lhs.base_; ++it)
+            (*it) *= single;
+        lhs.base_ += rhs.minExp_;
+        lhs.minExp_ += rhs.minExp_;
+        lhs.maxExp_ += rhs.minExp_;
         return std::move(lhs);
     } else {
         // Both polynomials have more than one non-zero term.

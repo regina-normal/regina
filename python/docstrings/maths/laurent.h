@@ -407,6 +407,29 @@ Python:
 Parameter ``constant``:
     the value of this new polynomial.)doc";
 
+// Docstring regina::python::doc::Laurent::__init_4
+static constexpr const char __init_4[] =
+R"doc(Creates the product of two Laurent polynomials that use independent
+sets of variables. Specifically, this creates a `(v + w)`-variable
+polynomial that is the product ``p(…) q(…)``, where *p* uses the first
+*v* variables of the resulting polynomial, and *q* uses the last *w*
+variables of the resulting polynomial.
+
+For example, if *p* is the single-variable polynomial ``x^3 + 2 x``
+and *q* is the two-variable polynomial ``x y - y``, then
+``Laurent<Integer, 3>(p, q)`` will be the three-variable product
+``(x^3 + 2 x)(y z - z)``.
+
+Parameter ``p``:
+    the first of the two polynomials to multiply; this will use the
+    first *v* of the available *vars* variables in the resulting
+    polynomial.
+
+Parameter ``q``:
+    the second of the two polynomials to multiply; this will use the
+    last *w* of the available *vars* variables in the resulting
+    polynomial.)doc";
+
 // Docstring regina::python::doc::Laurent::__isub
 static constexpr const char __isub[] =
 R"doc(Subtracts the given polynomial from this.
@@ -599,6 +622,50 @@ positive capacity but an arbitrary base.
 Returns:
     a pair ``(base, capacity)`` as described above, or ``(0, 0)`` if
     this is the zero polynomial _and_ no memory is allocated at all.)doc";
+
+// Docstring regina::python::doc::Laurent::diagonalise
+static constexpr const char diagonalise[] =
+R"doc(Converts a single-variable polynomial ``p(⋅)`` into the multivariate
+polynomial ``p(x y …)``, where ``x,y,…`` are the *vars* variables of
+the resulting multivariate polynomial.
+
+For example, if *p* is the single-variable polynomial ``x^3 + 2 x``,
+then ``Laurent<Integer, 2>::diagonalise(p)`` will be the two-variable
+polynomial ``x^3 y^3 + 2 x y``.
+
+Parameter ``p``:
+    the single-variable polynomial ``p(⋅)`` to convert. \result the
+    resulting polynomial ``p(x y …)``.)doc";
+
+// Docstring regina::python::doc::Laurent::embed
+static constexpr const char embed[] =
+R"doc(Converts a single-variable polynomial ``p(⋅)`` into a multivariate
+polynomial ``p(v)`` for a given variable *v*, where the variable *v*
+does not need to be known until runtime. The other ``(vars - 1)``
+variables do not appear in the resulting polynomial at all.
+
+For example, if *p* is the single-variable polynomial ``x^3 + 2 x``,
+then ``Laurent<Integer, 2>::embed(p, 0)`` will be ``x^3 + 2 x``, and
+``Laurent<Integer, 2>::embed(p, 1)`` will be ``y^3 + 2 y``, where
+``x,y`` denote the two variables of the resulting multivariate
+polynomials.
+
+For C++ programmers who know the argument *var* at compile time, you
+are better off using the template function ``embed<var>()`` instead,
+which is slightly faster (and which also offers an rvalue variant).
+
+Exception ``InvalidArgument``:
+    The argument *var* is not within the allowed range (from 0 to
+    ``vars-1`` inclusive).
+
+Parameter ``p``:
+    the single-variable polynomial ``p(⋅)`` to convert.
+
+Parameter ``var``:
+    indicates which variable of the resulting multivariate polynomial
+    should be substituted into *p*; this must be between 0 and
+    ``vars-1`` inclusive. \result the resulting multivariate
+    polynomial ``p(v)``.)doc";
 
 // Docstring regina::python::doc::Laurent::first
 static constexpr const char first[] =

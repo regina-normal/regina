@@ -42,6 +42,7 @@ using regina::Crossing;
 using regina::ExampleLink;
 using regina::FailedPrecondition;
 using regina::GroupPresentation;
+using regina::Integer;
 using regina::InvalidArgument;
 using regina::Link;
 using regina::LinkSigBinary;
@@ -150,7 +151,7 @@ static void verifyIsomorphic(const GroupPresentation& a,
         regina::for_constexpr<2, 6>(compareGroups);
 }
 
-static regina::Laurent<regina::Integer> jonesModReflection(const Link& link) {
+static regina::Laurent<Integer> jonesModReflection(const Link& link) {
     auto jones1 = link.jones();
     auto jones2 = jones1;
     jones2.invertX();
@@ -160,7 +161,7 @@ static regina::Laurent<regina::Integer> jonesModReflection(const Link& link) {
         return jones2;
 }
 
-static regina::Laurent<regina::Integer> affineModSymmetries(const Link& link) {
+static regina::Laurent<Integer> affineModSymmetries(const Link& link) {
     auto affine1 = link.affineIndex();
     if (affine1[affine1.minExp()] < 0)
         affine1.negate();
@@ -999,7 +1000,7 @@ static void verifyWhiteheadDouble(const Link& link, const char* name) {
     EXPECT_EQ(neg.writhe(), 2 * writhe - 2);
 
     if (link.size() < 20 && link.isClassical()) {
-        using P = regina::Polynomial<regina::Integer>;
+        using P = regina::Polynomial<Integer>;
         EXPECT_EQ(pos.alexander(), regina::RingTraits<P>::one);
         EXPECT_EQ(neg.alexander(), regina::RingTraits<P>::one);
     }
@@ -1151,7 +1152,7 @@ TEST_F(LinkTest, parityProjection) {
 }
 
 static void verifyAlexander(const TestCase& test,
-        const regina::Polynomial<regina::Integer>& expected) {
+        const regina::Polynomial<Integer>& expected) {
     SCOPED_TRACE_CSTRING(test.name);
 
     // In case we later modify this code to compute the Alexander polynomial
@@ -1184,7 +1185,7 @@ TEST_F(LinkTest, alexander) {
 }
 
 static void verifyJones(const TestCase& test,
-        const regina::Laurent<regina::Integer>& expected) {
+        const regina::Laurent<Integer>& expected) {
     SCOPED_TRACE_CSTRING(test.name);
 
     // Since we are computing the Jones polynomial multiple times
@@ -1277,7 +1278,7 @@ TEST_F(LinkTest, jones) {
 }
 
 static void verifyHomflyAZ(const TestCase& test,
-        const regina::Laurent<regina::Integer, 2>& expected) {
+        const regina::Laurent<Integer, 2>& expected) {
     SCOPED_TRACE_CSTRING(test.name);
 
     // Since we are computing the HOMFLY-PT polynomial multiple times
@@ -1295,7 +1296,7 @@ static void verifyHomflyAZ(const TestCase& test,
 }
 
 static void verifyHomflyLM(const TestCase& test,
-        const regina::Laurent<regina::Integer, 2>& expected) {
+        const regina::Laurent<Integer, 2>& expected) {
     SCOPED_TRACE_CSTRING(test.name);
 
     // Since we are computing the HOMFLY-PT polynomial multiple times
@@ -1465,7 +1466,7 @@ static void verifyArrowClassical(const TestCase& test) {
 
     regina::Arrow arrow = Link(test.link, false).arrow();
 
-    regina::Laurent<regina::Integer> jones = Link(test.link, false).jones();
+    regina::Laurent<Integer> jones = Link(test.link, false).jones();
     jones.scaleUp(-2);
 
     EXPECT_EQ(arrow, jones);
@@ -1670,7 +1671,7 @@ TEST_F(LinkTest, arrow) {
 }
 
 static void verifyAffineIndex(const Link& link, const char* name,
-        const regina::Laurent<regina::Integer>& expected) {
+        const regina::Laurent<Integer>& expected) {
     // The affine index polynomial is not cached.
     // No need to fuss about cloning the given link.
     SCOPED_TRACE_CSTRING(name);
@@ -1680,7 +1681,7 @@ static void verifyAffineIndex(const Link& link, const char* name,
     // Verify that the polynomial behaves as expected under simple knot
     // transformations.
     // See Kauffman, JKTR (2018), Proposition 4.7.
-    regina::Laurent<regina::Integer> expectInverted = expected;
+    regina::Laurent<Integer> expectInverted = expected;
     expectInverted.invertX();
 
     {
@@ -1710,7 +1711,7 @@ static void verifyAffineIndex(const Link& link, const char* name,
 }
 
 static void verifyAffineIndex(const TestCase& test,
-        const regina::Laurent<regina::Integer>& expected) {
+        const regina::Laurent<Integer>& expected) {
     verifyAffineIndex(test.link, test.name, expected);
 }
 
@@ -1790,7 +1791,7 @@ TEST_F(LinkTest, affineIndex) {
     {
         Link link = Link::fromData({+1,-1,+1,+1}, {-1,-2,-3,2,4,1,3,-4});
         const auto affine = affineModSymmetries(link);
-        EXPECT_EQ(affine, regina::Laurent<regina::Integer>({-2, {1,-1,-1,1}}));
+        EXPECT_EQ(affine, regina::Laurent<Integer>({-2, {1,-1,-1,1}}));
 
         link.rewriteVirtual(3 /* height */, 2 /* threads */, nullptr,
                 [&affine](const Link& alt) {
@@ -1801,7 +1802,7 @@ TEST_F(LinkTest, affineIndex) {
 }
 
 static void verifyTheta(const TestCase& test,
-        const regina::Laurent2<regina::Integer>& expected) {
+        const regina::Laurent<Integer, 2>& expected) {
     SCOPED_TRACE_CSTRING(test.name);
 
     Link clone(test.link, false);
@@ -1840,9 +1841,10 @@ TEST_F(LinkTest, theta) {
 
     // The polynomial for the left-hand trefoil is taken from the
     // original Bar-Natan / van der Veen paper (where this is Knot[3,1]).
-    static const regina::Laurent2<regina::Integer> thetaTrefoilLeft {
-        {-2,-2,-1}, {-2,-1,1}, {-2,0,-1}, {-1,-2,1}, {-1,1,1}, {0,-2,-1},
-        {0,2,-1}, {1,-1,1}, {1,2,1}, {2,0,-1}, {2,1,1}, {2,2,-1} };
+    static const regina::Laurent<Integer, 2> thetaTrefoilLeft {
+        {{-2,-2},-1}, {{-2,-1},1}, {{-2,0},-1}, {{-1,-2},1}, {{-1,1},1},
+        {{0,-2},-1}, {{0,2},-1}, {{1,-1},1}, {{1,2},1},
+        {{2,0},-1}, {{2,1},1}, {{2,2},-1} };
 
     verifyTheta(trefoilLeft, thetaTrefoilLeft);
     verifyTheta(trefoilRight, -thetaTrefoilLeft);
@@ -1861,31 +1863,34 @@ TEST_F(LinkTest, theta) {
     // Bar-Natan / van der Veen and is tested here by verifyTheta(), and so
     // this does seem a safe assumption for the purpose of the test suite.
     verifyTheta(conway, {
-        {-6,-4,-1}, {-6,-3,2}, {-6,-2,-1},
-        {-5,-5,2}, {-5,-4,-2}, {-5,-1,-2}, {-5,0,2},
-        {-4,-6,-1}, {-4,-5,-2}, {-4,-4,2}, {-4,-2,2}, {-4,0,2}, {-4,1,-2},
-            {-4,2,-1},
-        {-3,-6,2}, {-3,-2,-1}, {-3,-1,-1}, {-3,3,2},
-        {-2,-6,-1}, {-2,-4,2}, {-2,-3,-1}, {-2,-2,-2}, {-2,0,-2}, {-2,1,-1},
-            {-2,2,2}, {-2,4,-1},
-        {-1,-5,-2}, {-1,-3,-1}, {-1,-1,4}, {-1,0,4}, {-1,2,-1}, {-1,4,-2},
-        {0,-5,2}, {0,-4,2}, {0,-2,-2}, {0,-1,4}, {0,0,-12}, {0,1,4}, {0,2,-2},
-            {0,4,2}, {0,5,2},
-        {1,-4,-2}, {1,-2,-1}, {1,0,4}, {1,1,4}, {1,3,-1}, {1,5,-2},
-        {2,-4,-1}, {2,-2,2}, {2,-1,-1}, {2,0,-2}, {2,2,-2}, {2,3,-1}, {2,4,2},
-            {2,6,-1},
-        {3,-3,2}, {3,1,-1}, {3,2,-1}, {3,6,2},
-        {4,-2,-1}, {4,-1,-2}, {4,0,2}, {4,2,2}, {4,4,2}, {4,5,-2}, {4,6,-1},
-        {5,0,2}, {5,1,-2}, {5,4,-2}, {5,5,2},
-        {6,2,-1}, {6,3,2}, {6,4,-1} });
+        {{-6,-4},-1}, {{-6,-3},2}, {{-6,-2},-1},
+        {{-5,-5},2}, {{-5,-4},-2}, {{-5,-1},-2}, {{-5,0},2},
+        {{-4,-6},-1}, {{-4,-5},-2}, {{-4,-4},2}, {{-4,-2},2}, {{-4,0},2},
+            {{-4,1},-2}, {{-4,2},-1},
+        {{-3,-6},2}, {{-3,-2},-1}, {{-3,-1},-1}, {{-3,3},2},
+        {{-2,-6},-1}, {{-2,-4},2}, {{-2,-3},-1}, {{-2,-2},-2}, {{-2,0},-2},
+            {{-2,1},-1}, {{-2,2},2}, {{-2,4},-1},
+        {{-1,-5},-2}, {{-1,-3},-1}, {{-1,-1},4}, {{-1,0},4}, {{-1,2},-1},
+            {{-1,4},-2},
+        {{0,-5},2}, {{0,-4},2}, {{0,-2},-2}, {{0,-1},4}, {{0,0},-12}, {{0,1},4},
+            {{0,2},-2}, {{0,4},2}, {{0,5},2},
+        {{1,-4},-2}, {{1,-2},-1}, {{1,0},4}, {{1,1},4}, {{1,3},-1}, {{1,5},-2},
+        {{2,-4},-1}, {{2,-2},2}, {{2,-1},-1}, {{2,0},-2}, {{2,2},-2},
+            {{2,3},-1}, {{2,4},2}, {{2,6},-1},
+        {{3,-3},2}, {{3,1},-1}, {{3,2},-1}, {{3,6},2},
+        {{4,-2},-1}, {{4,-1},-2}, {{4,0},2}, {{4,2},2}, {{4,4},2}, {{4,5},-2},
+            {{4,6},-1},
+        {{5,0},2}, {{5,1},-2}, {{5,4},-2}, {{5,5},2},
+        {{6,2},-1}, {{6,3},2}, {{6,4},-1} });
     verifyTheta(kinoshitaTerasaka, {
-        {-3,-2,1}, {-3,-1,1},
-        {-2,-3,1}, {-2,-2,-2}, {-2,-1,-2}, {-2,0,-2}, {-2,1,1},
-        {-1,-3,1}, {-1,-2,-2}, {-1,-1,2}, {-1,0,2}, {-1,1,-2}, {-1,2,1},
-        {0,-2,-2}, {0,-1,2}, {0,1,2}, {0,2,-2},
-        {1,-2,1}, {1,-1,-2}, {1,0,2}, {1,1,2}, {1,2,-2}, {1,3,1},
-        {2,-1,1}, {2,0,-2}, {2,1,-2}, {2,2,-2}, {2,3,1},
-        {3,1,1}, {3,2,1} });
+        {{-3,-2},1}, {{-3,-1},1},
+        {{-2,-3},1}, {{-2,-2},-2}, {{-2,-1},-2}, {{-2,0},-2}, {{-2,1},1},
+        {{-1,-3},1}, {{-1,-2},-2}, {{-1,-1},2}, {{-1,0},2}, {{-1,1},-2},
+            {{-1,2},1},
+        {{0,-2},-2}, {{0,-1},2}, {{0,1},2}, {{0,2},-2},
+        {{1,-2},1}, {{1,-1},-2}, {{1,0},2}, {{1,1},2}, {{1,2},-2}, {{1,3},1},
+        {{2,-1},1}, {{2,0},-2}, {{2,1},-2}, {{2,2},-2}, {{2,3},1},
+        {{3,1},1}, {{3,2},1} });
 
     // We do not test GST, since this is a bit slow at the present time.
 
@@ -1893,9 +1898,9 @@ TEST_F(LinkTest, theta) {
     // (theta_0 is additive under knot composition, and so theta is additive
     // after multiplying by the relevant Alexander polynomials)).
     verifyTheta(rht_rht, thetaTrefoilLeft * -2 *
-        regina::Laurent2<regina::Integer>({{1,0,1}, {0,0,-1}, {-1,0,1}}) *
-        regina::Laurent2<regina::Integer>({{0,1,1}, {0,0,-1}, {0,-1,1}}) *
-        regina::Laurent2<regina::Integer>({{1,1,1}, {0,0,-1}, {-1,-1,1}}));
+        regina::Laurent<Integer, 2>({{{1,0},1}, {{0,0},-1}, {{-1,0},1}}) *
+        regina::Laurent<Integer, 2>({{{0,1},1}, {{0,0},-1}, {{0,-1},1}}) *
+        regina::Laurent<Integer, 2>({{{1,1},1}, {{0,0},-1}, {{-1,-1},1}}));
     verifyTheta(rht_lht, {});
 
     // The theta invariant is not available for empty, virtual, and/or
@@ -3580,9 +3585,9 @@ static void verifyResolveViaJones(const Link& link, const char* name) {
 
     SCOPED_TRACE_CSTRING(name);
 
-    regina::Laurent<regina::Integer> minusCoeff { 2, { -1 } };
-    regina::Laurent<regina::Integer> plusCoeff { -2, { 1 } };
-    regina::Laurent<regina::Integer> resolveCoeff { -1, { -1, 0, 1 } };
+    regina::Laurent<Integer> minusCoeff { 2, { -1 } };
+    regina::Laurent<Integer> plusCoeff { -2, { 1 } };
+    regina::Laurent<Integer> resolveCoeff { -1, { -1, 0, 1 } };
 
     for (size_t i = 0; i < link.size(); ++i) {
         SCOPED_TRACE_NUMERIC(i);
@@ -4786,7 +4791,7 @@ static void verifyPDCode(const Link& link, const char* name) {
         auto jones = recon.jones();
         if (lost) {
             // Multiply jones by (-t - t^-1)^lost.
-            const regina::Laurent<regina::Integer> f(-1, { -1, 0, -1 });
+            const regina::Laurent<Integer> f(-1, { -1, 0, -1 });
             for (size_t i = 0; i < lost; ++i)
                 jones *= f;
         }

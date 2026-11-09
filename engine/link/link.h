@@ -827,7 +827,7 @@ class Link :
                  This is std::nullopt if it has not yet been computed.
                  We insist that bracket_ is non-null if and only if jones_
                  is non-null. */
-        mutable std::optional<Laurent2<Integer>> theta_;
+        mutable std::optional<Laurent<Integer, 2>> theta_;
             /**< The theta polynomial of the link.  This is the second part of
                  the invariant of Bar-Natan and van der Veen (the first part
                  is just the Alexander polynomial).
@@ -954,7 +954,7 @@ class Link :
          * theta polynomials for human consumption.
          *
          * To pretty-print the theta polynomial for human consumption, you
-         * can call `Laurent2::str(Link::thetaVarX, Link::thetaVarY)`.
+         * can call `Laurent::str(Link::thetaVarX, Link::thetaVarY)`.
          */
         static constexpr const char* thetaVarX = "T\u2081"; // $T_1$
 
@@ -964,7 +964,7 @@ class Link :
          * theta polynomials for human consumption.
          *
          * To pretty-print the theta polynomial for human consumption, you
-         * can call `Laurent2::str(Link::thetaVarX, Link::thetaVarY)`.
+         * can call `Laurent::str(Link::thetaVarX, Link::thetaVarY)`.
          */
         static constexpr const char* thetaVarY = "T\u2082"; // $T_2$
 
@@ -4339,7 +4339,7 @@ class Link :
          * then this routine will throw an exception.
          *
          * To pretty-print this polynomial for human consumption, you can call
-         * `Laurent2::str(Link::thetaVarX, Link::thetaVarY)`.
+         * `Laurent::str(Link::thetaVarX, Link::thetaVarY)`.
          *
          * Bear in mind that each time a link changes, all of its
          * polynomials will be deleted.  Thus the reference that is returned
@@ -4359,7 +4359,7 @@ class Link :
          *
          * \return the theta polynomial of this knot.
          */
-        const Laurent2<Integer>& theta() const;
+        const Laurent<Integer, 2>& theta() const;
         /**
          * Is the theta polynomial of this knot already known (or trivial
          * to determine)?  See theta() for further details.
