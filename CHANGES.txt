@@ -594,6 +594,7 @@ Version 8.0  [ TODO ]
             - Now supports iteration over coefficients.
             - New overloads for scalar multiplication and division that take
               native C++ integers.
+            - Tweaked the string output routines.
         Enum PolynomialProductAlgorithm:
             - New enumeration for use with polynomial multiplication.
         Class Primes:

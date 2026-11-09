@@ -1764,9 +1764,13 @@ void Polynomial<T>::writeTextShort(std::ostream& out, bool utf8,
         if (i == 0) {
             // This is the constant term.
             // If non-zero, it is not the first term being output.
-            if (coeff_[i] < 0)
-                out << " - " << (-coeff_[i]);
-            else if (coeff_[i] != 0)
+            if (coeff_[i] < 0) {
+                if (utf8)
+                    out << " \u2212 ";
+                else
+                    out << " - ";
+                out << (-coeff_[i]);
+            } else if (coeff_[i] != 0)
                 out << " + " << coeff_[i];
             break;
         }
@@ -1774,17 +1778,27 @@ void Polynomial<T>::writeTextShort(std::ostream& out, bool utf8,
             // This is non-zero, and not the constant term.
             if (i == degree_) {
                 // This is the first term being output.
-                if (coeff_[i] == -1)
-                    out << "- ";
-                else if (coeff_[i] != 1)
+                if (coeff_[i] == -1) {
+                    if (utf8)
+                        out << "\u2212";
+                    else
+                        out << '-';
+                } else if (coeff_[i] != 1)
                     out << coeff_[i] << ' ';
             } else {
                 // This is not the first term being output.
-                if (coeff_[i] == -1)
-                    out << " - ";
-                else if (coeff_[i] < 0)
-                    out << " - " << (-coeff_[i]) << ' ';
-                else if (coeff_[i] == 1)
+                if (coeff_[i] == -1) {
+                    if (utf8)
+                        out << " \u2212 ";
+                    else
+                        out << " - ";
+                } else if (coeff_[i] < 0) {
+                    if (utf8)
+                        out << " \u2212 ";
+                    else
+                        out << " - ";
+                    out << (-coeff_[i]) << ' ';
+                } else if (coeff_[i] == 1)
                     out << " + ";
                 else
                     out << " + " << coeff_[i] << ' ';
