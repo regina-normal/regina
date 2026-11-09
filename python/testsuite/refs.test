@@ -88,6 +88,15 @@ p[2,3] = 7; # should work
 print(p)
 print()
 
+p = Laurent3()
+p.initExp(2,3,1)
+print(p)
+p[2,3,1].negate() # should do nothing due to constness
+print(p)
+p[2,3,1] = 7; # should work
+print(p)
+print()
+
 p = Cyclotomic(3, [2, 5])
 print(p)
 p[1] = 4

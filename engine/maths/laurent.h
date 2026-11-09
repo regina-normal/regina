@@ -1055,7 +1055,7 @@ class Laurent :
                 term_ = new Term[capacity_];
 
                 Term* dest = term_;
-                for (const T* src = p.term_ + p.minExp_ - p.base_;
+                for (const auto* src = p.term_ + p.minExp_ - p.base_;
                         src != p.term_ + p.maxExp_ - p.base_ + 1;
                         ++src, ++dest) {
                     if constexpr (v == 1) {
@@ -1230,7 +1230,7 @@ class Laurent :
                 if constexpr (vars == 2)
                     *terms = p;
                 else
-                    *terms = Term::embed<var - 1>(p);
+                    *terms = Term::template embed<var - 1>(p);
                 return { 0, 0, terms };
             }
         }
@@ -1339,7 +1339,7 @@ class Laurent :
                     if constexpr (vars == 2) {
                         *dest->term_ = *src;
                     } else { // vars == 3
-                        T* next = dest->term_;
+                        typename Term::Term* next = dest->term_;
                         next->minExp_ = next->maxExp_ = next->base_ = exp;
                         next->capacity_ = 1;
                         next->term_ = new T[1];

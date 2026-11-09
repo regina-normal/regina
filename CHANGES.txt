@@ -381,6 +381,8 @@ Version 8.0  [ TODO ]
               + The std::initializer_list constructor has changed slightly:
                 each term is now a pair {{xExp, yExp}, value} instead of a
                 triple {xExp, yExp, value}.
+              + For str() and utf8(), you must pass either both variable names
+                or none (there is no longer an option to pass just one).
         Class LaurentCoefficient<T, vars>:
             - New lightweight type to support iteration over the non-zero
               coefficients of a Laurent polynomial.

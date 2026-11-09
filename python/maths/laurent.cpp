@@ -85,8 +85,7 @@ void addLaurent(pybind11::module_& m) {
         }), "minExp"_a, "coefficients"_a, rdoc::__init)
         .def(pybind11::init<const Integer&>(), rdoc::__init_2)
         .def(pybind11::init<long>(), rdoc::__init_3)
-        .def("init", static_cast<void (Laurent<Integer>::*)()>(
-            &Laurent<Integer>::init), rdoc::init)
+        .def("init", &Laurent<Integer>::init, rdoc::init)
         .def("initExp", &Laurent<Integer>::initExp<>, rdoc::initExp)
         .def_static("monomial", &Laurent<Integer>::monomial<>,
             rdoc::monomial)

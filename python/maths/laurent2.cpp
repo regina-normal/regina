@@ -40,65 +40,98 @@ using namespace pybind11::literals;
 
 using pybind11::overload_cast;
 using regina::Integer;
-using regina::Laurent2;
+using regina::Laurent;
 using regina::python::doc::common::neq_value;
 
 void addLaurent2(pybind11::module_& m) {
-    RDOC_SCOPE_BEGIN(Laurent2)
+    RDOC_SCOPE_BEGIN(LaurentCoefficient)
 
-    auto c = pybind11::class_<Laurent2<Integer>>(m, "Laurent2", rdoc::__class)
+    using LC = regina::LaurentCoefficient<Integer, 2>;
+    auto c = pybind11::class_<LC>(m, "LaurentCoefficient2", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
-        .def(pybind11::init<const Laurent2<Integer>&>(), rdoc::__copy)
-        .def(pybind11::init([](const Laurent2<Integer>& toShift,
-                long xShift, long yShift) { // deprecated constructor
-            return toShift.shifted(xShift, yShift);
-        }), "toShift"_a, "xShift"_a, "yShift"_a, rdoc::__init)
-        .def(pybind11::init([](const std::vector<
-                std::tuple<long, long, Integer>>& coeffs) {
-            return new Laurent2<Integer>(coeffs.begin(), coeffs.end());
-        }), "coefficients"_a, rdoc::__init_2)
-        .def(pybind11::init<const Integer&>(), rdoc::__init_3)
-        .def(pybind11::init<long>(), rdoc::__init_4)
-        .def(pybind11::init<const regina::Laurent<Integer>&, long, long>(),
-            rdoc::__init_5)
-        .def(pybind11::init<const regina::Laurent<Integer>&,
-                const regina::Laurent<Integer>&>(), rdoc::__init_6)
-        .def("init", overload_cast<>(&Laurent2<Integer>::init), rdoc::init)
-        .def("initExp", &Laurent2<Integer>::initExp, rdoc::initExp)
-        .def_static("monomial", &Laurent2<Integer>::monomial, rdoc::monomial)
-        .def("isZero", &Laurent2<Integer>::isZero, rdoc::isZero)
-        .def("countTerms", &Laurent2<Integer>::countTerms, rdoc::countTerms)
-        .def("set", &Laurent2<Integer>::set, rdoc::set)
-        .def("swap", &Laurent2<Integer>::swap, rdoc::swap)
-        .def("shift", &Laurent2<Integer>::shift, rdoc::shift)
-        .def("shifted", static_cast<Laurent2<Integer> (Laurent2<Integer>::*)(
-                long, long) const&>(&Laurent2<Integer>::shifted),
-            rdoc::shifted)
-        .def("negate", &Laurent2<Integer>::negate, rdoc::negate)
-        .def("invertX", &Laurent2<Integer>::invertX, rdoc::invertX)
-        .def("invertY", &Laurent2<Integer>::invertY, rdoc::invertY)
-        .def("addProduct", &Laurent2<Integer>::addProduct, rdoc::addProduct)
-        .def("str", overload_cast<const char*, const char*>(
-            &Laurent2<Integer>::str, pybind11::const_),
-            "varX"_a, "varY"_a = nullptr, rdoc::str)
-        .def("utf8", overload_cast<const char*, const char*>(
-            &Laurent2<Integer>::utf8, pybind11::const_),
-            "varX"_a, "varY"_a = nullptr, rdoc::utf8)
-        .def("validate", &Laurent2<Integer>::validate, rdoc::validate)
-        .def("__getitem__", [](const Laurent2<Integer>& p,
-                std::pair<long, long> exponents) {
-            return p(exponents.first, exponents.second);
+        .def(pybind11::init<const LC&>(), rdoc::__copy)
+        .def("__bool__", &LC::operator bool, rdoc::__as_bool)
+        .def("inc", [](LC& c) { return c++; }, rdoc::__inc)
+        .def("dec", [](LC& c) { return c--; }, rdoc::__dec)
+        .def("coeff", &LC::operator *,
+            pybind11::return_value_policy::copy, // to enforce constness
+            rdoc::__mul)
+        .def("exp", static_cast<long (LC::*)(int) const>(&LC::exp), rdoc::exp)
+        .def("constantTerm", &LC::constantTerm, rdoc::constantTerm)
+        .def("__next__", [](LC& it) {
+            if (it) {
+                auto ans = std::pair<std::pair<long, long>, Integer>(
+                    { it.exp<0>(), it.exp<1>() }, *it);
+                ++it;
+                return ans;
+            } else
+                throw pybind11::stop_iteration();
+        }, rdoc::__next__)
+    ;
+    regina::python::add_output_basic(c, rdoc::str);
+    regina::python::add_eq_operators(c, rdoc::__eq);
+
+    RDOC_SCOPE_SWITCH(Laurent)
+
+    // overload_cast has trouble with templated vs non-templated overloads
+    // and also overloads in the presence of perfect forwarding, and so there
+    // are several places below where we just static_cast directly.
+    using LL = Laurent<Integer, 2>;
+    auto c = pybind11::class_<LL>(m, "Laurent2", rdoc::__class)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<const LL&>(), rdoc::__copy)
+        .def(pybind11::init<const Integer&>(), rdoc::__init_2)
+        .def(pybind11::init<long>(), rdoc::__init_3)
+        .def(pybind11::init<const Laurent<Integer>&, const Laurent<Integer>&>(),
+            rdoc::__init_4)
+        .def("init", &LL::init, rdoc::init)
+        .def("initExp", &LL::initExp<long>, rdoc::initExp)
+        .def_static("monomial", &LL::monomial<long>, rdoc::monomial)
+        .def_static("embed",
+            static_cast<LL (*)(const Laurent<Integer>&, int)>(&LL::embed),
+            rdoc::embed)
+        .def_static("diagonalise",
+            overload_cast<const Laurent<Integer>&>(&LL::diagonalise),
+            rdoc::diagonalise)
+        .def("isZero", &LL::isZero, rdoc::isZero)
+        .def("allocation", &LL::allocation, rdoc::allocation)
+        .def("reserveRange", &LL::reserveRange, rdoc::reserveRange)
+        .def("__getitem__", [](const LL& p, std::pair<long, long> exp) {
+            return p(exp.first, exp.second);
         }, pybind11::return_value_policy::copy, // to enforce constness
             rdoc::__call)
-        .def("__setitem__", [](Laurent2<Integer>& p,
-                std::pair<long, long> exponents, const Integer& value) {
-            p.set(exponents.first, exponents.second, value);
+        .def("__setitem__", [](LL& p, std::pair<long, long> exp,
+                const Integer& value) {
+            p.set(exp.first, exp.second, value);
         }, rdoc::__call)
-        .def("__iter__", [](const Laurent2<Integer>& p) {
-            return
-                pybind11::make_iterator<pybind11::return_value_policy::copy>(p);
-        }, pybind11::keep_alive<0, 1>(), // iterator keeps polynomial alive
+        .def("__iter__", &LL::first,
+            pybind11::keep_alive<0, 1>(), // iterator keeps polynomial alive
             rdoc::__iter__)
+        .def("first", &LL::first,
+            pybind11::keep_alive<0, 1>(), // iterator keeps polynomial alive
+            rdoc::first)
+        .def("last", &LL::last,
+            pybind11::keep_alive<0, 1>(), // iterator keeps polynomial alive
+            rdoc::last)
+        .def("set", &LL::set, rdoc::set_2)
+        .def("setTo", &LL::setTo<long>, rdoc::setTo)
+        .def("swap", &LL::swap, rdoc::swap)
+        .def("shift", &LL::shift<long>, rdoc::shift)
+        .def("shifted",
+            static_cast<LL (LL::*)(long&&, long&&) const&>(
+                &LL::shifted<long, long>),
+            rdoc::shifted)
+        .def("negate", &LL::negate, rdoc::negate)
+        .def("invertX", &LL::invertX, rdoc::invertX)
+        .def("addProduct",
+            overload_cast<const LL&, const LL&>(&LL::addProduct),
+            rdoc::addProduct)
+        .def("addProduct",
+            overload_cast<const LL&, const Integer&>(&LL::addProduct),
+            rdoc::addProduct_2)
+        .def("str", &LL::str<const char*, const char*>, rdoc::str)
+        .def("utf8", &LL::utf8<const char*, const char*>, rdoc::utf8)
+        .def("validate", &LL::validate, rdoc::validate)
         .def(pybind11::self *= Integer(), rdoc::__imul)
         .def(pybind11::self *= long(), rdoc::__imul_2)
         .def(pybind11::self /= Integer(), rdoc::__idiv)
@@ -125,7 +158,7 @@ void addLaurent2(pybind11::module_& m) {
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_cmp_operators(c, rdoc::__cmp);
-    regina::python::add_global_swap<Laurent2<Integer>, rdoc>(m);
+    regina::python::add_global_swap<LL, rdoc>(m);
 
     RDOC_SCOPE_END
 }

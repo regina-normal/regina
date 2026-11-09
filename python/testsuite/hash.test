@@ -67,7 +67,7 @@ test(LargeInteger.infinity)
 test(VectorInt([3,-2,0,6]))
 test(VectorLarge([3,'inf',-2,0,6]))
 test(Laurent(-2, [5,0,-6,1]))
-test(Laurent2([(3,-2,1), (1,0,4)]))
+test(ExampleLink.trefoil().homfly()) # Laurent2
 test(Example2.kb().pairing())
 test(Example3.poincare().pairing())
 test(Example4.cappellShaneson().pairing())

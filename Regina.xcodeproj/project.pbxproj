@@ -1111,6 +1111,7 @@
 		05888BD8283F0F8B00181D2D /* tightencoding-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05888BD6283F0F8B00181D2D /* tightencoding-impl.h */; };
 		0588C2A31FD8D1350093C2C9 /* rewrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0588C2A11FD8D1340093C2C9 /* rewrite.cpp */; };
 		0588F1191808D43B006BDC79 /* packettype.h in Headers */ = {isa = PBXBuildFile; fileRef = 0588F1171808D43B006BDC79 /* packettype.h */; };
+		058A343F30A27535005D8F91 /* laurent3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 058A343E30A27535005D8F91 /* laurent3.cpp */; };
 		058C305F1DCAF6F8006162D2 /* forward.h in Headers */ = {isa = PBXBuildFile; fileRef = 058C305E1DCAF6F8006162D2 /* forward.h */; };
 		058E398D1DCBC67C00D463A4 /* generic.h in Headers */ = {isa = PBXBuildFile; fileRef = 058E398C1DCBC67C00D463A4 /* generic.h */; };
 		058F804E29DA160A00110CF5 /* triangulation-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 058F804D29DA160A00110CF5 /* triangulation-impl.h */; };
@@ -3602,6 +3603,7 @@
 		0589B32E2E00432E007A8F64 /* basic_alltypes.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = basic_alltypes.cpp; sourceTree = "<group>"; };
 		058A343C30A19D4D005D8F91 /* laurent.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = laurent.out; sourceTree = "<group>"; };
 		058A343D30A19D4D005D8F91 /* laurent.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = laurent.test; sourceTree = "<group>"; };
+		058A343E30A27535005D8F91 /* laurent3.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = laurent3.cpp; sourceTree = "<group>"; };
 		058C305E1DCAF6F8006162D2 /* forward.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = forward.h; sourceTree = "<group>"; };
 		058E398C1DCBC67C00D463A4 /* generic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = generic.h; sourceTree = "<group>"; };
 		058F804D29DA160A00110CF5 /* triangulation-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "triangulation-impl.h"; sourceTree = "<group>"; };
@@ -5200,6 +5202,7 @@
 				050F5D301B9BAB9C00C1F681 /* integer.cpp */,
 				05721F011F97160200A83FFC /* laurent.cpp */,
 				05721F021F97160200A83FFC /* laurent2.cpp */,
+				058A343E30A27535005D8F91 /* laurent3.cpp */,
 				05098AB628F4C4CF005E4716 /* matrix.cpp */,
 				050F5D321B9BAB9C00C1F681 /* matrix2.cpp */,
 				050F5D3A1B9BAB9C00C1F681 /* numbertheory.cpp */,
@@ -9471,6 +9474,7 @@
 				05E62A5E2FBFFD8D00AE1B84 /* face7.cpp in Sources */,
 				05E62A5F2FBFFD8D00AE1B84 /* isomorphism8.cpp in Sources */,
 				05E62A632FBFFD8D00AE1B84 /* component3.cpp in Sources */,
+				058A343F30A27535005D8F91 /* laurent3.cpp in Sources */,
 				05E62A642FBFFD8D00AE1B84 /* tetrahedron4.cpp in Sources */,
 				05E62A652FBFFD8D00AE1B84 /* face8.cpp in Sources */,
 				05E62A672FBFFD8D00AE1B84 /* isomorphism4.cpp in Sources */,
