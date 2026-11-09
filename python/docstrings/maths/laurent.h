@@ -1072,7 +1072,6 @@ As an example, you could print all of the non-zero terms of a single-
 variable Laurent polynomial using the following loop:
 
 ```
-cpp
 for (auto c = p.first(); c; ++c) {
     std::cout << "Term: " << *c << " x^" << c.exp() << std::endl;
 }
