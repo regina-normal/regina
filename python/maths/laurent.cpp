@@ -46,7 +46,33 @@ using regina::Laurent;
 using regina::python::doc::common::neq_value;
 
 void addLaurent(pybind11::module_& m) {
-    RDOC_SCOPE_BEGIN(Laurent)
+    RDOC_SCOPE_BEGIN(LaurentCoefficient)
+
+    using LC = regina::LaurentCoefficient<Integer, 1>;
+    auto c = pybind11::class_<LC>(m, "LaurentCoefficient", rdoc::__class)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<const LC&>(), rdoc::__copy)
+        .def("__bool__", &LC::operator bool, rdoc::__as_bool)
+        .def("inc", [](LC& c) { return c++; }, rdoc::__inc)
+        .def("dec", [](LC& c) { return c--; }, rdoc::__dec)
+        .def("coeff", &LC::operator *,
+            pybind11::return_value_policy::copy, // to enforce constness
+            rdoc::__mul)
+        .def("exp", static_cast<long (LC::*)(int) const>(&LC::exp), rdoc::exp)
+        .def("constantTerm", &LC::constantTerm, rdoc::constantTerm)
+        .def("__next__", [](LC& it) {
+            if (it) {
+                auto ans = std::pair<long, Integer>(it.exp<0>(), *it);
+                ++it;
+                return ans;
+            } else
+                throw pybind11::stop_iteration();
+        }, rdoc::__next__)
+    ;
+    regina::python::add_output_basic(c, rdoc::str);
+    regina::python::add_eq_operators(c, rdoc::__eq);
+
+    RDOC_SCOPE_SWITCH(Laurent)
 
     // overload_cast has trouble with templated vs non-templated overloads
     // and also overloads in the presence of perfect forwarding, and so there
@@ -78,11 +104,15 @@ void addLaurent(pybind11::module_& m) {
                 const Integer& value) {
             p.set(exp, value);
         }, rdoc::__array)
-        .def("__iter__", [](const Laurent<Integer>& p) {
-            return
-                pybind11::make_iterator<pybind11::return_value_policy::copy>(p);
-        }, pybind11::keep_alive<0, 1>(), // iterator keeps polynomial alive
+        .def("__iter__", &Laurent<Integer>::first,
+            pybind11::keep_alive<0, 1>(), // iterator keeps polynomial alive
             rdoc::__iter__)
+        .def("first", &Laurent<Integer>::first,
+            pybind11::keep_alive<0, 1>(), // iterator keeps polynomial alive
+            rdoc::first)
+        .def("last", &Laurent<Integer>::last,
+            pybind11::keep_alive<0, 1>(), // iterator keeps polynomial alive
+            rdoc::last)
         .def("set", &Laurent<Integer>::set, rdoc::set)
         .def("setTo", &Laurent<Integer>::setTo<>, rdoc::setTo)
         .def("swap", &Laurent<Integer>::swap, rdoc::swap)

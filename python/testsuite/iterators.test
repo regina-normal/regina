@@ -141,8 +141,6 @@ print([c for c in p])
 p = Laurent(-2, [1,4,0,6])
 print(p)
 print([c for c in p])
-for c in p:
-    c -= 1
 
 print(p)
 p.set(-2, 0)

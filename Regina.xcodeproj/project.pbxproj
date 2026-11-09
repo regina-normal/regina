@@ -3600,6 +3600,8 @@
 		0588C2A11FD8D1340093C2C9 /* rewrite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rewrite.cpp; sourceTree = "<group>"; };
 		0588F1171808D43B006BDC79 /* packettype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packettype.h; sourceTree = "<group>"; };
 		0589B32E2E00432E007A8F64 /* basic_alltypes.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = basic_alltypes.cpp; sourceTree = "<group>"; };
+		058A343C30A19D4D005D8F91 /* laurent.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = laurent.out; sourceTree = "<group>"; };
+		058A343D30A19D4D005D8F91 /* laurent.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = laurent.test; sourceTree = "<group>"; };
 		058C305E1DCAF6F8006162D2 /* forward.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = forward.h; sourceTree = "<group>"; };
 		058E398C1DCBC67C00D463A4 /* generic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = generic.h; sourceTree = "<group>"; };
 		058F804D29DA160A00110CF5 /* triangulation-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "triangulation-impl.h"; sourceTree = "<group>"; };
@@ -5422,6 +5424,8 @@
 				05199A3325C63B7F0006B8FA /* iterators.out */,
 				05199A3825C63B7F0006B8FA /* iterators.test */,
 				050F5D951B9BAB9C00C1F681 /* knotted-Y.orb */,
+				058A343C30A19D4D005D8F91 /* laurent.out */,
+				058A343D30A19D4D005D8F91 /* laurent.test */,
 				05199A3225C63B7F0006B8FA /* listener.out */,
 				05199A3725C63B7F0006B8FA /* listener.test */,
 				05CAE6862746878C007C93F3 /* lookup.out */,

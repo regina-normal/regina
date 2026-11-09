@@ -323,6 +323,7 @@ Language : enum
 LargeInteger : class -> EqualityType.ByValue
 Laurent : class -> EqualityType.ByValue
 Laurent2 : class -> EqualityType.ByValue
+LaurentCoefficient : class -> EqualityType.ByValue
 LayeredChain : class -> EqualityType.ByValue
 LayeredChainPair : class -> EqualityType.ByValue
 LayeredLensSpace : class -> EqualityType.ByValue

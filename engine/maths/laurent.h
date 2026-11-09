@@ -115,8 +115,8 @@ namespace detail {
  * Laurent polynomial using the following loop:
  *
  * ```cpp
- * for (auto c = p.first(); c; ++c) {
- *     std::cout << "Term: " << *c << " x^" << c.exp() << std::endl;
+ * for (auto c = poly.first(); c; ++c) {
+ *     std::cout << "Term: " << *c << " x^" << c.exp<0>() << std::endl;
  * }
  * ```
  *
@@ -235,6 +235,9 @@ class LaurentCoefficient {
          *
          * \pre This iterator is dereferenceable.
          *
+         * \nopython The postincrement operator is present in Python as the
+         * member function inc().
+         *
          * \return a reference to this iterator.
          */
         LaurentCoefficient& operator ++() {
@@ -276,6 +279,9 @@ class LaurentCoefficient {
          *
          * \pre This iterator is dereferenceable.
          *
+         * \python This routine is named inc() since Python does not support
+         * the increment operator.
+         *
          * \return a copy of this iterator before it was incremented.
          */
         LaurentCoefficient operator ++(int) {
@@ -291,6 +297,9 @@ class LaurentCoefficient {
          * non-zero coefficients.
          *
          * \pre This iterator is dereferenceable.
+         *
+         * \nopython The postdecrement operator is present in Python as the
+         * member function dec().
          *
          * \return a reference to this iterator.
          */
@@ -333,6 +342,9 @@ class LaurentCoefficient {
          *
          * \pre This iterator is dereferenceable.
          *
+         * \python This routine is named dec() since Python does not support
+         * the decrement operator.
+         *
          * \return a copy of this iterator before it was decremented.
          */
         LaurentCoefficient operator --(int) {
@@ -341,11 +353,41 @@ class LaurentCoefficient {
             return ans;
         }
 
+#ifdef __APIDOCS
+        /**
+         * Returns details of the current non-zero coefficient and increments
+         * this iterator.
+         *
+         * Specifically, this function will return a pair `(exp, coeff)`, where
+         * \a coeff is a deep copy of the (non-zero) coefficient of type \a T,
+         * and \a exp indicates which monomial the coefficient is attached to.
+         * If `vars == 1` then \a exp will simply be a Python integer indicating
+         * the corresponding exponent of the polynomial variable; if `vars > 1`
+         * then \a exp will be a tuple of \a vars Python integers indicating
+         * the corresponding exponent of each polynomial variable in turn.
+         *
+         * \nocpp For C++ users, LaurentCoefficient provides the usual iterator
+         * preincrement and postincrement operators (`++`), and gives access
+         * to details of the current coefficient via the deference operator
+         * `(*)` and the function exp().
+         *
+         * \exception StopIteration This iterator is not dereferenceable.
+         *
+         * \return details of the coefficient that this iterator is pointing to
+         * (as described above), before the increment takes place.
+         */
+        auto __next__();
+#endif
+
         /**
          * Returns a read-only reference to the current non-zero coefficient
          * of the underlying Laurent polynomial.
          *
          * \pre This iterator is dereferenceable.
+         *
+         * \python This routine is named coeff() since Python does not support
+         * the dereference operator.  Moreover, in order to enforce constness,
+         * this routine returns by value (not by reference).
          *
          * \return the current non-zero coefficient.
          */
@@ -376,7 +418,12 @@ class LaurentCoefficient {
          * corresponds to the current non-zero coefficient.  This allows you
          * to determine which monomial the current coefficient is attached to.
          *
+         * This is the fastest way to obtain the current exponent if you know
+         * \a var at compile time.
+         *
          * \pre This iterator is dereferenceable.
+         *
+         * \nopython Instead use the variant `exp(int)`.
          *
          * \tparam var indicates which variable of the polynomial you wish to
          * query.
@@ -389,6 +436,35 @@ class LaurentCoefficient {
                 return (pos_ - first_) + firstExp_;
             else
                 return inner_.template exp<var - 1>();
+        }
+
+        /**
+         * Identifies which exponent of the given polynomial variable
+         * corresponds to the current non-zero coefficient, where the variable
+         * in question does not need to be known until runtime.  This routine
+         * allows you to determine which monomial the current coefficient is
+         * attached to.
+         *
+         * For C++ programmers who know \a var at compile time, you are better
+         * off using the template function `exp<var>()` instead, which is
+         * slightly faster.
+         *
+         * \pre This iterator is dereferenceable.
+         *
+         * \exception InvalidArgument The argument \a var is not within the
+         * allowed range (from 0 to `vars-1` inclusive).
+         *
+         * \param var indicates which variable of the polynomial you wish to
+         * query; this must be between 0 and `vars-1` inclusive.
+         * \return the current exponent of the given polynomial variable.
+         */
+        long exp(int var) const {
+            if (var < 0 || var >= vars)
+                throw InvalidArgument("exp(): unsupported variable index");
+
+            return select_constexpr<0, vars, long>(var, [this](auto k) {
+                return exp<k>();
+            });
         }
 
         /**
@@ -407,6 +483,30 @@ class LaurentCoefficient {
                 return exp<0>() == 0;
             else
                 return exp<0>() == 0 && inner_.constantTerm();
+        }
+
+        /**
+         * Returns a string representation of this iterator.
+         *
+         * If this iterator is dereferenceable, a suitable string will still
+         * be returned.
+         *
+         * \return a string representation of this iterator.
+         */
+        std::string str() const {
+            if (pos_) {
+                std::ostringstream s;
+                if constexpr (vars == 1) {
+                    s << exp<0>() << " -> " << *pos_;
+                } else if constexpr (vars == 2) {
+                    s << exp<0>() << ',' << exp<1>() << " -> " << *inner_;
+                } else { // vars == 3
+                    s << exp<0>() << ',' << exp<1>() << ',' << exp<2>()
+                        << " -> " << *inner_;
+                }
+                return s.str();
+            } else
+                return "(null)";
         }
 
     private:
@@ -1452,8 +1552,25 @@ class Laurent :
          * If this is the zero polynomial, then the iterator that is returned
          * will be non-deferenceable.
          *
+         * A typical forward iteration through the non-zero coefficients would
+         * look like the following:
+         *
+         * ```cpp
+         * for (auto c = poly.first(); c; ++c) {
+         *     // use the coefficient *c and/or the exponent c.exp<...>()
+         * }
+         * ```
+         *
+         * Note that last() is _not_ a past-the-end iterator, and so
+         * `(first(), last())` do not form a complete iterator range.
+         *
          * See the LaurentCoefficient class notes for further details and
          * examples on how iteration works for Laurent polynomials.
+         *
+         * \python Laurent also implements the Python iterable interface,
+         * which means you can iterate through non-zero coefficients in the
+         * same way that you would iterate over any native Python container.
+         * See the __iter__() documentation for details on how this works.
          *
          * \return an iterator pointing to the first non-zero coefficient.
          */
@@ -1477,8 +1594,25 @@ class Laurent :
          * If this is the zero polynomial, then the iterator that is returned
          * will be non-deferenceable.
          *
+         * A typical backward iteration through the non-zero coefficients would
+         * look like the following:
+         *
+         * ```cpp
+         * for (auto c = poly.last(); c; --c) {
+         *     // use the coefficient *c and/or the exponent c.exp<...>()
+         * }
+         * ```
+         *
+         * Note that last() is _not_ a past-the-end iterator, and so
+         * `(first(), last())` do not form a complete iterator range.
+         *
          * See the LaurentCoefficient class notes for further details and
          * examples on how iteration works for Laurent polynomials.
+         *
+         * \python Laurent also implements the Python iterable interface,
+         * which means you can iterate through non-zero coefficients in the
+         * same way that you would iterate over any native Python container.
+         * See the __iter__() documentation for details on how this works.
          *
          * \return an iterator pointing to the last non-zero coefficient.
          */
@@ -1489,6 +1623,33 @@ class Laurent :
                 return { term_ + minExp_ - base_, term_ + maxExp_ - base_,
                     minExp_, false /* backward */ };
         }
+
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterator that iterates through all non-zero
+         * coefficients of this polynomial.
+         *
+         * Each step of the iteration will return a pair `(exp, coeff)`, where
+         * \a coeff is the (non-zero) coefficient of type \a T, and \a exp
+         * indicates which monomial the coefficient is attached to.
+         * If `vars == 1` then \a exp will simply be a Python integer indicating
+         * the corresponding exponent of the polynomial variable; if `vars > 1`
+         * then \a exp will be a tuple of \a vars Python integers indicating
+         * the corresponding exponent of each polynomial variable in turn.
+         *
+         * To enforce read-only access, Python iterators will return
+         * coefficients by value, not by reference.  If you wish to modify
+         * coefficients then you will need to call different routines, such as
+         * set().
+         *
+         * \nocpp For forward iteration, C++ users should call first() and use
+         * the (slightly non-standard) iteration pattern described there.
+         *
+         * \return an iterator over all non-zero coefficients of this
+         * polynomial.
+         */
+        auto __iter__() const;
+#endif
 
         /**
          * Tests whether this and the given polynomial are equal.
@@ -2442,7 +2603,7 @@ class Laurent :
             if (other.minExp_ == other.maxExp_) {
                 // We can get away without reallocating here.
                 // Also: things should work even if &other == this, since in
-                // such a scenario there is only one coefficient product (which
+                // such a scenario there is only one product of terms (which
                 // becomes single *= single).
                 const auto& single = other.term_[other.minExp_ - other.base_];
                 for (auto it = term_ + minExp_ - base_;
@@ -2488,10 +2649,10 @@ class Laurent :
             }
 
             // From here on, we know that both polynomials have more than one
-            // non-zero coefficient.
+            // non-zero term.
 
             // The following code works even if &other == this, since we build
-            // the coefficients of the product in a separate section of memory.
+            // the terms of the product in a separate section of memory.
             // TODO: Can we reuse our own memory if capacity_ is large enough?
             // (If we do, be sure to remember the case &other == this.)
             capacity_ = maxExp_ - minExp_ + other.maxExp_ - other.minExp_ + 1;
@@ -2606,11 +2767,11 @@ class Laurent :
                 reallocateForRange(x.minExp_, x.maxExp_);
 
                 for (long i = x.minExp_; i <= x.maxExp_; ++i)
-                    if constexpr (HasAddProduct<T>)
-                        term_[i - base_].addProduct(scalar,
-                            x.term_[i - x.base_]);
+                    if constexpr (vars > 1 || HasAddProduct<T>)
+                        term_[i - base_].addProduct(x.term_[i - x.base_],
+                            scalar);
                     else
-                        term_[i - base_] += scalar * x.term_[i - x.base_];
+                        term_[i - base_] += x.term_[i - x.base_] * scalar;
 
                 // We might have zeroed out some coefficients.
                 fixDegrees();
@@ -2635,12 +2796,12 @@ class Laurent :
                 reallocateForRange(x.minExp_, x.maxExp_);
 
                 for (long i = x.minExp_; i <= x.maxExp_; ++i)
-                    if constexpr (HasAddProduct<T>)
-                        term_[i - base_].addProduct(scalar,
-                            std::move(x.term_[i - x.base_]));
+                    if constexpr (vars > 1 || HasAddProduct<T>)
+                        term_[i - base_].addProduct(
+                            std::move(x.term_[i - x.base_]), scalar);
                     else
-                        term_[i - base_] += scalar *
-                            std::move(x.term_[i - x.base_]);
+                        term_[i - base_] +=
+                            std::move(x.term_[i - x.base_]) * scalar;
 
                 // We might have zeroed out some coefficients.
                 fixDegrees();
@@ -3018,44 +3179,44 @@ class Laurent :
     private:
         /**
          * Constructs a new polynomial with the given exponent range and
-         * coefficients.  It is assumed that the coefficient array starts
-         * at exponent \a minExp, and has capacity `maxExp - minExp + 1`.
-         * The new object will take ownership of the given coefficient array.
+         * terms.  It is assumed that the array of terms starts at exponent
+         * \a minExp, and has capacity `maxExp - minExp + 1`.
+         * The new object will take ownership of the given array.
          *
-         * The coefficient array may have leading or trailing zeroes (or
-         * indeed may consist entirely of zeroes), but if this is a possibility
+         * The array of terms may have leading or trailing zeroes (or indeed
+         * may consist entirely of zeroes), but if this is a possibility
          * then you _must_ pass \a checkZeroes as `true`.
          *
          * \pre The arguments satisfy `minExp ≤ maxExp`.
          *
-         * \pre The argument \a coeff is both non-null and non-empty.
+         * \pre The argument \a terms is both non-null and non-empty.
          */
-        Laurent(long minExp, long maxExp, Term* coeff,
+        Laurent(long minExp, long maxExp, Term* terms,
                 bool checkZeroes = false) :
                 minExp_(minExp), maxExp_(maxExp), base_(minExp),
-                capacity_(maxExp - minExp + 1), term_(coeff) {
+                capacity_(maxExp - minExp + 1), term_(terms) {
             // The preconditions guarantee term_ is non-null and non-empty.
             if (checkZeroes)
                 fixDegrees();
         }
 
         /**
-         * Ensures that `minExp_ ≤ newMin` and `maxExp_ ≥ newMax`, and grows
-         * the array of coefficients accordingly if this is necessary.
+         * Ensures that `minExp_ ≤ newMin` and `maxExp_ ≥ newMax`, and
+         * grows the array of terms accordingly if this is necessary.
          * As a result, the terms array will be non-empty (and in
          * particular, \a term_ will be non-null).
          *
          * If this is a non-zero polynomial, then the value of \a minExp_
          * might decrease, but it will not increase; likewise, the value of
          * \a maxExp_ might increase, but it will not decrease.  Moreover,
-         * if \a minExp_ and/or \a maxExp_ do change, then all new coefficients
+         * if \a minExp_ and/or \a maxExp_ do change, then all new terms
          * in the expanded range will be set to zero.
          *
          * If this is the zero polynomial, then \a minExp_ and \a maxExp_ will
          * be set to \a newMin and \a newMax respectively.
          *
          * Note that, after calling this routine, the polynomial might have
-         * zero coefficients at the exponents \a minExp_ and/or \a maxExp_.
+         * zero terms at the exponents \a minExp_ and/or \a maxExp_.
          *
          * This routine is used (for example) in the implementations
          * of += and -=.
@@ -3063,8 +3224,8 @@ class Laurent :
          * \pre The given range satisfies `newMin ≤ newMax`.
          */
         void reallocateForRange(long newMin, long newMax) {
-            // Note: type T will automatically initialise any newly allocated
-            // coefficients to zero.
+            // Note: the Term type will automatically initialise any newly
+            // allocated terms to zero.
             if (! term_) {
                 minExp_ = base_ = newMin;
                 maxExp_ = newMax;
@@ -3072,7 +3233,7 @@ class Laurent :
                 term_ = new Term[capacity_];
             } else if (isZero()) {
                 // This is the zero polynomial, but we already have an
-                // allocated coefficient array.
+                // allocated terms array.
                 size_t rangeLen = newMax - newMin + 1;
                 if (rangeLen > capacity_) {
                     // We are going to have to reallocate.
@@ -3092,7 +3253,7 @@ class Laurent :
                     maxExp_ = newMax;
                     base_ = newMin - ((capacity_ - rangeLen) >> 1);
                     std::fill(term_ + minExp_ - base_,
-                        term_ + maxExp_ - base_ + 1, T());
+                        term_ + maxExp_ - base_ + 1, 0);
                 }
             } else if (newMin >= minExp_ && newMax <= maxExp_) {
                 // We have nothing to do.
@@ -3147,8 +3308,8 @@ class Laurent :
                         base_ += shift;
                     }
 
-                    // Fix minExp_ and maxExp_, and zero out any extra
-                    // coefficients on either end.
+                    // Fix minExp_ and maxExp_, and zero out any extra terms
+                    // on either end.
                     if (newMin < minExp_) {
                         for (auto it = term_ + newMin - base_;
                                 it != term_ + minExp_ - base_; ++it)
@@ -3166,10 +3327,10 @@ class Laurent :
         }
 
         /**
-         * Increases \a minExp_ and/or decreases \a maxExp_ to ensure
-         * that both exponents \a minExp_ and \a maxExp_ have non-zero
-         * coefficients.  If this is the zero polynomial then \a minExp_ and
-         * \a maxExp_ will be left in a state that correctly encodes this.
+         * Increases \a minExp_ and/or decreases \a maxExp_ to ensure that
+         * both exponents \a minExp_ and \a maxExp_ have non-zero terms.
+         * If this is the zero polynomial then \a minExp_ and \a maxExp_ will
+         * be left in a state that correctly encodes this.
          *
          * \pre The data member \a term_ is non-null.
          */
@@ -3223,6 +3384,8 @@ class Laurent :
             return *this;
         }
 
+    friend class LaurentCoefficient<T, vars>;
+
     template <CoefficientDomain U, int v> requires (v > 0 && v <= 3)
     friend Laurent<U, v> operator + (const Laurent<U, v>&,
         const Laurent<U, v>&);
@@ -3246,8 +3409,6 @@ class Laurent :
     // automatically instantiate more classes than we want.
     template <CoefficientDomain U, int v> requires (v > 0 && v <= 3)
     friend class Laurent;
-
-    friend class LaurentCoefficient<T, vars>;
 };
 
 /**
@@ -3433,40 +3594,40 @@ Laurent<T, vars> operator + (const Laurent<T, vars>& lhs,
     // this avoids having to worry about jumping over the gap between
     // them in the code that follows.
     if (lhs.maxExp_ < rhs.minExp_) {
-        auto* coeff = new Laurent<T, vars>::Term[rhs.maxExp_ - lhs.minExp_ + 1];
+        auto* terms = new Laurent<T, vars>::Term[rhs.maxExp_ - lhs.minExp_ + 1];
         std::copy(lhs.term_ + lhs.minExp_ - lhs.base_,
             lhs.term_ + lhs.maxExp_ + 1 - lhs.base_,
-            coeff);
+            terms);
         std::copy(rhs.term_ + rhs.minExp_ - rhs.base_,
             rhs.term_ + rhs.maxExp_ + 1 - rhs.base_,
-            coeff + rhs.minExp_ - lhs.minExp_);
-        return Laurent<T, vars>(lhs.minExp_, rhs.maxExp_, coeff);
+            terms + rhs.minExp_ - lhs.minExp_);
+        return Laurent<T, vars>(lhs.minExp_, rhs.maxExp_, terms);
     } else if (rhs.maxExp_ < lhs.minExp_) {
-        auto* coeff = new Laurent<T, vars>::Term[lhs.maxExp_ - rhs.minExp_ + 1];
+        auto* terms = new Laurent<T, vars>::Term[lhs.maxExp_ - rhs.minExp_ + 1];
         std::copy(rhs.term_ + rhs.minExp_ - rhs.base_,
             rhs.term_ + rhs.maxExp_ + 1 - rhs.base_,
-            coeff);
+            terms);
         std::copy(lhs.term_ + lhs.minExp_ - lhs.base_,
             lhs.term_ + lhs.maxExp_ + 1 - lhs.base_,
-            coeff + lhs.minExp_ - rhs.minExp_);
-        return Laurent<T, vars>(rhs.minExp_, lhs.maxExp_, coeff);
+            terms + lhs.minExp_ - rhs.minExp_);
+        return Laurent<T, vars>(rhs.minExp_, lhs.maxExp_, terms);
     }
 
     // We are guaranteed from here on that the two ranges overlap.
     long minExp = std::min(lhs.minExp_, rhs.minExp_);
     long maxExp = std::max(lhs.maxExp_, rhs.maxExp_);
-    auto* coeff = new Laurent<T, vars>::Term[maxExp - minExp + 1];
+    auto* terms = new Laurent<T, vars>::Term[maxExp - minExp + 1];
 
-    long exp /* next exponent */, idx /* next index into coeff */;
+    long exp /* next exponent */, idx /* next index into terms */;
 
     if (lhs.minExp_ < rhs.minExp_) {
         std::copy(lhs.term_ + lhs.minExp_ - lhs.base_,
-            lhs.term_ + rhs.minExp_ - lhs.base_, coeff);
+            lhs.term_ + rhs.minExp_ - lhs.base_, terms);
         exp = rhs.minExp_;
         idx = rhs.minExp_ - lhs.minExp_;
     } else if (rhs.minExp_ < lhs.minExp_) {
         std::copy(rhs.term_ + rhs.minExp_ - rhs.base_,
-            rhs.term_ + lhs.minExp_ - rhs.base_, coeff);
+            rhs.term_ + lhs.minExp_ - rhs.base_, terms);
         exp = lhs.minExp_;
         idx = lhs.minExp_ - rhs.minExp_;
     } else {
@@ -3475,18 +3636,18 @@ Laurent<T, vars> operator + (const Laurent<T, vars>& lhs,
     }
 
     for ( ; exp <= lhs.maxExp_ && exp <= rhs.maxExp_; ++idx, ++exp)
-        coeff[idx] = lhs.term_[exp - lhs.base_] + rhs.term_[exp - rhs.base_];
+        terms[idx] = lhs.term_[exp - lhs.base_] + rhs.term_[exp - rhs.base_];
 
     // exp is now min(lhs.maxExp_, rhs.maxExp_) + 1.
     if (exp <= lhs.maxExp_) {
         std::copy(lhs.term_ + exp - lhs.base_,
-            lhs.term_ + lhs.maxExp_ + 1 - lhs.base_, coeff + idx);
+            lhs.term_ + lhs.maxExp_ + 1 - lhs.base_, terms + idx);
     } else if (exp <= rhs.maxExp_) {
         std::copy(rhs.term_ + exp - rhs.base_,
-            rhs.term_ + rhs.maxExp_ + 1 - rhs.base_, coeff + idx);
+            rhs.term_ + rhs.maxExp_ + 1 - rhs.base_, terms + idx);
     }
 
-    return Laurent<T, vars>(minExp, maxExp, coeff, true);
+    return Laurent<T, vars>(minExp, maxExp, terms, true);
 }
 
 /**
@@ -3578,45 +3739,45 @@ Laurent<T, vars> operator - (const Laurent<T, vars>& lhs,
     // this avoids having to worry about jumping over the gap between
     // them in the code that follows.
     if (lhs.maxExp_ < rhs.minExp_) {
-        auto* coeff = new Term[rhs.maxExp_ - lhs.minExp_ + 1];
+        auto* terms = new Term[rhs.maxExp_ - lhs.minExp_ + 1];
         std::copy(lhs.term_ + lhs.minExp_ - lhs.base_,
             lhs.term_ + lhs.maxExp_ + 1 - lhs.base_,
-            coeff);
+            terms);
         Term *rit, *cit;
         for (rit = rhs.term_ + rhs.minExp_ - rhs.base_,
-                    cit = coeff + rhs.minExp_ - lhs.minExp_;
+                    cit = terms + rhs.minExp_ - lhs.minExp_;
                 rit != rhs.term_ + rhs.maxExp_ + 1 - rhs.base_; ++rit, ++cit)
             if (*rit != 0)
                 *cit = -(*rit);
-        return Laurent<T, vars>(lhs.minExp_, rhs.maxExp_, coeff);
+        return Laurent<T, vars>(lhs.minExp_, rhs.maxExp_, terms);
     } else if (rhs.maxExp_ < lhs.minExp_) {
-        auto* coeff = new Term[lhs.maxExp_ - rhs.minExp_ + 1];
+        auto* terms = new Term[lhs.maxExp_ - rhs.minExp_ + 1];
         Term *rit, *cit;
-        for (rit = rhs.term_ + rhs.minExp_ - rhs.base_, cit = coeff;
+        for (rit = rhs.term_ + rhs.minExp_ - rhs.base_, cit = terms;
                 rit != rhs.term_ + rhs.maxExp_ + 1 - rhs.base_; ++rit, ++cit)
             if (*rit != 0)
                 *cit = -(*rit);
         std::copy(lhs.term_ + lhs.minExp_ - lhs.base_,
             lhs.term_ + lhs.maxExp_ + 1 - lhs.base_,
-            coeff + lhs.minExp_ - rhs.minExp_);
-        return Laurent<T, vars>(rhs.minExp_, lhs.maxExp_, coeff);
+            terms + lhs.minExp_ - rhs.minExp_);
+        return Laurent<T, vars>(rhs.minExp_, lhs.maxExp_, terms);
     }
 
     // We are guaranteed from here on that the two ranges overlap.
     long minExp = std::min(lhs.minExp_, rhs.minExp_);
     long maxExp = std::max(lhs.maxExp_, rhs.maxExp_);
-    auto* coeff = new Term[maxExp - minExp + 1];
+    auto* terms = new Term[maxExp - minExp + 1];
 
-    long exp /* next exponent */, idx /* next index into coeff */;
+    long exp /* next exponent */, idx /* next index into terms */;
 
     if (lhs.minExp_ < rhs.minExp_) {
         std::copy(lhs.term_ + lhs.minExp_ - lhs.base_,
-            lhs.term_ + rhs.minExp_ - lhs.base_, coeff);
+            lhs.term_ + rhs.minExp_ - lhs.base_, terms);
         exp = rhs.minExp_;
         idx = rhs.minExp_ - lhs.minExp_;
     } else if (rhs.minExp_ < lhs.minExp_) {
         Term *rit, *cit;
-        for (rit = rhs.term_ + rhs.minExp_ - rhs.base_, cit = coeff;
+        for (rit = rhs.term_ + rhs.minExp_ - rhs.base_, cit = terms;
                 rit != rhs.term_ + lhs.minExp_ - rhs.base_; ++rit, ++cit)
             if (*rit != 0)
                 *cit = -(*rit);
@@ -3628,21 +3789,21 @@ Laurent<T, vars> operator - (const Laurent<T, vars>& lhs,
     }
 
     for ( ; exp <= lhs.maxExp_ && exp <= rhs.maxExp_; ++idx, ++exp)
-        coeff[idx] = lhs.term_[exp - lhs.base_] - rhs.term_[exp - rhs.base_];
+        terms[idx] = lhs.term_[exp - lhs.base_] - rhs.term_[exp - rhs.base_];
 
     // exp is now min(lhs.maxExp_, rhs.maxExp_) + 1.
     if (exp <= lhs.maxExp_) {
         std::copy(lhs.term_ + exp - lhs.base_,
-            lhs.term_ + lhs.maxExp_ + 1 - lhs.base_, coeff + idx);
+            lhs.term_ + lhs.maxExp_ + 1 - lhs.base_, terms + idx);
     } else if (exp <= rhs.maxExp_) {
         Term *rit, *cit;
-        for (rit = rhs.term_ + exp - rhs.base_, cit = coeff + idx;
+        for (rit = rhs.term_ + exp - rhs.base_, cit = terms + idx;
                 rit != rhs.term_ + rhs.maxExp_ + 1 - rhs.base_; ++rit, ++cit)
             if (*rit != 0)
                 *cit = -(*rit);
     }
 
-    return Laurent<T, vars>(minExp, maxExp, coeff, true);
+    return Laurent<T, vars>(minExp, maxExp, terms, true);
 }
 
 /**
@@ -3732,17 +3893,17 @@ Laurent<T, vars> operator * (const Laurent<T, vars>& lhs,
         ans.maxExp_ += rhs.minExp_;
         return ans;
     } else {
-        // Both polynomials have more than one non-zero coefficient.
-        auto* coeff = new Laurent<T, vars>::Term[
+        // Both polynomials have more than one non-zero term.
+        auto* terms = new Laurent<T, vars>::Term[
             lhs.maxExp_ - lhs.minExp_ + rhs.maxExp_ - rhs.minExp_ + 1];
-        detail::productBest<Term, detail::SetOrAdd::Either, false>(coeff,
+        detail::productBest<Term, detail::SetOrAdd::Either, false>(terms,
             lhs.term_ + lhs.minExp_ - lhs.base_, lhs.maxExp_ - lhs.minExp_ + 1,
             rhs.term_ + rhs.minExp_ - rhs.base_, rhs.maxExp_ - rhs.minExp_ + 1,
             nullptr /* scratch */);
 
         // Note: the final minExp/maxExp terms will both be non-zero,
         // since the same is true of both lhs and rhs.
-        return { lhs.minExp_ + rhs.minExp_, lhs.maxExp_ + rhs.maxExp_, coeff };
+        return { lhs.minExp_ + rhs.minExp_, lhs.maxExp_ + rhs.maxExp_, terms };
     }
 }
 
@@ -3771,17 +3932,17 @@ Laurent<T, vars> operator * (Laurent<T, vars>&& lhs, Laurent<T, vars>&& rhs) {
         lhs.shift(rhs.minExp_);
         return std::move(lhs);
     } else {
-        // Both polynomials have more than one non-zero coefficient.
-        auto* coeff = new Laurent<T, vars>::Term[
+        // Both polynomials have more than one non-zero term.
+        auto* terms = new Laurent<T, vars>::Term[
             lhs.maxExp_ - lhs.minExp_ + rhs.maxExp_ - rhs.minExp_ + 1];
-        detail::productBest<Term, detail::SetOrAdd::Either, true>(coeff,
+        detail::productBest<Term, detail::SetOrAdd::Either, true>(terms,
             lhs.term_ + lhs.minExp_ - lhs.base_, lhs.maxExp_ - lhs.minExp_ + 1,
             rhs.term_ + rhs.minExp_ - rhs.base_, rhs.maxExp_ - rhs.minExp_ + 1,
             nullptr /* scratch */);
 
         // Note: the final minExp/maxExp terms will both be non-zero,
         // since the same is true of both lhs and rhs.
-        return { lhs.minExp_ + rhs.minExp_, lhs.maxExp_ + rhs.maxExp_, coeff };
+        return { lhs.minExp_ + rhs.minExp_, lhs.maxExp_ + rhs.maxExp_, terms };
     }
 }
 

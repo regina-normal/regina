@@ -417,6 +417,26 @@ Parameter ``other``:
 Returns:
     a reference to this polynomial.)doc";
 
+// Docstring regina::python::doc::Laurent::__iter__
+static constexpr const char __iter__[] =
+R"doc(Returns a Python iterator that iterates through all non-zero
+coefficients of this polynomial.
+
+Each step of the iteration will return a pair ``(exp, coeff)``, where
+*coeff* is the (non-zero) coefficient of type *T*, and *exp* indicates
+which monomial the coefficient is attached to. If ``vars == 1`` then
+*exp* will simply be a Python integer indicating the corresponding
+exponent of the polynomial variable; if ``vars > 1`` then *exp* will
+be a tuple of *vars* Python integers indicating the corresponding
+exponent of each polynomial variable in turn.
+
+To enforce read-only access, Python iterators will return coefficients
+by value, not by reference. If you wish to modify coefficients then
+you will need to call different routines, such as set().
+
+Returns:
+    an iterator over all non-zero coefficients of this polynomial.)doc";
+
 // Docstring regina::python::doc::Laurent::__mul
 static constexpr const char __mul[] =
 R"doc(Multiplies the given polynomial by the given scalar constant.
@@ -592,8 +612,26 @@ coefficients you will need to call different routines, such as set().
 If this is the zero polynomial, then the iterator that is returned
 will be non-deferenceable.
 
+A typical forward iteration through the non-zero coefficients would
+look like the following:
+
+```
+for (auto c = poly.first(); c; ++c) {
+    // use the coefficient *c and/or the exponent c.exp<...>()
+}
+```
+
+Note that last() is _not_ a past-the-end iterator, and so ``(first(),
+last())`` do not form a complete iterator range.
+
 See the LaurentCoefficient class notes for further details and
 examples on how iteration works for Laurent polynomials.
+
+Python:
+    Laurent also implements the Python iterable interface, which means
+    you can iterate through non-zero coefficients in the same way that
+    you would iterate over any native Python container. See the
+    __iter__() documentation for details on how this works.
 
 Returns:
     an iterator pointing to the first non-zero coefficient.)doc";
@@ -660,8 +698,26 @@ coefficients you will need to call different routines, such as set().
 If this is the zero polynomial, then the iterator that is returned
 will be non-deferenceable.
 
+A typical backward iteration through the non-zero coefficients would
+look like the following:
+
+```
+for (auto c = poly.last(); c; --c) {
+    // use the coefficient *c and/or the exponent c.exp<...>()
+}
+```
+
+Note that last() is _not_ a past-the-end iterator, and so ``(first(),
+last())`` do not form a complete iterator range.
+
 See the LaurentCoefficient class notes for further details and
 examples on how iteration works for Laurent polynomials.
+
+Python:
+    Laurent also implements the Python iterable interface, which means
+    you can iterate through non-zero coefficients in the same way that
+    you would iterate over any native Python container. See the
+    __iter__() documentation for details on how this works.
 
 Returns:
     an iterator pointing to the last non-zero coefficient.)doc";
@@ -1072,8 +1128,8 @@ As an example, you could print all of the non-zero terms of a single-
 variable Laurent polynomial using the following loop:
 
 ```
-for (auto c = p.first(); c; ++c) {
-    std::cout << "Term: " << *c << " x^" << c.exp() << std::endl;
+for (auto c = poly.first(); c; ++c) {
+    std::cout << "Term: " << *c << " x^" << c.exp<0>() << std::endl;
 }
 ```
 
@@ -1098,19 +1154,6 @@ static constexpr const char __copy[] = R"doc(Creates a copy of the given iterato
 
 // Docstring regina::python::doc::LaurentCoefficient::__dec
 static constexpr const char __dec[] =
-R"doc(Predecrement operator. This iterator will step backward to point to
-the previous non-zero coefficient of the underlying Laurent
-polynomial, or will become non-dereferenceable if there are no prior
-non-zero coefficients.
-
-Precondition:
-    This iterator is dereferenceable.
-
-Returns:
-    a reference to this iterator.)doc";
-
-// Docstring regina::python::doc::LaurentCoefficient::__dec_2
-static constexpr const char __dec_2[] =
 R"doc(Postdecrement operator. This iterator will step backward to point to
 the previous non-zero coefficient of the underlying Laurent
 polynomial, or will become non-dereferenceable if there are no prior
@@ -1118,6 +1161,10 @@ non-zero coefficients.
 
 Precondition:
     This iterator is dereferenceable.
+
+Python:
+    This routine is named dec() since Python does not support the
+    decrement operator.
 
 Returns:
     a copy of this iterator before it was decremented.)doc";
@@ -1152,19 +1199,6 @@ Returns:
 
 // Docstring regina::python::doc::LaurentCoefficient::__inc
 static constexpr const char __inc[] =
-R"doc(Preincrement operator. This iterator will step forward to point to the
-next non-zero coefficient of the underlying Laurent polynomial, or
-will become non-dereferenceable if there are no more non-zero
-coefficients.
-
-Precondition:
-    This iterator is dereferenceable.
-
-Returns:
-    a reference to this iterator.)doc";
-
-// Docstring regina::python::doc::LaurentCoefficient::__inc_2
-static constexpr const char __inc_2[] =
 R"doc(Postincrement operator. This iterator will step forward to point to
 the next non-zero coefficient of the underlying Laurent polynomial, or
 will become non-dereferenceable if there are no more non-zero
@@ -1172,6 +1206,10 @@ coefficients.
 
 Precondition:
     This iterator is dereferenceable.
+
+Python:
+    This routine is named inc() since Python does not support the
+    increment operator.
 
 Returns:
     a copy of this iterator before it was incremented.)doc";
@@ -1184,8 +1222,33 @@ the underlying Laurent polynomial.
 Precondition:
     This iterator is dereferenceable.
 
+Python:
+    This routine is named coeff() since Python does not support the
+    dereference operator. Moreover, in order to enforce constness,
+    this routine returns by value (not by reference).
+
 Returns:
     the current non-zero coefficient.)doc";
+
+// Docstring regina::python::doc::LaurentCoefficient::__next__
+static constexpr const char __next__[] =
+R"doc(Returns details of the current non-zero coefficient and increments
+this iterator.
+
+Specifically, this function will return a pair ``(exp, coeff)``, where
+*coeff* is a deep copy of the (non-zero) coefficient of type *T*, and
+*exp* indicates which monomial the coefficient is attached to. If
+``vars == 1`` then *exp* will simply be a Python integer indicating
+the corresponding exponent of the polynomial variable; if ``vars > 1``
+then *exp* will be a tuple of *vars* Python integers indicating the
+corresponding exponent of each polynomial variable in turn.
+
+Exception ``StopIteration``:
+    This iterator is not dereferenceable.
+
+Returns:
+    details of the coefficient that this iterator is pointing to (as
+    described above), before the increment takes place.)doc";
 
 // Docstring regina::python::doc::LaurentCoefficient::__sub_
 static constexpr const char __sub_[] =
@@ -1215,17 +1278,37 @@ Returns:
 // Docstring regina::python::doc::LaurentCoefficient::exp
 static constexpr const char exp[] =
 R"doc(Identifies which exponent of the given polynomial variable corresponds
-to the current non-zero coefficient. This allows you to determine
-which monomial the current coefficient is attached to.
+to the current non-zero coefficient, where the variable in question
+does not need to be known until runtime. This routine allows you to
+determine which monomial the current coefficient is attached to.
+
+For C++ programmers who know *var* at compile time, you are better off
+using the template function ``exp<var>()`` instead, which is slightly
+faster.
 
 Precondition:
     This iterator is dereferenceable.
 
-Template parameter ``var``:
-    indicates which variable of the polynomial you wish to query.
+Exception ``InvalidArgument``:
+    The argument *var* is not within the allowed range (from 0 to
+    ``vars-1`` inclusive).
+
+Parameter ``var``:
+    indicates which variable of the polynomial you wish to query; this
+    must be between 0 and ``vars-1`` inclusive.
 
 Returns:
     the current exponent of the given polynomial variable.)doc";
+
+// Docstring regina::python::doc::LaurentCoefficient::str
+static constexpr const char str[] =
+R"doc(Returns a string representation of this iterator.
+
+If this iterator is dereferenceable, a suitable string will still be
+returned.
+
+Returns:
+    a string representation of this iterator.)doc";
 
 }; // struct LaurentCoefficient
 

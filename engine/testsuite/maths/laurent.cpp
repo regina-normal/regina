@@ -42,8 +42,6 @@ using regina::Laurent;
 using regina::polynomialProduct;
 
 using L = Laurent<Integer>;
-using LL = Laurent<Integer, 2>;
-using LLL = Laurent<Integer, 3>;
 
 // An integer that cannot fit into 128 bits, and some small multiples of it.
 // We split the digits into chunks to not break syntax highlighting.
@@ -203,55 +201,6 @@ namespace {
         EXPECT_FALSE(poly != cmp);
     }
 
-    void validate(const LL& poly, long minExp, std::initializer_list<
-            std::pair<long, std::initializer_list<Integer>>> coeffs) {
-        if (coeffs.size() == 0) { // initializer_list does not have empty()
-            validateZero(poly);
-        } else {
-            validate(poly);
-            EXPECT_FALSE(poly.isZero());
-            EXPECT_EQ(poly.minExp(), minExp);
-            EXPECT_EQ(poly.maxExp(), minExp + coeffs.size() - 1);
-
-            auto alloc = poly.allocation();
-            EXPECT_LE(alloc.first, minExp);
-            EXPECT_GE(alloc.first + static_cast<long>(alloc.second),
-                minExp + static_cast<long>(coeffs.size()));
-
-            EXPECT_NE(poly[poly.minExp()], 0);
-            EXPECT_NE(poly[poly.maxExp()], 0);
-
-            auto expect = coeffs.begin();
-            for (long e = minExp; expect != coeffs.end(); ++e, ++expect)
-                validate(poly[e], expect->first, expect->second);
-        }
-    }
-
-    void validate(const LLL& poly, long minExp, std::initializer_list<
-            std::pair<long, std::initializer_list<
-            std::pair<long, std::initializer_list<Integer>>>>> coeffs) {
-        if (coeffs.size() == 0) { // initializer_list does not have empty()
-            validateZero(poly);
-        } else {
-            validate(poly);
-            EXPECT_FALSE(poly.isZero());
-            EXPECT_EQ(poly.minExp(), minExp);
-            EXPECT_EQ(poly.maxExp(), minExp + coeffs.size() - 1);
-
-            auto alloc = poly.allocation();
-            EXPECT_LE(alloc.first, minExp);
-            EXPECT_GE(alloc.first + static_cast<long>(alloc.second),
-                minExp + static_cast<long>(coeffs.size()));
-
-            EXPECT_NE(poly[poly.minExp()], 0);
-            EXPECT_NE(poly[poly.maxExp()], 0);
-
-            auto expect = coeffs.begin();
-            for (long e = minExp; expect != coeffs.end(); ++e, ++expect)
-                validate(poly[e], expect->first, expect->second);
-        }
-    }
-
     template <std::ranges::sized_range Container>
     void validate(const L& poly, long minExp, const Container& coeffs) {
         if (coeffs.empty()) {
@@ -334,6 +283,24 @@ namespace {
         ans.set(ans.maxExp(), 0);
         return ans;
     }
+
+    /**
+     * Returns the coefficients of \a poly in order from minimum to maximum
+     * exponent, including any intermediate zero coefficients.
+     */
+    template <regina::CoefficientDomain T>
+    regina::FixedArray<T> coefficientSequence(const Laurent<T>& poly) {
+        if (poly.isZero()) {
+            return {};
+        } else {
+            regina::FixedArray<T> ans(poly.maxExp() - poly.minExp() + 1);
+            long exp = poly.minExp();
+            size_t idx = 0;
+            while (exp <= poly.maxExp())
+                ans[idx++] = poly[exp++];
+            return ans;
+        }
+    }
 } // anonymous namespace
 
 TEST_F(LaurentTest, construct) {
@@ -351,13 +318,15 @@ TEST_F(LaurentTest, construct) {
             L y(std::move(x));
             validate(y, c);
         }
-        validate(L(c.minExp(), c.begin(), c.end()), c);
+
+        auto seq = coefficientSequence(c);
+        validate(L(c.minExp(), seq.begin(), seq.end()), c);
         {
             // This test (for iterator ranges with zero padding at either end)
             // also covers the case where the iterator range contains entirely
             // zeroes (this is tested when c is the zero polynomial).
             std::vector<Integer> coeffs(3); // some initial zeroes
-            coeffs.insert(coeffs.end(), c.begin(), c.end());
+            coeffs.insert(coeffs.end(), seq.begin(), seq.end());
             coeffs.resize(coeffs.size() + 2); // some final zeroes
             EXPECT_FALSE(coeffs.empty());
             EXPECT_EQ(coeffs.front(), 0);
@@ -1087,477 +1056,18 @@ TEST_F(LaurentTest, set) {
     }
 }
 
-TEST_F(LaurentTest, nestedElement) {
-    // This tests element getters for nested types, such as Laurent<Laurent<T>>.
-    {
-        LL poly;
-        validateZero(poly);
+TEST_F(LaurentTest, iteration) {
+    const regina::LaurentCoefficient<Integer, 1> end{};
 
-        for (int i : { -1, 0, 1 })
-            for (int j : { -1, 0, 1 })
-                EXPECT_EQ(poly(i, j), 0);
-    }
-    {
-        LL poly(3, { L(-5) });
-        validate(poly, 3, { {0, {-5}} });
-
-        for (int i : { 0, 2, 3, 4 })
-            for (int j : { -1, 0, 1 })
-                EXPECT_EQ(poly(i, j), i == 3 && j == 0 ? -5 : 0);
-    }
-    {
-        LL poly(-5, { L(-2, {3,0,2,-1}) });
-        validate(poly, -5, { {-2, {3,0,2,-1}} });
-
-        EXPECT_EQ(poly(-5, -3), 0);
-        EXPECT_EQ(poly(-5, -2), 3);
-        EXPECT_EQ(poly(-5, -1), 0);
-        EXPECT_EQ(poly(-5, 0), 2);
-        EXPECT_EQ(poly(-5, 1), -1);
-        EXPECT_EQ(poly(-5, 2), 0);
-
-        for (int i : { -6, -4 })
-            for (int j : { -1, 0, 1 })
-                EXPECT_EQ(poly(i, j), 0);
-    }
-    {
-        LL poly(-1, { 7, 0, 0, -3, 2 });
-        validate(poly, -1, { {0, {7}}, {0, {}}, {0, {}}, {0, {-3}}, {0, {2}} });
-
-        EXPECT_EQ(poly(-1, 0), 7);
-        EXPECT_EQ(poly(2, 0), -3);
-        EXPECT_EQ(poly(3, 0), 2);
-
-        for (int i : { -1, 2, 3 })
-            for (int j : { -1, 1 })
-                EXPECT_EQ(poly(i, j), 0);
-
-        for (int i : { -2, 0, 1, 4 })
-            for (int j : { -1, 0, 1 })
-                EXPECT_EQ(poly(i, j), 0);
-    }
-    {
-        LL poly(-1, { L(-5), L(), L(), L(-2, {3,0,2,-1}) });
-        validate(poly, -1, { {0, {-5}}, {0, {}}, {0, {}}, {-2, {3,0,2,-1}} });
-
-        EXPECT_EQ(poly(-1, -1), 0);
-        EXPECT_EQ(poly(-1, 0), -5);
-        EXPECT_EQ(poly(-1, 1), 0);
-        EXPECT_EQ(poly(2, -3), 0);
-        EXPECT_EQ(poly(2, -2), 3);
-        EXPECT_EQ(poly(2, -1), 0);
-        EXPECT_EQ(poly(2, 0), 2);
-        EXPECT_EQ(poly(2, 1), -1);
-        EXPECT_EQ(poly(2, 2), 0);
-
-        for (int i : { -2, 0, 1, 3 })
-            for (int j : { -1, 0, 1 })
-                EXPECT_EQ(poly(i, j), 0);
-    }
-    {
-        LLL poly;
-        validateZero(poly);
-
-        for (int i : { -1, 0, 1 })
-            for (int j : { -1, 0, 1 })
-                for (int k : { -1, 0, 1 })
-                    EXPECT_EQ(poly(i, j, k), 0);
-    }
-    {
-        LLL poly(3, { LL(-2, { L(-5) })});
-        validate(poly, 3, {
-            { -2, { {0, {-5}} } }
-        });
-
-        for (int i : { 0, 2, 3, 4 })
-            for (int j : { -3, -2, -1, 0 })
-                for (int k : { -1, 0, 1 })
-                    EXPECT_EQ(poly(i, j, k),
-                        i == 3 && j == -2 && k == 0 ? -5 : 0);
-    }
-    {
-        LLL poly(3, {
-            LL(-1, { L(-5), L(), L(), L(-2, {3,0,2,-1}) }),
-            LL(),
-            LL(-1, { 7, 0, 0, -3, 2 })
-        });
-        validate(poly, 3, {
-            { -1, { {0, {-5}}, {0, {}}, {0, {}}, {-2, {3,0,2,-1}} } },
-            { 0, {} },
-            { -1, { {0, {7}}, {0, {}}, {0, {}}, {0, {-3}}, {0, {2}} } }
-        });
-
-        EXPECT_EQ(poly(3, -1, -1), 0);
-        EXPECT_EQ(poly(3, -1, 0), -5);
-        EXPECT_EQ(poly(3, -1, 1), 0);
-        EXPECT_EQ(poly(3, 2, -3), 0);
-        EXPECT_EQ(poly(3, 2, -2), 3);
-        EXPECT_EQ(poly(3, 2, -1), 0);
-        EXPECT_EQ(poly(3, 2, 0), 2);
-        EXPECT_EQ(poly(3, 2, 1), -1);
-        EXPECT_EQ(poly(3, 2, 2), 0);
-        for (int i : { -2, 0, 1, 3 })
-            for (int j : { -1, 0, 1 })
-                EXPECT_EQ(poly(3, i, j), 0);
-
-        EXPECT_EQ(poly(5, -1, 0), 7);
-        EXPECT_EQ(poly(5, 2, 0), -3);
-        EXPECT_EQ(poly(5, 3, 0), 2);
-        for (int i : { -1, 2, 3 })
-            for (int j : { -1, 1 })
-                EXPECT_EQ(poly(5, i, j), 0);
-        for (int i : { -2, 0, 1, 4 })
-            for (int j : { -1, 0, 1 })
-                EXPECT_EQ(poly(5, i, j), 0);
-
-        for (int i : { 0, 2, 4, 6 })
-            for (int j : { -1, 0, 1 })
-                for (int k : { -1, 0, 1 })
-                    EXPECT_EQ(poly(i, j, k), 0);
-    }
-}
-
-TEST_F(LaurentTest, nestedSet) {
-    // This tests element setters for nested types, such as Laurent<Laurent<T>>.
-
-    // Tests that begin with the zero polynomial:
-    {
-        LL x;
-        const auto alloc = x.allocation();
-        EXPECT_EQ(alloc.second, 0);
-        x.set(0, 0, 0);
-        validateZero(x);
-        EXPECT_EQ(x.allocation(), alloc);
-    }
-    {
-        LL x;
-        x.reserveRange(-5, 5);
-        const auto alloc = x.allocation();
-        EXPECT_GT(alloc.second, 0);
-        x.set(0, 0, 0);
-        validateZero(x);
-        EXPECT_EQ(x.allocation(), alloc);
-    }
-    {
-        LL x;
-        x.reserveRange(10, 20);
-        const auto alloc = x.allocation();
-        EXPECT_GT(alloc.second, 0);
-        x.set(0, 0, 0);
-        validateZero(x);
-        EXPECT_EQ(x.allocation(), alloc);
-    }
-    {
-        LL x;
-        x.set(2, -1, -7);
-        validate(x, 2, { {-1, {-7}} });
-    }
-    {
-        LL x;
-        x.reserveRange(-5, 5);
-        const auto alloc = x.allocation();
-        EXPECT_GT(alloc.second, 0);
-        x.set(2, -1, -7);
-        validate(x, 2, { {-1, {-7}} });
-        EXPECT_EQ(x.allocation(), alloc);
-    }
-    {
-        LL x;
-        x.reserveRange(10, 20);
-        const auto alloc = x.allocation();
-        EXPECT_GT(alloc.second, 0);
-        x.set(2, -1, -7);
-        validate(x, 2, { {-1, {-7}} });
-        EXPECT_NE(x.allocation(), alloc);
-    }
-    {
-        LL x;
-        x.reserveRange(-20, -10);
-        const auto alloc = x.allocation();
-        EXPECT_GT(alloc.second, 0);
-        x.set(2, -1, -7);
-        validate(x, 2, { {-1, {-7}} });
-        EXPECT_NE(x.allocation(), alloc);
-    }
-
-    // Tests that begin with a non-zero polynomial, setting an element to 0:
-    {
-        const LL mix(-1, { L(1, {-5,0,3}), L(), L(-3, {1,0,-1}), L(),
-            L(-2, {3,0,2}) });
-        validate(mix, -1, { {1, {-5,0,3}}, {0, {}}, {-3, {1,0,-1}}, {0, {}},
-            {-2, {3,0,2}} });
-
-        LL x(mix);
-        const auto initAlloc = x.allocation();
-        x.reserveRange(-5, 5); // to distinguish between base vs minExp
-        const auto alloc = x.allocation();
-        EXPECT_NE(alloc, initAlloc);
-        validate(x, mix);
-
-        x.set(-2, 0, 0);
-        validate(x, mix);
-        x.set(-100, 0, 0);
-        validate(x, mix);
-        x.set(4, 0, 0);
-        validate(x, mix);
-        x.set(100, 0, 0);
-        validate(x, mix);
-        x.set(100, 0, 0);
-        validate(x, mix);
-
-        x.set(-1, 1, 0);
-        validate(x, -1, { {3, {3}}, {0, {}}, {-3, {1,0,-1}}, {0, {}},
-            {-2, {3,0,2}} });
-        x.set(-1, 3, 0);
-        validate(x, 1, { {-3, {1,0,-1}}, {0, {}}, {-2, {3,0,2}} });
-        x.set(3, 0, 0);
-        validate(x, 1, { {-3, {1,0,-1}}, {0, {}}, {-2, {3}} });
-        x.set(3, -2, 0);
-        validate(x, 1, { {-3, {1,0,-1}} });
-        x.set(1, -3, 0);
-        validate(x, 1, { {-1, {-1}} });
-        x.set(1, -1, 0);
-        validateZero(x);
-
-        EXPECT_EQ(x.allocation(), alloc);
-    }
-
-    // Tests that begin with a non-zero polynomial, setting an element to ≠ 0:
-    {
-        LL mix(-1, { 7, 0, -3 });
-        validate(mix, -1, { {0, {7}}, {0, {}}, {0, {-3}} });
-
-        LL x(mix);
-        const auto initAlloc = x.allocation();
-        x.reserveRange(-3, 3); // to distinguish between base vs minExp
-        const auto alloc = x.allocation();
-        EXPECT_NE(alloc, initAlloc);
-        validate(x, mix);
-
-        x.set(-1, 2, 3);
-        x.set(0, -3, 4);
-        x.set(1, -1, 5);
-        validate(x, -1, { {0, {7,0,3}}, {-3, {4}}, {-1, {5,-3}} });
-        EXPECT_EQ(x.allocation(), alloc);
-
-        x.set(-3, 1, 6);
-        validate(x, -3, { {1, {6}}, {0, {}}, {0, {7,0,3}}, {-3, {4}},
-            {-1, {5,-3}} });
-        EXPECT_EQ(x.allocation(), alloc);
-
-        x.set(-3, 1, 6);
-        x.set(3, -4, 2);
-        validate(x, -3, { {1, {6}}, {0, {}}, {0, {7,0,3}}, {-3, {4}},
-            {-1, {5,-3}}, {0, {}}, {-4, {2}} });
-        EXPECT_EQ(x.allocation(), alloc);
-
-        x.set(-6, 1, 6);
-        x.set(6, -4, 2);
-        validate(x, -6, { {1, {6}}, {0, {}}, {0, {}}, {1, {6}}, {0, {}},
-            {0, {7,0,3}}, {-3, {4}}, {-1, {5,-3}}, {0, {}}, {-4, {2}},
-            {0, {}}, {0, {}}, {-4, {2}} });
-        EXPECT_NE(x.allocation(), alloc);
-    }
-
-    // Some very basic tests on thrice-nested Laurent polynomials:
-    {
-        LLL x;
-        validateZero(x);
-        x.set(0, 0, 0);
-        validateZero(x);
-        x.set(3, -2, 4, -5);
-        validate(x, 3, {
-            { -2, { {4, {-5}} } }
-        });
-        x.set(1, -1, 2, 6);
-        validate(x, 1, {
-            { -1, { {2, {6}} } },
-            { 0, {} },
-            { -2, { {4, {-5}} } }
-        });
-        x.set(3, -2, 5, 0);
-        validate(x, 1, {
-            { -1, { {2, {6}} } },
-            { 0, {} },
-            { -2, { {4, {-5}} } }
-        });
-        x.set(3, -2, 4, 0);
-        validate(x, 1, {
-            { -1, { {2, {6}} } }
-        });
-        x.set(1, -1, 2, 0);
-        validateZero(x);
-    }
-}
-
-TEST_F(LaurentTest, nestedShift) {
-    // This tests shift() and shifted() for nested types, such as
-    // Laurent<Laurent<T>>.
-
-    static constexpr int shifts[5] = { -100, -5, 0, 5, 100 };
-    for (int s : shifts) {
-        for (int t : shifts) {
-            {
-                LL x;
-                validateZero(x.shifted(s, t));
-                validateZero(LL(x).shifted(s, t));
-
-                x.shift(s, t);
-                validateZero(x);
-            }
-            for (int u : shifts) {
-                LLL x;
-                validateZero(x.shifted(s, t, u));
-                validateZero(LLL(x).shifted(s, t, u));
-
-                x.shift(s, t, u);
-                validateZero(x);
-            }
-        }
-    }
-
-    {
-        LL poly(-1, { L(-5), L(), L(), L(-2, {3,0,2,-1}) });
-        validate(poly, -1, { {0, {-5}}, {0, {}}, {0, {}}, {-2, {3,0,2,-1}} });
-
-        {
-            validate(poly.shifted(0, 0), poly);
-            validate(LL(poly).shifted(0, 0), poly);
-
-            LL y(poly);
-            auto alloc = y.allocation();
-            y.shift(0, 0);
-            validate(y, poly);
-            EXPECT_EQ(y.allocation(), alloc);
-        }
-        {
-            LL x = poly.shifted(3, 0);
-            validate(x, 2, { {0, {-5}}, {0, {}}, {0, {}}, {-2, {3,0,2,-1}} });
-            validate(LL(poly).shifted(3, 0), x);
-
-            LL y(poly);
-            size_t capacity = y.allocation().second;
-            y.shift(3, 0);
-            validate(y, x);
-            EXPECT_EQ(y.allocation().second, capacity);
-        }
-        {
-            LL x = poly.shifted(0, -3);
-            validate(x, -1, { {-3, {-5}}, {0, {}}, {0, {}}, {-5, {3,0,2,-1}} });
-            validate(LL(poly).shifted(0, -3), x);
-
-            LL y(poly);
-            size_t capacity = y.allocation().second;
-            y.shift(0, -3);
-            validate(y, x);
-            EXPECT_EQ(y.allocation().second, capacity);
-        }
-        {
-            LL x = poly.shifted(30, -50);
-            validate(x, 29,
-                { {-50, {-5}}, {0, {}}, {0, {}}, {-52, {3,0,2,-1}} });
-            validate(LL(poly).shifted(30, -50), x);
-
-            LL y(poly);
-            size_t capacity = y.allocation().second;
-            y.shift(30, -50);
-            validate(y, x);
-            EXPECT_EQ(y.allocation().second, capacity);
-        }
-    }
-
-    {
-        LLL poly(3, {
-            LL(-1, { L(-5), L(), L(), L(-2, {3,0,2,-1}) }),
-            LL(),
-            LL(-1, { 7, 0, 0, -3, 2 })
-        });
-        validate(poly, 3, {
-            { -1, { {0, {-5}}, {0, {}}, {0, {}}, {-2, {3,0,2,-1}} } },
-            { 0, {} },
-            { -1, { {0, {7}}, {0, {}}, {0, {}}, {0, {-3}}, {0, {2}} } }
-        });
-
-        {
-            validate(poly.shifted(0, 0, 0), poly);
-            validate(LLL(poly).shifted(0, 0, 0), poly);
-
-            LLL y(poly);
-            auto alloc = y.allocation();
-            y.shift(0, 0, 0);
-            validate(y, poly);
-            EXPECT_EQ(y.allocation(), alloc);
-        }
-        {
-            LLL x = poly.shifted(3, 0, 0);
-            validate(x, 6, {
-                { -1, { {0, {-5}}, {0, {}}, {0, {}}, {-2, {3,0,2,-1}} } },
-                { 0, {} },
-                { -1, { {0, {7}}, {0, {}}, {0, {}}, {0, {-3}}, {0, {2}} } }
-            });
-            validate(LLL(poly).shifted(3, 0, 0), x);
-
-            LLL y(poly);
-            size_t capacity = y.allocation().second;
-            y.shift(3, 0, 0);
-            validate(y, x);
-            EXPECT_EQ(y.allocation().second, capacity);
-        }
-        {
-            LLL x = poly.shifted(0, -3, 0);
-            validate(x, 3, {
-                { -4, { {0, {-5}}, {0, {}}, {0, {}}, {-2, {3,0,2,-1}} } },
-                { 0, {} },
-                { -4, { {0, {7}}, {0, {}}, {0, {}}, {0, {-3}}, {0, {2}} } }
-            });
-            validate(LLL(poly).shifted(0, -3, 0), x);
-
-            LLL y(poly);
-            size_t capacity = y.allocation().second;
-            y.shift(0, -3, 0);
-            validate(y, x);
-            EXPECT_EQ(y.allocation().second, capacity);
-        }
-        {
-            LLL x = poly.shifted(0, 0, 5);
-            validate(x, 3, {
-                { -1, { {5, {-5}}, {0, {}}, {0, {}}, {3, {3,0,2,-1}} } },
-                { 0, {} },
-                { -1, { {5, {7}}, {0, {}}, {0, {}}, {5, {-3}}, {5, {2}} } }
-            });
-            validate(LLL(poly).shifted(0, 0, 5), x);
-
-            LLL y(poly);
-            size_t capacity = y.allocation().second;
-            y.shift(0, 0, 5);
-            validate(y, x);
-            EXPECT_EQ(y.allocation().second, capacity);
-        }
-        {
-            LLL x = poly.shifted(20, -30, 40);
-            validate(x, 23, {
-                { -31, { {40, {-5}}, {0, {}}, {0, {}}, {38, {3,0,2,-1}} } },
-                { 0, {} },
-                { -31, { {40, {7}}, {0, {}}, {0, {}}, {40, {-3}}, {40, {2}} } }
-            });
-            validate(LLL(poly).shifted(20, -30, 40), x);
-
-            LLL y(poly);
-            size_t capacity = y.allocation().second;
-            y.shift(20, -30, 40);
-            validate(y, x);
-            EXPECT_EQ(y.allocation().second, capacity);
-        }
-    }
-}
-
-TEST_F(LaurentTest, iterators) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
 
         // Here is as good a time as any to test operator[] also.
         if (c.isZero()) {
-            EXPECT_EQ(c.begin(), c.end());
+            EXPECT_FALSE(c.first());
+            EXPECT_FALSE(c.last());
+            EXPECT_EQ(c.first(), end);
+            EXPECT_EQ(c.last(), end);
 
             EXPECT_EQ(c[-100], 0);
             EXPECT_EQ(c[-1], 0);
@@ -1565,14 +1075,40 @@ TEST_F(LaurentTest, iterators) {
             EXPECT_EQ(c[1], 0);
             EXPECT_EQ(c[100], 0);
         } else {
-            long exp = c.minExp();
-            auto it = c.begin();
-            while (exp <= c.maxExp() && it != c.end()) {
-                EXPECT_EQ(c[exp], *it);
-                ++exp;
-                ++it;
+            {
+                long exp = c.minExp();
+                auto it = c.first();
+                while (exp <= c.maxExp() && it) {
+                    EXPECT_NE(it, end);
+                    EXPECT_EQ(exp, it.exp<0>());
+                    EXPECT_EQ(c[exp], *it);
+                    EXPECT_EQ(it.constantTerm(), exp == 0);
+                    ++exp;
+                    while (exp <= c.maxExp() && c[exp] == 0)
+                        ++exp;
+                    ++it;
+                }
+                EXPECT_EQ(exp, c.maxExp() + 1);
+                EXPECT_FALSE(it);
+                EXPECT_EQ(it, end);
             }
-            EXPECT_EQ(it, c.end());
+            {
+                long exp = c.maxExp();
+                auto it = c.last();
+                while (exp >= c.minExp() && it) {
+                    EXPECT_NE(it, end);
+                    EXPECT_EQ(exp, it.exp<0>());
+                    EXPECT_EQ(c[exp], *it);
+                    EXPECT_EQ(it.constantTerm(), exp == 0);
+                    --exp;
+                    while (exp >= c.minExp() && c[exp] == 0)
+                        --exp;
+                    --it;
+                }
+                EXPECT_EQ(exp, c.minExp() - 1);
+                EXPECT_FALSE(it);
+                EXPECT_EQ(it, end);
+            }
 
             EXPECT_EQ(c[c.minExp() - 100], 0);
             EXPECT_EQ(c[c.minExp() - 1], 0);
@@ -2334,12 +1870,15 @@ TEST_F(LaurentTest, multiply) {
                 using PPA = regina::PolynomialProductAlgorithm;
                 using Array = regina::FixedArray<Integer>;
 
+                auto cSeq = coefficientSequence(c);
+                auto dSeq = coefficientSequence(d);
+
                 auto def = polynomialProduct<PPA::Default>(
-                    Array(c.begin(), c.end()),
-                    Array(d.begin(), d.end()));
+                    Array(cSeq.begin(), cSeq.end()),
+                    Array(dSeq.begin(), dSeq.end()));
                 auto classic = polynomialProduct<PPA::Classic>(
-                    Array(c.begin(), c.end()),
-                    Array(d.begin(), d.end()));
+                    Array(cSeq.begin(), cSeq.end()),
+                    Array(dSeq.begin(), dSeq.end()));
                 EXPECT_EQ(def, classic);
 
                 long cSpan = c.maxExp() - c.minExp();
@@ -2348,14 +1887,14 @@ TEST_F(LaurentTest, multiply) {
                         (2 * cSpan <= dSpan || 2 * dSpan <= cSpan)) {
                     EXPECT_THROW({
                         polynomialProduct<PPA::Karatsuba>(
-                            Array(c.begin(), c.end()),
-                            Array(d.begin(), d.end()));
+                            Array(cSeq.begin(), cSeq.end()),
+                            Array(dSeq.begin(), dSeq.end()));
                     }, regina::InvalidArgument);
                 } else {
                     EXPECT_NO_THROW({
                         auto karatsuba = polynomialProduct<PPA::Karatsuba>(
-                            Array(c.begin(), c.end()),
-                            Array(d.begin(), d.end()));
+                            Array(cSeq.begin(), cSeq.end()),
+                            Array(dSeq.begin(), dSeq.end()));
                         EXPECT_EQ(def, karatsuba);
                     });
                 }
@@ -2527,6 +2066,16 @@ TEST_F(LaurentTest, tightEncoding) {
         SCOPED_TRACE_REGINA(c);
         TightEncodingTest<L>::verifyTightEncoding(c);
     }
+
+    // Test a handful of cases manually, to ensure the format does not change
+    // between releases.  (The following tight encodings were all computed
+    // using Regina 7.4.1.)
+    EXPECT_EQ(zero.tightEncoding(), "M");
+    EXPECT_EQ(x2.tightEncoding(), "NOM");
+    EXPECT_EQ(x5Inv.tightEncoding(), "NHM");
+    EXPECT_EQ(f.tightEncoding(), "LPNTM");
+    EXPECT_EQ(low.tightEncoding(), "NFKGPHIIM");
+    EXPECT_EQ(long2.tightEncoding(), "LPNZM");
 }
 
 TEST_F(LaurentTest, swap) {

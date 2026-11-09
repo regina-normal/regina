@@ -1231,6 +1231,16 @@ TEST_F(Laurent2Test, tightEncoding) {
     for (const L& c : cases) {
         TightEncodingTest<L>::verifyTightEncoding(c);
     }
+
+    // Test a handful of cases manually, to ensure the format does not change
+    // between releases.  (The following tight encodings were all computed
+    // using Regina 7.4.1.)
+    EXPECT_EQ(L().tightEncoding(), "M");
+    EXPECT_EQ(L({{2, 0, 3}}).tightEncoding(), "POMM");
+    EXPECT_EQ(L({{-1, 2, 5}}).tightEncoding(), "RLOM");
+    EXPECT_EQ(L({{0,0,1}, {1,2,-2}, {-2,-1,3}}).tightEncoding(), "PKLNMMKNOM");
+    EXPECT_EQ(L({{1,1,-1}, {1,3,1}, {0,-1,-2}, {1,-1,-2}}).tightEncoding(),
+        "KMLKNLLNNNNPM");
 }
 
 TEST_F(Laurent2Test, swap) {
