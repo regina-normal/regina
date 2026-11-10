@@ -1106,39 +1106,32 @@ TEST_F(Laurent2Test, ringConstants) {
 }
 
 TEST_F(Laurent2Test, str) {
-    EXPECT_EQ(L().str(), "0");
-    EXPECT_EQ(L(2).str(), "2");
-    EXPECT_EQ(L(-1).str(), "-1");
-    EXPECT_EQ(L::monomial(1, 0).str(), "x");
-    EXPECT_EQ(L::monomial(2, 0).str(), "x^2");
-    EXPECT_EQ(L::monomial(-1, 0).str(), "x^-1");
-    EXPECT_EQ(L::monomial(0, 1).str(), "y");
-    EXPECT_EQ(L::monomial(0, 2).str(), "y^2");
-    EXPECT_EQ(L::monomial(0, -1).str(), "y^-1");
-    EXPECT_EQ(L::monomial(1, -1).str(), "x y^-1");
-    EXPECT_EQ(L::monomial(-1, 1).str(), "x^-1 y");
-    EXPECT_EQ(L::monomial(2, -2).str(), "x^2 y^-2");
-    EXPECT_EQ(L::monomial(-2, 2).str(), "x^-2 y^2");
-    EXPECT_EQ(L({{-2,3,-1}}).str(), "-x^-2 y^3");
-    EXPECT_EQ(L({{-2,3,5}}).str(), "5 x^-2 y^3");
-    EXPECT_EQ(L({{-2,3,-6}}).str(), "-6 x^-2 y^3");
-    EXPECT_EQ(L({{0,0,1}, {1,2,-2}, {-2,-1,3}}).str(),
+    verifyStr(L(), "0");
+    verifyStr(L(2), "2");
+    verifyStr(L(-1), "-1");
+    verifyStr(L::monomial(1, 0), "x");
+    verifyStr(L::monomial(2, 0), "x^2");
+    verifyStr(L::monomial(-1, 0), "x^-1");
+    verifyStr(L::monomial(0, 1), "y");
+    verifyStr(L::monomial(0, 2), "y^2");
+    verifyStr(L::monomial(0, -1), "y^-1");
+    verifyStr(L::monomial(1, -1), "x y^-1");
+    verifyStr(L::monomial(-1, 1), "x^-1 y");
+    verifyStr(L::monomial(2, -2), "x^2 y^-2");
+    verifyStr(L::monomial(-2, 2), "x^-2 y^2");
+    verifyStr(L{{{-2,3},-1}}, "-x^-2 y^3");
+    verifyStr(L{{{-2,3},5}}, "5 x^-2 y^3");
+    verifyStr(L{{{-2,3},-6}}, "-6 x^-2 y^3");
+    verifyStr(L{{{0,0},1}, {{1,2},-2}, {{-2,-1},3}},
         "-2 x y^2 + 1 + 3 x^-2 y^-1");
-    EXPECT_EQ(L({{1,0,2}, {1,2,-4}, {0,-1,-2}}).str(),
+    verifyStr(L{{{1,0},2}, {{1,2},-4}, {{0,-1},-2}},
         "-4 x y^2 + 2 x - 2 y^-1");
-    EXPECT_EQ(L({{0,0,3}, {2,1,3}, {2,-1,-2}, {1,-1,5}}).str(),
+    verifyStr(L{{{0,0},3}, {{2,1},3}, {{2,-1},-2}, {{1,-1},5}},
         "3 x^2 y - 2 x^2 y^-1 + 5 x y^-1 + 3");
-    EXPECT_EQ(L({{0,0,3}, {-2,1,3}, {-2,-1,-2}, {-1,-1,5}}).str(),
+    verifyStr(L{{{0,0},3}, {{-2,1},3}, {{-2,-1},-2}, {{-1,-1},5}},
         "3 + 5 x^-1 y^-1 + 3 x^-2 y - 2 x^-2 y^-1");
-    EXPECT_EQ(L({{0,0,-3}, {-2,1,3}, {-2,-1,-2}, {-1,-1,5}}).str(),
+    verifyStr(L{{{0,0},-3}, {{-2,1},3}, {{-2,-1},-2}, {{-1,-1},5}},
         "-3 + 5 x^-1 y^-1 + 3 x^-2 y - 2 x^-2 y^-1");
-}
-
-namespace {
-    void verifyUtf8(const L& poly, const char8_t* expect) {
-        EXPECT_EQ(poly.utf8(),
-            std::string(reinterpret_cast<const char*>(expect)));
-    }
 }
 
 TEST_F(Laurent2Test, utf8) {
@@ -1157,18 +1150,18 @@ TEST_F(Laurent2Test, utf8) {
     verifyUtf8(L::monomial(-1, 1), u8"x⁻¹ y");
     verifyUtf8(L::monomial(2, -2), u8"x² y⁻²");
     verifyUtf8(L::monomial(-2, 2), u8"x⁻² y²");
-    verifyUtf8(L({{-2,3,-1}}), u8"−x⁻² y³");
-    verifyUtf8(L({{-2,3,5}}), u8"5 x⁻² y³");
-    verifyUtf8(L({{-2,3,-6}}), u8"−6 x⁻² y³");
-    verifyUtf8(L({{0,0,1}, {1,2,-2}, {-2,-1,3}}),
+    verifyUtf8(L{{{-2,3},-1}}, u8"−x⁻² y³");
+    verifyUtf8(L{{{-2,3},5}}, u8"5 x⁻² y³");
+    verifyUtf8(L{{{-2,3},-6}}, u8"−6 x⁻² y³");
+    verifyUtf8(L{{{0,0},1}, {{1,2},-2}, {{-2,-1},3}},
         u8"−2 x y² + 1 + 3 x⁻² y⁻¹");
-    verifyUtf8(L({{1,0,2}, {1,2,-4}, {0,-1,-2}}),
+    verifyUtf8(L{{{1,0},2}, {{1,2},-4}, {{0,-1},-2}},
         u8"−4 x y² + 2 x − 2 y⁻¹");
-    verifyUtf8(L({{0,0,3}, {2,1,3}, {2,-1,-2}, {1,-1,5}}),
+    verifyUtf8(L{{{0,0},3}, {{2,1},3}, {{2,-1},-2}, {{1,-1},5}},
         u8"3 x² y − 2 x² y⁻¹ + 5 x y⁻¹ + 3");
-    verifyUtf8(L({{0,0,3}, {-2,1,3}, {-2,-1,-2}, {-1,-1,5}}),
+    verifyUtf8(L{{{0,0},3}, {{-2,1},3}, {{-2,-1},-2}, {{-1,-1},5}},
         u8"3 + 5 x⁻¹ y⁻¹ + 3 x⁻² y − 2 x⁻² y⁻¹");
-    verifyUtf8(L({{0,0,-3}, {-2,1,3}, {-2,-1,-2}, {-1,-1,5}}),
+    verifyUtf8(L{{{0,0},-3}, {{-2,1},3}, {{-2,-1},-2}, {{-1,-1},5}},
         u8"−3 + 5 x⁻¹ y⁻¹ + 3 x⁻² y − 2 x⁻² y⁻¹");
 }
 
@@ -1181,11 +1174,22 @@ TEST_F(Laurent2Test, tightEncoding) {
     // between releases.  (The following tight encodings were all computed
     // using Regina 7.4.1.)
     EXPECT_EQ(L().tightEncoding(), "M");
-    EXPECT_EQ(L({{2, 0, 3}}).tightEncoding(), "POMM");
-    EXPECT_EQ(L({{-1, 2, 5}}).tightEncoding(), "RLOM");
-    EXPECT_EQ(L({{0,0,1}, {1,2,-2}, {-2,-1,3}}).tightEncoding(), "PKLNMMKNOM");
-    EXPECT_EQ(L({{1,1,-1}, {1,3,1}, {0,-1,-2}, {1,-1,-2}}).tightEncoding(),
-        "KMLKNLLNNNNPM");
+    {
+        L p{{{2,0},3}};
+        EXPECT_EQ(p.tightEncoding(), "POMM");
+    }
+    {
+        L p{{{-1,2},5}};
+        EXPECT_EQ(p.tightEncoding(), "RLOM");
+    }
+    {
+        L p{{{0,0},1}, {{1,2},-2}, {{-2,-1},3}};
+        EXPECT_EQ(p.tightEncoding(), "PKLNMMKNOM");
+    }
+    {
+        L p{{{1,1},-1}, {{1,3},1}, {{0,-1},-2}, {{1,-1},-2}};
+        EXPECT_EQ(p.tightEncoding(), "KMLKNLLNNNNPM");
+    }
 }
 
 TEST_F(Laurent2Test, swap) {
