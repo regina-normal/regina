@@ -3365,14 +3365,15 @@ class Laurent :
         void tightEncode(std::ostream& out) const
                 requires InherentlyTightEncodable<T> {
             // Write the non-zero coefficients with their exponents, and then
-            // terminate with zero.
-            if (! isZero()) {
-                auto it = term_ + minExp_ - base_;
-                for (long exp = minExp_; exp <= maxExp_; ++exp, ++it)
-                    if (*it != 0) {
-                        it->tightEncode(out);
-                        regina::tightEncode(out, exp);
-                    }
+            // terminate with zero.  We write the coefficient before the
+            // exponents so we can use zero as an unambiguous terminator.
+            for (auto it = first(); it; ++it) {
+                it->tightEncode(out);
+                regina::tightEncode(out, it.template exp<0>());
+                if constexpr (vars > 1)
+                    regina::tightEncode(out, it.template exp<1>());
+                if constexpr (vars > 2) // vars == 3
+                    regina::tightEncode(out, it.template exp<2>());
             }
             T().tightEncode(out); // The zero terminator
         }
