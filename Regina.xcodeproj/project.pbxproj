@@ -958,7 +958,7 @@
 		056AED762A431AE200EAF4FA /* laurent2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AED2A2A431AE200EAF4FA /* laurent2.cpp */; };
 		056AED782A431AE200EAF4FA /* permconv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AED2C2A431AE200EAF4FA /* permconv.cpp */; };
 		056AED792A431AE200EAF4FA /* cyclotomic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AED2D2A431AE200EAF4FA /* cyclotomic.cpp */; };
-		056AED7A2A431AE200EAF4FA /* laurent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AED2F2A431AE200EAF4FA /* laurent.cpp */; };
+		056AED7A2A431AE200EAF4FA /* laurent1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AED2F2A431AE200EAF4FA /* laurent1.cpp */; };
 		056AED7B2A431AE200EAF4FA /* primes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AED302A431AE200EAF4FA /* primes.cpp */; };
 		056AED7D2A431AE200EAF4FA /* numbertheory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AED322A431AE200EAF4FA /* numbertheory.cpp */; };
 		056AED7E2A431AE200EAF4FA /* binom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AED332A431AE200EAF4FA /* binom.cpp */; };
@@ -3409,7 +3409,7 @@
 		056AED2C2A431AE200EAF4FA /* permconv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = permconv.cpp; sourceTree = "<group>"; };
 		056AED2D2A431AE200EAF4FA /* cyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyclotomic.cpp; sourceTree = "<group>"; };
 		056AED2E2A431AE200EAF4FA /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		056AED2F2A431AE200EAF4FA /* laurent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = laurent.cpp; sourceTree = "<group>"; };
+		056AED2F2A431AE200EAF4FA /* laurent1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = laurent1.cpp; sourceTree = "<group>"; };
 		056AED302A431AE200EAF4FA /* primes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = primes.cpp; sourceTree = "<group>"; };
 		056AED322A431AE200EAF4FA /* numbertheory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = numbertheory.cpp; sourceTree = "<group>"; };
 		056AED332A431AE200EAF4FA /* binom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = binom.cpp; sourceTree = "<group>"; };
@@ -7298,7 +7298,7 @@
 				056AED2E2A431AE200EAF4FA /* CMakeLists.txt */,
 				056AED2D2A431AE200EAF4FA /* cyclotomic.cpp */,
 				05F3DABD2A5CE3B3007A2CE2 /* integer.cpp */,
-				056AED2F2A431AE200EAF4FA /* laurent.cpp */,
+				056AED2F2A431AE200EAF4FA /* laurent1.cpp */,
 				056AED2A2A431AE200EAF4FA /* laurent2.cpp */,
 				058A344030A28658005D8F91 /* laurenttest.h */,
 				05BF6FCF2DB0001D0093D7A2 /* matrix.cpp */,
@@ -10004,7 +10004,7 @@
 				056AED852A431AE200EAF4FA /* snappea.cpp in Sources */,
 				05F3DABE2A5CE3B3007A2CE2 /* integer.cpp in Sources */,
 				056AED632A431AE200EAF4FA /* incompressible.cpp in Sources */,
-				056AED7A2A431AE200EAF4FA /* laurent.cpp in Sources */,
+				056AED7A2A431AE200EAF4FA /* laurent1.cpp in Sources */,
 				05BE83F930205F32008EB541 /* intutils.cpp in Sources */,
 				056AED7B2A431AE200EAF4FA /* primes.cpp in Sources */,
 				056AEDBC2A46690D00EAF4FA /* rational.cpp in Sources */,
