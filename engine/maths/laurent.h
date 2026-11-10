@@ -2647,7 +2647,7 @@ class Laurent :
          * corresponding exponents.
          *
          * \nopython This function is (for now) not available in Python;
-         * instead you can loop through the coefficients and call `set()`.
+         * instead you can iterate through the coefficients and call `set()`.
          *
          * \param action the action (typically a lambda) to perform on each
          * coefficient and its corresponding exponent.
@@ -2685,7 +2685,7 @@ class Laurent :
          * corresponding exponent sequences `(s,t)`.
          *
          * \nopython This function is (for now) not available in Python;
-         * instead you can loop through the coefficients and call `set()`.
+         * instead you can iterate through the coefficients and call `set()`.
          *
          * \param action the action (typically a lambda) to perform on each
          * coefficient and its corresponding exponents.
@@ -2703,6 +2703,53 @@ class Laurent :
                                 std::invoke(std::forward<Action>(action),
                                     *it1, exp0, exp1);
                         it0->fixDegrees();
+                    }
+                fixDegrees();
+            }
+        }
+
+        /**
+         * Applies the given transformation to every non-zero coefficient of
+         * a three-variable Laurent polynomial.
+         *
+         * Specifically, for each non-zero coefficient \a c attached to the
+         * monomial `x^s y^t z^u` (where `x,y,z` are the polynomial variables),
+         * this routine will call `action(c, s, t, u)`.
+         *
+         * Each coefficient will be passed to \a action by reference;
+         * typically \a action would modify the coefficient in some way.
+         * The corresponding exponents will be passed by value, and so cannot be
+         * modified.  It is fine if \a action sets some coefficients to zero.
+         *
+         * The coefficients will be passed in lexicographical order of their
+         * corresponding exponent sequences `(s,t,u)`.
+         *
+         * \nopython This function is (for now) not available in Python;
+         * instead you can iterate through the coefficients and call `set()`.
+         *
+         * \param action the action (typically a lambda) to perform on each
+         * coefficient and its corresponding exponents.
+         */
+        template <std::invocable<T&, long, long, long> Action>
+        void transform(Action&& action) requires (vars == 3) {
+            if (! isZero()) {
+                auto i0 = term_ + minExp_ - base_;
+                for (long e0 = minExp_; e0 <= maxExp_; ++e0, ++i0)
+                    if (! i0->isZero()) {
+                        auto i1 = i0->term_ + i0->minExp_ - i0->base_;
+                        for (long e1 = i0->minExp_; e1 <= i0->maxExp_;
+                                ++e1, ++i1)
+                            if (! i1->isZero()) {
+                                auto i2 = i1->term_ + i1->minExp_ - i1->base_;
+                                for (long e2 = i1->minExp_; e2 <= i1->maxExp_;
+                                        ++e2, ++i2)
+                                    if (*i2 != 0)
+                                        std::invoke(
+                                            std::forward<Action>(action),
+                                            *i2, e0, e1, e2);
+                                i1->fixDegrees();
+                            }
+                        i0->fixDegrees();
                     }
                 fixDegrees();
             }
