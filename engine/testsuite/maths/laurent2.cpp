@@ -46,7 +46,7 @@ using Term = std::pair<std::pair<long, long>, Integer>;
 // We split the digits into chunks to not break syntax highlighting.
 #define BIG "5421309874" "5789403215" "6654013103" "5798756432" "1035741817"
 
-class Laurent2Test : public testing::Test {
+class Laurent2Test : public LaurentTest {
     protected:
         // An integer that cannot fit into 128 bits.
         const Integer bigInt { BIG };
@@ -624,13 +624,13 @@ namespace {
             return;
         }
 
-        validate(poly * native, product);
-        validate(L(poly) * native, product);
-        validate(native * poly, product);
-        validate(native * L(poly), product);
+        LaurentTest::validate(poly * native, product);
+        LaurentTest::validate(L(poly) * native, product);
+        LaurentTest::validate(native * poly, product);
+        LaurentTest::validate(native * L(poly), product);
         {
             L x(poly);
-            validate(x *= native, product);
+            LaurentTest::validate(x *= native, product);
         }
     }
 
@@ -649,11 +649,11 @@ namespace {
             return;
         }
 
-        validate(poly / native, quotient);
-        validate(L(poly) / native, quotient);
+        LaurentTest::validate(poly / native, quotient);
+        LaurentTest::validate(L(poly) / native, quotient);
         {
             L x(poly);
-            validate(x /= native, quotient);
+            LaurentTest::validate(x /= native, quotient);
         }
     }
 
@@ -662,19 +662,19 @@ namespace {
 
         const L product = poly * scalar;
         if (scalar == 0) {
-            validateZero(product);
+            LaurentTest::validateZero(product);
         } else {
-            validate(product, poly, [&scalar](long x, long y,
+            LaurentTest::validate(product, poly, [&scalar](long x, long y,
                     const Integer& c) {
                 return std::make_tuple(x, y, c * scalar);
             });
         }
-        validate(L(poly) * scalar, product);
-        validate(scalar * poly, product);
-        validate(scalar * L(poly), product);
+        LaurentTest::validate(L(poly) * scalar, product);
+        LaurentTest::validate(scalar * poly, product);
+        LaurentTest::validate(scalar * L(poly), product);
         {
             L x(poly);
-            validate(x *= scalar, product);
+            LaurentTest::validate(x *= scalar, product);
         }
 
         verifyNativeProduct<int8_t>(poly, scalar, product);
@@ -699,9 +699,9 @@ namespace {
         if (scalar != 0) {
             const L quotient = poly / scalar;
             if (poly.isZero()) {
-                validateZero(quotient);
+                LaurentTest::validateZero(quotient);
             } else {
-                validate(quotient);
+                LaurentTest::validate(quotient);
                 EXPECT_LE(quotient.countTerms(), poly.countTerms());
 
                 auto pit = poly.begin();
@@ -726,10 +726,10 @@ namespace {
                     }
                 }
             }
-            validate(L(poly) / scalar, quotient);
+            LaurentTest::validate(L(poly) / scalar, quotient);
             {
                 L x(poly);
-                validate(x /= scalar, quotient);
+                LaurentTest::validate(x /= scalar, quotient);
             }
 
             verifyNativeQuotient<int8_t>(poly, scalar, quotient);

@@ -51,7 +51,7 @@ using L = Laurent<Integer>;
 #define BIG3 "16263929623" "7368209646" "9962039310" "7396269296" "3107225451"
 #define BIG4 "21685239498" "3157612862" "6616052414" "3195025728" "4142967268"
 
-class LaurentTest : public testing::Test {
+class Laurent1Test : public LaurentTest {
     protected:
         // An integer that cannot fit into 128 bits.
         const Integer bigInt { BIG };
@@ -134,7 +134,7 @@ class LaurentTest : public testing::Test {
         }
 };
 
-TEST_F(LaurentTest, construct) {
+TEST_F(Laurent1Test, construct) {
     validateZero(L());
     validateZero(zero);
     validateZero(zero2);
@@ -181,7 +181,7 @@ TEST_F(LaurentTest, construct) {
     // At this point: zero, pos, neg, big are all unusable.
 }
 
-TEST_F(LaurentTest, assign) {
+TEST_F(Laurent1Test, assign) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
 
@@ -221,7 +221,7 @@ TEST_F(LaurentTest, assign) {
     }
 }
 
-TEST_F(LaurentTest, padding) {
+TEST_F(Laurent1Test, padding) {
     {
         auto alloc = paddedZero.allocation();
         EXPECT_GT(alloc.second, 0);
@@ -300,7 +300,7 @@ namespace {
             EXPECT_GT(newAlloc.first + static_cast<long>(newAlloc.second),
                 toExp);
 
-            validate(x, poly);
+            LaurentTest::validate(x, poly);
 
             for (long i = fromExp; i <= toExp; ++i) {
                 x.set(i, 1);
@@ -310,7 +310,7 @@ namespace {
     }
 } // anonymous namespace
 
-TEST_F(LaurentTest, reserveRange) {
+TEST_F(Laurent1Test, reserveRange) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
         if (c.isZero()) {
@@ -354,7 +354,7 @@ TEST_F(LaurentTest, reserveRange) {
     }
 }
 
-TEST_F(LaurentTest, init) {
+TEST_F(Laurent1Test, init) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
         {
@@ -373,7 +373,7 @@ TEST_F(LaurentTest, init) {
     }
 }
 
-TEST_F(LaurentTest, moveThenAssign) {
+TEST_F(Laurent1Test, moveThenAssign) {
     // Here we test both move-then-assign and move-then-init.
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
@@ -511,7 +511,7 @@ TEST_F(LaurentTest, moveThenAssign) {
     }
 }
 
-TEST_F(LaurentTest, set) {
+TEST_F(Laurent1Test, set) {
     // Some tests specific to the zero polynomial:
     {
         L x;
@@ -887,7 +887,7 @@ TEST_F(LaurentTest, set) {
     }
 }
 
-TEST_F(LaurentTest, iteration) {
+TEST_F(Laurent1Test, iteration) {
     const regina::LaurentCoefficient<Integer, 1> end{};
 
     for (const L& c : cases) {
@@ -951,7 +951,7 @@ TEST_F(LaurentTest, iteration) {
     }
 }
 
-TEST_F(LaurentTest, comparison) {
+TEST_F(Laurent1Test, comparison) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
         Batch cBatch = batch(c);
@@ -1011,7 +1011,7 @@ TEST_F(LaurentTest, comparison) {
     }
 }
 
-TEST_F(LaurentTest, shift) {
+TEST_F(Laurent1Test, shift) {
     static constexpr int shifts[5] = { -100, -5, 0, 5, 100 };
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
@@ -1047,7 +1047,7 @@ TEST_F(LaurentTest, shift) {
     }
 }
 
-TEST_F(LaurentTest, scale) {
+TEST_F(Laurent1Test, scale) {
     static constexpr int factors[6] = { 1, -1, 2, -2, 5, -5 };
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
@@ -1154,7 +1154,7 @@ TEST_F(LaurentTest, scale) {
     }
 }
 
-TEST_F(LaurentTest, negate) {
+TEST_F(Laurent1Test, negate) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
         if (c.isZero()) {
@@ -1184,7 +1184,7 @@ TEST_F(LaurentTest, negate) {
     }
 }
 
-TEST_F(LaurentTest, invertX) {
+TEST_F(Laurent1Test, invertX) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
         if (c.isZero()) {
@@ -1209,7 +1209,7 @@ TEST_F(LaurentTest, invertX) {
     }
 }
 
-TEST_F(LaurentTest, transform) {
+TEST_F(Laurent1Test, transform) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
 
@@ -1270,13 +1270,13 @@ namespace {
             return;
         }
 
-        validate(poly * native, product);
-        validate(L(poly) * native, product);
-        validate(native * poly, product);
-        validate(native * L(poly), product);
+        LaurentTest::validate(poly * native, product);
+        LaurentTest::validate(L(poly) * native, product);
+        LaurentTest::validate(native * poly, product);
+        LaurentTest::validate(native * L(poly), product);
         {
             L x(poly);
-            validate(x *= native, product);
+            LaurentTest::validate(x *= native, product);
         }
     }
 
@@ -1296,11 +1296,11 @@ namespace {
         }
 
         if (quotient) {
-            validate(poly / native, *quotient);
-            validate(L(poly) / native, *quotient);
+            LaurentTest::validate(poly / native, *quotient);
+            LaurentTest::validate(L(poly) / native, *quotient);
             {
                 L x(poly);
-                validate(x /= native, *quotient);
+                LaurentTest::validate(x /= native, *quotient);
             }
         } else {
             #if 0 // For now, Laurent division requires a non-zero divisor.
@@ -1321,21 +1321,21 @@ namespace {
 
         const L product = poly * scalar;
         if (poly.isZero() || scalar == 0) {
-            validateZero(product);
+            LaurentTest::validateZero(product);
         } else {
-            validate(product);
+            LaurentTest::validate(product);
             EXPECT_FALSE(product.isZero());
             EXPECT_EQ(product.minExp(), poly.minExp());
             EXPECT_EQ(product.maxExp(), poly.maxExp());
             for (long i = poly.minExp(); i <= poly.maxExp(); ++i)
                 EXPECT_EQ(product[i], poly[i] * scalar);
         }
-        validate(L(poly) * scalar, product);
-        validate(scalar * poly, product);
-        validate(scalar * L(poly), product);
+        LaurentTest::validate(L(poly) * scalar, product);
+        LaurentTest::validate(scalar * poly, product);
+        LaurentTest::validate(scalar * L(poly), product);
         {
             L x(poly);
-            validate(x *= scalar, product);
+            LaurentTest::validate(x *= scalar, product);
         }
 
         verifyNativeProduct<int8_t>(poly, scalar, product);
@@ -1384,9 +1384,9 @@ namespace {
         } else {
             const L quotient = poly / scalar;
             if (poly.isZero()) {
-                validateZero(quotient);
+                LaurentTest::validateZero(quotient);
             } else {
-                validate(quotient);
+                LaurentTest::validate(quotient);
                 if (poly[poly.minExp()].abs() >= scalar.abs()) {
                     EXPECT_FALSE(quotient.isZero());
                     EXPECT_EQ(quotient.minExp(), poly.minExp());
@@ -1404,10 +1404,10 @@ namespace {
                 for (long i = poly.minExp(); i <= poly.maxExp(); ++i)
                     EXPECT_EQ(quotient[i], poly[i] / scalar);
             }
-            validate(L(poly) / scalar, quotient);
+            LaurentTest::validate(L(poly) / scalar, quotient);
             {
                 L x(poly);
-                validate(x /= scalar, quotient);
+                LaurentTest::validate(x /= scalar, quotient);
             }
 
             verifyNativeQuotient<int8_t>(poly, scalar, quotient);
@@ -1435,12 +1435,12 @@ namespace {
             {
                 L x(c);
                 x.addProduct(poly, scalar);
-                validate(x, c + product);
+                LaurentTest::validate(x, c + product);
             }
             {
                 L x(c);
                 x.addProduct(L(poly), scalar);
-                validate(x, c + product);
+                LaurentTest::validate(x, c + product);
             }
         }
 
@@ -1448,12 +1448,12 @@ namespace {
         {
             L x(poly);
             x.addProduct(x, scalar);
-            validate(x, poly + product);
+            LaurentTest::validate(x, poly + product);
         }
     }
 } // anonymous namespace
 
-TEST_F(LaurentTest, scalarMultiplyDivide) {
+TEST_F(Laurent1Test, scalarMultiplyDivide) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
 
@@ -1506,7 +1506,7 @@ TEST_F(LaurentTest, scalarMultiplyDivide) {
     }
 }
 
-TEST_F(LaurentTest, addSubtract) {
+TEST_F(Laurent1Test, addSubtract) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
         for (const L& d : cases) {
@@ -1627,7 +1627,7 @@ TEST_F(LaurentTest, addSubtract) {
     }
 }
 
-TEST_F(LaurentTest, multiply) {
+TEST_F(Laurent1Test, multiply) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
         for (const L& d : cases) {
@@ -1789,13 +1789,13 @@ TEST_F(LaurentTest, multiply) {
     }
 }
 
-TEST_F(LaurentTest, ringConstants) {
+TEST_F(Laurent1Test, ringConstants) {
     // Verify that the RingTraits constants looks correct.
     EXPECT_EQ(regina::RingTraits<L>::zero.str(), "0");
     EXPECT_EQ(regina::RingTraits<L>::one.str(), "1");
 }
 
-TEST_F(LaurentTest, str) {
+TEST_F(Laurent1Test, str) {
     EXPECT_EQ(zero.str(), "0");
     EXPECT_EQ(zero2.str(), "0");
     EXPECT_EQ(zero3.str(), "0");
@@ -1839,7 +1839,7 @@ TEST_F(LaurentTest, str) {
     EXPECT_EQ(paddedPoly.str(), "x^3 - x^2 + x");
 }
 
-TEST_F(LaurentTest, utf8) {
+TEST_F(Laurent1Test, utf8) {
     // Here we directly use unicode superscripts and minus signs in the C++
     // source code.
     verifyUtf8(zero, u8"0");
@@ -1885,7 +1885,7 @@ TEST_F(LaurentTest, utf8) {
     verifyUtf8(paddedPoly, u8"x³ − x² + x");
 }
 
-TEST_F(LaurentTest, tightEncoding) {
+TEST_F(Laurent1Test, tightEncoding) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
         TightEncodingTest<L>::verifyTightEncoding(c);
@@ -1902,7 +1902,7 @@ TEST_F(LaurentTest, tightEncoding) {
     EXPECT_EQ(long2.tightEncoding(), "LPNZM");
 }
 
-TEST_F(LaurentTest, swap) {
+TEST_F(Laurent1Test, swap) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
         for (const L& d : cases) {
