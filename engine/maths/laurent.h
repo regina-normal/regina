@@ -3402,31 +3402,33 @@ class Laurent :
          */
         static Laurent tightDecode(std::istream& input)
                 requires InherentlyTightEncodable<T> {
-            // Use a temporary std::vector to store non-zero coefficients,
-            // since we don't know in advance how many there will be.
-            std::vector<std::pair<long, Term>> coeffs;
-
+            // For now, just set coefficients directly as we read them.
+            // The old implementation used a temporary std::vector, but now
+            // that Laurent manages growth in a similar way to std::vector we
+            // might as well just store them directly.
+            Laurent ans;
+            std::array<long, vars> exp[2];
+            int prev = -1, curr = 0;
             while (true) {
-                Term coeff = Term::tightDecode(input);
+                T coeff = T::tightDecode(input);
                 if (coeff == 0) {
                     // The sequence of coefficients is finished.
-                    if (coeffs.empty())
-                        return {};
-
-                    long firstExp = coeffs.front().first;
-                    long lastExp = coeffs.back().first;
-                    Term* raw = new Term[lastExp - firstExp + 1];
-                    for (auto& c : coeffs)
-                        raw[c.first - firstExp] = std::move(c.second);
-                    return { firstExp, lastExp, raw };
+                    return ans;
                 } else {
-                    long exp = regina::tightDecode<long>(input);
-                    if (! coeffs.empty()) {
-                        if (exp <= coeffs.back().first)
-                            throw InvalidInput("The tight encoding has an "
-                                "invalid sequence of exponents");
-                    }
-                    coeffs.emplace_back(exp, std::move(coeff));
+                    for (auto& e : exp[curr])
+                        e = regina::tightDecode<long>(input);
+                    if (prev >= 0 && exp[curr] <= exp[prev])
+                        throw InvalidInput("The tight encoding uses "
+                            "non-increasing exponent sequences");
+                    prev = curr;
+                    if constexpr (vars == 1)
+                        ans.setTo(std::move(coeff), exp[curr][0]);
+                    else if constexpr (vars == 2)
+                        ans.setTo(std::move(coeff), exp[curr][0], exp[curr][1]);
+                    else // vars == 3
+                        ans.setTo(std::move(coeff), exp[curr][0], exp[curr][1],
+                            exp[curr][2]);
+                    curr ^= 1;
                 }
             }
         }
