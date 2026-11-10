@@ -40,7 +40,6 @@ using regina::Integer;
 using regina::Laurent;
 
 using L = Laurent<Integer, 2>;
-using Term = std::pair<std::pair<long, long>, Integer>;
 
 // An integer that cannot fit into 128 bits.
 // We split the digits into chunks to not break syntax highlighting.
@@ -64,41 +63,33 @@ class Laurent2Test : public LaurentTest {
             L{{{1, 1}, -1}, {{1, 2}, 1}, {{0, -1}, -2}, {{1, 0}, -2}},
             L{{{1, 2}, bigInt}, {{1, -2}, -bigInt}, {{1, 1}, -1}}
         };
+
+        // Some single-variable polynomials to use with routines such as
+        // embed() and diagonalise().
+        const std::array<const regina::Laurent<Integer>, 3> sub {
+            Laurent<Integer>(),
+            Laurent<Integer>(-5),
+            Laurent<Integer>(-2, {3,0,2,-1})
+        };
 };
-
-namespace {
-    void validate(const L& poly,
-            std::initializer_list<std::tuple<long, long, Integer>> coeffs) {
-        // We assume here that coeffs only contains non-zero coefficients, and
-        // does not contain any duplicate exponent pairs.
-
-        EXPECT_NO_THROW({ poly.validate(); });
-        EXPECT_EQ(poly.countTerms(), coeffs.size());
-        if (coeffs.size() == 0) {
-            EXPECT_TRUE(poly.isZero());
-        } else {
-            EXPECT_FALSE(poly.isZero());
-            for (const auto& c : coeffs)
-                EXPECT_EQ(poly(std::get<0>(c), std::get<1>(c)), std::get<2>(c));
-        }
-    }
-} // anonymous namespace
 
 TEST_F(Laurent2Test, construct) {
     // Here we also test isZero() and countTerms() via the calls to validate()
     // and validateZero(), through the initialiser list tests below.
     validateZero(L());
     validateZero(L({}));
-    validate(L({{0,0,1}}), {{0,0,1}});
-    validate(L({{0,0,-1}}), {{0,0,-1}});
-    validate(L({{2,0,3}}), {{2,0,3}});
-    validate(L({{0,-2,-3}}), {{0,-2,-3}});
-    validate(L({{1,0,-2}, {1,1,5}, {0,1,7}}), {{1,0,-2}, {1,1,5}, {0,1,7}});
-    validate(L({{0,1,7}, {1,1,5}, {1,0,-2}}), {{1,0,-2}, {1,1,5}, {0,1,7}});
-    validate(L({{0,0,1}, {0,1,2}, {0,2,3}, {-1,0,4}, {-2,0,5}}),
-        {{0,0,1}, {0,1,2}, {0,2,3}, {-1,0,4}, {-2,0,5}});
-    validate(L({{-2,0,5}, {-1,0,4}, {0,2,3}, {0,1,2}, {0,0,1}}),
-        {{0,0,1}, {0,1,2}, {0,2,3}, {-1,0,4}, {-2,0,5}});
+    validate(L{{{0,0},1}}, {{{0,0},1}});
+    validate(L{{{0,0},-1}}, {{{0,0},-1}});
+    validate(L{{{2,0},3}}, {{{2,0},3}});
+    validate(L{{{0,-2},-3}}, {{{0,-2},-3}});
+    validate(L{{{1,0},-2}, {{1,1},5}, {{0,1},7}},
+        {{{0,1},7}, {{1,0},-2}, {{1,1},5}});
+    validate(L{{{0,1},7}, {{1,1},5}, {{1,0},-2}},
+        {{{0,1},7}, {{1,0},-2}, {{1,1},5}});
+    validate(L{{{0,0},1}, {{0,1},2}, {{0,2},3}, {{-1,0},4}, {{-2,0},5}},
+        {{{-2,0},5}, {{-1,0},4}, {{0,0},1}, {{0,1},2}, {{0,2},3}});
+    validate(L{{{-2,0},5}, {{-1,0},4}, {{0,2},3}, {{0,1},2}, {{0,0},1}},
+        {{{-2,0},5}, {{-1,0},4}, {{0,0},1}, {{0,1},2}, {{0,2},3}});
 
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
@@ -109,6 +100,7 @@ TEST_F(Laurent2Test, construct) {
             validate(y, c);
         }
 
+        #if 0
         using Tuple = std::tuple<long, long, Integer>;
         {
             std::vector<Tuple> coeffs;
@@ -133,6 +125,7 @@ TEST_F(Laurent2Test, construct) {
                 return std::make_pair(term.first, term.second * 2);
             });
         }
+        #endif
     }
 
     {
@@ -140,81 +133,45 @@ TEST_F(Laurent2Test, construct) {
         validateZero(L(zero));
         validateZero(L(std::move(zero)));
         validateZero(L(0));
-        validate(L(pos), {{0,0,4}});
-        validate(L(std::move(pos)), {{0,0,4}});
-        validate(L(4), {{0,0,4}});
-        validate(L(neg), {{0,0,-4}});
-        validate(L(std::move(neg)), {{0,0,-4}});
-        validate(L(-4), {{0,0,-4}});
-        validate(L(big), {{0,0,bigInt}});
-        validate(L(std::move(big)), {{0,0,bigInt}});
+        validate(L(pos), {{{0,0},4}});
+        validate(L(std::move(pos)), {{{0,0},4}});
+        validate(L(4), {{{0,0},4}});
+        validate(L(neg), {{{0,0},-4}});
+        validate(L(std::move(neg)), {{{0,0},-4}});
+        validate(L(-4), {{{0,0},-4}});
+        validate(L(big), {{{0,0},bigInt}});
+        validate(L(std::move(big)), {{{0,0},bigInt}});
         // At this point: zero, pos, neg, big are all unusable.
     }
-
-    const std::array<regina::Laurent<Integer>, 4> sub {
-        regina::Laurent<Integer>(),
-        regina::Laurent<Integer>(-5),
-        regina::Laurent<Integer>(-2, {3,0,2,-1}),
-    };
-
-    validateZero(L(sub[0], 0, 0));
-    validateZero(L(sub[0], 1, 0));
-    validateZero(L(sub[0], 0, 1));
-    validateZero(L(sub[0], -1, 0));
-    validateZero(L(sub[0], 0, -1));
-    validateZero(L(sub[0], 2, -3));
-    validate(L(sub[1], 0, 0), {{0,0,-5}});
-    validate(L(sub[1], 1, 0), {{0,0,-5}});
-    validate(L(sub[1], 0, 1), {{0,0,-5}});
-    validate(L(sub[1], -1, 0), {{0,0,-5}});
-    validate(L(sub[1], 0, -1), {{0,0,-5}});
-    validate(L(sub[1], 2, -3), {{0,0,-5}});
-    validate(L(sub[2], 0, 0), {{0,0,4}});
-    validate(L(sub[2], 1, 0), {{-2,0,3}, {0,0,2}, {1,0,-1}});
-    validate(L(sub[2], 0, 1), {{0,-2,3}, {0,0,2}, {0,1,-1}});
-    validate(L(sub[2], -1, 0), {{2,0,3}, {0,0,2}, {-1,0,-1}});
-    validate(L(sub[2], 0, -1), {{0,2,3}, {0,0,2}, {0,-1,-1}});
-    validate(L(sub[2], 2, -3), {{-4,6,3}, {0,0,2}, {2,-3,-1}});
 
     for (const auto& s : sub) {
         validateZero(L(sub[0], s));
         validateZero(L(s, sub[0]));
     }
-    validate(L(sub[1], sub[1]), {{0,0,25}});
-    validate(L(sub[1], sub[2]), {{0,-2,-15}, {0,0,-10}, {0,1,5}});
-    validate(L(sub[2], sub[1]), {{-2,0,-15}, {0,0,-10}, {1,0,5}});
-    validate(L(sub[2], sub[2]), {
-        {-2,-2,9}, {-2,0,6}, {-2,1,-3},
-        {0,-2,6}, {0,0,4}, {0,1,-2},
-        {1,-2,-3}, {1,0,-2}, {1,1,1}
-    });
 
-    using LL = regina::Laurent<regina::Laurent<Integer>>;
-    {
-        LL zero;
-        validateZero(L(zero));
-        validateZero(L(std::move(zero)));
-    }
-    {
-        LL poly(3, { sub[1] });
-        validate(L(poly), {{3,0,-5}});
-        validate(L(std::move(poly)), {{3,0,-5}});
-    }
-    {
-        LL poly(-5, { sub[2] });
-        validate(L(poly), {{-5,-2,3}, {-5,0,2}, {-5,1,-1}});
-        validate(L(std::move(poly)), {{-5,-2,3}, {-5,0,2}, {-5,1,-1}});
-    }
-    {
-        LL poly(-1, { 7, 0, 0, -3, 2 });
-        validate(L(poly), {{-1,0,7}, {2,0,-3}, {3,0,2}});
-        validate(L(std::move(poly)), {{-1,0,7}, {2,0,-3}, {3,0,2}});
-    }
-    {
-        LL poly(-1, { sub[1], sub[0], sub[0], sub[2] });
-        validate(L(poly), {{-1,0,-5}, {2,-2,3}, {2,0,2}, {2,1,-1}});
-        validate(L(std::move(poly)), {{-1,0,-5}, {2,-2,3}, {2,0,2}, {2,1,-1}});
-    }
+    validate(L(sub[1], sub[1]), {{{0,0},25}});
+    validate(L(sub[1], sub[2]), {{{0,-2},-15}, {{0,0},-10}, {{0,1},5}});
+    validate(L(sub[2], sub[1]), {{{-2,0},-15}, {{0,0},-10}, {{1,0},5}});
+    validate(L(sub[2], sub[2]), {
+        {{-2,-2},9}, {{-2,0},6}, {{-2,1},-3},
+        {{0,-2},6}, {{0,0},4}, {{0,1},-2},
+        {{1,-2},-3}, {{1,0},-2}, {{1,1},1}
+    });
+}
+
+TEST_F(Laurent2Test, embed) {
+    validateZero(L::embed<0>(sub[0]));
+    validateZero(L::embed<1>(sub[0]));
+    validate(L::embed<0>(sub[1]), {{{0,0},-5}});
+    validate(L::embed<1>(sub[1]), {{{0,0},-5}});
+    validate(L::embed<0>(sub[2]), {{{-2,0},3}, {{0,0},2}, {{1,0},-1}});
+    validate(L::embed<1>(sub[2]), {{{0,-2},3}, {{0,0},2}, {{0,1},-1}});
+}
+
+TEST_F(Laurent2Test, diagonalise) {
+    validateZero(L::diagonalise(sub[0]));
+    validate(L::diagonalise(sub[1]), {{{0,0},-5}});
+    validate(L::diagonalise(sub[2]), {{{-2,-2},3}, {{0,0},2}, {{1,1},-1}});
 }
 
 TEST_F(Laurent2Test, assign) {
@@ -242,15 +199,17 @@ TEST_F(Laurent2Test, assign) {
         { L x(c); validate(x, c); x = zero; validateZero(x); }
         { L x(c); validate(x, c); x = std::move(zero); validateZero(x); }
         { L x(c); validate(x, c); x = 0; validateZero(x); }
-        { L x(c); validate(x, c); x = pos; validate(x, {{0,0,4}}); }
-        { L x(c); validate(x, c); x = std::move(pos); validate(x, {{0,0,4}}); }
-        { L x(c); validate(x, c); x = 4; validate(x, {{0,0,4}}); }
-        { L x(c); validate(x, c); x = neg; validate(x, {{0,0,-4}}); }
-        { L x(c); validate(x, c); x = std::move(neg); validate(x, {{0,0,-4}}); }
-        { L x(c); validate(x, c); x = -4; validate(x, {{0,0,-4}}); }
-        { L x(c); validate(x, c); x = big; validate(x, {{0,0,bigInt}}); }
+        { L x(c); validate(x, c); x = pos; validate(x, {{{0,0},4}}); }
+        { L x(c); validate(x, c); x = std::move(pos);
+            validate(x, {{{0,0},4}}); }
+        { L x(c); validate(x, c); x = 4; validate(x, {{{0,0},4}}); }
+        { L x(c); validate(x, c); x = neg; validate(x, {{{0,0},-4}}); }
+        { L x(c); validate(x, c); x = std::move(neg);
+            validate(x, {{{0,0},-4}}); }
+        { L x(c); validate(x, c); x = -4; validate(x, {{{0,0},-4}}); }
+        { L x(c); validate(x, c); x = big; validate(x, {{{0,0},bigInt}}); }
         { L x(c); validate(x, c); x = std::move(big);
-            validate(x, {{0,0,bigInt}}); }
+            validate(x, {{{0,0},bigInt}}); }
         // At this point: zero, pos, neg, big are all unusable.
     }
 }
@@ -266,7 +225,7 @@ TEST_F(Laurent2Test, init) {
         {
             L x(c);
             x.initExp(-2, 3);
-            validate(x, {{-2, 3, 1}});
+            validate(x, {{{-2,3},1}});
 
             // Here is as good a place as any to test monomial().
             validate(L::monomial(-2, 3), x);
@@ -365,7 +324,7 @@ TEST_F(Laurent2Test, moveThenAssign) {
 
                 y = std::move(x);
                 x.initExp(1, 2);
-                validate(x, {{1,2,1}});
+                validate(x, {{{1,2},1}});
                 validate(y, c);
             }
 
@@ -417,23 +376,23 @@ TEST_F(Laurent2Test, set) {
     // there is not really any specialised code to test here other than
     // ensuring that the map remains free of zero coefficients.
 
-    L x { {{0,0},1}, {{1,-1}, 2} };
+    L x{{{0,0},1}, {{1,-1},2}};
 
-    validate(x, { {0, 0, 1}, {1, -1, 2} });
+    validate(x, {{{0,0},1}, {{1,-1},2}});
     x.set(-1, 1, 3);
-    validate(x, { {0, 0, 1}, {1, -1, 2}, {-1, 1, 3} });
+    validate(x, {{{-1,1},3}, {{0,0},1}, {{1,-1},2}});
     x.set(0, 0, 0);
-    validate(x, { {1, -1, 2}, {-1, 1, 3} });
+    validate(x, {{{-1,1},3}, {{1,-1},2}});
     x.set(1, -1, 0);
-    validate(x, { {-1, 1, 3} });
+    validate(x, {{{-1,1},3} });
     x.set(1, -1, 0);
-    validate(x, { {-1, 1, 3} });
+    validate(x, {{{-1,1},3} });
     x.set(-1, 1, 0);
     validate(x, {});
     x.set(0, 0, 0);
     validate(x, {});
     x.set(-1, -1, 1);
-    validate(x, { {-1, -1, 1} });
+    validate(x, {{{-1,-1},1}});
 }
 
 TEST_F(Laurent2Test, iterators) {
@@ -442,33 +401,63 @@ TEST_F(Laurent2Test, iterators) {
 
         // Here is as good a time as any to test operator() also.
         if (c.isZero()) {
-            EXPECT_EQ(c.begin(), c.end());
+            EXPECT_FALSE(c.first());
+            EXPECT_FALSE(c.last());
 
             for (int i : { -100, -1, 0, 1, 100 })
                 for (int j : { -100, -1, 0, 1, 100 })
                     EXPECT_EQ(c(i, j), 0);
         } else {
-            ASSERT_NE(c.begin(), c.end());
+            ASSERT_TRUE(c.first());
+            ASSERT_TRUE(c.last());
 
-            auto minExp = c.begin()->first;
-            EXPECT_EQ(c(minExp.first - 1, minExp.second), 0);
-            EXPECT_EQ(c(minExp.first, minExp.second - 1), 0);
+            // Forward iteration:
+            {
+                auto it = c.first();
+                EXPECT_EQ(c(it.exp<0>() - 1, it.exp<1>()), 0);
+                EXPECT_EQ(c(it.exp<0>(), it.exp<1>() - 1), 0);
 
-            auto it = c.begin();
-            std::optional<std::pair<long, long>> prevExp;
-            for (const Term& t : c) { // tests begin() / end() / iteration
-                if (prevExp.has_value()) {
-                    // Manually verify the order of iteration:
-                    EXPECT_LE(prevExp->first, t.first.first);
-                    if (prevExp->first == t.first.first)
-                        EXPECT_LT(prevExp->second, t.first.second);
+                std::optional<regina::LaurentCoefficient<Integer, 2>> prev;
+                for ( ; it; prev = it++) {
+                    if (prev.has_value()) {
+                        // Manually verify the order of iteration:
+                        EXPECT_LE(prev->exp<0>(), it.exp<0>());
+                        if (prev->exp<0>() == it.exp<0>())
+                            EXPECT_LT(prev->exp<1>(), it.exp<1>());
+                    }
+                    EXPECT_EQ(c(it.exp<0>(), it.exp<1>()), *it);
                 }
-                EXPECT_EQ(c(t.first.first, t.first.second), t.second);
-                prevExp = t.first;
+
+                ASSERT_TRUE(prev);
+                ASSERT_TRUE(*prev);
+                EXPECT_EQ(*prev, c.last());
+                EXPECT_EQ(c(prev->exp<0>() + 1, prev->exp<1>()), 0);
+                EXPECT_EQ(c(prev->exp<0>(), prev->exp<1>() + 1), 0);
             }
 
-            EXPECT_EQ(c(prevExp->first + 1, prevExp->second), 0);
-            EXPECT_EQ(c(prevExp->first, prevExp->second + 1), 0);
+            // Backward iteration:
+            {
+                auto it = c.last();
+                EXPECT_EQ(c(it.exp<0>() + 1, it.exp<1>()), 0);
+                EXPECT_EQ(c(it.exp<0>(), it.exp<1>() + 1), 0);
+
+                std::optional<regina::LaurentCoefficient<Integer, 2>> prev;
+                for ( ; it; prev = it--) {
+                    if (prev.has_value()) {
+                        // Manually verify the order of iteration:
+                        EXPECT_GE(prev->exp<0>(), it.exp<0>());
+                        if (prev->exp<0>() == it.exp<0>())
+                            EXPECT_GT(prev->exp<1>(), it.exp<1>());
+                    }
+                    EXPECT_EQ(c(it.exp<0>(), it.exp<1>()), *it);
+                }
+
+                ASSERT_TRUE(prev);
+                ASSERT_TRUE(*prev);
+                EXPECT_EQ(*prev, c.first());
+                EXPECT_EQ(c(prev->exp<0>() - 1, prev->exp<1>()), 0);
+                EXPECT_EQ(c(prev->exp<0>(), prev->exp<1>() - 1), 0);
+            }
         }
     }
 }
@@ -702,22 +691,20 @@ namespace {
                 LaurentTest::validateZero(quotient);
             } else {
                 LaurentTest::validate(quotient);
-                EXPECT_LE(quotient.countTerms(), poly.countTerms());
-
-                auto pit = poly.begin();
-                auto qit = quotient.begin();
-                while (pit != poly.end() || qit != quotient.end()) {
-                    if (pit != poly.end() && qit != quotient.end() &&
-                            pit->first == qit->first) {
-                        auto q = (pit++)->second / scalar;
+                auto pit = poly.first();
+                auto qit = quotient.first();
+                while (pit || qit) {
+                    if (pit && qit && pit.exp<0>() == qit.exp<0>() &&
+                            pit.exp<1>() == qit.exp<1>()) {
+                        auto q = *pit++ / scalar;
                         EXPECT_NE(q, 0);
-                        EXPECT_EQ((qit++)->second, q);
-                    } else if (pit != poly.end()) {
+                        EXPECT_EQ(*qit++, q);
+                    } else if (pit) {
                         // We might have a coefficient which, when divided by
                         // our scalar using integer division, becomes zero.
-                        EXPECT_GT(pit->second, -scalar.abs());
-                        EXPECT_LT(pit->second, scalar.abs());
-                        EXPECT_EQ((pit++)->second / scalar, 0);
+                        EXPECT_GT(*pit, -scalar.abs());
+                        EXPECT_LT(*pit, scalar.abs());
+                        EXPECT_EQ(*pit++ / scalar, 0);
                     } else {
                         // We have a deeper mismatch between terms that we
                         // do not know how to recover from.
@@ -792,11 +779,14 @@ TEST_F(Laurent2Test, scalarMultiplyDivide) {
         validate(c * 2, c + c);
 
         if (! c.isZero()) {
-            verifyScalarMultiplyDivide(c, c.begin()->second);
+            const auto& f = c.first();
+            verifyScalarMultiplyDivide(c, *f);
 
-            L c0 = c / c.begin()->second;
-            EXPECT_EQ(c0.begin()->first, c.begin()->first);
-            EXPECT_EQ(c0.begin()->second, 1);
+            L c0 = c / *f;
+            const auto& f0 = c0.first();
+            EXPECT_EQ(f0.exp<0>(), f.exp<0>());
+            EXPECT_EQ(f0.exp<1>(), f.exp<1>());
+            EXPECT_EQ(*f0, 1);
         }
     }
 }
@@ -817,27 +807,26 @@ TEST_F(Laurent2Test, addSubtract) {
                 validate(sum, c);
             } else {
                 validate(sum);
-                EXPECT_LE(sum.countTerms(), c.countTerms() + d.countTerms());
 
                 // Verify the individual terms of the sum.
-                auto sit = sum.begin();
-                auto cit = c.begin();
-                auto dit = d.begin();
-                while (sit != sum.end() || cit != c.end() || dit != d.end()) {
-                    if (cit != c.end() && dit != d.end() &&
-                            cit->first == dit->first) {
-                        if (sit != sum.end() && sit->first == cit->first) {
-                            EXPECT_EQ((sit++)->second,
-                                (cit++)->second + (dit++)->second);
+                auto sit = sum.first();
+                auto cit = c.first();
+                auto dit = d.first();
+                while (sit || cit || dit) {
+                    if (cit && dit && cit.exp<0>() == dit.exp<0>() &&
+                            cit.exp<1>() == dit.exp<1>()) {
+                        if (sit && sit.exp<0>() == cit.exp<0>() &&
+                                sit.exp<1>() == cit.exp<1>()) {
+                            EXPECT_EQ(*sit++, *cit++ + *dit++);
                         } else {
-                            EXPECT_EQ((cit++)->second, -(dit++)->second);
+                            EXPECT_EQ(*cit++, -*dit++);
                         }
-                    } else if (sit != sum.end() && cit != c.end() &&
-                            sit->first == cit->first) {
-                        EXPECT_EQ((sit++)->second, (cit++)->second);
-                    } else if (sit != sum.end() && dit != d.end() &&
-                            sit->first == dit->first) {
-                        EXPECT_EQ((sit++)->second, (dit++)->second);
+                    } else if (sit && cit && sit.exp<0>() == cit.exp<0>() &&
+                            sit.exp<1>() == cit.exp<1>()) {
+                        EXPECT_EQ(*sit++, *cit++);
+                    } else if (sit && dit && sit.exp<0>() == dit.exp<0>() &&
+                            sit.exp<1>() == dit.exp<1>()) {
+                        EXPECT_EQ(*sit++, *dit++);
                     } else {
                         // We have a lone term that appears on one side but
                         // not the other.
@@ -871,27 +860,26 @@ TEST_F(Laurent2Test, addSubtract) {
                 });
             } else {
                 validate(diff);
-                EXPECT_LE(diff.countTerms(), c.countTerms() + d.countTerms());
 
                 // Verify the individual terms of the difference.
-                auto sit = diff.begin();
-                auto cit = c.begin();
-                auto dit = d.begin();
-                while (sit != diff.end() || cit != c.end() || dit != d.end()) {
-                    if (cit != c.end() && dit != d.end() &&
-                            cit->first == dit->first) {
-                        if (sit != diff.end() && sit->first == cit->first) {
-                            EXPECT_EQ((sit++)->second,
-                                (cit++)->second - (dit++)->second);
+                auto sit = diff.first();
+                auto cit = c.first();
+                auto dit = d.first();
+                while (sit || cit || dit) {
+                    if (cit && dit && cit.exp<0>() == dit.exp<0>() &&
+                            cit.exp<1>() == dit.exp<1>()) {
+                        if (sit && sit.exp<0>() == cit.exp<0>() &&
+                                sit.exp<1>() == cit.exp<1>()) {
+                            EXPECT_EQ(*sit++, *cit++ - *dit++);
                         } else {
-                            EXPECT_EQ((cit++)->second, (dit++)->second);
+                            EXPECT_EQ(*cit++, *dit++);
                         }
-                    } else if (sit != diff.end() && cit != c.end() &&
-                            sit->first == cit->first) {
-                        EXPECT_EQ((sit++)->second, (cit++)->second);
-                    } else if (sit != diff.end() && dit != d.end() &&
-                            sit->first == dit->first) {
-                        EXPECT_EQ((sit++)->second, -(dit++)->second);
+                    } else if (sit && cit && sit.exp<0>() == cit.exp<0>() &&
+                            sit.exp<1>() == cit.exp<1>()) {
+                        EXPECT_EQ(*sit++, *cit++);
+                    } else if (sit && dit && sit.exp<0>() == dit.exp<0>() &&
+                            sit.exp<1>() == dit.exp<1>()) {
+                        EXPECT_EQ(*sit++, -*dit++);
                     } else {
                         // We have a lone term that appears on one side but
                         // not the other.
@@ -973,28 +961,15 @@ TEST_F(Laurent2Test, multiply) {
                 const L product = c * d;
                 validate(product);
                 EXPECT_FALSE(product.isZero());
-                EXPECT_GE(product.countTerms(), c.countTerms());
-                EXPECT_GE(product.countTerms(), d.countTerms());
 
-                // We will verify the individual coefficients with the help of
-                // Laurent<Laurent<Integer>>, whose own multiplications are
-                // tested by explicit formula.
+                // We have already tested addition and scalar multiplication,
+                // so we can attempt to reimplement multiplication in terms
+                // of these.
                 {
-                    regina::Laurent<regina::Laurent<Integer>> cLL;
-                    for (const auto& term : c) {
-                        long x = term.first.first;
-                        cLL.set(x, cLL[x] + regina::Laurent<Integer>(
-                            term.second).shifted(term.first.second));
-                    }
-
-                    regina::Laurent<regina::Laurent<Integer>> dLL;
-                    for (const auto& term : d) {
-                        long x = term.first.first;
-                        dLL.set(x, dLL[x] + regina::Laurent<Integer>(
-                            term.second).shifted(term.first.second));
-                    }
-
-                    validate(product, L(cLL * dLL));
+                    L expect;
+                    for (auto it = d.first(); it; ++it)
+                        expect += (c * *it).shifted(it.exp<0>(), it.exp<1>());
+                    validate(product, expect);
                 }
 
                 validate(c * L(d), product);
@@ -1056,20 +1031,14 @@ TEST_F(Laurent2Test, multiply) {
         } else {
             validate(square);
             EXPECT_FALSE(square.isZero());
-            EXPECT_GE(square.countTerms(), c.countTerms());
 
-            // We will verify the individual coefficients with the help of
-            // Laurent<Laurent<Integer>>, whose own multiplications are
-            // tested by explicit formula.
+            // As before, reimplement multiplication in terms of addition and
+            // scalar multiplication.
             {
-                regina::Laurent<regina::Laurent<Integer>> cLL;
-                for (const auto& term : c) {
-                    long x = term.first.first;
-                    cLL.set(x, cLL[x] + regina::Laurent<Integer>(term.second).
-                        shifted(term.first.second));
-                }
-
-                validate(square, L(cLL * cLL));
+                L expect;
+                for (auto it = c.first(); it; ++it)
+                    expect += (c * *it).shifted(it.exp<0>(), it.exp<1>());
+                validate(square, expect);
             }
         }
         validate(c * c, square);

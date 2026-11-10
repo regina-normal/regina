@@ -127,67 +127,38 @@ class LaurentTest : public testing::Test {
             EXPECT_FALSE(poly != cmp);
         }
 
-        template <regina::CoefficientDomain T>
-        static void validate(const regina::Laurent<T, 2>& poly, long minExp,
-                std::initializer_list<std::pair<long,
-                    std::initializer_list<std::type_identity_t<T>>>> coeffs) {
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 1 && vars <= 3)
+        static void validate(const regina::Laurent<T, vars>& poly,
+                std::initializer_list<std::pair<std::array<long, vars>, T>>
+                coeffs) {
+            // We assume here that coeffs only contains non-zero coefficients,
+            // in order of their exponent sequences which must be distinct.
+
             if (coeffs.size() == 0) { // initializer_list does not have empty()
                 validateZero(poly);
             } else {
+                // Note: validate() already verifies the internal array
+                // allocation against the polynomial's own min/max exponents.
                 validate(poly);
-                EXPECT_FALSE(poly.isZero());
-                EXPECT_EQ(poly.minExp(), minExp);
-                EXPECT_EQ(poly.maxExp(), minExp + coeffs.size() - 1);
 
-                auto alloc = poly.allocation();
-                EXPECT_LE(alloc.first, minExp);
-                EXPECT_GE(alloc.first + static_cast<long>(alloc.second),
-                    minExp + static_cast<long>(coeffs.size()));
+                EXPECT_FALSE(poly.isZero());
 
                 ASSERT_TRUE(poly.first());
                 ASSERT_TRUE(poly.last());
                 EXPECT_NE(*poly.first(), 0);
                 EXPECT_NE(*poly.last(), 0);
 
-                EXPECT_NE(poly[poly.minExp()], 0);
-                EXPECT_NE(poly[poly.maxExp()], 0);
-
-                auto expect = coeffs.begin();
-                for (long e = minExp; expect != coeffs.end(); ++e, ++expect)
-                    validate(poly[e], expect->first, expect->second);
-            }
-        }
-
-        template <regina::CoefficientDomain T>
-        static void validate(const regina::Laurent<T, 3>& poly, long minExp,
-                std::initializer_list<std::pair<long,
-                    std::initializer_list<std::pair<long,
-                        std::initializer_list<std::type_identity_t<T>>>>>>
-                            coeffs) {
-            if (coeffs.size() == 0) { // initializer_list does not have empty()
-                validateZero(poly);
-            } else {
-                validate(poly);
-                EXPECT_FALSE(poly.isZero());
-                EXPECT_EQ(poly.minExp(), minExp);
-                EXPECT_EQ(poly.maxExp(), minExp + coeffs.size() - 1);
-
-                auto alloc = poly.allocation();
-                EXPECT_LE(alloc.first, minExp);
-                EXPECT_GE(alloc.first + static_cast<long>(alloc.second),
-                    minExp + static_cast<long>(coeffs.size()));
-
-                ASSERT_TRUE(poly.first());
-                ASSERT_TRUE(poly.last());
-                EXPECT_NE(*poly.first(), 0);
-                EXPECT_NE(*poly.last(), 0);
-
-                EXPECT_NE(poly[poly.minExp()], 0);
-                EXPECT_NE(poly[poly.maxExp()], 0);
-
-                auto expect = coeffs.begin();
-                for (long e = minExp; expect != coeffs.end(); ++e, ++expect)
-                    validate(poly[e], expect->first, expect->second);
+                auto pc = poly.first();
+                auto ec = coeffs.begin();
+                for ( ; pc && ec != coeffs.end(); ++pc, ++ec) {
+                    regina::for_constexpr<0, vars>([&pc, ec](auto i) {
+                        EXPECT_EQ(pc.template exp<i>(), ec->first[i]);
+                    });
+                    EXPECT_EQ(*pc, ec->second);
+                }
+                EXPECT_FALSE(pc);
+                EXPECT_EQ(ec, coeffs.end());
             }
         }
 
