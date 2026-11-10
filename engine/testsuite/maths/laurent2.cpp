@@ -50,7 +50,7 @@ class Laurent2Test : public LaurentTest {
         // An integer that cannot fit into 128 bits.
         const Integer bigInt { BIG };
 
-        const std::array<const L, 11> cases {
+        const std::array<const L, 12> cases {
             L{},
             L{{{0, 0}, 1}},
             L{{{0, 0}, 2}},
@@ -61,6 +61,7 @@ class Laurent2Test : public LaurentTest {
             L{{{0, 0}, 1}, {{1, 2}, -2}, {{-2, -1}, 3}},
             L{{{1, 0}, 2}, {{1, 2}, -4}, {{0, -1}, -2}},
             L{{{1, 1}, -1}, {{1, 2}, 1}, {{0, -1}, -2}, {{1, 0}, -2}},
+            L{{{-1, 0}, -5}, {{2, -2}, 3}, {{2, 0}, 2}, {{2, 1}, -1}},
             L{{{1, 2}, bigInt}, {{1, -2}, -bigInt}, {{1, 1}, -1}}
         };
 
@@ -74,8 +75,8 @@ class Laurent2Test : public LaurentTest {
 };
 
 TEST_F(Laurent2Test, construct) {
-    // Here we also test isZero() and countTerms() via the calls to validate()
-    // and validateZero(), through the initialiser list tests below.
+    // Here we also test isZero() via the calls to validate() and
+    // validateZero(), through the initialiser list tests below.
     validateZero(L());
     validateZero(L({}));
     validate(L{{{0,0},1}}, {{{0,0},1}});
@@ -539,11 +540,23 @@ TEST_F(Laurent2Test, shift) {
                 validate(L(c).shifted(xShift, yShift), s);
                 {
                     L x(c);
+                    auto alloc = x.allocation();
                     x.shift(xShift, yShift);
                     validate(x, s);
+                    if (c.isZero()) {
+                        EXPECT_EQ(x.allocation(), alloc);
+                    } else {
+                        EXPECT_EQ(x.allocation().first,
+                            alloc.first + xShift);
+                        EXPECT_EQ(x.allocation().second, alloc.second);
+                    }
                 }
             }
         }
+
+        // The zero shift is already tested above, but verify explicitly
+        // that it matches the original polynomial:
+        validate(c.shifted(0, 0), c);
     }
 }
 
