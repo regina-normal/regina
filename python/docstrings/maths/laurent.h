@@ -1034,19 +1034,20 @@ Parameter ``k``:
 static constexpr const char set[] =
 R"doc(Changes the given coefficient of a single-variable Laurent polynomial.
 
-Calling ``poly.set(exp, value)`` is identical to calling the generic
-function ``poly.setTo(value, exp)``; the only difference is that the
-new value is passed as the last argument instead of the first. See the
-setTo() documentation for further details.
+Specifically, for a polynomial *p*, calling ``p.set(a, value)`` will
+set the coefficient of ``x^a`` to *value*, where ``x`` is the
+polynomial variable. There are no restrictions on the exponent ``a``,
+and the new coefficient *value* may be zero.
 
-The reason Laurent offers both set() and setTo() is that the argument
-order for setTo() greatly simplifies the C++ template implementation,
-whereas set() is consistent with other classes such as Polynomial and
-Bitmask. If you are not sure which routine to use, just use set().
+Note that it may be expensive to set a non-zero coefficient outside
+the current span of exponents, since this may require allocating more
+space and/or moving coefficients around in memory. The Laurent class
+does, however, use an exponential growth strategy that attempts to
+minimise the cost of this.
 
 Python:
     This set() routine is available, but you can also set coefficients
-    directly using syntax of the form ``p[exp] = value``.
+    directly using syntax of the form ``p[a] = value``.
 
 Parameter ``exp``:
     the exponent of the polynomial variable for the coefficient that
@@ -1059,20 +1060,20 @@ Parameter ``value``:
 static constexpr const char set_2[] =
 R"doc(Changes the given coefficient of a two-variable Laurent polynomial.
 
-Calling ``poly.set(exp0, exp1, value)`` is identical to calling the
-generic function ``poly.setTo(value, exp0, exp1)``; the only
-difference is that the new value is passed as the last argument
-instead of the first. See the setTo() documentation for further
-details.
+Specifically, for a polynomial *p*, calling ``p.set(a, b, value)``
+will set the coefficient of ``x^a y^b`` to *value*, where ``x,y`` are
+the polynomial variables. There are no restrictions on the exponents
+``a,b``, and the new coefficient *value* may be zero.
 
-The reason Laurent offers both set() and setTo() is that the argument
-order for setTo() greatly simplifies the C++ template implementation,
-whereas set() is consistent with other classes such as Polynomial and
-Bitmask. If you are not sure which routine to use, just use set().
+Note that it may be expensive to set a non-zero coefficient outside
+the current span of exponents, since this may require allocating more
+space and/or moving coefficients around in memory. The Laurent class
+does, however, use an exponential growth strategy that attempts to
+minimise the cost of this.
 
 Python:
     This set() routine is available, but you can also set coefficients
-    directly using syntax of the form ``p[exp0, exp1] = value``.
+    directly using syntax of the form ``p[a, b] = value``.
 
 Parameter ``exp0``:
     the exponent of the first polynomial variable for the coefficient
@@ -1089,20 +1090,20 @@ Parameter ``value``:
 static constexpr const char set_3[] =
 R"doc(Changes the given coefficient of a three-variable Laurent polynomial.
 
-Calling ``poly.set(exp0, exp1, exp2, value)`` is identical to calling
-the generic function ``poly.setTo(value, exp0, exp1, exp2)``; the only
-difference is that the new value is passed as the last argument
-instead of the first. See the setTo() documentation for further
-details.
+Specifically, for a polynomial *p*, calling ``p.set(a, b, c, value)``
+will set the coefficient of ``x^a y^b z^c`` to *value*, where
+``x,y,z`` are the polynomial variables. There are no restrictions on
+the exponents ``a,b,c``, and the new coefficient *value* may be zero.
 
-The reason Laurent offers both set() and setTo() is that the argument
-order for setTo() greatly simplifies the C++ template implementation,
-whereas set() is consistent with other classes such as Polynomial and
-Bitmask. If you are not sure which routine to use, just use set().
+Note that it may be expensive to set a non-zero coefficient outside
+the current span of exponents, since this may require allocating more
+space and/or moving coefficients around in memory. The Laurent class
+does, however, use an exponential growth strategy that attempts to
+minimise the cost of this.
 
 Python:
     This set() routine is available, but you can also set coefficients
-    directly using syntax of the form ``p[exp0, exp1, exp2] = value``.
+    directly using syntax of the form ``p[a, b, c] = value``.
 
 Parameter ``exp0``:
     the exponent of the first polynomial variable for the coefficient
@@ -1118,44 +1119,6 @@ Parameter ``exp2``:
 
 Parameter ``value``:
     the new value to assign to the given coefficient.)doc";
-
-// Docstring regina::python::doc::Laurent::setTo
-static constexpr const char setTo[] =
-R"doc(Changes the given coefficient of this polynomial.
-
-Specifically, for a polynomial *p*, calling ``p.setTo(value,a,b,…)``
-will set the coefficient of ``x^a y^b …`` to *value*, where ``x,y,…``
-are the polynomial variables. There are no restrictions on the
-exponents ``a,b,…``, and the new coefficient *value* may be zero.
-
-Note that it may be expensive to set a non-zero coefficient outside
-the current span of exponents, since this may require allocating more
-space and/or moving coefficients around in memory. The Laurent class
-does, however, use an exponential growth strategy that attempts to
-minimise the cost of this.
-
-The only difference between setTo() and set() is the order of
-arguments: in setTo() the value comes first, since this greatly
-simplifies the recursive C++ template implementation. If you are not
-sure which routine to use, just use set(): if Regina ever moves to a
-C++ standard with better handling of template parameter packs then
-setTo() may eventually be deprecated and later removed.
-
-Python:
-    This setTo() routine is available, but you can also set
-    coefficients directly using syntax of the form ``p[a,b,…] =
-    value``.
-
-Parameter ``value``:
-    the new value to assign to the given coefficient.
-
-Parameter ``firstExp``:
-    the exponent of the first polynomial variable *x* for the
-    coefficient that we should set.
-
-Parameter ``otherExp``:
-    the exponents of the remaining ``(vars - 1)`` polynomial variables
-    ``y,…`` for the coefficient that we should set.)doc";
 
 // Docstring regina::python::doc::Laurent::shift
 static constexpr const char shift[] =

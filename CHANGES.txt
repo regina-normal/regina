@@ -354,9 +354,6 @@ Version 8.0  [ TODO ]
               native C++ integers.
             - New routine polynomial() for converting Laurent<T, 1> to
               Polynomial<T>.
-            - New routine setTo(), which changes the argument order of set().
-              This mainly exists to simplify the C++ template implementation.
-              The set() routine is still available and recommended for use.
             - Deprecated invertX(), in favour of a new template function
               invert<var>() which is better suited for multivariate polynomials.
             - Functions scaleUp() and scaleDown() now throw an InvalidArgument
