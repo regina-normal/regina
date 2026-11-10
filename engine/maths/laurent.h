@@ -3389,10 +3389,10 @@ class Laurent :
                 requires InherentlyTightEncodable<T> {
             // Use a temporary std::vector to store non-zero coefficients,
             // since we don't know in advance how many there will be.
-            std::vector<std::pair<long, T>> coeffs;
+            std::vector<std::pair<long, Term>> coeffs;
 
             while (true) {
-                T coeff = T::tightDecode(input);
+                Term coeff = Term::tightDecode(input);
                 if (coeff == 0) {
                     // The sequence of coefficients is finished.
                     if (coeffs.empty())
