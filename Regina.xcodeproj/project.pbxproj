@@ -1000,7 +1000,7 @@
 		05721EF21F97153E00A83FFC /* examplelink.h in Headers */ = {isa = PBXBuildFile; fileRef = 05721EE11F97153C00A83FFC /* examplelink.h */; };
 		05721EFF1F9715C700A83FFC /* laurent2.h in Headers */ = {isa = PBXBuildFile; fileRef = 05721EFD1F9715C600A83FFC /* laurent2.h */; };
 		05721F001F9715C700A83FFC /* laurent.h in Headers */ = {isa = PBXBuildFile; fileRef = 05721EFE1F9715C700A83FFC /* laurent.h */; };
-		05721F071F97160A00A83FFC /* laurent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721F011F97160200A83FFC /* laurent.cpp */; };
+		05721F071F97160A00A83FFC /* laurent1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721F011F97160200A83FFC /* laurent1.cpp */; };
 		05721F081F97160A00A83FFC /* laurent2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721F021F97160200A83FFC /* laurent2.cpp */; };
 		05721F0F1F97162600A83FFC /* examplelink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721F0B1F97162600A83FFC /* examplelink.cpp */; };
 		05721F111F97162600A83FFC /* pylink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721F0C1F97162600A83FFC /* pylink.cpp */; };
@@ -3466,7 +3466,7 @@
 		05721EE11F97153C00A83FFC /* examplelink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = examplelink.h; sourceTree = "<group>"; };
 		05721EFD1F9715C600A83FFC /* laurent2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = laurent2.h; sourceTree = "<group>"; };
 		05721EFE1F9715C700A83FFC /* laurent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = laurent.h; sourceTree = "<group>"; };
-		05721F011F97160200A83FFC /* laurent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = laurent.cpp; sourceTree = "<group>"; };
+		05721F011F97160200A83FFC /* laurent1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = laurent1.cpp; sourceTree = "<group>"; };
 		05721F021F97160200A83FFC /* laurent2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = laurent2.cpp; sourceTree = "<group>"; };
 		05721F0A1F97162600A83FFC /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05721F0B1F97162600A83FFC /* examplelink.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = examplelink.cpp; sourceTree = "<group>"; };
@@ -5201,7 +5201,7 @@
 				05DADB1621928EBF00DC80E1 /* binom.cpp */,
 				050F5D2F1B9BAB9C00C1F681 /* cyclotomic.cpp */,
 				050F5D301B9BAB9C00C1F681 /* integer.cpp */,
-				05721F011F97160200A83FFC /* laurent.cpp */,
+				05721F011F97160200A83FFC /* laurent1.cpp */,
 				05721F021F97160200A83FFC /* laurent2.cpp */,
 				058A343E30A27535005D8F91 /* laurent3.cpp */,
 				05098AB628F4C4CF005E4716 /* matrix.cpp */,
@@ -9541,7 +9541,7 @@
 				050C648F1DA124EB00C9420F /* fileinfo.cpp in Sources */,
 				05772EFB270CFB3D00D26D8A /* sigcensus.cpp in Sources */,
 				050F5E121B9BAB9C00C1F681 /* pysnappea.cpp in Sources */,
-				05721F071F97160A00A83FFC /* laurent.cpp in Sources */,
+				05721F071F97160A00A83FFC /* laurent1.cpp in Sources */,
 				050F5E031B9BAB9C00C1F681 /* pymaths.cpp in Sources */,
 				05772EDB270CFAA200D26D8A /* fileformat.cpp in Sources */,
 				050F5DFE1B9BAB9C00C1F681 /* polynomial.cpp in Sources */,
