@@ -56,7 +56,8 @@ namespace regina {
 
 namespace detail {
     /**
-     * Provides data types to use for internal storage in Laurent polynomials.
+     * Provides supporting types for use in the implementation and testing of
+     * Laurent polynomials.
      *
      * \nopython
      *
@@ -119,6 +120,12 @@ namespace detail {
  *     std::cout << "Term: " << *c << " x^" << c.exp<0>() << std::endl;
  * }
  * ```
+ *
+ * The order of forward iteration is lexicographic in the sequences of
+ * exponents.  That is, the coefficient attached to the monomial `x^a y^b …`
+ * will appear before the coefficient attached to the monomial `x^p y^q …`
+ * if and only if the sequence `(a,b,…)` is lexicographically smaller than
+ * `(p,q,…)`.  Here `x,y,…` denote the polynomial variables.
  *
  * LaurentCoefficient objects are small enough to pass by value and swap with
  * std::swap(), with no need for any specialised move operations or swap
@@ -1857,11 +1864,14 @@ class Laurent :
          * }
          * ```
          *
-         * Note that last() is _not_ a past-the-end iterator, and so
-         * `(first(), last())` do not form a complete iterator range.
+         * The order of forward iteration is lexicographic in the sequences of
+         * exponents.
          *
          * See the LaurentCoefficient class notes for further details and
          * examples on how iteration works for Laurent polynomials.
+         *
+         * \warning Note that last() is _not_ a past-the-end iterator, and so
+         * `first()` and `last()` do not together form a full iterator range.
          *
          * \python Laurent also implements the Python iterable interface,
          * which means you can iterate through non-zero coefficients in the
@@ -1899,11 +1909,15 @@ class Laurent :
          * }
          * ```
          *
-         * Note that last() is _not_ a past-the-end iterator, and so
-         * `(first(), last())` do not form a complete iterator range.
+         * The order of forward iteration is lexicographic in the sequences of
+         * exponents (and therefore the order of backward iteration is reverse
+         * lexicographic in the exponents).
          *
          * See the LaurentCoefficient class notes for further details and
          * examples on how iteration works for Laurent polynomials.
+         *
+         * \warning Note that last() is _not_ a past-the-end iterator, and so
+         * `first()` and `last()` do not together form a full iterator range.
          *
          * \python Laurent also implements the Python iterable interface,
          * which means you can iterate through non-zero coefficients in the
