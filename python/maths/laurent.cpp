@@ -59,6 +59,7 @@ void addLaurent(pybind11::module_& m) {
             pybind11::return_value_policy::copy, // to enforce constness
             rdoc::__mul)
         .def("exp", static_cast<long (LC::*)(int) const>(&LC::exp), rdoc::exp)
+        .def("exponents", &LC::exponents, rdoc::exponents)
         .def("constantTerm", &LC::constantTerm, rdoc::constantTerm)
         .def("__next__", [](LC& it) {
             if (it) {
@@ -83,8 +84,8 @@ void addLaurent(pybind11::module_& m) {
         .def(pybind11::init([](long minExp, const std::vector<Integer>& c) {
             return new Laurent<Integer>(minExp, c.begin(), c.end());
         }), "minExp"_a, "coefficients"_a, rdoc::__init)
-        .def(pybind11::init<const Integer&>(), rdoc::__init_2)
-        .def(pybind11::init<long>(), rdoc::__init_3)
+        .def(pybind11::init<const Integer&>(), rdoc::__init_3)
+        .def(pybind11::init<long>(), rdoc::__init_4)
         .def("init", &Laurent<Integer>::init, rdoc::init)
         .def("initExp", &Laurent<Integer>::initExp<>, rdoc::initExp)
         .def_static("monomial", &Laurent<Integer>::monomial<>,

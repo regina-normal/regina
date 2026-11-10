@@ -101,32 +101,62 @@ TEST_F(Laurent2Test, construct) {
             validate(y, c);
         }
 
-        #if 0
-        using Tuple = std::tuple<long, long, Integer>;
+        // This code tests the iterator-based constructor, but since
+        // the std::initializer_list constructor is implemented using that,
+        // it effectively tests the std::initializer_list constructor also.
+        using Term = std::pair<std::array<long, 2>, Integer>;
         {
-            std::vector<Tuple> coeffs;
-            for (const auto& t : c)
-                coeffs.emplace_back(t.first.first, t.first.second, t.second);
-            validate(L(coeffs.begin(), coeffs.end()), c);
+            std::vector<Term> terms;
+            for (auto it = c.first(); it; ++it)
+                terms.emplace_back(it.exponents(), *it);
+            validate(L(terms.begin(), terms.end()), c);
+            validate(L(terms.rbegin(), terms.rend()), c);
 
-            std::reverse(coeffs.begin(), coeffs.end());
-            validate(L(coeffs.begin(), coeffs.end()), c);
+            {
+                // Zero terms will be ignored entirely.
+                std::vector<Term> messy;
+                for (size_t i = 1; i < terms.size(); i += 2)
+                    messy.emplace_back(terms[i].first, 0);
+                for (size_t i = 0; i < terms.size(); i += 2)
+                    messy.push_back(terms[i]);
+                for (size_t i = 0; i < terms.size(); i += 2)
+                    messy.emplace_back(terms[i].first, 0);
+                for (size_t i = 1; i < terms.size(); i += 2)
+                    messy.push_back(terms[i]);
+                for (size_t i = 1; i < terms.size(); i += 2)
+                    messy.emplace_back(terms[i].first, 0);
+                messy.push_back(Term({1000, -1000}, 0));
+                validate(L(messy.begin(), messy.end()), c);
+                validate(L(messy.rbegin(), messy.rend()), c);
+            }
 
-            std::vector<Tuple> messy;
-            for (const auto& t : c)
-                messy.emplace_back(t.first.first, t.first.second, 0);
-            for (const auto& t : c) // real coefficients in sorted order
-                messy.emplace_back(t.first.first, t.first.second, t.second);
-            for (const auto& t : c)
-                messy.emplace_back(t.first.second, t.first.first, 0);
-            for (const auto& t : coeffs) // real coefficients in reverse
-                messy.push_back(t);
-            messy.emplace_back(1000, -1000, 0);
-            validate(L(messy.begin(), messy.end()), c, [](const Term& term) {
-                return std::make_pair(term.first, term.second * 2);
-            });
+            for (const auto& t : terms) {
+                std::vector<Term> broken = terms;
+                broken.push_back(t);
+                EXPECT_THROW({ L(broken.begin(), broken.end()); },
+                    regina::InvalidArgument);
+            }
+
+            {
+                using BadTerm = std::pair<std::array<long, 1>, Integer>;
+                std::vector<BadTerm> bad;
+
+                validateZero(L(bad.begin(), bad.end()));
+                bad.push_back(BadTerm({1}, 0));
+                EXPECT_THROW({ L(bad.begin(), bad.end()); },
+                    regina::InvalidArgument);
+            }
+
+            {
+                using BadTerm = std::pair<std::array<long, 3>, Integer>;
+                std::vector<BadTerm> bad;
+
+                validateZero(L(bad.begin(), bad.end()));
+                bad.push_back(BadTerm({1,2,3}, 0));
+                EXPECT_THROW({ L(bad.begin(), bad.end()); },
+                    regina::InvalidArgument);
+            }
         }
-        #endif
     }
 
     {

@@ -382,9 +382,10 @@ Version 8.0  [ TODO ]
                 now use poly.shifted(xShift, yShift) instead.
               + Deprecated invertX() and invertY() in favour of a new template
                 function invert<var>().
-              + The std::initializer_list constructor has changed slightly:
-                each term is now a pair {{xExp, yExp}, value} instead of a
-                triple {xExp, yExp, value}.
+              + The std::initializer_list and iterator-based constructors have
+                changed slightly: each term is now a pair {{xExp, yExp}, value}
+                instead of a triple {xExp, yExp, value}, and exponent sequences
+                cannot be reused across multiple terms.
               + For str() and utf8(), you must pass either both variable names
                 or none (there is no longer an option to pass just one).
         Class LaurentCoefficient<T, vars>:

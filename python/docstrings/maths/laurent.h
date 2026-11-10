@@ -349,8 +349,8 @@ Returns:
 
 // Docstring regina::python::doc::Laurent::__init
 static constexpr const char __init[] =
-R"doc(Creates a new polynomial from a contiguous sequence of coefficients.
-This is only relevant for single-variable Laurent polynomials.
+R"doc(Creates a new single-variable Laurent polynomial from a contiguous
+sequence of coefficients.
 
 The coefficients should be given in order from the smallest exponent
 term to the largest. The first coefficient in the sequence will be
@@ -382,6 +382,58 @@ Parameter ``end``:
 
 // Docstring regina::python::doc::Laurent::__init_2
 static constexpr const char __init_2[] =
+R"doc(Creates a new multivariate Laurent polynomial from a sparse collection
+of terms.
+
+The terms should be presented as a collection of pairs ``{exp,
+coeff}``, where *exp* is an sequence of integer exponents ``{a,b,…}``,
+and *coeff* is the corresponding coefficient of type *T* attached to
+the monomial ``x^a y^b …``. Here ``x,y,…`` denote the polynomial
+variables.
+
+As an example, you can create the two-variable polynomial ``(x - x^-1)
+/ y`` by passing the two terms ``([1,-1],1)`` and ``([-1,-1],-1)``.
+
+The terms _must_ use distinct exponent sequences, and they may be
+given in any order. Passing coefficients of zero is allowed (any such
+terms will be ignored completely). An empty sequence will be treated
+as the zero polynomial.
+
+Regarding the C++ iterator type:
+
+* The exponent/coefficient pairs should support C++ tuple-like access
+  via ``std::get()``. This means in particular that you can use
+  ``std::pair`` or ``std::tuple``.
+
+* The exponent sequence should support iteration and size queries (via
+  the standard C++ ranges interface). This means that standard
+  container types such as ``std::array``, ``std::tuple`` and
+  ``std::vector`` are all fine to use.
+
+* As a complete example, you could perhaps store each term using the
+  type ``std::pair<std::array<long, vars>, T>``, collect _all_ of
+  these terms in a ``std::vector`` *v*, and then pass ``v.begin()``
+  and ``v.end()`` as the arguments to this constructor.
+
+Python:
+    Instead of the iterators *begin* and *end*, this routine takes a
+    Python sequence of pairs, such as ``Laurent2([ ((1,-1),1),
+    ((-1,-1),-1) ])``. It does not matter whether you use Python
+    tuples or Python lists or a mixture of both.
+
+Exception ``InvalidArgument``:
+    The same exponent sequence is reused in more than one term, and/or
+    some exponent sequence has a length different from *vars*.
+
+Parameter ``begin``:
+    the beginning of the collection of terms, as described above.
+
+Parameter ``end``:
+    a past-the-end iterator indicating the end of the collection of
+    terms.)doc";
+
+// Docstring regina::python::doc::Laurent::__init_3
+static constexpr const char __init_3[] =
 R"doc(Creates a new polynomial with a single constant term, equal to the
 given value.
 
@@ -390,8 +442,8 @@ There is no problem if the given value is zero.
 Parameter ``constant``:
     the value of this new constant polynomial.)doc";
 
-// Docstring regina::python::doc::Laurent::__init_3
-static constexpr const char __init_3[] =
+// Docstring regina::python::doc::Laurent::__init_4
+static constexpr const char __init_4[] =
 R"doc(Creates a new polynomial with a single integer constant term.
 
 There is no problem if the given constant is zero (though you can also
@@ -407,8 +459,8 @@ Python:
 Parameter ``constant``:
     the value of this new polynomial.)doc";
 
-// Docstring regina::python::doc::Laurent::__init_4
-static constexpr const char __init_4[] =
+// Docstring regina::python::doc::Laurent::__init_5
+static constexpr const char __init_5[] =
 R"doc(Creates the product of two Laurent polynomials that use independent
 sets of variables. Specifically, this creates a `(v + w)`-variable
 polynomial that is the product ``p(…) q(…)``, where *p* uses the first
@@ -1235,14 +1287,14 @@ variables).
 For a Laurent polynomial *p*, you begin iteration by calling either
 ``p.first()`` or ``p.last()`` (for forward or backward iteration
 respectively), which returns a LaurentCoefficient *c*. You can then
-dereference *c* to extract the coefficient, call ``c.exp()`` to
-identify the current exponents of the polynomial variables, and/or
-move the iterator forwards or backwards using the usual operators
-``++c`` and ``--c``. To test whether iteration has finished (i.e.,
-whether *c* is no longer dereferenceable), you can test whether *c*
-evaluates to ``False`` in a boolean context, or you can compare *c* to
-a default-constructed ``LaurentCoefficient()`` (which behaves like an
-end iterator).
+dereference *c* to extract the coefficient, call ``c.exp()`` or
+``c.exponents()`` to identify the current exponents of the polynomial
+variables, and/or move the iterator forwards or backwards using the
+usual operators ``++c`` and ``--c``. To test whether iteration has
+finished (i.e., whether *c* is no longer dereferenceable), you can
+test whether *c* evaluates to ``False`` in a boolean context, or you
+can compare *c* to a default-constructed ``LaurentCoefficient()``
+(which behaves like an end iterator).
 
 As an example, you could print all of the non-zero terms of a single-
 variable Laurent polynomial using the following loop:
@@ -1426,6 +1478,21 @@ Parameter ``var``:
 
 Returns:
     the current exponent of the given polynomial variable.)doc";
+
+// Docstring regina::python::doc::LaurentCoefficient::exponents
+static constexpr const char exponents[] =
+R"doc(Returns the full sequence of exponents corresponding to the current
+non-zero coefficient. Like exp(), this routine allows you to determine
+which monomial the current coefficient is attached to.
+
+Calling ``exponents()`` is equivalent to building the array ``{exp(0),
+…, exp(vars - 1)}``.
+
+Precondition:
+    This iterator is dereferenceable.
+
+Returns:
+    the full sequence of exponents.)doc";
 
 // Docstring regina::python::doc::LaurentCoefficient::str
 static constexpr const char str[] =

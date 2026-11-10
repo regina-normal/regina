@@ -49,6 +49,7 @@
 #include <functional>
 #include <iostream>
 #include <iterator>
+#include <ranges>
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -104,13 +105,13 @@ namespace detail {
  * For a Laurent polynomial \a p, you begin iteration by calling either
  * `p.first()` or `p.last()` (for forward or backward iteration respectively),
  * which returns a LaurentCoefficient \a c.  You can then dereference \a c to
- * extract the coefficient, call `c.exp()` to identify the current exponents
- * of the polynomial variables, and/or move the iterator forwards or backwards
- * using the usual operators `++c` and `--c`.  To test whether iteration has
- * finished (i.e., whether \a c is no longer dereferenceable), you can test
- * whether \a c evaluates to `false` in a boolean context, or you can compare
- * \a c to a default-constructed `LaurentCoefficient()` (which behaves like an
- * end iterator).
+ * extract the coefficient, call `c.exp()` or `c.exponents()` to identify the
+ * current exponents of the polynomial variables, and/or move the iterator
+ * forwards or backwards using the usual operators `++c` and `--c`.
+ * To test whether iteration has finished (i.e., whether \a c is no longer
+ * dereferenceable), you can test whether \a c evaluates to `false` in a
+ * boolean context, or you can compare \a c to a default-constructed
+ * `LaurentCoefficient()` (which behaves like an end iterator).
  *
  * As an example, you could print all of the non-zero terms of a single-variable
  * Laurent polynomial using the following loop:
@@ -376,7 +377,7 @@ class LaurentCoefficient {
          * \nocpp For C++ users, LaurentCoefficient provides the usual iterator
          * preincrement and postincrement operators (`++`), and gives access
          * to details of the current coefficient via the deference operator
-         * `(*)` and the function exp().
+         * `(*)` and the functions exp() and exponents().
          *
          * \exception StopIteration This iterator is not dereferenceable.
          *
@@ -473,6 +474,26 @@ class LaurentCoefficient {
             return select_constexpr<0, vars, long>(var, [this](auto k) {
                 return exp<k>();
             });
+        }
+
+        /**
+         * Returns the full sequence of exponents corresponding to the current
+         * non-zero coefficient.  Like exp(), this routine allows you to
+         * determine which monomial the current coefficient is attached to.
+         *
+         * Calling `exponents()` is equivalent to building the array
+         * `{exp(0), …, exp(vars - 1)}`.
+         *
+         * \pre This iterator is dereferenceable.
+         *
+         * \return the full sequence of exponents.
+         */
+        std::array<long, vars> exponents() const {
+            std::array<long, vars> ans;
+            for_constexpr<0, vars>([this, &ans](auto k) {
+                ans[k] = exp<k>();
+            });
+            return ans;
         }
 
         /**
@@ -842,8 +863,8 @@ class Laurent :
         }
 
         /**
-         * Creates a new polynomial from a contiguous sequence of coefficients.
-         * This is only relevant for single-variable Laurent polynomials.
+         * Creates a new single-variable Laurent polynomial from a contiguous
+         * sequence of coefficients.
          *
          * The coefficients should be given in order from the smallest
          * exponent term to the largest.  The first coefficient in the
@@ -924,40 +945,163 @@ class Laurent :
         }
 
         /**
-         * Creates a new multivariate Laurent polynomial from a hard-coded
-         * sparse collection of exponents and coefficients.
+         * Creates a new multivariate Laurent polynomial from a sparse
+         * collection of terms.
          *
-         * The exponents and coefficients should be presented as a collection of
-         * pairs `{exp, coeff}`, where \a exp is an array of integer exponents
+         * The terms should be presented as a collection of pairs
+         * `{exp, coeff}`, where \a exp is an sequence of integer exponents
          * `{a,b,…}`, and \a coeff is the corresponding coefficient of type \a T
          * attached to the monomial `x^a y^b …`.  Here `x,y,…` denote the
          * polynomial variables.
          *
          * As an example, you can create the two-variable polynomial
-         * `(x - x^-1) / y` via the following code:
+         * `(x - x^-1) / y` by passing the two terms `([1,-1],1)` and
+         * `([-1,-1],-1)`.
          *
-         * ```cpp
-         * Laurent<Integer, 2> poly({ {{1, -1}, 1}, {{-1, -1}, -1} });
-         * ```
-         *
-         * The tuples _must_ have distinct exponent sequences (this will not be
-         * checked, but reusing an exponent sequence will give undefined
-         * results).  The tuples may be given in any order.  Passing
-         * coefficients of zero is allowed, and an empty sequence will be
+         * The terms _must_ use distinct exponent sequences, and they may be
+         * given in any order.  Passing coefficients of zero is allowed (any
+         * such terms will be ignored completely).  An empty sequence will be
          * treated as the zero polynomial.
          *
-         * \param data the list of exponents and coefficients, as described
+         * Regarding the C++ iterator type:
+         *
+         * - The exponent/coefficient pairs should support C++ tuple-like
+         *   access via `std::get()`.  This means in particular that you can
+         *   use `std::pair` or `std::tuple`.
+         *
+         * - The exponent sequence should support iteration and size queries
+         *   (via the standard C++ ranges interface).  This means that standard
+         *   container types such as `std::array`, `std::tuple` and
+         *   `std::vector` are all fine to use.
+         *
+         * - As a complete example, you could perhaps store each term using the
+         *   type `std::pair<std::array<long, vars>, T>`, collect _all_ of
+         *   these terms in a `std::vector` \a v, and then pass `v.begin()` and
+         *   `v.end()` as the arguments to this constructor.
+         *
+         * \python Instead of the iterators \a begin and \a end, this routine
+         * takes a Python sequence of pairs, such as
+         * `Laurent2([ ((1,-1),1), ((-1,-1),-1) ])`.  It does not matter
+         * whether you use Python tuples or Python lists or a mixture of both.
+         *
+         * \exception InvalidArgument The same exponent sequence is reused in
+         * more than one term, and/or some exponent sequence has a length
+         * different from \a vars.
+         *
+         * \param begin the beginning of the collection of terms, as described
          * above.
+         * \param end a past-the-end iterator indicating the end of the
+         * collection of terms.
          */
-        Laurent(std::initializer_list<
-                std::pair<std::array<long, vars>, T>> data)
-                requires (vars > 1) :
-                Laurent() {
-            for (const auto& d : data)
-                if constexpr (vars == 2)
-                    setTo(d.second, d.first[0], d.first[1]);
-                else // vars == 3
-                    setTo(d.second, d.first[0], d.first[1], d.first[2]);
+        template <std::input_iterator Iterator>
+        requires requires(Iterator it) {
+            { std::get<0>(*it) } -> std::ranges::input_range;
+            { std::get<0>(*it) } -> std::ranges::sized_range;
+            { *std::ranges::begin(std::get<0>(*it)) } ->
+                std::convertible_to<long>;
+            { std::get<1>(*it) } -> std::convertible_to<T>;
+        } && (vars > 1)
+        Laurent(Iterator begin, Iterator end) : Laurent() {
+            std::array<long, vars> exp;
+            for (auto it = begin; it != end; ++it) {
+                if (std::ranges::size(std::get<0>(*it)) != vars)
+                    throw InvalidArgument(
+                        "Exponent sequence has the wrong length");
+
+                // We quietly accept reuse of exponent sequences when at most
+                // one appearance assigns a non-zero coefficient.  (Otherwise
+                // detecting reuse becomes expensive.)
+                if (std::get<1>(*it) == 0)
+                    continue;
+
+                auto res = std::ranges::copy(
+                    std::ranges::begin(std::get<0>(*it)),
+                    std::ranges::end(std::get<0>(*it)),
+                    exp.begin());
+
+                if (isZero() || exp[0] < minExp_ || exp[0] > maxExp_) {
+                    // No reuse here.  Pass through to set(), which might or
+                    // might not need to reallocate.
+                    if constexpr (vars == 2)
+                        set(exp[0], exp[1], std::get<1>(*it));
+                    else // vars == 3
+                        set(exp[0], exp[1], exp[2], std::get<1>(*it));
+                } else {
+                    // We might be reusing an exponent sequence... but we do
+                    // know that exp[0] is already within our allocated range
+                    // and this assignment will not change minExp_ or maxExp_.
+                    // Pass through to the inner term and do this all again.
+                    auto& t1 = term_[exp[0] - base_];
+                    if (t1.isZero() || exp[1] < t1.minExp_ ||
+                            exp[1] > t1.maxExp_) {
+                        if constexpr (vars == 2)
+                            t1.set(exp[1], std::get<1>(*it));
+                        else // vars == 3
+                            t1.set(exp[1], exp[2], std::get<1>(*it));
+                    } else {
+                        if constexpr (vars == 2) {
+                            // Both exp[0] and exp[1] are within range:
+                            // we can go ahead and make the assignment.
+                            T& t2 = t1.term_[exp[1] - t1.base_];
+                            if (t2 == 0)
+                                t2 = std::get<1>(*it);
+                            else
+                                throw InvalidArgument("Exponent sequence "
+                                    "reused in multiple terms");
+                        } else { // vars == 3
+                            // One more time around.
+                            auto& t2 = t1.term_[exp[1] - t1.base_];
+                            if (t2.isZero() || exp[2] < t2.minExp_ ||
+                                    exp[2] > t2.maxExp_) {
+                                t2.set(exp[2], std::get<1>(*it));
+                            } else {
+                                T& t3 = t2.term_[exp[2] - t2.base_];
+                                if (t3 == 0)
+                                    t3 = std::get<1>(*it);
+                                else
+                                    throw InvalidArgument("Exponent sequence "
+                                        "reused in multiple terms");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /**
+         * Creates a new multivariate Laurent polynomial from a hard-coded
+         * sparse collection of terms.
+         *
+         * The terms should be presented as a collection of pairs
+         * `{exp, coeff}`, where \a exp is an sequence of integer exponents
+         * `{a,b,…}`, and \a coeff is the corresponding coefficient of type \a T
+         * attached to the monomial `x^a y^b …`.  Here `x,y,…` denote the
+         * polynomial variables.
+         *
+         * As an example, you can create the two-variable polynomial
+         * `(x - x^-1) / y` (which has two terms) via the following C++ code:
+         *
+         * ```cpp
+         * Laurent<Integer, 2> poly({ {{1,-1},1}, {{-1,-1},-1} });
+         * ```
+         *
+         * The terms _must_ use distinct exponent sequences, and they may be
+         * given in any order.  Passing coefficients of zero is allowed (any
+         * such terms will be ignored completely).  An empty sequence will be
+         * treated as the zero polynomial.
+         *
+         * \nopython Instead, use the Python constructor that takes a sequence
+         * of pairs, such as `Laurent2([ ((1,-1),1), ((-1,-1),-1) ])`.  It does
+         * not matter whether you use Python tuples or Python lists or a mixture
+         * of both.
+         *
+         * \exception InvalidArgument The same exponent sequence is reused in
+         * more than one term.
+         *
+         * \param data the list of terms, as described above.
+         */
+        Laurent(std::initializer_list<std::pair<std::array<long, vars>, T>>
+                data) requires (vars > 1) : Laurent(data.begin(), data.end()) {
         }
 
         /**

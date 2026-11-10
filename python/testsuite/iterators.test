@@ -160,3 +160,13 @@ for c in p:
 print(p)
 p = Laurent2()
 print([c for c in p])
+
+p = Laurent3([([3,1,2], 4), ([0,-1,5], -2), ([-6,0,4], -1)])
+print(p)
+print([c for c in p])
+for c in p:
+    c[1].negate()
+
+print(p)
+p = Laurent3()
+print([c for c in p])
