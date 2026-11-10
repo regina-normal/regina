@@ -126,7 +126,17 @@ void addLaurent3(pybind11::module_& m) {
                 &LLL::shifted<long, long, long>),
             rdoc::shifted)
         .def("negate", &LLL::negate, rdoc::negate)
-        .def("invertX", &LLL::invertX, rdoc::invertX)
+        .def("invert", static_cast<void (LLL::*)(int)>(&LLL::invert),
+            rdoc::invert)
+        .def("invertX", [](LLL& p) { // deprecated
+            p.invert<0>();
+        }, rdoc::invertX)
+        .def("invertY", [](LLL& p) { // deprecated
+            p.invert<1>();
+        }, rdoc::invertY)
+        .def("invertZ", [](LLL& p) { // deprecated
+            p.invert<2>();
+        }, rdoc::invertZ)
         .def("addProduct",
             overload_cast<const LLL&, const LLL&>(&LLL::addProduct),
             rdoc::addProduct)

@@ -468,7 +468,7 @@ class LaurentCoefficient {
          */
         long exp(int var) const {
             if (var < 0 || var >= vars)
-                throw InvalidArgument("exp(): unsupported variable index");
+                throw InvalidArgument("Unsupported variable index");
 
             return select_constexpr<0, vars, long>(var, [this](auto k) {
                 return exp<k>();
@@ -1307,7 +1307,7 @@ class Laurent :
         static Laurent embed(const Laurent<T, 1>& p, int var)
                 requires (vars > 1) {
             if (var < 0 || var >= vars)
-                throw InvalidArgument("embed(): unsupported variable index");
+                throw InvalidArgument("Unsupported variable index");
 
             return select_constexpr<0, vars, Laurent>(var, [&p](auto k) {
                 return embed<k>(p);
@@ -2374,7 +2374,7 @@ class Laurent :
             } else if (k == 1 || isZero()) {
                 return;
             } else if (k == -1) {
-                invertX();
+                invert<0>();
                 return;
             }
 
@@ -2388,7 +2388,7 @@ class Laurent :
 
             if (k < 0) {
                 // Reverse the sequence of coefficients.
-                // This is simply the non-trivial case of invertX().
+                // This is simply the non-trivial case of invert<0>().
                 std::reverse(term_ + minExp_ - base_,
                     term_ + maxExp_ - base_ + 1);
                 base_ -= (minExp_ + maxExp_);
@@ -2471,7 +2471,7 @@ class Laurent :
             } else if (k == 1 || isZero()) {
                 return;
             } else if (k == -1) {
-                invertX();
+                invert<0>();
                 return;
             }
 
@@ -2550,29 +2550,108 @@ class Laurent :
         }
 
         /**
-         * Replaces the first polynomial variable `x` with `x^-1`, leaving all
-         * other polynomial variables unchanged.  This polynomial is changed
-         * directly.
+         * Replaces a single polynomial variable `v` with `v^-1`, leaving all
+         * other variables unchanged.  This polynomial is changed directly.
+         *
+         * This template function is the fastest way to invert a variable
+         * if you know \a var at compile time.
+         *
+         * For single-variable Laurent polynomials, calling `invert<0>()`
+         * is equivalent to calling `scaleUp(-1)`.
+         *
+         * \nopython Instead use the variant `invert(var)`, where \a var is
+         * passed at runtime.
+         *
+         * \tparam var indicates which variable of the polynomial to invert.
+         */
+        template <int var> requires (var >= 0 && var < vars)
+        void invert() {
+            if (isZero()) {
+                return;
+            } else if constexpr (var == 0) {
+                if (minExp_ == maxExp_) {
+                    base_ -= (minExp_ << 1);
+                    minExp_ = -minExp_;
+                    maxExp_ = -maxExp_;
+                } else {
+                    std::reverse(term_ + minExp_ - base_,
+                        term_ + maxExp_ - base_ + 1);
+                    base_ -= (minExp_ + maxExp_);
+                    auto tmp = minExp_;
+                    minExp_ = -maxExp_;
+                    maxExp_ = -tmp;
+                }
+            } else {
+                for (auto it = term_ + minExp_ - base_;
+                        it <= term_ + maxExp_ - base_; ++it)
+                    it->template invert<var - 1>();
+            }
+        }
+
+        /**
+         * Replaces a single polynomial variable `v` with `v^-1` leaving all
+         * other variables unchanged, where the variable to invert does not
+         * need to be known until runtime.  This polynomial is changed directly.
+         *
+         * For C++ programmers who know \a var at compile time, you are better
+         * off using the template function `invert<var>()` instead, which is
+         * slightly faster.
+         *
+         * For single-variable Laurent polynomials, calling `invert(0)`
+         * is equivalent to calling `scaleUp(-1)`.
+         *
+         * \exception InvalidArgument The argument \a var is not within the
+         * allowed range (from 0 to `vars-1` inclusive).
+         *
+         * \param var indicates which variable of the polynomial you wish to
+         * invert; this must be between 0 and `vars-1` inclusive.
+         */
+        void invert(int var) {
+            if (var < 0 || var >= vars)
+                throw InvalidArgument("Unsupported variable index");
+
+            return select_constexpr<0, vars, void>(var, [this](auto k) {
+                invert<k>();
+            });
+        }
+
+        /**
+         * Deprecated function that replaces the first polynomial variable
+         * `x` with `x^-1`, leaving all other polynomial variables unchanged.
+         * This polynomial is changed directly.
          *
          * For single-variable Laurent polynomials, this is equivalent to
          * calling `scaleUp(-1)`.
+         *
+         * \deprecated Instead, call `invert<0>()` in C++, or `invert(0)` in
+         * Python.
          */
-        void invertX() {
-            if (isZero()) {
-                return;
-            } else if (minExp_ == maxExp_) {
-                base_ -= (minExp_ << 1);
-                minExp_ = -minExp_;
-                maxExp_ = -maxExp_;
-                return;
-            } else {
-                std::reverse(term_ + minExp_ - base_,
-                    term_ + maxExp_ - base_ + 1);
-                base_ -= (minExp_ + maxExp_);
-                auto tmp = minExp_;
-                minExp_ = -maxExp_;
-                maxExp_ = -tmp;
-            }
+        [[deprecated]] void invertX() {
+            invert<0>();
+        }
+
+        /**
+         * Deprecated function that replaces the second polynomial variable
+         * `y` with `y^-1`, leaving all other polynomial variables unchanged.
+         * This polynomial is changed directly.
+         *
+         * \deprecated Instead, call `invert<1>()` in C++, or `invert(1)` in
+         * Python.
+         */
+        [[deprecated]] void invertY() {
+            invert<1>();
+        }
+
+        /**
+         * Deprecated function that replaces the third polynomial variable
+         * `z` with `z^-1`, leaving all other polynomial variables unchanged.
+         * This polynomial is changed directly.
+         *
+         * \deprecated Instead, call `invert<2>()` in C++, or `invert(2)` in
+         * Python.
+         */
+        [[deprecated]] void invertZ() {
+            invert<2>();
         }
 
         /**

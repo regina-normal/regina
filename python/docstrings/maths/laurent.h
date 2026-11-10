@@ -688,11 +688,16 @@ for (auto c = poly.first(); c; ++c) {
 }
 ```
 
-Note that last() is _not_ a past-the-end iterator, and so ``(first(),
-last())`` do not form a complete iterator range.
+The order of forward iteration is lexicographic in the sequences of
+exponents.
 
 See the LaurentCoefficient class notes for further details and
 examples on how iteration works for Laurent polynomials.
+
+.. warning::
+    Note that last() is _not_ a past-the-end iterator, and so
+    ``first()`` and ``last()`` do not together form a full iterator
+    range.
 
 Python:
     Laurent also implements the Python iterable interface, which means
@@ -737,14 +742,56 @@ Parameter ``otherExp``:
     the exponents of the remaining ``(vars - 1)`` polynomial variables
     ``y,…``.)doc";
 
+// Docstring regina::python::doc::Laurent::invert
+static constexpr const char invert[] =
+R"doc(Replaces a single polynomial variable ``v`` with ``v^-1`` leaving all
+other variables unchanged, where the variable to invert does not need
+to be known until runtime. This polynomial is changed directly.
+
+For C++ programmers who know *var* at compile time, you are better off
+using the template function ``invert<var>()`` instead, which is
+slightly faster.
+
+For single-variable Laurent polynomials, calling ``invert(0)`` is
+equivalent to calling ``scaleUp(-1)``.
+
+Exception ``InvalidArgument``:
+    The argument *var* is not within the allowed range (from 0 to
+    ``vars-1`` inclusive).
+
+Parameter ``var``:
+    indicates which variable of the polynomial you wish to invert;
+    this must be between 0 and ``vars-1`` inclusive.)doc";
+
 // Docstring regina::python::doc::Laurent::invertX
 static constexpr const char invertX[] =
-R"doc(Replaces the first polynomial variable ``x`` with ``x^-1``, leaving
-all other polynomial variables unchanged. This polynomial is changed
-directly.
+R"doc(Deprecated function that replaces the first polynomial variable ``x``
+with ``x^-1``, leaving all other polynomial variables unchanged. This
+polynomial is changed directly.
 
 For single-variable Laurent polynomials, this is equivalent to calling
-``scaleUp(-1)``.)doc";
+``scaleUp(-1)``.
+
+.. deprecated::
+    Instead, call ``invert<0>()`` in C++, or ``invert(0)`` in Python.)doc";
+
+// Docstring regina::python::doc::Laurent::invertY
+static constexpr const char invertY[] =
+R"doc(Deprecated function that replaces the second polynomial variable ``y``
+with ``y^-1``, leaving all other polynomial variables unchanged. This
+polynomial is changed directly.
+
+.. deprecated::
+    Instead, call ``invert<1>()`` in C++, or ``invert(1)`` in Python.)doc";
+
+// Docstring regina::python::doc::Laurent::invertZ
+static constexpr const char invertZ[] =
+R"doc(Deprecated function that replaces the third polynomial variable ``z``
+with ``z^-1``, leaving all other polynomial variables unchanged. This
+polynomial is changed directly.
+
+.. deprecated::
+    Instead, call ``invert<2>()`` in C++, or ``invert(2)`` in Python.)doc";
 
 // Docstring regina::python::doc::Laurent::isZero
 static constexpr const char isZero[] =
@@ -774,11 +821,17 @@ for (auto c = poly.last(); c; --c) {
 }
 ```
 
-Note that last() is _not_ a past-the-end iterator, and so ``(first(),
-last())`` do not form a complete iterator range.
+The order of forward iteration is lexicographic in the sequences of
+exponents (and therefore the order of backward iteration is reverse
+lexicographic in the exponents).
 
 See the LaurentCoefficient class notes for further details and
 examples on how iteration works for Laurent polynomials.
+
+.. warning::
+    Note that last() is _not_ a past-the-end iterator, and so
+    ``first()`` and ``last()`` do not together form a full iterator
+    range.
 
 Python:
     Laurent also implements the Python iterable interface, which means
@@ -1199,6 +1252,13 @@ for (auto c = poly.first(); c; ++c) {
     std::cout << "Term: " << *c << " x^" << c.exp<0>() << std::endl;
 }
 ```
+
+The order of forward iteration is lexicographic in the sequences of
+exponents. That is, the coefficient attached to the monomial ``x^a y^b
+…`` will appear before the coefficient attached to the monomial ``x^p
+y^q …`` if and only if the sequence ``(a,b,…)`` is lexicographically
+smaller than ``(p,q,…)``. Here ``x,y,…`` denote the polynomial
+variables.
 
 LaurentCoefficient objects are small enough to pass by value and swap
 with std::swap(), with no need for any specialised move operations or

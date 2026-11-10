@@ -569,28 +569,43 @@ TEST_F(Laurent2Test, invert) {
         SCOPED_TRACE_REGINA(c);
 
         L invX(c), invY(c);
-        invX.invertX();
-        invY.invertY();
+        invX.invert<0>();
+        invY.invert<1>();
 
+        validate(invX);
+        validate(invY);
+
+        using Term = std::tuple<long, long, Integer>;
         {
-            std::vector<Term> terms(c.begin(), c.end());
-            for (auto& t : terms)
-                t.first.first = -t.first.first;
-            std::sort(terms.begin(), terms.end());
-            EXPECT_TRUE(std::equal(invX.begin(), invX.end(),
-                terms.begin(), terms.end()));
+            std::vector<Term> expect;
+            for (auto it = c.first(); it; ++it)
+                expect.emplace_back(-it.exp<0>(), it.exp<1>(), *it);
+            std::sort(expect.begin(), expect.end());
+
+            std::vector<Term> found;
+            for (auto it = invX.first(); it; ++it)
+                found.emplace_back(it.exp<0>(), it.exp<1>(), *it);
+
+            EXPECT_EQ(found, expect);
         }
         {
-            std::vector<Term> terms(c.begin(), c.end());
-            for (auto& t : terms)
-                t.first.second = -t.first.second;
-            std::sort(terms.begin(), terms.end());
-            EXPECT_TRUE(std::equal(invY.begin(), invY.end(),
-                terms.begin(), terms.end()));
+            std::vector<Term> expect;
+            for (auto it = c.first(); it; ++it)
+                expect.emplace_back(it.exp<0>(), -it.exp<1>(), *it);
+            std::sort(expect.begin(), expect.end());
+
+            std::vector<Term> found;
+            for (auto it = invY.first(); it; ++it)
+                found.emplace_back(it.exp<0>(), it.exp<1>(), *it);
+
+            EXPECT_EQ(found, expect);
         }
 
-        invX.invertY();
-        invY.invertX();
+        invX.invert<1>();
+        invY.invert<0>();
+
+        validate(invX);
+        validate(invY);
         EXPECT_EQ(invX, invY);
     }
 }

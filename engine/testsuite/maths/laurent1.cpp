@@ -1136,7 +1136,7 @@ TEST_F(Laurent1Test, scale) {
                 {
                     L x(c), y(c);
                     EXPECT_NO_THROW({ x.scaleUp(-1); });
-                    y.invertX();
+                    y.invert<0>();
                     validate(x);
                     validate(y);
                     EXPECT_EQ(x, y);
@@ -1144,7 +1144,7 @@ TEST_F(Laurent1Test, scale) {
                 {
                     L x(c), y(c);
                     EXPECT_NO_THROW({ x.scaleDown(-1); });
-                    y.invertX();
+                    y.invert<0>();
                     validate(x);
                     validate(y);
                     EXPECT_EQ(x, y);
@@ -1184,16 +1184,16 @@ TEST_F(Laurent1Test, negate) {
     }
 }
 
-TEST_F(Laurent1Test, invertX) {
+TEST_F(Laurent1Test, invert) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
         if (c.isZero()) {
             L x(c);
-            x.invertX();
+            x.invert<0>();
             validateZero(x);
         } else {
             L x(c);
-            x.invertX();
+            x.invert<0>();
             validate(x);
             EXPECT_FALSE(x.isZero());
             EXPECT_EQ(x.maxExp(), -c.minExp());

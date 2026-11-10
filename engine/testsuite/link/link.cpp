@@ -154,7 +154,7 @@ static void verifyIsomorphic(const GroupPresentation& a,
 static regina::Laurent<Integer> jonesModReflection(const Link& link) {
     auto jones1 = link.jones();
     auto jones2 = jones1;
-    jones2.invertX();
+    jones2.invert<0>();
     if (jones1 <= jones2)
         return jones1;
     else
@@ -167,7 +167,7 @@ static regina::Laurent<Integer> affineModSymmetries(const Link& link) {
         affine1.negate();
 
     auto affine2 = affine1;
-    affine2.invertX();
+    affine2.invert<0>();
     if (affine2[affine2.minExp()] < 0)
         affine2.negate();
 
@@ -1682,7 +1682,7 @@ static void verifyAffineIndex(const Link& link, const char* name,
     // transformations.
     // See Kauffman, JKTR (2018), Proposition 4.7.
     regina::Laurent<Integer> expectInverted = expected;
-    expectInverted.invertX();
+    expectInverted.invert<0>();
 
     {
         // Reverse the orientation of the knot.

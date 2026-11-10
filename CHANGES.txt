@@ -357,6 +357,8 @@ Version 8.0  [ TODO ]
             - New routine setTo(), which changes the argument order of set().
               This mainly exists to simplify the C++ template implementation.
               The set() routine is still available and recommended for use.
+            - Deprecated invertX(), in favour of a new template function
+              invert<var>() which is better suited for multivariate polynomials.
             - Functions scaleUp() and scaleDown() now throw an InvalidArgument
               exception if the scaling factor is zero.  Note that this changes
               the exception type for scaleDown() (which will still throw a
@@ -378,6 +380,8 @@ Version 8.0  [ TODO ]
                 now use initExp(xExp, yExp) or monomial(xExp, yExp) instead.
               + Removed the shift constructor Laurent2(poly, xShift, yShift);
                 now use poly.shifted(xShift, yShift) instead.
+              + Deprecated invertX() and invertY() in favour of a new template
+                function invert<var>().
               + The std::initializer_list constructor has changed slightly:
                 each term is now a pair {{xExp, yExp}, value} instead of a
                 triple {xExp, yExp, value}.

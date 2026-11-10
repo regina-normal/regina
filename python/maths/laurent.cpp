@@ -123,7 +123,12 @@ void addLaurent(pybind11::module_& m) {
         .def("scaleUp", &Laurent<Integer>::scaleUp, rdoc::scaleUp)
         .def("scaleDown", &Laurent<Integer>::scaleDown, rdoc::scaleDown)
         .def("negate", &Laurent<Integer>::negate, rdoc::negate)
-        .def("invertX", &Laurent<Integer>::invertX, rdoc::invertX)
+        .def("invert", static_cast<void (Laurent<Integer>::*)(int)>(
+                &Laurent<Integer>::invert),
+            rdoc::invert)
+        .def("invertX", [](Laurent<Integer>& p) { // deprecated
+            p.invert<0>();
+        }, rdoc::invertX)
         .def("addProduct",
             overload_cast<const Laurent<Integer>&, const Laurent<Integer>&>(
                 &Laurent<Integer>::addProduct),
