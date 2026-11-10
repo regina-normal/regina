@@ -333,7 +333,15 @@ Version 8.0  [ TODO ]
               template parameter (which defaults to 1).  In particular,
               Laurent<T, 2> replaces the old class Laurent2<T>, which has now
               been removed.  As a result, Laurent<T, vars> now has several new
-              routines that are specific only to multivariate polynomials.
+              routines that are specific only to multivariate polynomials:
+              + constructors that take sparse collections of exponents and
+                coefficients (either via std::initializer_list, or by iterator
+                pairs);
+              + a "product constructor" and static functions embed() and
+                diagonalise() for converting single-variable polynomials into
+                multivariate polynomials;
+              + a round bracket operator for element access in multivariate
+                polynomials.
             - For the iterator-based constructor and init() routine, the
               iterator type is now required to be random access.
             - Removed the exponent-based constructor Laurent(exp) and
@@ -381,8 +389,10 @@ Version 8.0  [ TODO ]
                 function invert<var>().
               + The std::initializer_list and iterator-based constructors have
                 changed slightly: each term is now a pair {{xExp, yExp}, value}
-                instead of a triple {xExp, yExp, value}, and exponent sequences
-                cannot be reused across multiple terms.
+                instead of a triple {xExp, yExp, value}, terms with zero
+                coefficients will be ignored, and exponent sequences cannot be
+                reused across multiple terms (this will be checked, with an
+                exception thrown if it is violated).
               + For str() and utf8(), you must pass either both variable names
                 or none (there is no longer an option to pass just one).
         Class LaurentCoefficient<T, vars>:
