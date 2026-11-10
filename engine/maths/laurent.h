@@ -1757,8 +1757,10 @@ class Laurent :
          * coefficient that we should set.
          * \param value the new value to assign to the given coefficient.
          */
-        inline void set(long exp, const T& value) requires (vars == 1) {
-            setTo(value, exp); // use the unified implementation
+        template <AssignableTo<T&> Value>
+        requires std::equality_comparable_with<Value, int>
+        inline void set(long exp, Value&& value) requires (vars == 1) {
+            setTo(std::forward<Value>(value), exp);
         }
 
         /**
@@ -1784,9 +1786,11 @@ class Laurent :
          * coefficient that we should set.
          * \param value the new value to assign to the given coefficient.
          */
-        inline void set(long exp0, long exp1, const T& value)
+        template <AssignableTo<T&> Value>
+        requires std::equality_comparable_with<Value, int>
+        inline void set(long exp0, long exp1, Value&& value)
                 requires (vars == 2) {
-            setTo(value, exp0, exp1); // use the unified implementation
+            setTo(std::forward<Value>(value), exp0, exp1);
         }
 
         /**
@@ -1814,9 +1818,11 @@ class Laurent :
          * coefficient that we should set.
          * \param value the new value to assign to the given coefficient.
          */
-        inline void set(long exp0, long exp1, long exp2, const T& value)
+        template <AssignableTo<T&> Value>
+        requires std::equality_comparable_with<Value, int>
+        inline void set(long exp0, long exp1, long exp2, Value&& value)
                 requires (vars == 3) {
-            setTo(value, exp0, exp1, exp2); // use the unified implementation
+            setTo(std::forward<Value>(value), exp0, exp1, exp2);
         }
 
         /**
@@ -3736,10 +3742,12 @@ class Laurent :
          * \param otherExp the exponents of the remaining `(vars - 1)`
          * polynomial variables `y,…` for the coefficient that we should set.
          */
-        template <std::convertible_to<long>... Exponents>
-        requires (sizeof...(Exponents) == vars - 1)
-        void setTo(const T& value, long firstExp, Exponents&&... otherExp) {
-            // TODO: We should probably offer a T&& variant also.
+        template <AssignableTo<T&> Value,
+            std::convertible_to<long>... Exponents>
+        requires
+            std::equality_comparable_with<Value, int> &&
+            (sizeof...(Exponents) == vars - 1)
+        void setTo(Value&& value, long firstExp, Exponents&&... otherExp) {
             if (value == 0) {
                 if (isZero() || firstExp < minExp_ || firstExp > maxExp_)
                     return;
@@ -3771,7 +3779,7 @@ class Laurent :
                     // Our term is within the [minExp_, maxExp_] range.
                     // Set the coefficient to zero now, and then - only if it
                     // might matter - see whether the entire term was erased.
-                    term_[firstExp - base_].setTo(value,
+                    term_[firstExp - base_].setTo(std::forward<Value>(value),
                         std::forward<Exponents>(otherExp)...);
 
                     if (firstExp == maxExp_) {
@@ -3866,9 +3874,9 @@ class Laurent :
             }
 
             if constexpr (vars == 1)
-                term_[firstExp - base_] = value;
+                term_[firstExp - base_] = std::forward<Value>(value);
             else
-                term_[firstExp - base_].setTo(value,
+                term_[firstExp - base_].setTo(std::forward<Value>(value),
                     std::forward<Exponents>(otherExp)...);
         }
 

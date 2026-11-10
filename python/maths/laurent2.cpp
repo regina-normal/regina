@@ -118,7 +118,7 @@ void addLaurent2(pybind11::module_& m) {
         .def("last", &LL::last,
             pybind11::keep_alive<0, 1>(), // iterator keeps polynomial alive
             rdoc::last)
-        .def("set", &LL::set, rdoc::set_2)
+        .def("set", &LL::set<const Integer&>, rdoc::set_2)
         .def("swap", &LL::swap, rdoc::swap)
         .def("shift", &LL::shift<long>, rdoc::shift)
         .def("shifted",
