@@ -3437,67 +3437,25 @@ class Laurent :
                         }
                     } else {
                         bool startedPower = false;
-                        long exp;
-                        {
-                            exp = c.template exp<0>();
-                            if (exp != 0) {
+                        auto exp = c.exponents();
+
+                        for (int i = 0; i < vars; ++i) {
+                            if (exp[i] != 0) {
                                 if (startedPower)
                                     out << ' ';
                                 else
                                     startedPower = true;
 
-                                if (names[0])
-                                    out << names[0];
+                                if (names[i])
+                                    out << names[i];
                                 else
-                                    out << 'x';
+                                    out << char('x' + i); // default name: x,y,z
 
-                                if (exp != 1) {
+                                if (exp[i] != 1) {
                                     if (utf8)
-                                        out << regina::superscript(exp);
+                                        out << regina::superscript(exp[i]);
                                     else
-                                        out << '^' << exp;
-                                }
-                            }
-                        }
-                        if constexpr (vars >= 2) {
-                            exp = c.template exp<1>();
-                            if (exp != 0) {
-                                if (startedPower)
-                                    out << ' ';
-                                else
-                                    startedPower = true;
-
-                                if (names[1])
-                                    out << names[1];
-                                else
-                                    out << 'y';
-
-                                if (exp != 1) {
-                                    if (utf8)
-                                        out << regina::superscript(exp);
-                                    else
-                                        out << '^' << exp;
-                                }
-                            }
-                        }
-                        if constexpr (vars >= 3) {
-                            exp = c.template exp<2>();
-                            if (exp != 0) {
-                                if (startedPower)
-                                    out << ' ';
-                                else
-                                    startedPower = true;
-
-                                if (names[2])
-                                    out << names[2];
-                                else
-                                    out << 'z';
-
-                                if (exp != 1) {
-                                    if (utf8)
-                                        out << regina::superscript(exp);
-                                    else
-                                        out << '^' << exp;
+                                        out << '^' << exp[i];
                                 }
                             }
                         }
@@ -3592,11 +3550,8 @@ class Laurent :
             // exponents so we can use zero as an unambiguous terminator.
             for (auto it = first(); it; ++it) {
                 it->tightEncode(out);
-                regina::tightEncode(out, it.template exp<0>());
-                if constexpr (vars > 1)
-                    regina::tightEncode(out, it.template exp<1>());
-                if constexpr (vars > 2) // vars == 3
-                    regina::tightEncode(out, it.template exp<2>());
+                for (long e : it.exponents())
+                    regina::tightEncode(out, e);
             }
             T().tightEncode(out); // The zero terminator
         }

@@ -452,9 +452,7 @@ TEST_F(Laurent2Test, iterators) {
                 for ( ; it; prev = it++) {
                     if (prev.has_value()) {
                         // Manually verify the order of iteration:
-                        EXPECT_LE(prev->exp<0>(), it.exp<0>());
-                        if (prev->exp<0>() == it.exp<0>())
-                            EXPECT_LT(prev->exp<1>(), it.exp<1>());
+                        EXPECT_LT(prev->exponents(), it.exponents());
                     }
                     EXPECT_EQ(c(it.exp<0>(), it.exp<1>()), *it);
                 }
@@ -476,9 +474,7 @@ TEST_F(Laurent2Test, iterators) {
                 for ( ; it; prev = it--) {
                     if (prev.has_value()) {
                         // Manually verify the order of iteration:
-                        EXPECT_GE(prev->exp<0>(), it.exp<0>());
-                        if (prev->exp<0>() == it.exp<0>())
-                            EXPECT_GT(prev->exp<1>(), it.exp<1>());
+                        EXPECT_GT(prev->exponents(), it.exponents());
                     }
                     EXPECT_EQ(c(it.exp<0>(), it.exp<1>()), *it);
                 }
@@ -752,8 +748,7 @@ namespace {
                 auto pit = poly.first();
                 auto qit = quotient.first();
                 while (pit || qit) {
-                    if (pit && qit && pit.exp<0>() == qit.exp<0>() &&
-                            pit.exp<1>() == qit.exp<1>()) {
+                    if (pit && qit && pit.exponents() == qit.exponents()) {
                         auto q = *pit++ / scalar;
                         EXPECT_NE(q, 0);
                         EXPECT_EQ(*qit++, q);
@@ -842,8 +837,7 @@ TEST_F(Laurent2Test, scalarMultiplyDivide) {
 
             L c0 = c / *f;
             const auto& f0 = c0.first();
-            EXPECT_EQ(f0.exp<0>(), f.exp<0>());
-            EXPECT_EQ(f0.exp<1>(), f.exp<1>());
+            EXPECT_EQ(f0.exponents(), f.exponents());
             EXPECT_EQ(*f0, 1);
         }
     }
@@ -871,19 +865,17 @@ TEST_F(Laurent2Test, addSubtract) {
                 auto cit = c.first();
                 auto dit = d.first();
                 while (sit || cit || dit) {
-                    if (cit && dit && cit.exp<0>() == dit.exp<0>() &&
-                            cit.exp<1>() == dit.exp<1>()) {
-                        if (sit && sit.exp<0>() == cit.exp<0>() &&
-                                sit.exp<1>() == cit.exp<1>()) {
+                    if (cit && dit && cit.exponents() == dit.exponents()) {
+                        if (sit && sit.exponents() == cit.exponents()) {
                             EXPECT_EQ(*sit++, *cit++ + *dit++);
                         } else {
                             EXPECT_EQ(*cit++, -*dit++);
                         }
-                    } else if (sit && cit && sit.exp<0>() == cit.exp<0>() &&
-                            sit.exp<1>() == cit.exp<1>()) {
+                    } else if (sit && cit &&
+                            sit.exponents() == cit.exponents()) {
                         EXPECT_EQ(*sit++, *cit++);
-                    } else if (sit && dit && sit.exp<0>() == dit.exp<0>() &&
-                            sit.exp<1>() == dit.exp<1>()) {
+                    } else if (sit && dit &&
+                            sit.exponents() == dit.exponents()) {
                         EXPECT_EQ(*sit++, *dit++);
                     } else {
                         // We have a lone term that appears on one side but
@@ -924,19 +916,17 @@ TEST_F(Laurent2Test, addSubtract) {
                 auto cit = c.first();
                 auto dit = d.first();
                 while (sit || cit || dit) {
-                    if (cit && dit && cit.exp<0>() == dit.exp<0>() &&
-                            cit.exp<1>() == dit.exp<1>()) {
-                        if (sit && sit.exp<0>() == cit.exp<0>() &&
-                                sit.exp<1>() == cit.exp<1>()) {
+                    if (cit && dit && cit.exponents() == dit.exponents()) {
+                        if (sit && sit.exponents() == cit.exponents()) {
                             EXPECT_EQ(*sit++, *cit++ - *dit++);
                         } else {
                             EXPECT_EQ(*cit++, *dit++);
                         }
-                    } else if (sit && cit && sit.exp<0>() == cit.exp<0>() &&
-                            sit.exp<1>() == cit.exp<1>()) {
+                    } else if (sit && cit &&
+                            sit.exponents() == cit.exponents()) {
                         EXPECT_EQ(*sit++, *cit++);
-                    } else if (sit && dit && sit.exp<0>() == dit.exp<0>() &&
-                            sit.exp<1>() == dit.exp<1>()) {
+                    } else if (sit && dit &&
+                            sit.exponents() == dit.exponents()) {
                         EXPECT_EQ(*sit++, -*dit++);
                     } else {
                         // We have a lone term that appears on one side but

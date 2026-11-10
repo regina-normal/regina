@@ -152,9 +152,7 @@ class LaurentTest : public testing::Test {
                 auto pc = poly.first();
                 auto ec = coeffs.begin();
                 for ( ; pc && ec != coeffs.end(); ++pc, ++ec) {
-                    regina::for_constexpr<0, vars>([&pc, ec](auto i) {
-                        EXPECT_EQ(pc.template exp<i>(), ec->first[i]);
-                    });
+                    EXPECT_EQ(pc.exponents(), ec->first);
                     EXPECT_EQ(*pc, ec->second);
                 }
                 EXPECT_FALSE(pc);
@@ -226,9 +224,7 @@ class LaurentTest : public testing::Test {
                 auto pc = poly.first();
                 auto ec = expect.first();
                 for ( ; pc && ec; ++pc, ++ec) {
-                    regina::for_constexpr<0, vars>([&pc, &ec](auto i) {
-                        EXPECT_EQ(pc.template exp<i>(), ec.template exp<i>());
-                    });
+                    EXPECT_EQ(pc.exponents(), ec.exponents());
                     EXPECT_EQ(*pc, *ec);
                 }
                 EXPECT_FALSE(pc);
