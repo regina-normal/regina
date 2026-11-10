@@ -33,10 +33,11 @@
 #include "utilities/stringutils.h"
 #include <array>
 
+#include "maths/laurenttest.h"
 #include "utilities/tightencodingtest.h"
 
 using regina::Integer;
-using regina::Laurent2;
+using regina::Laurent;
 
 using L = Laurent<Integer, 2>;
 using Term = std::pair<std::pair<long, long>, Integer>;
@@ -51,25 +52,21 @@ class Laurent2Test : public testing::Test {
         const Integer bigInt { BIG };
 
         const std::array<const L, 11> cases {
-            L(),
-            L({{0, 0, 1}}),
-            L({{0, 0, 2}}),
-            L({{0, 0, -1}}),
-            L({{2, 0, 1}}),
-            L({{1, 1, 1}}),
-            L({{1, 2, 1}}),
-            L({{0, 0, 1}, {1, 2, -2}, {-2, -1, 3}}),
-            L({{1, 0, 2}, {1, 2, -4}, {0, -1, -2}}),
-            L({{1, 1, -1}, {1, 2, 1}, {0, -1, -2}, {1, 0, -2}}),
-            L({{1, 2, bigInt}, {1, -2, -bigInt}, {1, 1, -1}})
+            L{},
+            L{{{0, 0}, 1}},
+            L{{{0, 0}, 2}},
+            L{{{0, 0}, -1}},
+            L{{{2, 0}, 1}},
+            L{{{1, 1}, 1}},
+            L{{{1, 2}, 1}},
+            L{{{0, 0}, 1}, {{1, 2}, -2}, {{-2, -1}, 3}},
+            L{{{1, 0}, 2}, {{1, 2}, -4}, {{0, -1}, -2}},
+            L{{{1, 1}, -1}, {{1, 2}, 1}, {{0, -1}, -2}, {{1, 0}, -2}},
+            L{{{1, 2}, bigInt}, {{1, -2}, -bigInt}, {{1, 1}, -1}}
         };
 };
 
 namespace {
-    void validate(const L& poly) {
-        EXPECT_NO_THROW({ poly.validate(); });
-    }
-
     void validate(const L& poly,
             std::initializer_list<std::tuple<long, long, Integer>> coeffs) {
         // We assume here that coeffs only contains non-zero coefficients, and
@@ -83,56 +80,6 @@ namespace {
             EXPECT_FALSE(poly.isZero());
             for (const auto& c : coeffs)
                 EXPECT_EQ(poly(std::get<0>(c), std::get<1>(c)), std::get<2>(c));
-        }
-    }
-
-    void validateZero(const L& poly) {
-        EXPECT_NO_THROW({ poly.validate(); });
-        EXPECT_TRUE(poly.isZero());
-        EXPECT_EQ(poly.countTerms(), 0);
-        EXPECT_EQ(poly.begin(), poly.end());
-    }
-
-    void validate(const L& poly, const L& expect) {
-        if (expect.isZero())
-            validateZero(poly);
-        else {
-            EXPECT_NO_THROW({ poly.validate(); });
-            EXPECT_FALSE(poly.isZero());
-            EXPECT_EQ(poly.countTerms(), expect.countTerms());
-
-            auto pit = poly.begin();
-            auto eit = expect.begin();
-            while (pit != poly.end() && eit != expect.end())
-                EXPECT_EQ(*pit++, *eit++);
-            EXPECT_EQ(pit, poly.end());
-            EXPECT_EQ(eit, expect.end());
-        }
-
-        EXPECT_EQ(poly, expect);
-        EXPECT_FALSE(poly != expect);
-    }
-
-    template <std::regular_invocable<const Term&> TranslateTerm>
-    requires requires(TranslateTerm trans, const Term t) {
-        { trans(t) } -> std::convertible_to<Term>;
-    }
-    void validate(const L& poly, const L& from, TranslateTerm&& translate) {
-        // It is assumed that translate preserves the order of terms, and
-        // does not create any zero terms.
-        if (from.isZero())
-            validateZero(poly);
-        else {
-            EXPECT_NO_THROW({ poly.validate(); });
-            EXPECT_FALSE(poly.isZero());
-            EXPECT_EQ(poly.countTerms(), from.countTerms());
-
-            auto pit = poly.begin();
-            auto fit = from.begin();
-            while (pit != poly.end() && fit != from.end())
-                EXPECT_EQ(*pit++, translate(*fit++));
-            EXPECT_EQ(pit, poly.end());
-            EXPECT_EQ(fit, from.end());
         }
     }
 } // anonymous namespace
@@ -470,7 +417,7 @@ TEST_F(Laurent2Test, set) {
     // there is not really any specialised code to test here other than
     // ensuring that the map remains free of zero coefficients.
 
-    L x { {0, 0, 1}, {1, -1, 2} };
+    L x { {{0,0},1}, {{1,-1}, 2} };
 
     validate(x, { {0, 0, 1}, {1, -1, 2} });
     x.set(-1, 1, 3);
@@ -596,11 +543,9 @@ TEST_F(Laurent2Test, shift) {
                 SCOPED_TRACE_NUMERIC(yShift);
 
                 L s = c.shifted(xShift, yShift);
-                validate(s, c, [xShift, yShift](const Term& term) {
-                    return std::make_pair(
-                        std::make_pair(term.first.first + xShift,
-                            term.first.second + yShift),
-                        term.second);
+                validate(s, c, [xShift, yShift](long x, long y,
+                        const Integer& v) {
+                    return std::make_tuple(x + xShift, y + yShift, v);
                 });
                 validate(L(c).shifted(xShift, yShift), s);
                 {
@@ -618,8 +563,8 @@ TEST_F(Laurent2Test, negate) {
         SCOPED_TRACE_REGINA(c);
 
         L neg = -c;
-        validate(neg, c, [](const Term& term) {
-            return std::make_pair(term.first, -term.second);
+        validate(neg, c, [](long x, long y, const Integer& c) {
+            return std::make_tuple(x, y, -c);
         });
         validate(-L(c), neg);
         {
@@ -719,8 +664,9 @@ namespace {
         if (scalar == 0) {
             validateZero(product);
         } else {
-            validate(product, poly, [&scalar](const Term& term) {
-                return std::make_pair(term.first, term.second * scalar);
+            validate(product, poly, [&scalar](long x, long y,
+                    const Integer& c) {
+                return std::make_tuple(x, y, c * scalar);
             });
         }
         validate(L(poly) * scalar, product);
@@ -920,8 +866,8 @@ TEST_F(Laurent2Test, addSubtract) {
                 validate(diff, c);
             } else if (c.isZero()) {
                 validate(diff);
-                validate(diff, d, [](const Term& term) {
-                    return std::make_pair(term.first, -term.second);
+                validate(diff, d, [](long x, long y, const Integer& c) {
+                    return std::make_tuple(x, y, -c);
                 });
             } else {
                 validate(diff);
@@ -980,8 +926,8 @@ TEST_F(Laurent2Test, addSubtract) {
 
         // Test operations upon one's self:
         const L dbl = c * 2;
-        validate(dbl, c, [](const Term& term) {
-            return std::make_pair(term.first, term.second * 2);
+        validate(dbl, c, [](long x, long y, const Integer& v) {
+            return std::make_tuple(x, y, v * 2);
         });
         validate(c + c, dbl);
         {

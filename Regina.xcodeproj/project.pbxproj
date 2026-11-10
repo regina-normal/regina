@@ -3604,6 +3604,7 @@
 		058A343C30A19D4D005D8F91 /* laurent.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = laurent.out; sourceTree = "<group>"; };
 		058A343D30A19D4D005D8F91 /* laurent.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = laurent.test; sourceTree = "<group>"; };
 		058A343E30A27535005D8F91 /* laurent3.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = laurent3.cpp; sourceTree = "<group>"; };
+		058A344030A28658005D8F91 /* laurenttest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = laurenttest.h; sourceTree = "<group>"; };
 		058C305E1DCAF6F8006162D2 /* forward.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = forward.h; sourceTree = "<group>"; };
 		058E398C1DCBC67C00D463A4 /* generic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = generic.h; sourceTree = "<group>"; };
 		058F804D29DA160A00110CF5 /* triangulation-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "triangulation-impl.h"; sourceTree = "<group>"; };
@@ -7299,6 +7300,7 @@
 				05F3DABD2A5CE3B3007A2CE2 /* integer.cpp */,
 				056AED2F2A431AE200EAF4FA /* laurent.cpp */,
 				056AED2A2A431AE200EAF4FA /* laurent2.cpp */,
+				058A344030A28658005D8F91 /* laurenttest.h */,
 				05BF6FCF2DB0001D0093D7A2 /* matrix.cpp */,
 				056AED322A431AE200EAF4FA /* numbertheory.cpp */,
 				056AED342A431AE200EAF4FA /* perm.cpp */,
