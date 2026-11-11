@@ -1296,7 +1296,7 @@ class Laurent :
          */
         template <std::convertible_to<long>... Exponents>
         requires (sizeof...(Exponents) == vars - 1)
-        void initExp(long firstExp, Exponents&&... otherExp) {
+        void initExp(long firstExp, Exponents... otherExp) {
             // Reuse any pre-allocated term_ array, if we can.
             if (term_) {
                 size_t gap = capacity_ >> 1; // 0 ≤ gap < capacity_
@@ -1304,7 +1304,7 @@ class Laurent :
                 if constexpr (vars == 1)
                     term_[gap] = 1;
                 else
-                    term_[gap].initExp(std::forward<Exponents>(otherExp)...);
+                    term_[gap].initExp(otherExp...);
             } else {
                 capacity_ = 1;
                 term_ = new Term[1];
@@ -1312,7 +1312,7 @@ class Laurent :
                 if constexpr (vars == 1)
                     *term_ = 1;
                 else
-                    term_->initExp(std::forward<Exponents>(otherExp)...);
+                    term_->initExp(otherExp...);
             }
             minExp_ = maxExp_ = firstExp;
         }
@@ -1332,12 +1332,12 @@ class Laurent :
          */
         template <std::convertible_to<long>... Exponents>
         requires (sizeof...(Exponents) == vars - 1)
-        static Laurent monomial(long firstExp, Exponents&&... otherExp) {
+        static Laurent monomial(long firstExp, Exponents... otherExp) {
             Term* c = new Term[1];
             if constexpr (vars == 1)
                 *c = 1;
             else
-                c->initExp(std::forward<Exponents>(otherExp)...);
+                c->initExp(otherExp...);
             return Laurent(firstExp, firstExp, c);
         }
 
@@ -1720,16 +1720,14 @@ class Laurent :
          */
         template <std::convertible_to<long>... Exponents>
         requires (vars > 1) && (sizeof...(Exponents) == vars - 1)
-        const T& operator () (long firstExp, Exponents&&... otherExp) const {
+        const T& operator () (long firstExp, Exponents... otherExp) const {
             // TODO: Once we move to C++23, we can use the subscript operator.
             if (firstExp >= minExp_ && firstExp <= maxExp_) {
                 // Here we are guaranteed that term_ is non-null.
                 if constexpr (vars > 2) {
-                    return term_[firstExp - base_](
-                        std::forward<Exponents>(otherExp)...);
+                    return term_[firstExp - base_](otherExp...);
                 } else {
-                    return term_[firstExp - base_].operator[](
-                        std::forward<Exponents>(otherExp)...);
+                    return term_[firstExp - base_].operator[](otherExp...);
                 }
             } else
                 return zero_;
@@ -2278,7 +2276,7 @@ class Laurent :
          */
         template <std::convertible_to<long>... Exponents>
         requires (sizeof...(Exponents) == vars - 1)
-        void shift(long firstShift, Exponents&&... otherShifts) {
+        void shift(long firstShift, Exponents... otherShifts) {
             if (! isZero()) {
                 base_ += firstShift;
                 minExp_ += firstShift;
@@ -2288,7 +2286,7 @@ class Laurent :
                     for (auto it = term_ + minExp_ - base_;
                             it <= term_ + maxExp_ - base_; ++it)
                         if (*it != 0)
-                            it->shift(std::forward<Exponents>(otherShifts)...);
+                            it->shift(otherShifts...);
             }
         }
 
@@ -2309,9 +2307,9 @@ class Laurent :
          */
         template <std::convertible_to<long>... Exponents>
         requires (sizeof...(Exponents) == vars)
-        Laurent shifted(Exponents&&... shifts) const& {
+        Laurent shifted(Exponents... shifts) const& {
             Laurent ans(*this);
-            ans.shift(std::forward<Exponents>(shifts)...);
+            ans.shift(shifts...);
             return ans;
         }
 
@@ -2330,8 +2328,8 @@ class Laurent :
          */
         template <std::convertible_to<long>... Exponents>
         requires (sizeof...(Exponents) == vars)
-        Laurent shifted(Exponents&&... shifts) && {
-            shift(std::forward<Exponents>(shifts)...);
+        Laurent shifted(Exponents... shifts) && {
+            shift(shifts...);
             return std::move(*this);
         }
 
@@ -3747,7 +3745,7 @@ class Laurent :
         requires
             std::equality_comparable_with<Value, int> &&
             (sizeof...(Exponents) == vars - 1)
-        void setTo(Value&& value, long firstExp, Exponents&&... otherExp) {
+        void setTo(Value&& value, long firstExp, Exponents... otherExp) {
             if (value == 0) {
                 if (isZero() || firstExp < minExp_ || firstExp > maxExp_)
                     return;
@@ -3780,7 +3778,7 @@ class Laurent :
                     // Set the coefficient to zero now, and then - only if it
                     // might matter - see whether the entire term was erased.
                     term_[firstExp - base_].setTo(std::forward<Value>(value),
-                        std::forward<Exponents>(otherExp)...);
+                        otherExp...);
 
                     if (firstExp == maxExp_) {
                         // Put the zero-coefficient test in a separate `if`
@@ -3877,7 +3875,7 @@ class Laurent :
                 term_[firstExp - base_] = std::forward<Value>(value);
             else
                 term_[firstExp - base_].setTo(std::forward<Value>(value),
-                    std::forward<Exponents>(otherExp)...);
+                    otherExp...);
         }
 
         /**

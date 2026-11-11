@@ -122,7 +122,7 @@ void addLaurent2(pybind11::module_& m) {
         .def("swap", &LL::swap, rdoc::swap)
         .def("shift", &LL::shift<long>, rdoc::shift)
         .def("shifted",
-            static_cast<LL (LL::*)(long&&, long&&) const&>(
+            static_cast<LL (LL::*)(long, long) const&>(
                 &LL::shifted<long, long>),
             rdoc::shifted)
         .def("negate", &LL::negate, rdoc::negate)

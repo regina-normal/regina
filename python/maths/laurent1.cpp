@@ -114,7 +114,7 @@ void addLaurent(pybind11::module_& m) {
         .def("set", &L::set<const Integer&>, rdoc::set)
         .def("swap", &L::swap, rdoc::swap)
         .def("shift", &L::shift<>, rdoc::shift)
-        .def("shifted", static_cast<L (L::*)(long&&) const&>(&L::shifted<long>),
+        .def("shifted", static_cast<L (L::*)(long) const&>(&L::shifted<long>),
             rdoc::shifted)
         .def("scaleUp", &L::scaleUp, rdoc::scaleUp)
         .def("scaleDown", &L::scaleDown, rdoc::scaleDown)
