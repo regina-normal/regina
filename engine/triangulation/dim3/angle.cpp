@@ -166,9 +166,9 @@ bool Triangulation<3>::hasGeneralAngleStructureInternal() const {
     // the case where bdryNull is true, we also want the solution to have
     // vanishing peripheral rotational holonomy.
     //
-    // We can use row echelon form for this: if there is any solution where the
-    // final coordinate is non-zero, then the final column will not appear as a
-    // leading coefficient in row echelon form.
+    // We can use row Hermite normal form for this: if there is any solution
+    // where the final coordinate is non-zero, then the final column will not
+    // appear as a leading coefficient in row Hermite normal form.
     MatrixInt eqns;
     if constexpr (bdryNull) {
         const SnapPeaTriangulation& snapPea = this->isSnapPea() ?
@@ -190,7 +190,7 @@ bool Triangulation<3>::hasGeneralAngleStructureInternal() const {
     } else {
         eqns = regina::makeAngleEquations(*this);
     }
-    size_t rank = eqns.makeRowEchelon();
+    size_t rank = eqns.makeRowHermite();
 
     // Note: the rank is always positive, since the triangulation is
     // non-empty and so we always have tetrahedron equations present.
