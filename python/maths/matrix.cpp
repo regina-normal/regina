@@ -81,7 +81,7 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
                 }
                 for (size_t j = 0; j < cols; ++j) {
                     try {
-                        m->entry(i, j) = row[j].cast<Element>();
+                        (*m)(i, j) = row[j].cast<Element>();
                     } catch (const pybind11::cast_error&) {
                         delete m;
                         throw regina::InvalidArgument("The given elements "
@@ -97,18 +97,34 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
         .def("swap", &Matrix::swap, rdoc::swap)
         .def("rows", &Matrix::rows, rdoc::rows)
         .def("columns", &Matrix::columns, rdoc::columns)
+        .def("__getitem__", [](Matrix& m, std::pair<size_t, size_t> pos)
+                -> Element& {
+            return m(pos.first, pos.second);
+        }, pybind11::return_value_policy::reference_internal,
+            rdoc::__call)
+        .def("__setitem__", [](Matrix& m, std::pair<size_t, size_t> pos,
+                const Element& e) {
+            m(pos.first, pos.second) = e;
+        }, rdoc::__call)
         .def("set", [](Matrix& m, size_t row, size_t col, const Element& e) {
-            m.entry(row, col) = e;
-        }, rdoc::set)
+            m(row, col) = e;
+        }, rdoc::set) // deprecated
         // Give the read-only entry() the same docstring as the read-write
         // set(), so users know they are allowed to call set().
-        .def("entry", overload_cast<size_t, size_t>(&Matrix::entry),
-            pybind11::return_value_policy::reference_internal, rdoc::entry)
+        .def("entry", overload_cast<size_t, size_t>(&Matrix::operator()),
+            pybind11::return_value_policy::reference_internal,
+            rdoc::entry) // deprecated
         .def("transpose", &Matrix::transpose, rdoc::transpose)
         .def("swapRows", &Matrix::swapRows,
             "first"_a, "second"_a, "fromCol"_a = 0, rdoc::swapRows)
         .def("swapCols", &Matrix::swapCols,
             "first"_a, "second"_a, "fromRow"_a = 0, rdoc::swapCols)
+        .def("copyRows", [](Matrix& m, const std::vector<size_t>& rows) {
+            return m.copyRows(rows.begin(), rows.end());
+        }, "rows"_a, rdoc::copyRows)
+        .def("copyCols", [](Matrix& m, const std::vector<size_t>& cols) {
+            return m.copyCols(cols.begin(), cols.end());
+        }, "cols"_a, rdoc::copyCols)
         .def("validate", &Matrix::validate, rdoc::validate)
     ;
     if constexpr (regina::Ring<Element>) {
@@ -117,6 +133,8 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
             .def("isZero", &Matrix::isZero, rdoc::isZero)
             .def_static("identity", &Matrix::identity, rdoc::identity)
             .def("makeIdentity", &Matrix::makeIdentity, rdoc::makeIdentity)
+            .def("rowVector", &Matrix::rowVector, rdoc::rowVector)
+            .def("columnVector", &Matrix::columnVector, rdoc::columnVector)
             .def("negate", &Matrix::negate, rdoc::negate)
             .def("negateRow", &Matrix::negateRow, rdoc::negateRow)
             .def("negateCol", &Matrix::negateCol, rdoc::negateCol)
@@ -152,6 +170,9 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
                 rdoc::trace)
             .def(pybind11::self += pybind11::self, rdoc::__iadd)
             .def(pybind11::self -= pybind11::self, rdoc::__isub)
+            .def(pybind11::self + pybind11::self, rdoc::__add)
+            .def(pybind11::self - pybind11::self, rdoc::__sub)
+            .def(- pybind11::self, rdoc::__sub_2)
             .def(pybind11::self * Element(), rdoc::__mul)
             .def(pybind11::self *= Element(), rdoc::__imul)
             .def(pybind11::self * pybind11::self, rdoc::__mul_2)
@@ -173,18 +194,24 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
             .def("gcdCol", &Matrix::gcdCol, rdoc::gcdCol)
             .def("reduceRow", &Matrix::reduceRow, rdoc::reduceRow)
             .def("reduceCol", &Matrix::reduceCol, rdoc::reduceCol)
-            .def("makeRowEchelon", &Matrix::makeRowEchelon,
-                rdoc::makeRowEchelon)
-            .def("makeColumnEchelon", &Matrix::makeColumnEchelon,
-                rdoc::makeColumnEchelon)
-            .def("rowEchelon",
+            .def("makeRowHermite", &Matrix::makeRowHermite,
+                rdoc::makeRowHermite)
+            .def("makeColumnHermite", &Matrix::makeColumnHermite,
+                rdoc::makeColumnHermite)
+            .def("rowHermite",
                 static_cast<std::pair<Matrix, size_t> (Matrix::*)() const&>(
-                    &Matrix::rowEchelon),
-                rdoc::rowEchelon)
-            .def("columnEchelon",
+                    &Matrix::rowHermite),
+                rdoc::rowHermite)
+            .def("columnHermite",
                 static_cast<std::pair<Matrix, size_t> (Matrix::*)() const&>(
-                    &Matrix::columnEchelon),
-                rdoc::columnEchelon)
+                    &Matrix::columnHermite),
+                rdoc::columnHermite)
+            .def("makeColumnHermiteCoB", &Matrix::makeColumnHermiteCoB,
+                rdoc::makeColumnHermiteCoB)
+            .def("columnHermiteCoB",
+                static_cast<std::tuple<Matrix, Matrix, Matrix, size_t>
+                    (Matrix::*)() const&>(&Matrix::columnHermiteCoB),
+                rdoc::columnHermiteCoB)
             .def("rank", static_cast<size_t (Matrix::*)() const&>(
                 &Matrix::rank), rdoc::rank)
             .def("makeRowBasis", &Matrix::makeRowBasis, rdoc::makeRowBasis)
@@ -196,12 +223,6 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
             .def("inverse",
                 static_cast<Matrix (Matrix::*)() const&>(&Matrix::inverse),
                 rdoc::inverse)
-            .def("__mul__", [](const Matrix& m, const regina::VectorInt& v){
-                return m * v;
-            }, rdoc::__mul_3)
-            .def("__mul__", [](const Matrix& m, const regina::VectorLarge& v){
-                return m * v;
-            }, rdoc::__mul_3)
             .def("makeSmith", &Matrix::makeSmith, rdoc::makeSmith)
             .def("makeSmithCoB", &Matrix::makeSmithCoB,
                 "alg"_a = regina::SNFAlgorithm::Default, rdoc::makeSmithCoB)
@@ -213,6 +234,24 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
                     (Matrix::*)(regina::SNFAlgorithm) const&>(
                     &Matrix::smithCoB),
                 "alg"_a = regina::SNFAlgorithm::Default, rdoc::smithCoB)
+            .def("preimageOfLattice", &Matrix::preimageOfLattice,
+                rdoc::preimageOfLattice)
+            .def("__mul__", [](const Matrix& m, const regina::VectorInt& v){
+                return m * v;
+            }, pybind11::is_operator(),
+                regina::python::doc::__mul_matrix_vector)
+            .def("__mul__", [](const Matrix& m, const regina::VectorLarge& v){
+                return m * v;
+            }, pybind11::is_operator(),
+                regina::python::doc::__mul_matrix_vector)
+            .def("__rmul__", [](const Matrix& m, regina::VectorInt& v){
+                return v * m;
+            }, pybind11::is_operator(),
+                regina::python::doc::__mul_vector_matrix)
+            .def("__rmul__", [](const Matrix& m, regina::VectorLarge& v){
+                return v * m;
+            }, pybind11::is_operator(),
+                regina::python::doc::__mul_vector_matrix)
         ;
     }
     regina::python::add_output_rich(c);
@@ -289,27 +328,10 @@ void addMatrix(pybind11::module_& m) {
         c = std::move(cob[2]);
         ci = std::move(cob[3]);
     }, rdoc::metricalSmithNormalForm);
-    m.def("preImageOfLattice", &regina::preImageOfLattice,
-        rdoc::preImageOfLattice);
-    m.def("torsionAutInverse", &regina::torsionAutInverse,
-        rdoc::torsionAutInverse);
-
-    #if defined(__GNUC__)
-    // The following functions are deprecated, but we still need to bind them
-    // since they have no direct replacements.  Silence the inevitable
-    // deprecation warnings that will occur.
-    #pragma GCC diagnostic push
-    #if defined(__clang__)
-    #pragma GCC diagnostic ignored "-Wdeprecated"
-    #else
-    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    #endif
-    #endif
-    m.def("columnEchelonForm", &regina::columnEchelonForm,
-        rdoc::columnEchelonForm); // deprecated
-    #if defined(__GNUC__)
-    #pragma GCC diagnostic pop
-    #endif
+    m.def("preImageOfLattice", [](const MatrixInt& hom, // deprecated
+            const std::vector<regina::Integer>& sublattice) {
+        return hom.preimageOfLattice(sublattice);
+    }, rdoc::preImageOfLattice);
 
     RDOC_SCOPE_END
 }

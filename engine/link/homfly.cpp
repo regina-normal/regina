@@ -29,7 +29,6 @@
  **************************************************************************/
 
 #include "link/link.h"
-#include "maths/laurent2.h"
 #include "utilities/bitmask.h"
 #include "utilities/bitmanip.h"
 #include "utilities/sequence.h"
@@ -59,7 +58,12 @@ namespace {
     /**
      * Used as a return value when the HOMFLY-PT calculation has been cancelled.
      */
-    const regina::Laurent2<regina::Integer> noResult;
+    const regina::Laurent<regina::Integer, 2> noResult;
+
+    /**
+     * The polynomial `(x - x^-1) / y`.
+     */
+    const Laurent<Integer, 2> delta({ {{1, -1}, 1}, {{-1, -1}, -1} });
 
     /**
      * Possible states of crossings.  Used by Kauffman's algorithm.
@@ -887,20 +891,20 @@ namespace {
     // Convenience functions for the treewidth HOMFLY-PT algorithm:
 
     inline void aggregate(
-            std::map<LightweightSequence<int>, Laurent2<Integer>>* solns,
-            LightweightSequence<int>&& key, Laurent2<Integer> value) {
+            std::map<LightweightSequence<int>, Laurent<Integer, 2>>* solns,
+            LightweightSequence<int>&& key, Laurent<Integer, 2> value) {
         auto existingSoln = solns->try_emplace(
             std::move(key), std::move(value));
         if (! existingSoln.second)
             existingSoln.first->second += std::move(value);
     }
 
-    inline Laurent2<Integer> switchValue(const Laurent2<Integer>& from,
+    inline Laurent<Integer, 2> switchValue(const Laurent<Integer, 2>& from,
             Crossing* c) {
         return from.shifted((c->sign() > 0 ? -2 : 2), 0);
     }
 
-    inline Laurent2<Integer> spliceValue(const Laurent2<Integer>& from,
+    inline Laurent<Integer, 2> spliceValue(const Laurent<Integer, 2>& from,
             Crossing* c) {
         auto ans = from.shifted((c->sign() > 0 ? -1 : 1), 1);
         if (c->sign() < 0)
@@ -909,9 +913,7 @@ namespace {
     }
 }
 
-Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
-    // Throughout this code, delta = (alpha - alpha^-1) / z.
-
+Laurent<Integer, 2> Link::homflyKauffman(ProgressTracker* tracker) const {
     // We know from the preconditions that there is at least one crossing.
     size_t n = crossings_.size();
 
@@ -982,14 +984,13 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
     // Since we are assured at least one crossing at this point,
     // we have 0 <= i <= #components + #crossings - 1.
     size_t maxComp = 0;
-    FixedArray<Laurent2<Integer>> coeff(n + components_.size());
+    FixedArray<Laurent<Integer, 2>> coeff(n + components_.size());
 
     // Iterate through a tree of states:
     FixedArray<CrossingState> state(n, CrossingState::Unseen);
     FixedArray<StrandRef> first(n + components_.size(), StrandRef());
     FixedArray<bool> seen(2 * n, false); // index = strand ID
 
-    Laurent2<Integer> term;
     s = start;
     ssize_t pos = 0;
     int branchDepth = 0; // This is only ever compared against PROGRESS_POS.
@@ -1041,11 +1042,12 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
                 //     delta^(#components-1).
                 // Note that delta^(#components-1) will be computed later;
                 // here we just store the rest of the term in coeff[comp-1].
-                term.initExp(writheAdj, splices);
                 if (splicesNeg % 2)
-                    term.negate();
-
-                coeff[comp - 1] += term;
+                    coeff[comp - 1] -= Laurent<Integer, 2>::monomial(
+                        writheAdj, splices);
+                else
+                    coeff[comp - 1] += Laurent<Integer, 2>::monomial(
+                        writheAdj, splices);
                 if (comp > maxComp)
                     maxComp = comp;
 
@@ -1219,10 +1221,9 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
 
     // Piece together the final polynomial.
 
-    Laurent2<Integer> ans;
+    Laurent<Integer, 2> ans;
 
-    Laurent2<Integer> delta { { 1, -1, 1 }, { -1, -1, -1 } };
-    Laurent2<Integer> deltaPow = RingTraits<Laurent2<Integer>>::one;
+    Laurent<Integer, 2> deltaPow(1);
     for (size_t i = 0; i < unknots; ++i)
         deltaPow *= delta;
     for (size_t i = 0; i < maxComp; ++i) {
@@ -1236,10 +1237,8 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
     return ans;
 }
 
-Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
+Laurent<Integer, 2> Link::homflyTreewidth(ProgressTracker* tracker) const {
     // We know from the precondition that there is at least one crossing.
-
-    Laurent2<Integer> delta { { 1, -1, 1 }, { -1, -1, -1 } };
 
     // Build a nice tree decomposition.
     if (tracker)
@@ -1299,7 +1298,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
     // our preconditions.
 
     using Key = LightweightSequence<int>;
-    using Value = Laurent2<Integer>;
+    using Value = Laurent<Integer, 2>;
     using SolnSet = std::map<Key, Value>;
 
     FixedArray<SolnSet*> partial(nBags, nullptr);
@@ -1326,7 +1325,8 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
             }
 
             partial[index] = new SolnSet;
-            partial[index]->emplace(Key(), RingTraits<Laurent2<Integer>>::one);
+            partial[index]->emplace(Key(),
+                RingTraits<Laurent<Integer, 2>>::one);
         } else if (bag->niceType() == NiceType::Introduce) {
             // Introduce bag.
             child = bag->children();
@@ -2941,7 +2941,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
     return ans;
 }
 
-const Laurent2<Integer>& Link::homflyAZ(Algorithm alg,
+const Laurent<Integer, 2>& Link::homflyAZ(Algorithm alg,
         ProgressTracker* tracker) const {
     if (homflyAZ_.has_value()) {
         if (tracker)
@@ -2951,7 +2951,7 @@ const Laurent2<Integer>& Link::homflyAZ(Algorithm alg,
 
     if (crossings_.empty()) {
         if (components_.empty()) {
-            homflyAZ_ = homflyLM_ = Laurent2<Integer>();
+            homflyAZ_ = homflyLM_ = Laurent<Integer, 2>();
             if (tracker)
                 tracker->setFinished();
             return *homflyAZ_;
@@ -2959,9 +2959,7 @@ const Laurent2<Integer>& Link::homflyAZ(Algorithm alg,
 
         // We have an unlink with no crossings.
         // The HOMFLY-PT polynomial is delta^(#components - 1).
-        Laurent2<Integer> delta { { 1, -1, 1 }, { -1, -1, -1 } };
-
-        Laurent2<Integer> ans = RingTraits<Laurent2<Integer>>::one;
+        Laurent<Integer, 2> ans(1);
         for (size_t i = 1; i < components_.size(); ++i)
             ans *= delta;
 
@@ -2980,7 +2978,7 @@ const Laurent2<Integer>& Link::homflyAZ(Algorithm alg,
         throw FailedPrecondition("Regina can only compute HOMFLY-PT "
             "polynomials for classical links, not virtual links");
 
-    Laurent2<Integer> ans;
+    Laurent<Integer, 2> ans;
     switch (alg) {
         case Algorithm::Naive:
         case Algorithm::Backtrack:
@@ -3004,7 +3002,7 @@ const Laurent2<Integer>& Link::homflyAZ(Algorithm alg,
     return *homflyAZ_;
 }
 
-const Laurent2<Integer>& Link::homflyLM(Algorithm alg,
+const Laurent<Integer, 2>& Link::homflyLM(Algorithm alg,
         ProgressTracker* tracker) const {
     if (homflyLM_.has_value()) {
         if (tracker)
@@ -3019,12 +3017,13 @@ const Laurent2<Integer>& Link::homflyLM(Algorithm alg,
     return *homflyLM_;
 }
 
-Laurent2<Integer> Link::homflyAZtoLM(Laurent2<Integer> h) {
+Laurent<Integer, 2> Link::homflyAZtoLM(Laurent<Integer, 2> h) {
     // Negate all coefficients for a^i z^j where i-j == 2 (mod 4).
     // Note that i-j should always be 0 or 2 (mod 4), never odd.
-    for (auto& term : h.coeff_)
-        if ((term.first.first - term.first.second) % 4 != 0)
-            term.second.negate();
+    h.transform([](Integer& coeff, long i, long j) {
+        if ((i - j) % 4 != 0)
+            coeff.negate();
+    });
     return h; // I believe this is a move, not a copy (C++ Core Issue 1148).
 }
 

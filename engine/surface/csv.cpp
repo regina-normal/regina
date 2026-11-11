@@ -113,8 +113,7 @@ namespace {
                     MatrixInt slopes = s.boundaryIntersections();
                     out << "\"spun:";
                     for (unsigned i = 0; i < slopes.rows(); ++i)
-                        out << " (" << slopes.entry(i, 1)
-                            << ", " << - slopes.entry(i, 0)
+                        out << " (" << slopes(i, 1) << ", " << - slopes(i, 0)
                             << ')';
                     out << '\"';
                 } catch (const ReginaException&) {
