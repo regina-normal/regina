@@ -953,7 +953,7 @@ inline void Arrow::negate() {
 
 inline void Arrow::invertA() {
     for (auto& term : terms_)
-        term.second.invertX();
+        term.second.invert<0>();
 }
 
 inline Laurent<Integer> Arrow::sumLaurent() const {

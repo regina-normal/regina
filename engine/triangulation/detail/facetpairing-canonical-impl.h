@@ -444,13 +444,13 @@ bool FacetPairing<dim>::isCanonicalInternal(
 
     auto* image = new FacetSpec<dim>[size_ * (dim + 1)];
         /**< The automorphism currently under construction. */
-    auto* preImage = new FacetSpec<dim>[size_ * (dim + 1)];
+    auto* preimage = new FacetSpec<dim>[size_ * (dim + 1)];
         /**< The inverse of this automorphism. */
 
     size_t i, j;
     for (i = 0; i < size_ * (dim + 1); ++i) {
         image[i].setBeforeStart();
-        preImage[i].setBeforeStart();
+        preimage[i].setBeforeStart();
     }
 
     // Note that we know size_ >= 1.
@@ -464,32 +464,32 @@ bool FacetPairing<dim>::isCanonicalInternal(
     bool stepDown;
     ssize_t simp;
     int facet;
-    for (preImage[0] = firstFace ; ! preImage[0].isPastEnd(size_, true);
-            ++preImage[0]) {
+    for (preimage[0] = firstFace ; ! preimage[0].isPastEnd(size_, true);
+            ++preimage[0]) {
         // Note that we know firstFace is not unmatched.
-        if (isUnmatched(preImage[0]))
+        if (isUnmatched(preimage[0]))
             continue;
 
         // If firstFace glues to the same simplex and this facet
         // doesn't, we can ignore this permutation.
-        firstDestPre = dest(preImage[0]);
-        if (firstFaceDest.simp == 0 && firstDestPre.simp != preImage[0].simp)
+        firstDestPre = dest(preimage[0]);
+        if (firstFaceDest.simp == 0 && firstDestPre.simp != preimage[0].simp)
             continue;
 
         // If firstFace doesn't glue to the same simplex but this
         // facet does, we're not in canonical form.
-        if (firstFaceDest.simp != 0 && firstDestPre.simp == preImage[0].simp) {
+        if (firstFaceDest.simp != 0 && firstDestPre.simp == preimage[0].simp) {
             if (list)
                 list->clear();
             delete[] image;
-            delete[] preImage;
+            delete[] preimage;
             return false;
         }
 
         // We can use this facet.  Set the corresponding reverse mapping
         // and off we go.
-        image[preImage[0].simp * (dim + 1) + preImage[0].facet] = firstFace;
-        preImage[firstFaceDest.simp * (dim + 1) + firstFaceDest.facet] =
+        image[preimage[0].simp * (dim + 1) + preimage[0].facet] = firstFace;
+        preimage[firstFaceDest.simp * (dim + 1) + firstFaceDest.facet] =
             firstDestPre;
         image[firstDestPre.simp * (dim + 1) + firstDestPre.facet] =
             firstFaceDest;
@@ -511,7 +511,7 @@ bool FacetPairing<dim>::isCanonicalInternal(
 
             stepDown = false;
             FacetSpec<dim>& pre =
-                preImage[trying.simp * (dim + 1) + trying.facet];
+                preimage[trying.simp * (dim + 1) + trying.facet];
 
             if (trying.isPastEnd(size_, true)) {
                 // We have a complete automorphism!
@@ -537,7 +537,7 @@ bool FacetPairing<dim>::isCanonicalInternal(
                         // Which simplex must we look in?
                         // Note that this simplex will already have been
                         // determined.
-                        pre.simp = preImage[trying.simp * (dim + 1)].simp;
+                        pre.simp = preimage[trying.simp * (dim + 1)].simp;
                         pre.facet = 0;
                     } else
                         ++pre.facet;
@@ -559,7 +559,7 @@ bool FacetPairing<dim>::isCanonicalInternal(
                             if (list)
                                 list->clear();
                             delete[] image;
-                            delete[] preImage;
+                            delete[] preimage;
                             return false;
                         }
                         break;
@@ -598,7 +598,7 @@ bool FacetPairing<dim>::isCanonicalInternal(
                                 // Find the first available facet.
                                 simp = image[fPre.simp * (dim + 1) + i].simp;
                                 for (facet = 0;
-                                        ! preImage[simp * (dim + 1) + facet].
+                                        ! preimage[simp * (dim + 1) + facet].
                                         isBeforeStart(); ++facet)
                                     ;
                                 image[fPre.simp * (dim + 1) +
@@ -611,7 +611,7 @@ bool FacetPairing<dim>::isCanonicalInternal(
                             // We need to map to a new simplex.
                             // Find the first available simplex.
                             for (simp = trying.simp + 1;
-                                    ! preImage[simp * (dim + 1)].
+                                    ! preimage[simp * (dim + 1)].
                                     isBeforeStart();
                                     ++simp)
                                 ;
@@ -622,7 +622,7 @@ bool FacetPairing<dim>::isCanonicalInternal(
 
                         // Set the corresponding preimage.
                         fImg = image[fPre.simp * (dim + 1) + fPre.facet];
-                        preImage[fImg.simp * (dim + 1) + fImg.facet] = fPre;
+                        preimage[fImg.simp * (dim + 1) + fImg.facet] = fPre;
                     }
                 }
 
@@ -630,7 +630,7 @@ bool FacetPairing<dim>::isCanonicalInternal(
                 // if need be.
                 do {
                     fImg = dest(trying);
-                    fPre = dest(preImage[trying.simp * (dim + 1) +
+                    fPre = dest(preimage[trying.simp * (dim + 1) +
                         trying.facet]);
                     if (! fPre.isBoundary(size_))
                         fPre = image[fPre.simp * (dim + 1) + fPre.facet];
@@ -649,14 +649,14 @@ bool FacetPairing<dim>::isCanonicalInternal(
                         if (list)
                             list->clear();
                         delete[] image;
-                        delete[] preImage;
+                        delete[] preimage;
                         return false;
                     }
 
                     // What we have so far is consistent with an automorphism.
                     ++trying;
                 } while (! (stepDown || trying.isPastEnd(size_, true) ||
-                        preImage[trying.simp * (dim + 1) + trying.facet].
+                        preimage[trying.simp * (dim + 1) + trying.facet].
                         isBeforeStart()));
             }
 
@@ -664,7 +664,7 @@ bool FacetPairing<dim>::isCanonicalInternal(
                 // We're shunting trying back down.
                 --trying;
                 while (true) {
-                    fPre = preImage[trying.simp * (dim + 1) + trying.facet];
+                    fPre = preimage[trying.simp * (dim + 1) + trying.facet];
                     if (! isUnmatched(fPre)) {
                         fPre = dest(fPre);
                         if (image[fPre.simp * (dim + 1) + fPre.facet] <
@@ -680,12 +680,12 @@ bool FacetPairing<dim>::isCanonicalInternal(
                 // Note that this resetting of facets that follows will
                 // also take place when trying makes it all the way back
                 // down to firstFace.
-                fPre = preImage[trying.simp * (dim + 1) + trying.facet];
+                fPre = preimage[trying.simp * (dim + 1) + trying.facet];
                 image[fPre.simp * (dim + 1) + fPre.facet].setBeforeStart();
                 if (! isUnmatched(fPre)) {
                     fPre = dest(fPre);
                     fImg = image[fPre.simp * (dim + 1) + fPre.facet];
-                    preImage[fImg.simp * (dim + 1) + fImg.facet].
+                    preimage[fImg.simp * (dim + 1) + fImg.facet].
                         setBeforeStart();
                     image[fPre.simp * (dim + 1) + fPre.facet].setBeforeStart();
                 }
@@ -696,7 +696,7 @@ bool FacetPairing<dim>::isCanonicalInternal(
     // The pairing is in canonical form and we have all our automorphisms.
     // Tidy up and return.
     delete[] image;
-    delete[] preImage;
+    delete[] preimage;
     return true;
 }
 

@@ -1008,27 +1008,27 @@ AbelianGroup SFSpace::homology() const {
 
         size_t which = 0;
         for (const auto& f : fibres_) {
-            pres.entry(fibreCount() + nRef, which) = 1;
+            pres(fibreCount() + nRef, which) = 1;
 
-            pres.entry(which, fibreCount()) = f.beta;
-            pres.entry(which, which) = f.alpha;
+            pres(which, fibreCount()) = f.beta;
+            pres(which, which) = f.alpha;
 
             ++which;
         }
 
         size_t ref;
         for (ref = 0; ref < nRef; ref++) {
-            pres.entry(fibreCount() + ref, fibreCount()) = -1;
-            pres.entry(fibreCount() + ref, fibreCount() + 1 + ref) = 2;
-            pres.entry(fibreCount() + nRef, fibreCount() + 1 + nRef + ref) = 1;
+            pres(fibreCount() + ref, fibreCount()) = -1;
+            pres(fibreCount() + ref, fibreCount() + 1 + ref) = 2;
+            pres(fibreCount() + nRef, fibreCount() + 1 + nRef + ref) = 1;
         }
 
-        pres.entry(fibreCount() + nRef, fibreCount()) = -b_;
+        pres(fibreCount() + nRef, fibreCount()) = -b_;
 
         if (reflectorsTwisted_)
-            pres.entry(fibreCount() + nRef + 1, fibreCount()) = 1;
+            pres(fibreCount() + nRef + 1, fibreCount()) = 1;
         else if (twisted)
-            pres.entry(fibreCount() + nRef + 1, fibreCount()) = 2;
+            pres(fibreCount() + nRef + 1, fibreCount()) = 2;
 
         AbelianGroup ans(std::move(pres));
         ans.addRank(2 * genus_);
@@ -1050,29 +1050,29 @@ AbelianGroup SFSpace::homology() const {
 
         size_t which = 0;
         for (const auto& f : fibres_) {
-            pres.entry(fibreCount() + nRef, which) = 1;
+            pres(fibreCount() + nRef, which) = 1;
 
-            pres.entry(which, fibreCount() + genus_) = f.beta;
-            pres.entry(which, which) = f.alpha;
+            pres(which, fibreCount() + genus_) = f.beta;
+            pres(which, which) = f.alpha;
 
             ++which;
         }
 
         size_t ref;
         for (ref = 0; ref < nRef; ref++) {
-            pres.entry(fibreCount() + ref, fibreCount() + genus_) = -1;
-            pres.entry(fibreCount() + ref, fibreCount() + genus_ + 1 + ref) = 2;
-            pres.entry(fibreCount() + nRef, fibreCount() + genus_ + 1 + nRef + ref) = 1;
+            pres(fibreCount() + ref, fibreCount() + genus_) = -1;
+            pres(fibreCount() + ref, fibreCount() + genus_ + 1 + ref) = 2;
+            pres(fibreCount() + nRef, fibreCount() + genus_ + 1 + nRef + ref) = 1;
         }
 
         for (which = 0; which < genus_; which++)
-            pres.entry(fibreCount() + nRef, fibreCount() + which) = 2;
-        pres.entry(fibreCount() + nRef, fibreCount() + genus_) = -b_;
+            pres(fibreCount() + nRef, fibreCount() + which) = 2;
+        pres(fibreCount() + nRef, fibreCount() + genus_) = -b_;
 
         if (reflectorsTwisted_)
-            pres.entry(fibreCount() + nRef + 1, fibreCount() + genus_) = 1;
+            pres(fibreCount() + nRef + 1, fibreCount() + genus_) = 1;
         else if (twisted)
-            pres.entry(fibreCount() + nRef + 1, fibreCount() + genus_) = 2;
+            pres(fibreCount() + nRef + 1, fibreCount() + genus_) = 2;
 
         return AbelianGroup(std::move(pres));
     }

@@ -40,6 +40,7 @@ void addInteger(pybind11::module_& m);
 void addKaratsuba(pybind11::module_& m);
 void addLaurent(pybind11::module_& m);
 void addLaurent2(pybind11::module_& m);
+void addLaurent3(pybind11::module_& m);
 void addVector(pybind11::module_& m);
 void addMatrix2(pybind11::module_& m);
 void addMatrix(pybind11::module_& m);
@@ -83,6 +84,7 @@ void addMathsClasses(pybind11::module_& m) {
     addCyclotomic(m);
     addLaurent(m);
     addLaurent2(m);
+    addLaurent3(m);
     addArrow(m);
     addKaratsuba(m);
 

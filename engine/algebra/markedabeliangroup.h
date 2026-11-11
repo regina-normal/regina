@@ -140,7 +140,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
         // matrix [MRi_ * N_], where the brackets indicate removal of the
         // first rankM_ rows.
 
-        /** Internal change of basis. presC_ * pres * presR_ is the SNF(pres). */
+        /** Internal change of basis. presC_ * pres * presR_ == SNF(pres). */
         MatrixInt presR_, presC_;
         /** Internal change of basis. This is the inverse of presC_. */
         MatrixInt presCi_;
@@ -752,13 +752,13 @@ void swap(MarkedAbelianGroup& lhs, MarkedAbelianGroup& rhs) noexcept;
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \todo \optlong preImageOf in CC and SNF coordinates.  This routine would
+ * \todo \optlong preimageOf in CC and SNF coordinates.  This routine would
  * return a generating list of elements in the preimage, thought of as an
  * affine subspace. Or maybe just one element together with the kernel
  * inclusion.  IMO smarter to be a list because that way there's a more
  * pleasant way to make it empty.  Or we could have a variety of routines
  * among these themes.  Store some minimal data for efficient computations of
- * preImage, eventually replacing the internals of inverseHom() with a more
+ * preimage, eventually replacing the internals of inverseHom() with a more
  * flexible set of tools. Also add an isInImage() in various coordinates.
  *
  * \todo \optlong writeTextShort() have completely different set of

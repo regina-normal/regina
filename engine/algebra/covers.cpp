@@ -766,7 +766,7 @@ namespace {
             }
 
             // Build a matrix that expresses the group relations as
-            // linear equations over Z_2.  If m.entry(r, g) is true then
+            // linear equations over Z_2.  If m(r, g) is true then
             // this means relation #r uses generator #g when written over Z_2.
             Matrix<bool> m(g.countRelations(), nGen);
             m.fill(false);
@@ -777,7 +777,7 @@ namespace {
             for (const auto& r : g.relations()) {
                 for (const auto& t : r.terms())
                     if (t.exponent % 2)
-                        m.entry(row, t.generator) = ! m.entry(row, t.generator);
+                        m(row, t.generator) = ! m(row, t.generator);
                 ++row;
             }
 
@@ -805,7 +805,7 @@ namespace {
 
                 // Identify the first non-zero entry in column #colsRemain.
                 for (row = 0; row < rowsRemain; ++row)
-                    if (m.entry(row, colsRemain))
+                    if (m(row, colsRemain))
                         break;
 
                 if (row == rowsRemain) {
@@ -828,10 +828,10 @@ namespace {
                 // Use row operations to zero out all other entries in
                 // this column.
                 for (row = 0; row < m.rows(); ++row)
-                    if (row != rowsRemain && m.entry(row, colsRemain))
+                    if (row != rowsRemain && m(row, colsRemain))
                         for (col = 0; col < m.columns(); ++col)
-                            if (m.entry(rowsRemain, col))
-                                m.entry(row, col) = ! m.entry(row, col);
+                            if (m(rowsRemain, col))
+                                m(row, col) = ! m(row, col);
 
                 // Row #rowsRemain now gives us a way to constraint the sign of
                 // generator #colsRemain in terms of lower-indexed generators.
@@ -856,7 +856,7 @@ namespace {
                     constraint[col]->reserve(nGen - 1);
 
                     for (size_t i = 0; i < col; ++i)
-                        if (m.entry(row, i))
+                        if (m(row, i))
                             constraint[col]->push_back(i);
                 }
         }
@@ -887,13 +887,13 @@ void GroupPresentation::minimaxGenerators() {
 
         size_t best = 0;
         for (size_t g = gensUsed; g < nGenerators_; ++g)
-            if (inc.entry(rowsUsed, relabelInv[g]))
+            if (inc(rowsUsed, relabelInv[g]))
                 ++best;
 
         for (size_t r = rowsUsed + 1; r < inc.rows(); ++r) {
             size_t curr = 0;
             for (size_t g = gensUsed; g < nGenerators_; ++g)
-                if (inc.entry(r, relabelInv[g]))
+                if (inc(r, relabelInv[g]))
                     ++curr;
             // TOOD: Make this test quicker by precomputing word lengths.
             if (curr < best ||
@@ -921,7 +921,7 @@ void GroupPresentation::minimaxGenerators() {
             // Make plans to relabel those new generators to use the
             // next available generator labels.
             for (size_t g = gensUsed; g < nGenerators_; ++g)
-                if (inc.entry(rowsUsed, relabelInv[g])) {
+                if (inc(rowsUsed, relabelInv[g])) {
                     // Whatever was being relabelled to g should now be
                     // relabelled to gensUsed.
                     if (g != gensUsed) {
