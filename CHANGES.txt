@@ -159,6 +159,8 @@ Version 8.0  [ TODO ]
               exception if the surface coordinates are too large.
         Class DivisionByZero:
             - New exception class.
+        Struct Empty:
+            - New empty type, to support conditional member variables.
         Class Face<dim, subdim>, FaceNumbering<dim, subdim>, :
             - Now has a unified implementation across all dimensions.  There
               are no more dimension-specific class specialisations or headers,
@@ -326,7 +328,20 @@ Version 8.0  [ TODO ]
               ArbitraryPrecisionInteger<T> and ReginaInteger<T>.
         Class LargeInteger:
             - See the changes listed under the sister class Integer above.
-        Class Laurent<T>:
+        Class Laurent<T, vars>:
+            - Now supports multivariate polynomials through a new second *vars*
+              template parameter (which defaults to 1).  In particular,
+              Laurent<T, 2> replaces the old class Laurent2<T>, which has now
+              been removed.  As a result, Laurent<T, vars> now has several new
+              routines that are specific only to multivariate polynomials:
+              + constructors that take sparse collections of exponents and
+                coefficients (either via std::initializer_list, or by iterator
+                pairs);
+              + a "product constructor" and static functions embed() and
+                diagonalise() for converting single-variable polynomials into
+                multivariate polynomials;
+              + a round bracket operator for element access in multivariate
+                polynomials.
             - For the iterator-based constructor and init() routine, the
               iterator type is now required to be random access.
             - Removed the exponent-based constructor Laurent(exp) and
@@ -336,13 +351,19 @@ Version 8.0  [ TODO ]
             - New constructors, assignment operators and comparison operators
               that create or compare against a constant polynomial, given by a
               coefficient of type T or a native C++ integer.
+            - New static routine monomial().
             - New routine addProduct(), which optimises x ±= y * z.
             - New const routine shifted().
-            - Now supports iteration over coefficients.
-            - New routines transform() and extract() for transforming and
-              extracting coefficients in bulk.
+            - Now supports iteration over non-zero coefficients via the new
+              routines first() and last() and the new helper type
+              LaurentCoefficient<T, vars>.
+            - New routine transform() for transforming coefficients in bulk.
             - New overloads for scalar multiplication and division that take
               native C++ integers.
+            - New routine polynomial() for converting Laurent<T, 1> to
+              Polynomial<T>.
+            - Deprecated invertX(), in favour of a new template function
+              invert<var>() which is better suited for multivariate polynomials.
             - Functions scaleUp() and scaleDown() now throw an InvalidArgument
               exception if the scaling factor is zero.  Note that this changes
               the exception type for scaleDown() (which will still throw a
@@ -352,28 +373,31 @@ Version 8.0  [ TODO ]
               policy and rvalue variants of many operations.  This comes with
               new functions allocation() and reserveRange() that query and
               manage the range of exponents for which memory is allocated.
+            - New routine validate(), for use in test suites.
         Class Laurent2<T>:
-            - New constructor that converts a single-variable Laurent polynomial
-              into a two-variable Laurent polynomial.
-            - New constructor that builds the product of a Laurent polynomial
-              in x with a Laurent polynomial in y.
-            - New constructors that convert a "nested" Laurent<Laurent<U>>
-              into type Laurent2<T>.
-            - Removed the exponent-based constructor Laurent2(xExp, yExp) and
-              initialiser init(xExp, yExp), which were deprecated in Regina 7.4.
-            - New constructors, assignment operators and comparison operators
-              that create or compare against a constant polynomial, given by a
-              coefficient of type T or a native C++ integer.
-            - New routine addProduct(), which optimises x ±= y * z.
-            - New routines shift() and shifted().
-            - Deprecated the shift constructor Laurent2(poly, xShift, yShift);
-              just use poly.shifted() instead.
-            - Now supports iteration over non-zero coefficients and their
-              corresponding exponent pairs.
-            - New overloads for scalar multiplication and division that take
-              native C++ integers.
-            - Many optimisations to this class, including rvalue variants of
-              many operations.
+            - Removed completely, in favour of the new "unified" class
+              Laurent<T, 2>.  This brings many new functions and optimisations;
+              please browse through the Laurent class API for details.
+            - Mostly, the new class Laurent<T, 2> should be a drop-in
+              replacement for the old class Laurent2<T>.  The exceptions are:
+              + Removed the constructor Laurent2(xExp, yExp) and initialiser
+                init(xExp, yExp), which were deprecated in Regina 7.4; you can
+                now use initExp(xExp, yExp) or monomial(xExp, yExp) instead.
+              + Removed the shift constructor Laurent2(poly, xShift, yShift);
+                now use poly.shifted(xShift, yShift) instead.
+              + Deprecated invertX() and invertY() in favour of a new template
+                function invert<var>().
+              + The std::initializer_list and iterator-based constructors have
+                changed slightly: each term is now a pair {{xExp, yExp}, value}
+                instead of a triple {xExp, yExp, value}, terms with zero
+                coefficients will be ignored, and exponent sequences cannot be
+                reused across multiple terms (this will be checked, with an
+                exception thrown if it is violated).
+              + For str() and utf8(), you must pass either both variable names
+                or none (there is no longer an option to pass just one).
+        Class LaurentCoefficient<T, vars>:
+            - New lightweight type to support iteration over the non-zero
+              coefficients of a Laurent polynomial.
         Class LightweightSequence<T>:
             - Removed the inner class SubsequenceCompareFirst<...>.
               This was a very specialised class designed specifically for
@@ -476,23 +500,34 @@ Version 8.0  [ TODO ]
             - This class now formally supports empty matrices (of size 0×k,
               k×0, or 0×0).  Because of this, the routine initialised()
               no longer makes sense and has been removed completely.
+            - You can now read, write and modify matrix entries in-place
+              using the more natural syntax `matrix(row, column)` in C++,
+              or `matrix[row, column]` in Python.
+            - New addition and subtraction operators +, -, += and -=.
+            - New unary negation operator -.
             - New scalar multiplication operators * and *=.
-            - New in-place addition and subtractions operators += and -=.
+            - New (vector * matrix) operator, to complement the existing
+              (matrix * vector) operator.
+            - New routines copyRows(), moveRows(), copyCols(), moveCols(),
+              rowVector(), and columnVector().
             - New routine negate().
             - New routines trace(), adjugate() and inverse().
             - New routines makeRowBasis(), rowBasis() and rowBasisAndOrthComp().
             - New routines smith(), smithCoB(), makeSmith() and makeSmithCoB(),
               which replace the deprecated global functions smithNormalForm()
               and metricalSmithNormalForm().
+            - New routine preimageOfLattice().
             - Renamed rowEchelonForm() and columnEchelonForm() to
-              makeRowEchelon() and makeColumnEchelon(), to better indicate
-              that these routines modify the matrix in-place.  The old names
-              have been removed completely.
-            - New routines rowEchelon() and columnEchelon().
+              makeRowHermite() and makeColumnHermite(), to better indicate that
+              these routines modify the matrix in-place and only use unimodular
+              operations.  The old names have been removed completely.
+            - New routines rowHermite(), columnHermite(), makeColumnHermiteCoB()
+              and columnHermiteCoB().
             - Routine det() now takes an optional algorithm argument.
             - Routine swapRows() now takes an optional from-column argument.
-            - Multiplying a matrix by a matrix or vector will now throw an
-              exception if the matrix/vector dimensions are incompatible.
+            - Matrix addition, subtraction and multiplication (by either a
+              matrix or a vector) will now throw an exception if the
+              matrix/vector dimensions are incompatible.
             - Changed the underlying data storage method.  This should make
               many operations faster; however, swapRows() is now linear time
               instead of constant time.
@@ -507,6 +542,7 @@ Version 8.0  [ TODO ]
             - The constructor that takes an Integer or LargeInteger is now
               deprecated.  Instead, you should initialise this using either
               safeValue() or unsafeValue() from Integer / LargeInteger.
+            - New routines lcm() and lcmWith().
             - The str() function and output stream operator now support
               128-bit integers on all platforms where native 128-bit integers
               are available.
@@ -565,6 +601,7 @@ Version 8.0  [ TODO ]
             - Now supports iteration over coefficients.
             - New overloads for scalar multiplication and division that take
               native C++ integers.
+            - Tweaked the string output routines.
         Enum PolynomialProductAlgorithm:
             - New enumeration for use with polynomial multiplication.
         Class Primes:
@@ -726,13 +763,16 @@ Version 8.0  [ TODO ]
               specialisation.
             - For the iterator-based constructor, the old recommendation that
               the iterator type be random access is now a hard requirement.
+            - The inner product operator (*) will now throw an exception if the
+              vector sizes are incompatible.
         Class Vector3D<Real>:
             - New assignment operator that takes a std::array<Real, 3>.
         Function columnEchelonForm():
-            - Deprecated with no direct replacement.  However, if you are using
-              this to compute inverses of integer matrices (which is the only
-              thing Regina used this function for), you can use the new routine
-              Matrix<Integer>::inverse() instead.
+            - Removed completely.  You can achieve the same functionality by
+              combining the new functions Matrix::makeColumnHermiteCoB() and
+              Matrix::copyRows().  If you were using this function to compute
+              inverses of integer matrices, you can use the new (and more
+              streamlined) routine Matrix::inverse() instead.
         Functions forall_constexpr():
             - New routine to support tests over a compile-time range of
               integers (like for_constexpr(), but with a boolean return value).
@@ -761,6 +801,12 @@ Version 8.0  [ TODO ]
         Function polynomialProduct():
             - New function for computing polynomial products using a specific
               algorithm.
+        Function preImageOfLattice():
+            - Added a precondition that the given sublattice actually lies
+              within the range of the given homomorphism.
+            - This routine has been moved into the class Matrix<Integer> under
+              the name preimageOfLattice (note the case change).  The old global
+              function is kept but deprecated.
         Function readDehydrationList(), readOrb(), readSigList():
             - These functions now throw exceptions on error, instead of
               returning null.
@@ -787,6 +833,10 @@ Version 8.0  [ TODO ]
             - The native C++ integer versions of these functions are now
               templated, and explicitly support 8-bit integers (i.e., chars)
               and 128-bit integers (if the platform supports them).
+        Function torsionAutInverse():
+            - Removed from Regina's public interface.  This function is specific
+              to the implementation of MarkedAbelianGroup, and so it is now
+              hidden away as an implementation detail.
         Function toString():
             - New function for converting native C++ integers to strings, with
               explicit support for 128-bit integers.
@@ -849,10 +899,10 @@ Version 8.0  [ TODO ]
               the new type aliases Int128 and UInt128.
         Concepts:
             - Many new concepts:
-              + AssignableTo, CanConstruct, CoefficientDomain, CommutativeRing,
-                Domain, Field, HasAddProduct, IntegralDomain, Negatable,
-                ReginaBitmask, ReginaQitmask, Ring, RingLike, SameModCVRef,
-                StrictWeakOrder, TerminatingCallback, VoidCallback
+              + AssignableTo, CanConstruct, CanValidate, CoefficientDomain,
+                CommutativeRing, Domain, Field, HasAddProduct, IntegralDomain,
+                Negatable, ReginaBitmask, ReginaQitmask, Ring, RingLike,
+                SameModCVRef, StrictWeakOrder, TerminatingCallback, VoidCallback
                 (defined in concepts/core.h)
               + InherentlyTightEncodable, Readable, RichStringifiable,
                 StandardStringifiable, Stringifiable, Writable (defined in

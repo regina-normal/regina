@@ -36,8 +36,6 @@
 #include <pybind11/functional.h>
 #include <pybind11/stl.h>
 #include "link/link.h"
-#include "maths/laurent.h"
-#include "maths/laurent2.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 #include "../helpers/bytesequence.h"

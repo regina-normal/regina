@@ -31,7 +31,6 @@
 // Regina core includes:
 #include "link/link.h"
 #include "maths/laurent.h"
-#include "maths/laurent2.h"
 
 // UI includes:
 #include "linkpoly.h"

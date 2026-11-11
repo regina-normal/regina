@@ -215,7 +215,7 @@ std::string Triangulation<3>::dehydrate() const {
     // (ii) the gluing permutation must be the identity permutation.
     //
     // The array image[] maps tetrahedron numbers from this
-    // triangulation to the canonical triangulation; preImage[] is the
+    // triangulation to the canonical triangulation; preimage[] is the
     // inverse map.  The array vertexMap[] describes the corresponding
     // rearrangement of tetrahedron vertices and faces; specifically,
     // vertex i of tetrahedron t of this triangulation maps to vertex
@@ -227,7 +227,7 @@ std::string Triangulation<3>::dehydrate() const {
     // See the Callahan, Hildebrand and Weeks paper for details.
     auto nTets = static_cast<unsigned>(simplices_.size());
     int* image = new int[nTets];
-    int* preImage = new int[nTets];
+    int* preimage = new int[nTets];
     auto* vertexMap = new Perm<4>[nTets];
 
     auto* newTet = new unsigned char[(nTets / 4) + 2];
@@ -241,16 +241,16 @@ std::string Triangulation<3>::dehydrate() const {
     unsigned nextUnused = 1;
 
     std::fill(image, image + nTets, -1);
-    std::fill(preImage, preImage + nTets, -1);
+    std::fill(preimage, preimage + nTets, -1);
 
-    image[0] = preImage[0] = 0;
+    image[0] = preimage[0] = 0;
     vertexMap[0] = Perm<4>();
     newTet[0] = 0;
 
     for (unsigned tetIndex = 0; tetIndex < nTets; tetIndex++) {
         // We must run through the tetrahedra in image order, not
         // preimage order.
-        int tet = preImage[tetIndex];
+        int tet = preimage[tetIndex];
 
         for (int faceIndex = 0; faceIndex < 4; faceIndex++) {
             // Likewise for faces.
@@ -258,7 +258,7 @@ std::string Triangulation<3>::dehydrate() const {
 
             // INVARIANTS (held while tet < nTets):
             // - nextUnused > tetIndex
-            // - image[tet], preImage[image[tet]] and vertexMap[tet] are
+            // - image[tet], preimage[image[tet]] and vertexMap[tet] are
             //   all filled in.
             // These invariants are preserved because the triangulation is
             // connected.  They break when tet == nTets.
@@ -276,7 +276,7 @@ std::string Triangulation<3>::dehydrate() const {
             if (image[dest] < 0) {
                 // Previously unseen.
                 image[dest] = nextUnused;
-                preImage[nextUnused] = dest;
+                preimage[nextUnused] = dest;
                 vertexMap[dest] = vertexMap[tet] *
                     simplices_[tet]->adjacentGluing(face).
                     inverse();
@@ -331,7 +331,7 @@ std::string Triangulation<3>::dehydrate() const {
     delete[] permChars;
     delete[] destChars;
     delete[] vertexMap;
-    delete[] preImage;
+    delete[] preimage;
     delete[] image;
 
     return ans;

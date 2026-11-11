@@ -51,6 +51,24 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 namespace regina {
 
 /**
+ * An empty type.
+ *
+ * This can (for example) be used with `std::conditional` in a class template
+ * if you want to define a member variable only for some template parameters.
+ * (In such a scenario, you would typically want to declare the data member
+ * `[[no_unique_address]]` so that the empty type consumes no space within
+ * the enclosing class.  See also `regina::EnableIf`, which provides similar
+ * "conditional data member" functionality but also supports a default value
+ * on construction.)
+ *
+ * \nopython
+ *
+ * \ingroup utilities
+ */
+struct Empty {
+};
+
+/**
  * A struct that holds either a single value of type \a T or nothing at all,
  * depending on whether the given compile-time condition holds.
  *

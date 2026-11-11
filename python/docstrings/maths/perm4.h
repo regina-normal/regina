@@ -178,11 +178,11 @@ Parameter ``b``:
 
 // Docstring regina::python::doc::Perm4::__init_2
 static constexpr const char __init_2[] =
-R"doc(Creates a permutation mapping (0,1,2,3) to (*a*,*b*,*c*,*d*)
+R"doc(Creates a permutation mapping ``(0,1,2,3)`` to ``(a,b,c,d)``
 respectively.
 
 Precondition:
-    {*a*,*b*,*c*,*d*} = {0,1,2,3}.
+    ``{a,b,c,d} = {0,1,2,3}``.
 
 Parameter ``a``:
     the desired image of 0.
@@ -209,11 +209,11 @@ Parameter ``image``:
 
 // Docstring regina::python::doc::Perm4::__init_4
 static constexpr const char __init_4[] =
-R"doc(Creates a permutation mapping (*a0*,*b0*,*c0*,*d0*) to
-(*a1*,*b1*,*c1*,*d1*) respectively.
+R"doc(Creates a permutation mapping ``(a0,b0,c0,d0)`` to ``(a1,b1,c1,d1)``
+respectively.
 
 Precondition:
-    {*a0*,*b0*,*c0*,*d0*} = {*a1*,*b1*,*c1*,*d1*} = {0,1,2,3}.
+    ``{a0,b0,c0,d0} = {a1,b1,c1,d1} = {0,1,2,3}``.
 
 Parameter ``a0``:
     the desired preimage of *a1*.

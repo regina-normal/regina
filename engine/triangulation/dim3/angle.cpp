@@ -166,9 +166,9 @@ bool Triangulation<3>::hasGeneralAngleStructureInternal() const {
     // the case where bdryNull is true, we also want the solution to have
     // vanishing peripheral rotational holonomy.
     //
-    // We can use row echelon form for this: if there is any solution where the
-    // final coordinate is non-zero, then the final column will not appear as a
-    // leading coefficient in row echelon form.
+    // We can use row Hermite normal form for this: if there is any solution
+    // where the final coordinate is non-zero, then the final column will not
+    // appear as a leading coefficient in row Hermite normal form.
     MatrixInt eqns;
     if constexpr (bdryNull) {
         const SnapPeaTriangulation& snapPea = this->isSnapPea() ?
@@ -190,7 +190,7 @@ bool Triangulation<3>::hasGeneralAngleStructureInternal() const {
     } else {
         eqns = regina::makeAngleEquations(*this);
     }
-    size_t rank = eqns.makeRowEchelon();
+    size_t rank = eqns.makeRowHermite();
 
     // Note: the rank is always positive, since the triangulation is
     // non-empty and so we always have tetrahedron equations present.
@@ -202,7 +202,7 @@ bool Triangulation<3>::hasGeneralAngleStructureInternal() const {
     size_t col = 0;
 
     while (row < rank) {
-        if (eqns.entry(row, col) != 0) {
+        if (eqns(row, col) != 0) {
             leading[row] = col;
             ++row;
         }
@@ -239,14 +239,14 @@ bool Triangulation<3>::hasGeneralAngleStructureInternal() const {
         // Enforce equation #row.
 
         col = leading[row];
-        Integer den = eqns.entry(row, col);
+        Integer den = eqns(row, col);
 
         Integer num; // set to 0
         for (++col; col < v.size(); ++col)
-            if (eqns.entry(row, col) != 0)
-                num.addProduct(eqns.entry(row, col), v[col]);
+            if (eqns(row, col) != 0)
+                num.addProduct(eqns(row, col), v[col]);
 
-        // Our row echelon form guarantees that den > 0.
+        // Our row Hermite normal form guarantees that den > 0.
         // We need to set v[leading[row]] = -num/den.
         if (den == 1) {
             v[leading[row]] = -num;

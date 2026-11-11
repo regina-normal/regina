@@ -39,15 +39,12 @@
  */
 
 #include "concepts/core.h"
+#include "maths/forward.h"
 #include "utilities/fixedarray.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
-
-template <CoefficientDomain> class Laurent;
-template <CoefficientDomain> class Laurent2;
-template <CoefficientDomain> class Polynomial;
 
 /**
  * Represents different algorithms for multiplying polynomials.
@@ -107,11 +104,9 @@ static constexpr size_t karatsubaThreshold = 16;
 
 #ifndef __DOXYGEN
 // For now, do not use Karatsuba multiplication when working with "nested"
-// polynomials (e.g., Laurent<Laurent<T>>).
-template <CoefficientDomain T>
-static constexpr size_t karatsubaThreshold<Laurent<T>> = 0;
-template <CoefficientDomain T>
-static constexpr size_t karatsubaThreshold<Laurent2<T>> = 0;
+// polynomials (e.g., polynomials whose "coefficients" are Laurent<T>).
+template <CoefficientDomain T, int vars>
+static constexpr size_t karatsubaThreshold<Laurent<T, vars>> = 0;
 template <CoefficientDomain T>
 static constexpr size_t karatsubaThreshold<Polynomial<T>> = 0;
 #endif

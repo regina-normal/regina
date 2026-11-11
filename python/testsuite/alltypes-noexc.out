@@ -323,6 +323,10 @@ Language : enum
 LargeInteger : class -> EqualityType.ByValue
 Laurent : class -> EqualityType.ByValue
 Laurent2 : class -> EqualityType.ByValue
+Laurent3 : class -> EqualityType.ByValue
+LaurentCoefficient : class -> EqualityType.ByValue
+LaurentCoefficient2 : class -> EqualityType.ByValue
+LaurentCoefficient3 : class -> EqualityType.ByValue
 LayeredChain : class -> EqualityType.ByValue
 LayeredChainPair : class -> EqualityType.ByValue
 LayeredLensSpace : class -> EqualityType.ByValue
@@ -701,7 +705,6 @@ basicTokenise : function
 binomMedium : function
 bitsRequired : function
 buildInfo : function
-columnEchelonForm : function
 digit : function
 discOrientationFollowsEdge : function
 faceOppositeEdge : function
@@ -750,7 +753,6 @@ testEngine : function
 tightDecoding : function
 tightEncoding : function
 timeExceptions : function
-torsionAutInverse : function
 utf8ValidTo : function
 versionMajor : function
 versionMinor : function

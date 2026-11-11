@@ -7,6 +7,7 @@ SET ( FILES
   disctype.cpp
   facenumbering.cpp
   flags.cpp
+  integer.cpp
   intutils.cpp
   iterators.cpp
   link.cpp
