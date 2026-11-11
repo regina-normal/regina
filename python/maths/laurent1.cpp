@@ -34,6 +34,7 @@
 #include <pybind11/stl.h>
 #include "maths/integer.h"
 #include "maths/laurent.h"
+#include "maths/polynomial.h"
 #include "../helpers.h"
 #include "../docstrings/maths/laurent.h"
 
@@ -45,63 +46,93 @@ using regina::Laurent;
 using regina::python::doc::common::neq_value;
 
 void addLaurent(pybind11::module_& m) {
-    RDOC_SCOPE_BEGIN(Laurent)
+    RDOC_SCOPE_BEGIN(LaurentCoefficient)
 
-    auto c = pybind11::class_<Laurent<Integer>>(m, "Laurent", rdoc::__class)
+    using LC = regina::LaurentCoefficient<Integer, 1>;
+    auto c = pybind11::class_<LC>(m, "LaurentCoefficient", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
-        .def(pybind11::init<const Laurent<Integer>&>(), rdoc::__copy)
+        .def(pybind11::init<const LC&>(), rdoc::__copy)
+        .def("__bool__", &LC::operator bool, rdoc::__as_bool)
+        .def("inc", [](LC& c) { return c++; }, rdoc::__inc)
+        .def("dec", [](LC& c) { return c--; }, rdoc::__dec)
+        .def("coeff", &LC::operator *,
+            pybind11::return_value_policy::copy, // to enforce constness
+            rdoc::__mul)
+        .def("exp", static_cast<long (LC::*)(int) const>(&LC::exp), rdoc::exp)
+        .def("exponents", &LC::exponents, rdoc::exponents)
+        .def("constantTerm", &LC::constantTerm, rdoc::constantTerm)
+        .def("__next__", [](LC& it) {
+            if (it) {
+                auto ans = std::pair<long, Integer>(it.exp<0>(), *it);
+                ++it;
+                return ans;
+            } else
+                throw pybind11::stop_iteration();
+        }, rdoc::__next__)
+    ;
+    regina::python::add_output_basic(c, rdoc::str);
+    regina::python::add_eq_operators(c, rdoc::__eq);
+
+    RDOC_SCOPE_SWITCH(Laurent)
+
+    // overload_cast has trouble with templated vs non-templated overloads
+    // and also overloads in the presence of perfect forwarding, and so there
+    // are several places below where we just static_cast directly.
+    using L = Laurent<Integer>;
+    auto c = pybind11::class_<L>(m, "Laurent", rdoc::__class)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<const L&>(), rdoc::__copy)
         .def(pybind11::init([](long minExp, const std::vector<Integer>& c) {
-            return new Laurent<Integer>(minExp, c.begin(), c.end());
+            return new L(minExp, c.begin(), c.end());
         }), "minExp"_a, "coefficients"_a, rdoc::__init)
-        .def(pybind11::init<const Integer&>(), rdoc::__init_2)
-        .def(pybind11::init<long>(), rdoc::__init_3)
-        // overload_cast has trouble with templated vs non-templated overloads.
-        // Just cast directly.
-        .def("init", static_cast<void (Laurent<Integer>::*)()>(
-            &Laurent<Integer>::init), rdoc::init)
-        .def("initExp", &Laurent<Integer>::initExp, rdoc::initExp)
-        .def("minExp", &Laurent<Integer>::minExp, rdoc::minExp)
-        .def("maxExp", &Laurent<Integer>::maxExp, rdoc::maxExp)
-        .def("isZero", &Laurent<Integer>::isZero, rdoc::isZero)
-        .def("allocation", &Laurent<Integer>::allocation, rdoc::allocation)
-        .def("reserveRange", &Laurent<Integer>::reserveRange,
-            rdoc::reserveRange)
-        .def("__getitem__", [](const Laurent<Integer>& p, long exp) {
+        .def(pybind11::init<const Integer&>(), rdoc::__init_3)
+        .def(pybind11::init<long>(), rdoc::__init_4)
+        .def("init", &L::init, rdoc::init)
+        .def("initExp", &L::initExp<>, rdoc::initExp)
+        .def_static("monomial", &L::monomial<>, rdoc::monomial)
+        .def("minExp", &L::minExp, rdoc::minExp)
+        .def("maxExp", &L::maxExp, rdoc::maxExp)
+        .def("isZero", &L::isZero, rdoc::isZero)
+        .def("allocation", &L::allocation, rdoc::allocation)
+        .def("reserveRange", &L::reserveRange, rdoc::reserveRange)
+        .def("__getitem__", [](const L& p, long exp) {
             return p[exp];
         }, pybind11::return_value_policy::copy, // to enforce constness
             rdoc::__array)
-        .def("__setitem__", [](Laurent<Integer>& p, long exp,
-                const Integer& value) {
+        .def("__setitem__", [](L& p, long exp, const Integer& value) {
             p.set(exp, value);
         }, rdoc::__array)
-        .def("__iter__", [](const Laurent<Integer>& p) {
-            return
-                pybind11::make_iterator<pybind11::return_value_policy::copy>(p);
-        }, pybind11::keep_alive<0, 1>(), // iterator keeps polynomial alive
+        .def("__iter__", &L::first,
+            pybind11::keep_alive<0, 1>(), // iterator keeps polynomial alive
             rdoc::__iter__)
-        .def("set", &Laurent<Integer>::set, rdoc::set)
-        .def("swap", &Laurent<Integer>::swap, rdoc::swap)
-        .def("shift", &Laurent<Integer>::shift, rdoc::shift)
-        .def("shifted",
-            static_cast<Laurent<Integer> (Laurent<Integer>::*)(long) const&>(
-                &Laurent<Integer>::shifted),
+        .def("first", &L::first,
+            pybind11::keep_alive<0, 1>(), // iterator keeps polynomial alive
+            rdoc::first)
+        .def("last", &L::last,
+            pybind11::keep_alive<0, 1>(), // iterator keeps polynomial alive
+            rdoc::last)
+        .def("set", &L::set<const Integer&>, rdoc::set)
+        .def("swap", &L::swap, rdoc::swap)
+        .def("shift", &L::shift<>, rdoc::shift)
+        .def("shifted", static_cast<L (L::*)(long) const&>(&L::shifted<long>),
             rdoc::shifted)
-        .def("scaleUp", &Laurent<Integer>::scaleUp, rdoc::scaleUp)
-        .def("scaleDown", &Laurent<Integer>::scaleDown, rdoc::scaleDown)
-        .def("negate", &Laurent<Integer>::negate, rdoc::negate)
-        .def("invertX", &Laurent<Integer>::invertX, rdoc::invertX)
+        .def("scaleUp", &L::scaleUp, rdoc::scaleUp)
+        .def("scaleDown", &L::scaleDown, rdoc::scaleDown)
+        .def("negate", &L::negate, rdoc::negate)
+        .def("invert", static_cast<void (L::*)(int)>(&L::invert), rdoc::invert)
+        .def("invertX", [](L& p) { // deprecated
+            p.invert<0>();
+        }, rdoc::invertX)
         .def("addProduct",
-            overload_cast<const Laurent<Integer>&, const Laurent<Integer>&>(
-                &Laurent<Integer>::addProduct),
+            overload_cast<const L&, const L&>(&L::addProduct),
             rdoc::addProduct)
         .def("addProduct",
-            overload_cast<const Laurent<Integer>&, const Integer&>(
-                &Laurent<Integer>::addProduct),
+            overload_cast<const L&, const Integer&>(&L::addProduct),
             rdoc::addProduct_2)
-        .def("str", overload_cast<const char*>(
-            &Laurent<Integer>::str, pybind11::const_), rdoc::str)
-        .def("utf8", overload_cast<const char*>(
-            &Laurent<Integer>::utf8, pybind11::const_), rdoc::utf8)
+        .def("polynomial", &L::polynomial, rdoc::polynomial)
+        .def("str", &L::str<const char*>, rdoc::str)
+        .def("utf8", &L::utf8<const char*>, rdoc::utf8)
+        .def("validate", &L::validate, rdoc::validate)
         .def(pybind11::self *= Integer(), rdoc::__imul)
         .def(pybind11::self *= long(), rdoc::__imul_2)
         .def(pybind11::self /= Integer(), rdoc::__idiv)
@@ -128,7 +159,7 @@ void addLaurent(pybind11::module_& m) {
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_cmp_operators(c, rdoc::__cmp);
-    regina::python::add_global_swap<Laurent<Integer>, rdoc>(m);
+    regina::python::add_global_swap<L, rdoc>(m);
 
     RDOC_SCOPE_END
 }

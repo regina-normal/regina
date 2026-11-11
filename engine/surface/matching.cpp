@@ -91,22 +91,22 @@ MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
                     Perm<4> perm1 = t->embedding(1).vertices();
                     for (int i=0; i<3; i++) {
                         // Triangles:
-                        ++ans.entry(row, pos0 + perm0[i]);
-                        --ans.entry(row, pos1 + perm1[i]);
+                        ++ans(row, pos0 + perm0[i]);
+                        --ans(row, pos1 + perm1[i]);
                         // Quads:
-                        ++ans.entry(row, pos0 + 4 +
+                        ++ans(row, pos0 + 4 +
                             quadSeparating[perm0[i]][perm0[3]]);
-                        --ans.entry(row, pos1 + 4 +
+                        --ans(row, pos1 + 4 +
                             quadSeparating[perm1[i]][perm1[3]]);
                         // Octagons:
                         if (coords == NormalCoords::AlmostNormal) {
-                            ++ans.entry(row, pos0 + 7 +
+                            ++ans(row, pos0 + 7 +
                                 quadMeeting[perm0[i]][perm0[3]][0]);
-                            --ans.entry(row, pos1 + 7 +
+                            --ans(row, pos1 + 7 +
                                 quadMeeting[perm1[i]][perm1[3]][0]);
-                            ++ans.entry(row, pos0 + 7 +
+                            ++ans(row, pos0 + 7 +
                                 quadMeeting[perm0[i]][perm0[3]][1]);
-                            --ans.entry(row, pos1 + 7 +
+                            --ans(row, pos1 + 7 +
                                 quadMeeting[perm1[i]][perm1[3]][1]);
                         }
                         ++row;
@@ -135,14 +135,14 @@ MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
                     for (const auto& emb : *e) {
                         size_t pos = block * emb.tetrahedron()->index();
                         Perm<4> perm = emb.vertices();
-                        ++ans.entry(row, pos +
+                        ++ans(row, pos +
                             quadSeparating[perm[0]][perm[2]]);
-                        --ans.entry(row, pos +
+                        --ans(row, pos +
                             quadSeparating[perm[0]][perm[3]]);
                         if (coords == NormalCoords::QuadOct) {
-                            --ans.entry(row, pos + 3 +
+                            --ans(row, pos + 3 +
                                 quadSeparating[perm[0]][perm[2]]);
-                            ++ans.entry(row, pos + 3 +
+                            ++ans(row, pos + 3 +
                                 quadSeparating[perm[0]][perm[3]]);
                         }
                     }
@@ -197,14 +197,14 @@ MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
                 for (auto& emb : *e) {
                     size_t pos = block * emb.tetrahedron()->index();
                     Perm<4> perm = emb.vertices();
-                    ++ans.entry(row, pos +
+                    ++ans(row, pos +
                         quadSeparating[perm[0]][perm[2]]);
-                    --ans.entry(row, pos +
+                    --ans(row, pos +
                         quadSeparating[perm[0]][perm[3]]);
                     if (coords == NormalCoords::QuadOctClosed) {
-                        --ans.entry(row, pos + 3 +
+                        --ans(row, pos + 3 +
                             quadSeparating[perm[0]][perm[2]]);
-                        ++ans.entry(row, pos + 3 +
+                        ++ans(row, pos + 3 +
                             quadSeparating[perm[0]][perm[3]]);
                     }
                 }
@@ -220,23 +220,20 @@ MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
                 // quad coordinates.
                 if (coords == NormalCoords::QuadClosed) {
                     for (size_t j = 0; j < 3 * triangulation.size(); ++j) {
-                        ans.entry(row, j) = coeffs.entry(2 * i, j);
-                        ans.entry(row + 1, j) = coeffs.entry(2 * i + 1, j);
+                        ans(row, j) = coeffs(2 * i, j);
+                        ans(row + 1, j) = coeffs(2 * i + 1, j);
                     }
                 } else {
                     for (size_t j = 0; j < triangulation.size(); ++j) {
                         for (int k = 0; k < 3; ++k){
                             // Quad contributions
-                            ans.entry(row, 6*j + k) =
-                                coeffs.entry(2 * i, 3*j + k);
-                            ans.entry(row + 1, 6*j + k) =
-                                coeffs.entry(2 * i + 1, 3*j + k);
+                            ans(row, 6*j + k) = coeffs(2 * i, 3*j + k);
+                            ans(row + 1, 6*j + k) = coeffs(2 * i + 1, 3*j + k);
                             // Oct contributions; signs are opposite of those
                             // for the quads as with the edge equations.
-                            ans.entry(row, 6*j + 3 + k) =
-                                -coeffs.entry(2 * i, 3*j + k);
-                            ans.entry(row + 1, 6*j + 3 + k) =
-                                -coeffs.entry(2 * i + 1, 3*j + k);
+                            ans(row, 6*j + 3 + k) = -coeffs(2 * i, 3*j + k);
+                            ans(row + 1, 6*j + 3 + k) =
+                                -coeffs(2 * i + 1, 3*j + k);
                         }
                     }
                 }

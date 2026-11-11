@@ -594,10 +594,16 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          *
          * \pre This and the given vector have the same size.
          *
+         * \exception InvalidArgument This and the given vector do not have
+         * the same size.
+         *
          * \param other the vector with which this will be multiplied.
          * \return the dot product of this and the given vector.
          */
         inline T operator * (const Vector& other) const {
+            if (size() != other.size())
+                throw InvalidArgument("Incompatible vector sizes");
+
             T ans(0);
 
             const T* e = elts_;

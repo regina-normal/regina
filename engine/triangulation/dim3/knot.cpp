@@ -136,9 +136,9 @@ std::array<long, 3> Triangulation<3>::longitudeCuts() const {
         for (int j = 0; j < 3; ++j) {
             size_t e = t->edge(j)->index();
             if (t->edgeMapping(j).sign() > 0)
-                ++n.entry(e, t->index());
+                ++n(e, t->index());
             else
-                --n.entry(e, t->index());
+                --n(e, t->index());
         }
     }
 

@@ -411,7 +411,7 @@ class FixedArray {
          * to the last element of the array then it will wrap around and point
          * to the first.
          *
-         * \pre The given iterator is dereferencable, and points to an element
+         * \pre The given iterator is dereferenceable, and points to an element
          * of this array.
          *
          * \param it the iterator to cycle forward.
@@ -428,7 +428,7 @@ class FixedArray {
          * to the last element of the array then it will wrap around and point
          * to the first.
          *
-         * \pre The given iterator is dereferencable, and points to an element
+         * \pre The given iterator is dereferenceable, and points to an element
          * of this array.
          *
          * \param it the iterator to cycle forward.
@@ -445,7 +445,7 @@ class FixedArray {
          * to the first element of the array then it will wrap around and point
          * to the last.
          *
-         * \pre The given iterator is dereferencable, and points to an element
+         * \pre The given iterator is dereferenceable, and points to an element
          * of this array.
          *
          * \param it the iterator to cycle backward.
@@ -463,7 +463,7 @@ class FixedArray {
          * to the first element of the array then it will wrap around and point
          * to the last.
          *
-         * \pre The given iterator is dereferencable, and points to an element
+         * \pre The given iterator is dereferenceable, and points to an element
          * of this array.
          *
          * \param it the iterator to cycle backward.

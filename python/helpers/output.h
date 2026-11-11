@@ -101,14 +101,16 @@ enum class ReprStyle {
 template <RichStringifiable T, typename... options>
 void add_output_rich(pybind11::class_<T, options...>& c,
         ReprStyle style = ReprStyle::Detailed) {
-    c.def("str", pybind11::overload_cast<>(&T::str, pybind11::const_),
+    // We use static_cast instead of overload_cast, since some classes have
+    // additional templated variants of str() and/or utf8().
+    c.def("str", static_cast<std::string (T::*)() const>(&T::str),
         doc::Output::str);
-    c.def("utf8", pybind11::overload_cast<>(&T::utf8, pybind11::const_),
+    c.def("utf8", static_cast<std::string (T::*)() const>(&T::utf8),
         doc::Output::utf8);
-    c.def("detail", pybind11::overload_cast<>(&T::detail, pybind11::const_),
+    c.def("detail", static_cast<std::string (T::*)() const>(&T::detail),
         doc::Output::detail);
 
-    c.def("__str__", pybind11::overload_cast<>(&T::str, pybind11::const_));
+    c.def("__str__", static_cast<std::string (T::*)() const>(&T::str));
 
     switch (style) {
         case ReprStyle::Detailed:
@@ -124,8 +126,7 @@ void add_output_rich(pybind11::class_<T, options...>& c,
             break;
 
         case ReprStyle::Slim:
-            c.def("__repr__",
-                pybind11::overload_cast<>(&T::str, pybind11::const_));
+            c.def("__repr__", static_cast<std::string (T::*)() const>(&T::str));
             break;
 
         case ReprStyle::None:
