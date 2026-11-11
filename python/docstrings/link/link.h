@@ -2770,7 +2770,7 @@ links. If this is a virtual link diagram, then this routine will throw
 an exception.
 
 To pretty-print this polynomial for human consumption, you can call
-``Laurent2::str(Link::homflyVarX, Link::homflyVarY)``.
+``Laurent::str(Link::homflyVarX, Link::homflyVarY)``.
 
 Bear in mind that each time a link changes, all of its polynomials
 will be deleted. Thus the reference that is returned from this routine
@@ -2831,13 +2831,13 @@ are related by a simple transformation: *alpha* = *l* *i* and *z* =
 
 This routine returns a Laurent polynomial in the two variables *alpha*
 and *z* (which are represented by *x* and *y* respectively in the
-class Laurent2).
+class ``Laurent<Integer, 2>``).
 
 If this is the empty link, then this routine will return the zero
 polynomial.
 
 To pretty-print this polynomial for human consumption, you can call
-``Laurent2::str(Link::homflyAZVarX, Link::homflyAZVarY)``.
+``Laurent::str(Link::homflyAZVarX, Link::homflyAZVarY)``.
 
 The default implementation uses Kauffman's skein-template algorithm;
 see L. H. Kauffman, "State models for link polynomials",
@@ -2911,12 +2911,12 @@ See homflyAZ() and homflyLM() for further details.
 Parameter ``homflyAZ``:
     the HOMFLY-PT polynomial of a link as a polynomial in *alpha* and
     *z*, where (*alpha*, *z*) are represented by (*x*, *y*) in the
-    class Laurent2<Integer>.
+    class ``Laurent<Integer, 2>``.
 
 Returns:
     the HOMFLY-PT polynomial of the same link as a polynomial in *l*
     and *m*, where (*l*, *m*) are represented by (*x*, *y*) in the
-    class Laurent2<Integer>.)doc";
+    class ``Laurent<Integer, 2>``.)doc";
 
 // Docstring regina::python::doc::Link::homflyLM
 static constexpr const char homflyLM[] =
@@ -2936,13 +2936,13 @@ are related by a simple transformation: *alpha* = *l* *i* and *z* =
 
 This routine returns a Laurent polynomial in the two variables *l* and
 *m* (which are represented by *x* and *y* respectively in the class
-Laurent2).
+``Laurent<Integer, 2>``).
 
 If this is the empty link, then this routine will return the zero
 polynomial.
 
 To pretty-print this polynomial for human consumption, you can call
-``Laurent2::str(Link::homflyLMVarX, Link::homflyLMVarY)``.
+``Laurent::str(Link::homflyLMVarX, Link::homflyLMVarY)``.
 
 The default implementation uses Kauffman's skein-template algorithm;
 see L. H. Kauffman, "State models for link polynomials",

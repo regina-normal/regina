@@ -4,7 +4,7 @@ SET ( FILES
   binom.cpp
   cyclotomic.cpp
   integer.cpp
-  laurent.cpp
+  laurent1.cpp
   laurent2.cpp
   matrix.cpp
   numbertheory.cpp

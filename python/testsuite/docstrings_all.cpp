@@ -109,7 +109,6 @@
 #include "../docstrings/maths/forward.h"
 #include "../docstrings/maths/integer.h"
 #include "../docstrings/maths/laurent.h"
-#include "../docstrings/maths/laurent2.h"
 #include "../docstrings/maths/matrix.h"
 #include "../docstrings/maths/matrix2.h"
 #include "../docstrings/maths/numbertheory.h"

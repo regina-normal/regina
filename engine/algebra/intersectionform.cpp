@@ -41,7 +41,7 @@ IntersectionForm::IntersectionForm(MatrixInt form) :
     size_t i;
 
     for (i = 0; i < n; ++i)
-        if (form.entry(i, i) % 2 != 0) {
+        if (form(i, i) % 2 != 0) {
             even_ = false;
             break;
         }
@@ -57,12 +57,12 @@ IntersectionForm::IntersectionForm(MatrixInt form) :
         // the diagonal and zero entries everywhere else.  These non-zero
         // diagonal entries have been added into both rank_ and signature_.
 
-        Integer d = form.entry(rank_, rank_);
+        Integer d = form(rank_, rank_);
         if (d != 0) {
             for (i = rank_ + 1; i < n; ++i) {
-                Integer e = form.entry(i, rank_);
+                Integer e = form(i, rank_);
                 if (e != 0) {
-                    if (form.entry(rank_, i) != e)
+                    if (form(rank_, i) != e)
                         throw InvalidArgument(
                             "IntersectionForm requires a symmetric matrix.");
                     Integer gcd = d.gcd(e);
@@ -88,7 +88,7 @@ IntersectionForm::IntersectionForm(MatrixInt form) :
         // The next diagonal entry is zero.
         // See if we can find a non-zero diagonal entry further down.
         for (i = rank_ + 1; i < n; ++i)
-            if (form.entry(i, i) != 0)
+            if (form(i, i) != 0)
                 break;
         if (i < n) {
             form.swapRows(rank_, i);
@@ -100,7 +100,7 @@ IntersectionForm::IntersectionForm(MatrixInt form) :
         // See if we can find a non-zero entry elsewhere to use.
         for (size_t r = rank_; r < n; ++r)
             for (i = r + 1; i < n; ++i)
-                if (form.entry(r, i) != 0) {
+                if (form(r, i) != 0) {
                     // Got one.
                     form.addRow(i, r);
                     form.addCol(i, r);
@@ -116,7 +116,7 @@ IntersectionForm::IntersectionForm(MatrixInt form) :
         // entries also to finish verifying that the matrix is symmetric.
         for (size_t r = rank_; r < n; ++r)
             for (i = r + 1; i < n; ++i)
-                if (form.entry(i, r) != 0)
+                if (form(i, r) != 0)
                     throw InvalidArgument(
                         "IntersectionForm requires a symmetric matrix.");
         break;

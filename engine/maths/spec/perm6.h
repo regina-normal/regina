@@ -319,11 +319,10 @@ class Perm<6> {
         constexpr Perm(int a, int b);
 
         /**
-         * Creates a permutation mapping (0,1,2,3,4,5) to
-         * (<i>a</i>,<i>b</i>,<i>c</i>,<i>d</i>,<i>e</i>,<i>f</i>) respectively.
+         * Creates a permutation mapping `(0,1,2,3,4,5)` to `(a,b,c,d,e,f)`
+         * respectively.
          *
-         * \pre {<i>a</i>,<i>b</i>,<i>c</i>,<i>d</i>,<i>e</i>,<i>f</i>} =
-         * {0,1,2,3,4,5}.
+         * \pre `{a,b,c,d,e,f} = {0,1,2,3,4,5}`.
          *
          * \param a the desired image of 0.
          * \param b the desired image of 1.
@@ -345,14 +344,10 @@ class Perm<6> {
         constexpr Perm(const std::array<int, 6>& image);
 
         /**
-         * Creates a permutation mapping
-         * (<i>a0</i>,<i>b0</i>,<i>c0</i>,<i>d0</i>,<i>e0</i>,<i>f0</i>) to
-         * (<i>a1</i>,<i>b1</i>,<i>c1</i>,<i>d1</i>,<i>e1</i>,<i>f1</i>)
-         * respectively.
+         * Creates a permutation mapping `(a0,b0,c0,d0,e0,f0)` to
+         * `(a1,b1,c1,d1,e1,f1)` respectively.
          *
-         * \pre {<i>a0</i>,<i>b0</i>,<i>c0</i>,<i>d0</i>,<i>e0</i>,<i>f0</i>} =
-         * {<i>a1</i>,<i>b1</i>,<i>c1</i>,<i>d1</i>,<i>e1</i>,<i>f1</i>} =
-         * {0,1,2,3,4,5}.
+         * \pre `{a0,b0,c0,d0,e0,f0} = {a1,b1,c1,d1,e1,f1} = {0,1,2,3,4,5}`.
          *
          * \param a0 the desired preimage of <i>a1</i>.
          * \param b0 the desired preimage of <i>b1</i>.

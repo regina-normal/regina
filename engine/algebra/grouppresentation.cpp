@@ -322,7 +322,7 @@ AbelianGroup GroupPresentation::abelianisation() const {
         size_t row = 0;
         for (const auto& r : relations_) {
             for (const auto& t : r.terms())
-                m.entry(row, t.generator) += t.exponent;
+                m(row, t.generator) += t.exponent;
             ++row;
         }
 
@@ -343,7 +343,7 @@ size_t GroupPresentation::abelianRank() const {
     size_t row = 0;
     for (const auto& r : relations_) {
         for (const auto& t : r.terms())
-            m.entry(row, t.generator) += t.exponent;
+            m(row, t.generator) += t.exponent;
         ++row;
     }
 
@@ -357,7 +357,7 @@ MarkedAbelianGroup GroupPresentation::markedAbelianisation() const {
     for (size_t j=0; j<countRelations(); j++) {
         GroupExpression Rj ( relation(j) );
         for (size_t i=0; i<Rj.countTerms(); i++)
-            N.entry( Rj.generator(i), j ) += Rj.exponent(i);
+            N( Rj.generator(i), j ) += Rj.exponent(i);
     }
     return MarkedAbelianGroup(
         MatrixInt(1, countGenerators()) /* zero matrix */,
@@ -1260,7 +1260,7 @@ std::optional<HomGroupPresentation> GroupPresentation::homologicalAlignment() {
         Vector<Integer> temp = abelianized.snfRep(
             Vector<Integer>::unit(countGenerators(), j));
         for (size_t i=0; i<abelianized.snfRank(); i++)
-            abMat.entry(i,j) = temp[i]; // cols are snfreps of abelianized gens.
+            abMat(i,j) = temp[i]; // cols are snfreps of abelianized gens.
     }
 
     size_t abNF = abelianized.countInvariantFactors();
@@ -1278,23 +1278,23 @@ std::optional<HomGroupPresentation> GroupPresentation::homologicalAlignment() {
             size_t j0 = 0, j1 = abMat.columns()-1;
             while (j0 < j1) {
                 // if at j0 its zero, inc, if at j1 zero, dec
-                if (abMat.entry(i,j0).isZero()) {
+                if (abMat(i,j0).isZero()) {
                     j0++;
                     continue;
                 }
-                if (abMat.entry(i,j1).isZero()) {
+                if (abMat(i,j1).isZero()) {
                     j1--;
                     continue;
                 }
                 // column op!
                 bool colFlag(
-                    abMat.entry(i,j0).abs() < abMat.entry(i,j1).abs() );
-                Integer q = abMat.entry(i,colFlag ? j1 : j0) /
-                            abMat.entry(i,colFlag ? j0 : j1);
+                    abMat(i,j0).abs() < abMat(i,j1).abs() );
+                Integer q = abMat(i,colFlag ? j1 : j0) /
+                            abMat(i,colFlag ? j0 : j1);
                 // subtract q times column j0 from column j1
                 for (size_t r=0; r<abMat.rows(); r++)
-                    abMat.entry(r,colFlag ? j1 : j0) -=
-                        abMat.entry(r,colFlag ? j0 : j1) * q;
+                    abMat(r,colFlag ? j1 : j0) -=
+                        abMat(r,colFlag ? j0 : j1) * q;
                 GroupPresentation oldPres(*this);
                 std::vector<GroupExpression> fVec( nGenerators_ );
                 std::vector<GroupExpression> bVec( nGenerators_ );
@@ -1327,7 +1327,7 @@ std::optional<HomGroupPresentation> GroupPresentation::homologicalAlignment() {
 
         for (size_t i=0; i<abNF; i++)
             for (size_t j=abNF; j<abNG; j++)
-                abMat.entry(i,j) = 0;
+                abMat(i,j) = 0;
         // now we're at [ * 0 * ]
         //              [ 0 D 0 ]
 
@@ -1338,27 +1338,24 @@ std::optional<HomGroupPresentation> GroupPresentation::homologicalAlignment() {
             size_t j0 = 0, j1 = abMat.columns()-1;
             while (j0 < j1) {
                 // if at j0 its zero, inc, if at j1 zero, dec
-                if ((abMat.entry(i,j0) %
-                        abelianized.invariantFactor(i)).isZero()) {
+                if ((abMat(i,j0) % abelianized.invariantFactor(i)).isZero()) {
                     j0++;
                     continue;
                 }
-                if ((abMat.entry(i,j1) %
-                        abelianized.invariantFactor(i)).isZero()) {
+                if ((abMat(i,j1) % abelianized.invariantFactor(i)).isZero()) {
                     j1--;
                     continue;
                 }
                 // column op!
                 bool colFlag(
-                    (abMat.entry(i,j0) % abelianized.invariantFactor(i)).abs() <
-                    (abMat.entry(i,j1) % abelianized.invariantFactor(i)).abs());
-                Integer q = abMat.entry(i,colFlag ? j1 : j0) /
-                            abMat.entry(i,colFlag ? j0 : j1);
+                    (abMat(i,j0) % abelianized.invariantFactor(i)).abs() <
+                    (abMat(i,j1) % abelianized.invariantFactor(i)).abs());
+                Integer q = abMat(i,colFlag ? j1 : j0) /
+                            abMat(i,colFlag ? j0 : j1);
 
                 // subtract q times column j0 from column j1
                 for (size_t r=0; r<abMat.rows(); r++)
-                    abMat.entry(r,colFlag ? j1 : j0) -=
-                        abMat.entry(r,colFlag ? j0 : j1)*q;
+                    abMat(r,colFlag ? j1 : j0) -= abMat(r,colFlag ? j0 : j1)*q;
                 GroupPresentation oldPres(*this);
                 std::vector<GroupExpression> fVec( nGenerators_ );
                 std::vector<GroupExpression> bVec( nGenerators_ );
@@ -2488,7 +2485,7 @@ Matrix<bool> GroupPresentation::incidence() const {
     size_t row = 0;
     for (const auto& r : relations_) {
         for (const auto& t : r.terms())
-            inc.entry(row, t.generator) = true;
+            inc(row, t.generator) = true;
         ++row;
     }
 

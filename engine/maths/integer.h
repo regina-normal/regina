@@ -2905,6 +2905,28 @@ class NativeInteger {
          * integer.
          */
         constexpr NativeInteger gcd(const NativeInteger& other) const;
+        /**
+         * Sets this integer to be the lowest common multiple of this
+         * and the given integer.
+         *
+         * Note that the result might possibly be negative.
+         *
+         * \param other the integer whose lowest common multiple with
+         * this will be found.
+         */
+        constexpr void lcmWith(const NativeInteger& other);
+        /**
+         * Determines the lowest common multiple of this and the given
+         * integer.  This integer is not changed.
+         *
+         * Note that the result might possibly be negative.
+         *
+         * \param other the integer whose lowest common multiple with
+         * this will be found.
+         * \return the lowest common multiple of this and the given
+         * integer.
+         */
+        constexpr NativeInteger lcm(const NativeInteger& other) const;
 
         /**
          * Returns whether this integer is infinity.
@@ -5521,6 +5543,25 @@ inline constexpr NativeInteger<bytes> NativeInteger<bytes>::gcd(
         const NativeInteger<bytes>& other) const {
     NativeInteger<bytes> ans(data_);
     ans.gcdWith(other);
+    return ans;
+}
+
+template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
+constexpr void NativeInteger<bytes>::lcmWith(const NativeInteger<bytes>& other)
+        {
+    if (other.data_ == 0)
+        data_ = 0;
+    else if (data_ != 0)
+        data_ = (data_ / gcd(other).data_) * other.data_;
+}
+
+template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
+inline constexpr NativeInteger<bytes> NativeInteger<bytes>::lcm(
+        const NativeInteger<bytes>& other) const {
+    NativeInteger<bytes> ans(data_);
+    ans.lcmWith(other);
     return ans;
 }
 

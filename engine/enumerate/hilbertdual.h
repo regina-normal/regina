@@ -454,8 +454,8 @@ inline void HilbertDual::VecSpec<IntegerType, BitmaskType>::initNextHyp(
 
     IntegerType tmp;
     for (size_t i = 0; i < subspace.columns(); ++i)
-        if (subspace.entry(row, i) != 0 && (*this)[i] != 0) {
-            tmp = subspace.entry(row, i);
+        if (subspace(row, i) != 0 && (*this)[i] != 0) {
+            tmp = subspace(row, i);
             tmp *= (*this)[i];
             nextHyp_ += tmp;
         }
