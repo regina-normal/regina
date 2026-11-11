@@ -30,6 +30,7 @@
 
 #include "maths/integer.h"
 #include "maths/laurent.h"
+#include "maths/polynomial.h"
 #include "utilities/stringutils.h"
 #include <array>
 #include <ranges>
@@ -1786,6 +1787,30 @@ TEST_F(Laurent1Test, multiply) {
         validate(x2 * c, c.shifted(2));
         validate(c * x5Inv, c.shifted(-5));
         validate(x5Inv * c, c.shifted(-5));
+    }
+}
+
+TEST_F(Laurent1Test, polynomial) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        auto p = c.polynomial();
+
+        if (c.isZero()) {
+            EXPECT_TRUE(p.first.isZero());
+            EXPECT_EQ(p.second, 0);
+        } else {
+            ASSERT_FALSE(p.first.isZero());
+            ASSERT_EQ(p.first.degree(), c.maxExp() - c.minExp());
+
+            EXPECT_NE(p.first[0], 0);
+            EXPECT_EQ(p.second, c.minExp());
+
+            size_t i = 0;
+            long j = c.minExp();
+            while (j <= c.maxExp()) {
+                EXPECT_EQ(p.first[i++], c[j++]);
+            }
+        }
     }
 }
 
