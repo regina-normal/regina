@@ -649,6 +649,13 @@ TEST_F(Laurent2Test, invert) {
     }
 }
 
+TEST_F(Laurent2Test, transform) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        verifyTransform(c);
+    }
+}
+
 namespace {
     // TODO: Putting verifyNativeProduct and verifyNativeQuotient inside an
     // anonymous namespace is slowing down the tests.  I'd love to know why.
@@ -848,141 +855,9 @@ TEST_F(Laurent2Test, addSubtract) {
         SCOPED_TRACE_REGINA(c);
         for (const L& d : cases) {
             SCOPED_TRACE_REGINA(d);
-
-            const L sum = c + d;
-            if (sum.isZero()) {
-                validateZero(sum);
-                validate(-c, d);
-            } else if (c.isZero()) {
-                validate(sum, d);
-            } else if (d.isZero()) {
-                validate(sum, c);
-            } else {
-                validate(sum);
-
-                // Verify the individual terms of the sum.
-                auto sit = sum.first();
-                auto cit = c.first();
-                auto dit = d.first();
-                while (sit || cit || dit) {
-                    if (cit && dit && cit.exponents() == dit.exponents()) {
-                        if (sit && sit.exponents() == cit.exponents()) {
-                            EXPECT_EQ(*sit++, *cit++ + *dit++);
-                        } else {
-                            EXPECT_EQ(*cit++, -*dit++);
-                        }
-                    } else if (sit && cit &&
-                            sit.exponents() == cit.exponents()) {
-                        EXPECT_EQ(*sit++, *cit++);
-                    } else if (sit && dit &&
-                            sit.exponents() == dit.exponents()) {
-                        EXPECT_EQ(*sit++, *dit++);
-                    } else {
-                        // We have a lone term that appears on one side but
-                        // not the other.
-                        ADD_FAILURE();
-                        break; // since we don't know which iterator to advance
-                    }
-                }
-            }
-            validate(c + L(d), sum);
-            validate(L(c) + d, sum);
-            validate(L(c) + L(d), sum);
-            {
-                L x(c);
-                validate(x += d, sum);
-            }
-            {
-                L x(c);
-                validate(x += L(d), sum);
-            }
-
-            const L diff = c - d;
-            if (diff.isZero()) {
-                validateZero(diff);
-                validate(c, d);
-            } else if (d.isZero()) {
-                validate(diff, c);
-            } else if (c.isZero()) {
-                validate(diff);
-                validate(diff, d, [](long x, long y, const Integer& c) {
-                    return std::make_tuple(x, y, -c);
-                });
-            } else {
-                validate(diff);
-
-                // Verify the individual terms of the difference.
-                auto sit = diff.first();
-                auto cit = c.first();
-                auto dit = d.first();
-                while (sit || cit || dit) {
-                    if (cit && dit && cit.exponents() == dit.exponents()) {
-                        if (sit && sit.exponents() == cit.exponents()) {
-                            EXPECT_EQ(*sit++, *cit++ - *dit++);
-                        } else {
-                            EXPECT_EQ(*cit++, *dit++);
-                        }
-                    } else if (sit && cit &&
-                            sit.exponents() == cit.exponents()) {
-                        EXPECT_EQ(*sit++, *cit++);
-                    } else if (sit && dit &&
-                            sit.exponents() == dit.exponents()) {
-                        EXPECT_EQ(*sit++, -*dit++);
-                    } else {
-                        // We have a lone term that appears on one side but
-                        // not the other.
-                        ADD_FAILURE();
-                        break; // since we don't know which iterator to advance
-                    }
-                }
-            }
-            validate(c - L(d), diff);
-            validate(L(c) - d, diff);
-            validate(L(c) - L(d), diff);
-            {
-                L x(c);
-                validate(x -= d, diff);
-            }
-            {
-                L x(c);
-                validate(x -= L(d), diff);
-            }
-
-            // Test expected arithmetic properties:
-            validate(d + c, sum);
-            validate(-(d - c), diff);
-            validate((c + d) - d, c);
-            validate((c + d) - c, d);
-            validate((c - d) + d, c);
-            validate(-((c - d) - c), d);
-            validate(-(c - d) + c, d);
-            validate(c + (-d), diff);
-            validate(c - (-d), sum);
+            verifyAddSubtract(c, d);
         }
-
-        // Test operations upon one's self:
-        const L dbl = c * 2;
-        validate(dbl, c, [](long x, long y, const Integer& v) {
-            return std::make_tuple(x, y, v * 2);
-        });
-        validate(c + c, dbl);
-        {
-            L x(c);
-            validate(x += x, dbl);
-        }
-        validateZero(c - c);
-        {
-            L x(c);
-            validateZero(x -= x);
-        }
-
-        // More expected arithmetic properties:
-        const L zero;
-        validate(c + zero, c);
-        validate(zero + c, c);
-        validate(c - zero, c);
-        validate(zero - c, -c);
-        validateZero(c + -c);
+        verifyAddSubtract(c);
     }
 }
 

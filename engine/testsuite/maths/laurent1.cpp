@@ -1237,43 +1237,7 @@ TEST_F(Laurent1Test, invert) {
 TEST_F(Laurent1Test, transform) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
-
-        {
-            // A transformation that preserves minExp/maxExp:
-            L x(c);
-            x.transform([&c](Integer& i, long) {
-                EXPECT_FALSE(c.isZero());
-                EXPECT_NE(i, 0);
-                i *= 2;
-            });
-            validate(x, c * 2);
-        }
-        {
-            // A transformation that could change minExp/maxExp or even make
-            // the entire polynomial zero:
-            L x(c);
-            x.transform([&c](Integer& i, long) {
-                EXPECT_FALSE(c.isZero());
-                EXPECT_NE(i, 0);
-                i /= 2;
-            });
-            validate(x, c / 2);
-        }
-        {
-            // A transformation that uses the exponent:
-            L x(c), y;
-            x.transform([&c, &y](Integer& i, long exp) {
-                EXPECT_FALSE(c.isZero());
-                EXPECT_GE(exp, c.minExp());
-                EXPECT_LE(exp, c.maxExp());
-                EXPECT_NE(i, 0);
-
-                y.set(exp, i);
-                i /= 2;
-            });
-            validate(x, c / 2);
-            validate(y, c);
-        }
+        verifyTransform(c);
     }
 }
 
@@ -1536,119 +1500,9 @@ TEST_F(Laurent1Test, addSubtract) {
         SCOPED_TRACE_REGINA(c);
         for (const L& d : cases) {
             SCOPED_TRACE_REGINA(d);
-
-            const L sum = c + d;
-            if (sum.isZero()) {
-                validateZero(sum);
-                validate(-c, d);
-            } else if (c.isZero()) {
-                validate(sum, d);
-            } else if (d.isZero()) {
-                validate(sum, c);
-            } else {
-                validate(sum);
-                if (c.minExp() == d.minExp())
-                    EXPECT_GE(sum.minExp(), c.minExp());
-                else
-                    EXPECT_EQ(sum.minExp(), std::min(c.minExp(), d.minExp()));
-                if (c.maxExp() == d.maxExp())
-                    EXPECT_LE(sum.maxExp(), c.maxExp());
-                else
-                    EXPECT_EQ(sum.maxExp(), std::max(c.maxExp(), d.maxExp()));
-                for (long i = std::min(c.minExp(), d.minExp());
-                        i <= std::max(c.maxExp(), d.maxExp()); ++i)
-                    EXPECT_EQ(sum[i], c[i] + d[i]);
-            }
-            validate(c + L(d), sum);
-            validate(L(c) + d, sum);
-            validate(L(c) + L(d), sum);
-            {
-                L x(c);
-                validate(x += d, sum);
-            }
-            {
-                L x(c);
-                validate(x += L(d), sum);
-            }
-
-            const L diff = c - d;
-            if (diff.isZero()) {
-                validateZero(diff);
-                validate(c, d);
-            } else if (d.isZero()) {
-                validate(diff, c);
-            } else if (c.isZero()) {
-                validate(diff);
-                EXPECT_EQ(diff.minExp(), d.minExp());
-                EXPECT_EQ(diff.maxExp(), d.maxExp());
-                for (long i = d.minExp(); i <= d.maxExp(); ++i)
-                    EXPECT_EQ(diff[i], - d[i]);
-            } else {
-                validate(diff);
-                if (c.minExp() == d.minExp())
-                    EXPECT_GE(diff.minExp(), c.minExp());
-                else
-                    EXPECT_EQ(diff.minExp(), std::min(c.minExp(), d.minExp()));
-                if (c.maxExp() == d.maxExp())
-                    EXPECT_LE(diff.maxExp(), c.maxExp());
-                else
-                    EXPECT_EQ(diff.maxExp(), std::max(c.maxExp(), d.maxExp()));
-                for (long i = std::min(c.minExp(), d.minExp());
-                        i <= std::max(c.maxExp(), d.maxExp()); ++i)
-                    EXPECT_EQ(diff[i], c[i] - d[i]);
-            }
-            validate(c - L(d), diff);
-            validate(L(c) - d, diff);
-            validate(L(c) - L(d), diff);
-            {
-                L x(c);
-                validate(x -= d, diff);
-            }
-            {
-                L x(c);
-                validate(x -= L(d), diff);
-            }
-
-            // Test expected arithmetic properties:
-            validate((c + d) - d, c);
-            validate((c + d) - c, d);
-            validate(c - d, -(d - c));
-            validate((c - d) + d, c);
-            validate(-((c - d) - c), d);
-            validate(-(c - d) + c, d);
-            validate(c + (-d), c - d);
-            validate(c - (-d), c + d);
+            verifyAddSubtract(c, d);
         }
-
-        // Test operations upon one's self:
-        const L dbl = c * 2;
-        if (c.isZero()) {
-            validateZero(dbl);
-        } else {
-            validate(dbl);
-            EXPECT_FALSE(dbl.isZero());
-            EXPECT_EQ(dbl.minExp(), c.minExp());
-            EXPECT_EQ(dbl.maxExp(), c.maxExp());
-            for (long i = c.minExp(); i <= c.maxExp(); ++i)
-                EXPECT_EQ(dbl[i], c[i] * 2);
-        }
-        validate(c + c, dbl);
-        {
-            L x(c);
-            validate(x += x, dbl);
-        }
-        validateZero(c - c);
-        {
-            L x(c);
-            validateZero(x -= x);
-        }
-
-        // More expected arithmetic properties:
-        validate(c + zero, c);
-        validate(zero + c, c);
-        validate(c - zero, c);
-        validate(zero - c, -c);
-        validateZero(c + -c);
+        verifyAddSubtract(c);
     }
 }
 

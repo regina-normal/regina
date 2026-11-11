@@ -308,6 +308,267 @@ class LaurentTest : public testing::Test {
             }
         }
 
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        static void verifyTransform(const regina::Laurent<T, vars>& c) {
+            {
+                // A transformation that preserves minExp/maxExp:
+                regina::Laurent<T, vars> x(c);
+                x.transform([&c](T& v, auto...) {
+                    EXPECT_FALSE(c.isZero());
+                    EXPECT_NE(v, 0);
+                    v *= 2;
+                });
+                validate(x, c * 2);
+            }
+            {
+                // A transformation that could change minExp/maxExp or even make
+                // the entire polynomial zero:
+                regina::Laurent<T, vars> x(c);
+                x.transform([&c](T& v, auto...) {
+                    EXPECT_FALSE(c.isZero());
+                    EXPECT_NE(v, 0);
+                    v /= 2;
+                });
+                validate(x, c / 2);
+            }
+            {
+                // A transformation that uses the exponents:
+                regina::Laurent<T, vars> x(c), y;
+                x.transform([&c, &y](T& v, long exp0, auto... exp) {
+                    EXPECT_FALSE(c.isZero());
+                    if constexpr (vars == 1) {
+                        EXPECT_GE(exp0, c.minExp());
+                        EXPECT_LE(exp0, c.maxExp());
+                    }
+                    EXPECT_NE(v, 0);
+
+                    if constexpr (sizeof...(exp) == vars - 1) {
+                        // This sizeof test should always be true.  However,
+                        // we need this code to compile even when it's false,
+                        // since the compiler will be trying our lambda against
+                        // several other function signatures to choose the right
+                        // overload of transform().
+                        y.set(exp0, exp..., v);
+                    }
+                    v /= 2;
+                });
+                validate(x, c / 2);
+                validate(y, c);
+            }
+        }
+
+        /**
+         * Tests addition/subtraction operations involving two polynomials.
+         */
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        static void verifyAddSubtract(const regina::Laurent<T, vars>& c,
+                const regina::Laurent<T, vars>& d) {
+            using L = regina::Laurent<T, vars>;
+
+            const L sum = c + d;
+            if (sum.isZero()) {
+                validateZero(sum);
+                validate(-c, d);
+            } else if (c.isZero()) {
+                validate(sum, d);
+            } else if (d.isZero()) {
+                validate(sum, c);
+            } else {
+                validate(sum);
+
+                // Verify the individual terms of the sum.
+                if constexpr (vars == 1) {
+                    if (c.minExp() == d.minExp())
+                        EXPECT_GE(sum.minExp(), c.minExp());
+                    else
+                        EXPECT_EQ(sum.minExp(),
+                            std::min(c.minExp(), d.minExp()));
+
+                    if (c.maxExp() == d.maxExp())
+                        EXPECT_LE(sum.maxExp(), c.maxExp());
+                    else
+                        EXPECT_EQ(sum.maxExp(),
+                            std::max(c.maxExp(), d.maxExp()));
+
+                    for (long i = std::min(c.minExp(), d.minExp());
+                            i <= std::max(c.maxExp(), d.maxExp()); ++i)
+                        EXPECT_EQ(sum[i], c[i] + d[i]);
+                } else {
+                    auto sit = sum.first();
+                    auto cit = c.first();
+                    auto dit = d.first();
+                    while (sit || cit || dit) {
+                        if (cit && dit && cit.exponents() == dit.exponents()) {
+                            if (sit && sit.exponents() == cit.exponents()) {
+                                EXPECT_EQ(*sit++, *cit++ + *dit++);
+                            } else {
+                                EXPECT_EQ(*cit++, -*dit++);
+                            }
+                        } else if (sit && cit &&
+                                sit.exponents() == cit.exponents()) {
+                            EXPECT_EQ(*sit++, *cit++);
+                        } else if (sit && dit &&
+                                sit.exponents() == dit.exponents()) {
+                            EXPECT_EQ(*sit++, *dit++);
+                        } else {
+                            // We have a lone term that appears on one side but
+                            // not the other.
+                            ADD_FAILURE();
+                            break; // we don't know which iterator to advance
+                        }
+                    }
+                }
+            }
+            validate(c + L(d), sum);
+            validate(L(c) + d, sum);
+            validate(L(c) + L(d), sum);
+            {
+                L x(c);
+                validate(x += d, sum);
+            }
+            {
+                L x(c);
+                validate(x += L(d), sum);
+            }
+
+            const L diff = c - d;
+            if (diff.isZero()) {
+                validateZero(diff);
+                validate(c, d);
+            } else if (d.isZero()) {
+                validate(diff, c);
+            } else if (c.isZero()) {
+                if constexpr (vars == 1) {
+                    validate(diff);
+                    EXPECT_FALSE(diff.isZero()); // since d ≠ 0
+                    EXPECT_EQ(diff.minExp(), d.minExp());
+                    EXPECT_EQ(diff.maxExp(), d.maxExp());
+                    for (long i = d.minExp(); i <= d.maxExp(); ++i)
+                        EXPECT_EQ(diff[i], - d[i]);
+                } else {
+                    validate(diff, d, [](long x, long y, const T& v) {
+                        return std::make_tuple(x, y, -v);
+                    });
+                }
+            } else {
+                validate(diff);
+
+                // Verify the individual terms of the difference.
+                if constexpr (vars == 1) {
+                    if (c.minExp() == d.minExp())
+                        EXPECT_GE(diff.minExp(), c.minExp());
+                    else
+                        EXPECT_EQ(diff.minExp(),
+                            std::min(c.minExp(), d.minExp()));
+
+                    if (c.maxExp() == d.maxExp())
+                        EXPECT_LE(diff.maxExp(), c.maxExp());
+                    else
+                        EXPECT_EQ(diff.maxExp(), std::max(c.maxExp(),
+                            d.maxExp()));
+
+                    for (long i = std::min(c.minExp(), d.minExp());
+                            i <= std::max(c.maxExp(), d.maxExp()); ++i)
+                        EXPECT_EQ(diff[i], c[i] - d[i]);
+                } else {
+                    // Verify the individual terms of the difference.
+                    auto sit = diff.first();
+                    auto cit = c.first();
+                    auto dit = d.first();
+                    while (sit || cit || dit) {
+                        if (cit && dit && cit.exponents() == dit.exponents()) {
+                            if (sit && sit.exponents() == cit.exponents()) {
+                                EXPECT_EQ(*sit++, *cit++ - *dit++);
+                            } else {
+                                EXPECT_EQ(*cit++, *dit++);
+                            }
+                        } else if (sit && cit &&
+                                sit.exponents() == cit.exponents()) {
+                            EXPECT_EQ(*sit++, *cit++);
+                        } else if (sit && dit &&
+                                sit.exponents() == dit.exponents()) {
+                            EXPECT_EQ(*sit++, -*dit++);
+                        } else {
+                            // We have a lone term that appears on one side but
+                            // not the other.
+                            ADD_FAILURE();
+                            break; // we don't know which iterator to advance
+                        }
+                    }
+                }
+            }
+            validate(c - L(d), diff);
+            validate(L(c) - d, diff);
+            validate(L(c) - L(d), diff);
+            {
+                L x(c);
+                validate(x -= d, diff);
+            }
+            {
+                L x(c);
+                validate(x -= L(d), diff);
+            }
+
+            // Test expected arithmetic properties:
+            validate((c + d) - d, c);
+            validate((c + d) - c, d);
+            validate((c - d) + d, c);
+            validate(-(c - d) + c, d);
+            validate(-((c - d) - c), d);
+            validate(c + (-d), diff);
+            validate(c - (-d), sum);
+            validate(d + c, sum);
+            validate(-(d - c), diff);
+        }
+
+        /**
+         * Tests addition/subtraction operations involving a single polynomial.
+         */
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        static void verifyAddSubtract(const regina::Laurent<T, vars>& c) {
+            using L = regina::Laurent<T, vars>;
+
+            // Test operations upon one's self:
+            const L dbl = c * 2;
+            if (c.isZero()) {
+                validateZero(dbl);
+            } else {
+                if constexpr (vars == 1) {
+                    validate(dbl);
+                    EXPECT_FALSE(dbl.isZero());
+                    EXPECT_EQ(dbl.minExp(), c.minExp());
+                    EXPECT_EQ(dbl.maxExp(), c.maxExp());
+                    for (long i = c.minExp(); i <= c.maxExp(); ++i)
+                        EXPECT_EQ(dbl[i], c[i] * 2);
+                } else {
+                    validate(dbl, c, [](long x, long y, const T& v) {
+                        return std::make_tuple(x, y, v * 2);
+                    });
+                }
+            }
+            validate(c + c, dbl);
+            {
+                L x(c);
+                validate(x += x, dbl);
+            }
+            validateZero(c - c);
+            {
+                L x(c);
+                validateZero(x -= x);
+            }
+
+            // Test expected arithmetic properties:
+            static const regina::Laurent<T, vars> zero;
+            validate(c + zero, c);
+            validate(zero + c, c);
+            validate(c - zero, c);
+            validate(zero - c, -c);
+            validateZero(c + -c);
+        }
+
         template <regina::Ring T>
         static void verifyRingConstants() {
             // Verify that the RingTraits constants looks correct.
