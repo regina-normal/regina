@@ -2997,12 +2997,12 @@ class ChildIterator {
         packet_type& operator * () const;
 
         /**
-         * Identifies whether this iterator is dereferencable.
+         * Identifies whether this iterator is dereferenceable.
          *
          * \nopython For Python users, ChildIterator implements the
          * Python iterator interface instead.  See __next__() for details.
          *
-         * \return \c true if and only if this is dereferencable (i.e.,
+         * \return \c true if and only if this is dereferenceable (i.e.,
          * not past-the-end).
          */
         operator bool() const;
@@ -3205,12 +3205,12 @@ class SubtreeIterator {
         packet_type& operator * () const;
 
         /**
-         * Identifies whether this iterator is dereferencable.
+         * Identifies whether this iterator is dereferenceable.
          *
          * \nopython For Python users, SubtreeIterator implements the
          * Python iterator interface instead.  See __next__() for details.
          *
-         * \return \c true if and only if this is dereferencable (i.e.,
+         * \return \c true if and only if this is dereferenceable (i.e.,
          * not past-the-end).
          */
         operator bool() const;

@@ -58,7 +58,6 @@ module ReginaEngine {
     header "maths/cyclotomic.h"
     header "maths/integer.h"
     header "maths/laurent.h"
-    header "maths/laurent2.h"
     header "maths/matrix.h"
     header "maths/matrix2.h"
     header "maths/numbertheory.h"

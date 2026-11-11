@@ -2373,17 +2373,17 @@ class TriangulationTest : public testing::Test {
                     // Test whether the column space for dualBoundariesAsPrimal
                     // lives within the column space for boundaryMap<k + 1>.
                     auto [b, rank] =
-                        tri.template boundaryMap<k + 1>().columnEchelon();
+                        tri.template boundaryMap<k + 1>().columnHermite();
 
                     regina::MatrixInt comb(b.rows(),
                         rank + dualBoundariesAsPrimal.columns());
                     for (size_t row = 0; row < b.rows(); ++row) {
                         for (size_t col = 0; col < rank; ++col)
-                            comb.entry(row, col) = b.entry(row, col);
+                            comb(row, col) = b(row, col);
                         for (size_t col = 0;
                                 col < dualBoundariesAsPrimal.columns(); ++col)
-                            comb.entry(row, rank + col) =
-                                dualBoundariesAsPrimal.entry(row, col);
+                            comb(row, rank + col) =
+                                dualBoundariesAsPrimal(row, col);
                     }
 
                     EXPECT_EQ(rank, std::move(comb).rank());
