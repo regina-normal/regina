@@ -308,6 +308,14 @@ class LaurentTest : public testing::Test {
             }
         }
 
+        template <regina::Ring T>
+        static void verifyRingConstants() {
+            // Verify that the RingTraits constants looks correct.
+            // Here T should be some class Laurent<T, vars>.
+            EXPECT_EQ(regina::RingTraits<T>::zero.str(), "0");
+            EXPECT_EQ(regina::RingTraits<T>::one.str(), "1");
+        }
+
         template <regina::CoefficientDomain T, int vars>
         requires (vars > 0 && vars <= 3)
         static void verifyStr(const regina::Laurent<T, vars>& poly,
@@ -321,6 +329,26 @@ class LaurentTest : public testing::Test {
                 const char8_t* expect) {
             EXPECT_EQ(poly.utf8(),
                 std::string(reinterpret_cast<const char*>(expect)));
+        }
+
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        static void verifySwap(const regina::Laurent<T, vars>& c,
+                const regina::Laurent<T, vars>& d) {
+            {
+                regina::Laurent<T, vars> x(c);
+                regina::Laurent<T, vars> y(d);
+                x.swap(y);
+                validate(x, d);
+                validate(y, c);
+            }
+            {
+                regina::Laurent<T, vars> x(c);
+                regina::Laurent<T, vars> y(d);
+                swap(x, y);
+                validate(x, d);
+                validate(y, c);
+            }
         }
 };
 

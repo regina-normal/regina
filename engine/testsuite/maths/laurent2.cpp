@@ -1117,9 +1117,7 @@ TEST_F(Laurent2Test, multiply) {
 }
 
 TEST_F(Laurent2Test, ringConstants) {
-    // Verify that the RingTraits constants looks correct.
-    EXPECT_EQ(regina::RingTraits<L>::zero.str(), "0");
-    EXPECT_EQ(regina::RingTraits<L>::one.str(), "1");
+    verifyRingConstants<L>();
 }
 
 TEST_F(Laurent2Test, str) {
@@ -1214,20 +1212,7 @@ TEST_F(Laurent2Test, swap) {
         SCOPED_TRACE_REGINA(c);
         for (const L& d : cases) {
             SCOPED_TRACE_REGINA(d);
-            {
-                L x(c);
-                L y(d);
-                x.swap(y);
-                validate(x, d);
-                validate(y, c);
-            }
-            {
-                L x(c);
-                L y(d);
-                swap(x, y);
-                validate(x, d);
-                validate(y, c);
-            }
+            verifySwap(c, d);
         }
     }
 }
