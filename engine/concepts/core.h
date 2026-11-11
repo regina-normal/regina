@@ -96,8 +96,26 @@ concept SameModCVRef =
     std::same_as<std::remove_cvref_t<T>, std::remove_cvref_t<U>>;
 
 /**
+ * A type that has an in-built diagnostic validation function.
+ * This function must have the signature `void validate() const`, following
+ * Regina's usual pattern.
+ *
+ * Such functions are provided by some classes for diagnostic purposes.
+ * They should do nothing if the internal representation of the object is
+ * valid, and should throw an exception if it is not.
+ *
+ * \nopython
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept CanValidate =
+    requires(const T t) { { t.validate() } -> std::same_as<void>; };
+
+/**
  * A mathematical type that has an inherent in-place negation function.
- * This function must follow Regina's usual signature of `void negate()`.
+ * This function must have the signature `void negate()`, following Regina's
+ * usual pattern.
  *
  * Such functions are typically provided when in-place negation is more
  * efficient than the usual `x = -x` (which makes a temporary deep copy).

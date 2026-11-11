@@ -184,7 +184,7 @@ struct PermSn {
                 /**< The permutation that this iterator points to, or the
                      identity permutation if this iterator is past-the-end. */
             bool valid_;
-                /**< \c true if this iterator is dereferencable, or \c false
+                /**< \c true if this iterator is dereferenceable, or \c false
                      if this iterator is past-the-end. */
 
         public:
@@ -229,7 +229,7 @@ struct PermSn {
              * Compares this with the given iterator for equality.
              *
              * To be considered equal, two iterators must both be
-             * dereferencable and pointing to the same permutation, or must
+             * dereferenceable and pointing to the same permutation, or must
              * both be past-the-end.
              *
              * \return \c true if and only if the two iterators are equal.

@@ -5,8 +5,9 @@ SET ( FILES
   3d.cpp
   arrow.cpp
   binom.cpp
-  laurent.cpp
+  laurent1.cpp
   laurent2.cpp
+  laurent3.cpp
   cyclotomic.cpp
   integer.cpp
   matrix2.cpp
