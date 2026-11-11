@@ -98,11 +98,11 @@ const Polynomial<Integer>& Link::alexander() const {
         for (int j = 0; j < 4; ++j) {
             size_t cell = cells.cell(n->arc(j));
             if (cell < ignore[0])
-                m.entry(i, cell) += alexanderCoeff[j];
+                m(i, cell) += alexanderCoeff[j];
             else if (cell > ignore[0] && cell < ignore[1])
-                m.entry(i, cell - 1) += alexanderCoeff[j];
+                m(i, cell - 1) += alexanderCoeff[j];
             else if (cell > ignore[1])
-                m.entry(i, cell - 2) += alexanderCoeff[j];
+                m(i, cell - 2) += alexanderCoeff[j];
         }
     }
 

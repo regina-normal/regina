@@ -41,6 +41,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <memory>
+#include <tuple>
 #include "regina-core.h"
 #include "concepts/core.h"
 #include "concepts/io.h"
@@ -173,8 +174,9 @@ enum class AdjugateAlgorithm {
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
- * even when passing or returning objects by value.  If a matrix is moved from,
- * it can later be reused by assigning it a new value.
+ * even when passing or returning objects by value.  If a matrix is moved from
+ * (via move construction or move assignment), it can later be reused by
+ * assigning it a new value.
  *
  * \headers Some routines in this template class are implemented in a separate
  * header (matrix-impl.h), which is not included automatically by this file.
@@ -189,7 +191,7 @@ enum class AdjugateAlgorithm {
  * \ingroup maths
  */
 template <typename T>
-requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
+requires std::semiregular<T> && Writeable<T>
 class Matrix : public Output<Matrix<T>> {
     public:
         /**
@@ -329,7 +331,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \param src the matrix to clone.
          */
-        template <AssignableTo<T> U>
+        template <AssignableTo<T&> U>
         explicit Matrix(const Matrix<U>& src) :
                 rows_(src.rows_), cols_(src.cols_) {
             if (size_t size = src.rows_ * src.cols_) {
@@ -472,13 +474,12 @@ class Matrix : public Output<Matrix<T>> {
          * Returns a read-write reference to the entry at the given
          * row and column.  Rows and columns are numbered beginning at zero.
          *
-         * \python In general, to assign values to matrix elements you
-         * should use the Python-only set() routine.  This entry() routine does
-         * give read-write access to matrix elements in Python, but it does
-         * not allow them to be set using the assignment operator.
-         * In other words, code such as `matrix.entry(r, c).negate()`
-         * will work, but `matrix.entry(r, c) = value` will not; instead
-         * you will need to call `matrix.set(r, c, value)`.
+         * \python In Python, this is the square bracket operator,
+         * not the round bracket operator; that is, Python users can access
+         * entries through the syntax `matrix[row, column]`.
+         * Moreover (unlike the old entry() routine from Regina 7.x),
+         * this operator can also _set_ entries; that is, you can write
+         * `matrix[row, column] = value`.
          *
          * \param row the row of the desired entry; this must be between
          * 0 and `rows()-1` inclusive.
@@ -486,36 +487,74 @@ class Matrix : public Output<Matrix<T>> {
          * between 0 and `columns()-1` inclusive.
          * \return a reference to the entry in the given row and column.
          */
-        T& entry(size_t row, size_t column) {
+        T& operator () (size_t row, size_t column) {
             return data_[row * cols_ + column];
         }
         /**
          * Returns a read-only reference to the entry at the given
          * row and column.  Rows and columns are numbered beginning at zero.
          *
+         * \nopython In Python, only the read-write version of this operator
+         * is available (not this read-only operator).  Note also that this
+         * operator uses square brackets in Python (not round brackets).
+         *
          * \param row the row of the desired entry; this must be between
          * 0 and `rows()-1` inclusive.
          * \param column the column of the desired entry; this must be
          * between 0 and `columns()-1` inclusive.
          * \return a reference to the entry in the given row and column.
          */
-        const T& entry(size_t row, size_t column) const {
+        const T& operator () (size_t row, size_t column) const {
+            return data_[row * cols_ + column];
+        }
+
+        /**
+         * Deprecated function that returns a read-write reference to the entry
+         * at the given row and column.
+         *
+         * \deprecated You can now use the syntax `matrix(row, column)` in C++
+         * or `matrix[row, column]` in Python.
+         *
+         * \python The square bracket operator is more robust, and supports
+         * reading, writing and in-place modification.  This deprecated entry()
+         * function is more limited: it can be used to read values or modify
+         * them in-place (e.g., `matrix.entry(r, c).negate()`), but it cannot
+         * be used to assign values to entries (e.g., `matrix.entry(r, c) = 1`).
+         *
+         * \param row the row of the desired entry; this must be between
+         * 0 and `rows()-1` inclusive.
+         * \param column the column of the desired entry; this must be
+         * between 0 and `columns()-1` inclusive.
+         * \return a reference to the entry in the given row and column.
+         */
+        [[deprecated]] T& entry(size_t row, size_t column) {
+            return data_[row * cols_ + column];
+        }
+        /**
+         * Deprecated function that returns a read-only reference to the entry
+         * at the given row and column.
+         *
+         * \deprecated You can now use the syntax `matrix(row, column)`
+         * instead of this deprecated syntax `matrix.entry(row, column)`.
+         *
+         * \param row the row of the desired entry; this must be between
+         * 0 and `rows()-1` inclusive.
+         * \param column the column of the desired entry; this must be
+         * between 0 and `columns()-1` inclusive.
+         * \return a reference to the entry in the given row and column.
+         */
+        [[deprecated]] const T& entry(size_t row, size_t column) const {
             return data_[row * cols_ + column];
         }
 #ifdef __APIDOCS
         /**
-         * Python-only routine that sets the entry at the given row and column.
-         * Rows and columns are numbered beginning at zero.
+         * Deprecated Python-only routine that sets the entry at the given row
+         * and column.
          *
-         * \nocpp For C++ users, entry() is used for both reading and
-         * writing: just write `entry(row, column) = value`.
+         * \deprecated Python users can now assign values to matrix entries
+         * using the more intuitive syntax `matrix[row, column] = value`.
          *
-         * \python In general, to assign values to matrix elements you
-         * should use the syntax `matrix.set(row, column, value)`.  The entry()
-         * routine does give read-write access to matrix elements in Python,
-         * but it does not allow them to be set using the assignment operator.
-         * In other words, code such as `matrix.entry(r, c).negate()`
-         * will work, but `matrix.entry(r, c) = value` will not.
+         * \nocpp C++ users should use the syntax `matrix(row, column) = value`.
          *
          * \param row the row of the entry to set; this must be between
          * 0 and `rows()-1` inclusive.
@@ -523,7 +562,7 @@ class Matrix : public Output<Matrix<T>> {
          * between 0 and `columns()-1` inclusive.
          * \param value the new entry to place in the given row and column.
          */
-        void set(size_t row, size_t column, const T& value);
+        [[deprecated]] void set(size_t row, size_t column, const T& value);
 #endif
 
         /**
@@ -575,6 +614,9 @@ class Matrix : public Output<Matrix<T>> {
          * operation will only be performed for the elements from that
          * column to the rightmost end of each row (inclusive).
          *
+         * It is safe to have `first == second` (in which case this routine
+         * will do nothing).
+         *
          * \pre The two given rows are between 0 and `rows()-1` inclusive.
          * \pre If passed, \a fromCol is between 0 and columns() inclusive.
          *
@@ -599,6 +641,9 @@ class Matrix : public Output<Matrix<T>> {
          * operation will only be performed for the elements from that
          * row down to the bottom of each column (inclusive).
          *
+         * It is safe to have `first == second` (in which case this routine
+         * will do nothing).
+         *
          * \pre The two given columns are between 0 and `columns()-1` inclusive.
          * \pre If passed, \a fromRow is between 0 and rows() inclusive.
          *
@@ -618,6 +663,197 @@ class Matrix : public Output<Matrix<T>> {
                 for (size_t i = fromRow; i < rows_; ++i, pos += cols_)
                     swap(*pos, *(pos + gap));
             }
+        }
+
+        /**
+         * Copies the given collection of rows from this matrix.
+         * This original matrix will not be changed.
+         *
+         * The rows are given as a sequence of integer row indices (passed as
+         * an iterator pair).  You may request the same row multiple times
+         * (i.e., the sequence of indices may contain duplicate entries).
+         *
+         * \pre All row indices in the given sequence are integers in the range
+         * `0,...,rows()-1` inclusive.
+         *
+         * \python Instead of an iterator pair, this routine takes a Python
+         * list of integers.
+         *
+         * \param beginRows the beginning of the sequence of row indices.
+         * \param endRows a past-the-end iterator indicating the end of the
+         * sequence of row indices.
+         * \return a matrix containing only the requested rows, in the order
+         * in which they appear in the given sequence.  This matrix will have
+         * dimensions `S × columns()`, where \a S is the length of the given
+         * sequence.
+         */
+        template <RandomAccessIteratorFor<size_t> Iterator>
+        Matrix copyRows(Iterator beginRows, Iterator endRows) const {
+            Matrix ans(endRows - beginRows, cols_);
+            T* pos = ans.data_;
+            for (auto it = beginRows; it != endRows; ++it, pos += cols_) {
+                auto row = data_ + (*it) * cols_;
+                std::copy(row, row + cols_, pos);
+            }
+            return ans;
+        }
+
+        /**
+         * Moves the given collection of rows out of this matrix.
+         *
+         * The rows are given as a sequence of integer row indices (passed as
+         * an iterator pair).  Unlike copyRows(), each row may be requested
+         * at most once (i.e., the sequence of indices must not contain
+         * duplicate entries).
+         *
+         * Typically an object cannot be used after you call an rvalue member
+         * function.  There is an exception here: it is safe to make several
+         * successive calls to moveRows() as long as the sequences of row
+         * indices are disjoint (i.e., each individual row is extracted at
+         * most once).
+         *
+         * \pre All row indices in the given sequence are _distinct_ integers
+         * in the range `0,...,rows()-1` inclusive.
+         *
+         * \param beginRows the beginning of the sequence of row indices.
+         * \param endRows a past-the-end iterator indicating the end of the
+         * sequence of row indices.
+         * \return a matrix containing only the requested rows, in the order
+         * in which they appear in the given sequence.  This matrix will have
+         * dimensions `S × columns()`, where \a S is the length of the given
+         * sequence.
+         */
+        template <RandomAccessIteratorFor<size_t> Iterator>
+        Matrix moveRows(Iterator beginRows, Iterator endRows) && {
+            Matrix ans(endRows - beginRows, cols_);
+            T* pos = ans.data_;
+            for (auto it = beginRows; it != endRows; ++it, pos += cols_) {
+                auto row = data_ + (*it) * cols_;
+                std::move(row, row + cols_, pos);
+            }
+            return ans;
+        }
+
+        /**
+         * Copies the given collection of columns from this matrix.
+         * This original matrix will not be changed.
+         *
+         * The columns are given as a sequence of integer column indices (passed
+         * as an iterator pair).  You may request the same column multiple times
+         * (i.e., the sequence of indices may contain duplicate entries).
+         *
+         * \pre All column indices in the given sequence are integers in the
+         * range `0,...,columns()-1` inclusive.
+         *
+         * \python Instead of an iterator pair, this routine takes a Python
+         * list of integers.
+         *
+         * \param beginCols the beginning of the sequence of column indices.
+         * \param endCols a past-the-end iterator indicating the end of the
+         * sequence of column indices.
+         * \return a matrix containing only the requested columns, in the order
+         * in which they appear in the given sequence.  This matrix will have
+         * dimensions `rows() × S`, where \a S is the length of the given
+         * sequence.
+         */
+        template <RandomAccessIteratorFor<size_t> Iterator>
+        Matrix copyCols(Iterator beginCols, Iterator endCols) const {
+            Matrix ans(rows_, endCols - beginCols);
+            size_t col = 0;
+            for (auto it = beginCols; it != endCols; ++it, ++col) {
+                const T* src = data_ + *it;
+                T* dest = ans.data_ + col;
+                for (size_t i = 0; i < rows_; ++i) {
+                    *dest = *src;
+                    src += cols_;
+                    dest += ans.cols_;
+                }
+            }
+            return ans;
+        }
+
+        /**
+         * Moves the given collection of columns out of this matrix.
+         *
+         * The columns are given as a sequence of integer column indices (passed
+         * as an iterator pair).  Unlike copyCols(), each column may be
+         * requested at most once (i.e., the sequence of indices must not
+         * contain duplicate entries).
+         *
+         * Typically an object cannot be used after you call an rvalue member
+         * function.  There is an exception here: it is safe to make several
+         * successive calls to moveCols() as long as the sequences of column
+         * indices are disjoint (i.e., each individual column is extracted at
+         * most once).
+         *
+         * \pre All column indices in the given sequence are _distinct_ integers
+         * in the range `0,...,columns()-1` inclusive.
+         *
+         * \param beginCols the beginning of the sequence of column indices.
+         * \param endCols a past-the-end iterator indicating the end of the
+         * sequence of column indices.
+         * \return a matrix containing only the requested columns, in the order
+         * in which they appear in the given sequence.  This matrix will have
+         * dimensions `rows() × S`, where \a S is the length of the given
+         * sequence.
+         */
+        template <RandomAccessIteratorFor<size_t> Iterator>
+        Matrix moveCols(Iterator beginCols, Iterator endCols) && {
+            Matrix ans(rows_, endCols - beginCols);
+            size_t col = 0;
+            for (auto it = beginCols; it != endCols; ++it, ++col) {
+                T* src = data_ + *it;
+                T* dest = ans.data_ + col;
+                for (size_t i = 0; i < rows_; ++i) {
+                    *dest = std::move(*src);
+                    src += cols_;
+                    dest += ans.cols_;
+                }
+            }
+            return ans;
+        }
+
+        /**
+         * Returns the given row of this matrix as a row vector.
+         * The row will be copied, and this matrix will not be changed.
+         *
+         * The return type is marked `auto`, since this type is only defined
+         * for some element types \a T; it is guaranteed that this return type
+         * will be `Vector<T>`.
+         *
+         * \param row the index of the row to return; this must be an integer
+         * between 0 and `rows()-1` inclusive.
+         * \return the requested row as a row vector.
+         */
+        auto rowVector(size_t row) const
+                requires Ring<T> && IntegerCompatible<T> {
+            const T* begin = data_ + row * cols_;
+            return Vector<T>(begin, begin + cols_);
+        }
+
+        /**
+         * Returns the given column of this matrix as a column vector.
+         * The column will be copied, and this matrix will not be changed.
+         *
+         * The return type is marked `auto`, since this type is only defined
+         * for some element types \a T; it is guaranteed that this return type
+         * will be `Vector<T>`.
+         *
+         * \param column the index of the column to return; this must be an
+         * integer between 0 and `columns()-1` inclusive.
+         * \return the requested column as a column vector.
+         */
+        auto columnVector(size_t column) const
+                requires Ring<T> && IntegerCompatible<T> {
+            // With C++23, this will become simpler via
+            // std::ranges::views::stride.
+            Vector<T> ans(rows_);
+            const T* pos = data_ + column;
+            for (auto& elt : ans) {
+                elt = *pos;
+                pos += cols_;
+            }
+            return ans;
         }
 
         /**
@@ -1036,10 +1272,16 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \pre The given matrix has the same dimensions as this matrix.
          *
+         * \exception InvalidArgument This and the given matrix do not have
+         * the same dimensions.
+         *
          * \param rhs the matrix to add to this.
          * \return a reference to this matrix.
          */
         Matrix& operator += (const Matrix& rhs) requires Ring<T> {
+            if (rows_ != rhs.rows_ || cols_ != rhs.cols_)
+                throw InvalidArgument("Incompatible matrix dimensions");
+
             size_t size = rows_ * cols_;
             const T* src = rhs.data_;
             T* dest = data_;
@@ -1049,20 +1291,227 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
+         * Adds the given matrix to this matrix in-place.
+         *
+         * \pre The given matrix has the same dimensions as this matrix.
+         *
+         * \exception InvalidArgument This and the given matrix do not have
+         * the same dimensions.
+         *
+         * \param rhs the matrix to add to this.
+         * \return a reference to this matrix.
+         */
+        Matrix& operator += (Matrix&& rhs) requires Ring<T> {
+            if (rows_ != rhs.rows_ || cols_ != rhs.cols_)
+                throw InvalidArgument("Incompatible matrix dimensions");
+
+            size_t size = rows_ * cols_;
+            const T* src = rhs.data_;
+            T* dest = data_;
+            for (size_t i = 0; i < size; ++i, ++src, ++dest)
+                *dest += std::move(*src);
+            return *this;
+        }
+
+        /**
          * Subtracts the given matrix from this matrix in-place.
          *
          * \pre The given matrix has the same dimensions as this matrix.
+         *
+         * \exception InvalidArgument This and the given matrix do not have
+         * the same dimensions.
          *
          * \param rhs the matrix to subtract from this.
          * \return a reference to this matrix.
          */
         Matrix& operator -= (const Matrix& rhs) requires Ring<T> {
+            if (rows_ != rhs.rows_ || cols_ != rhs.cols_)
+                throw InvalidArgument("Incompatible matrix dimensions");
+
             size_t size = rows_ * cols_;
             const T* src = rhs.data_;
             T* dest = data_;
             for (size_t i = 0; i < size; ++i)
                 *dest++ -= *src++;
             return *this;
+        }
+
+        /**
+         * Subtracts the given matrix from this matrix in-place.
+         *
+         * \pre The given matrix has the same dimensions as this matrix.
+         *
+         * \exception InvalidArgument This and the given matrix do not have
+         * the same dimensions.
+         *
+         * \param rhs the matrix to subtract from this.
+         * \return a reference to this matrix.
+         */
+        Matrix& operator -= (Matrix&& rhs) requires Ring<T> {
+            if (rows_ != rhs.rows_ || cols_ != rhs.cols_)
+                throw InvalidArgument("Incompatible matrix dimensions");
+
+            size_t size = rows_ * cols_;
+            const T* src = rhs.data_;
+            T* dest = data_;
+            for (size_t i = 0; i < size; ++i, ++src, ++dest)
+                *dest -= std::move(*src);
+            return *this;
+        }
+
+        /**
+         * Adds the given matrix to this matrix and returns the result.
+         *
+         * \pre The given matrix has the same dimensions as this matrix.
+         *
+         * \exception InvalidArgument This and the given matrix do not have
+         * the same dimensions.
+         *
+         * \param rhs the matrix to add to this.
+         * \return the sum of this and the given matrix.
+         */
+        Matrix operator + (const Matrix& rhs) const& requires Ring<T> {
+            if (rows_ != rhs.rows_ || cols_ != rhs.cols_)
+                throw InvalidArgument("Incompatible matrix dimensions");
+
+            Matrix ans(rows_, cols_);
+            if (size_t size = rows_ * cols_) {
+                const T* srcL = data_;
+                const T* srcR = rhs.data_;
+                T* dest = ans.data_;
+                while (srcL != data_ + size)
+                    *dest++ = *srcL++ + *srcR++;
+            }
+            return ans;
+        }
+
+        /**
+         * Adds the given matrix to this matrix and returns the result.
+         *
+         * \pre The given matrix has the same dimensions as this matrix.
+         *
+         * \exception InvalidArgument This and the given matrix do not have
+         * the same dimensions.
+         *
+         * \param rhs the matrix to add to this.
+         * \return the sum of this and the given matrix.
+         */
+        Matrix operator + (Matrix&& rhs) const& requires Ring<T> {
+            rhs += *this;
+            return std::move(rhs);
+        }
+
+        /**
+         * Adds the given matrix to this matrix and returns the result.
+         *
+         * \pre The given matrix has the same dimensions as this matrix.
+         *
+         * \exception InvalidArgument This and the given matrix do not have
+         * the same dimensions.
+         *
+         * \param rhs the matrix to add to this.
+         * \return the sum of this and the given matrix.
+         */
+        Matrix operator + (const Matrix& rhs) && requires Ring<T> {
+            *this += rhs;
+            return std::move(*this);
+        }
+
+        /**
+         * Adds the given matrix to this matrix and returns the result.
+         *
+         * \pre The given matrix has the same dimensions as this matrix.
+         *
+         * \exception InvalidArgument This and the given matrix do not have
+         * the same dimensions.
+         *
+         * \param rhs the matrix to add to this.
+         * \return the sum of this and the given matrix.
+         */
+        Matrix operator + (Matrix&& rhs) && requires Ring<T> {
+            *this += std::move(rhs);
+            return std::move(*this);
+        }
+
+        /**
+         * Subtracts the given matrix from this matrix and returns the result.
+         *
+         * \pre The given matrix has the same dimensions as this matrix.
+         *
+         * \exception InvalidArgument This and the given matrix do not have
+         * the same dimensions.
+         *
+         * \param rhs the matrix to subtract from this.
+         * \return a difference between this and the given matrix.
+         */
+        Matrix operator - (const Matrix& rhs) const& requires Ring<T> {
+            if (rows_ != rhs.rows_ || cols_ != rhs.cols_)
+                throw InvalidArgument("Incompatible matrix dimensions");
+
+            Matrix ans(rows_, cols_);
+            if (size_t size = rows_ * cols_) {
+                const T* srcL = data_;
+                const T* srcR = rhs.data_;
+                T* dest = ans.data_;
+                while (srcL != data_ + size)
+                    *dest++ = *srcL++ - *srcR++;
+            }
+            return ans;
+        }
+
+        /**
+         * Subtracts the given matrix from this matrix and returns the result.
+         *
+         * \pre The given matrix has the same dimensions as this matrix.
+         *
+         * \exception InvalidArgument This and the given matrix do not have
+         * the same dimensions.
+         *
+         * \param rhs the matrix to subtract from this.
+         * \return a difference between this and the given matrix.
+         */
+        Matrix operator - (Matrix&& rhs) const& requires Ring<T> {
+            if (rows_ != rhs.rows_ || cols_ != rhs.cols_)
+                throw InvalidArgument("Incompatible matrix dimensions");
+
+            size_t size = rows_ * cols_;
+            const T* src = data_;
+            T* dest = rhs.data_;
+            for (size_t i = 0; i < size; ++i, ++src, ++dest)
+                *dest = *src - *dest;
+            return std::move(rhs);
+        }
+
+        /**
+         * Subtracts the given matrix from this matrix and returns the result.
+         *
+         * \pre The given matrix has the same dimensions as this matrix.
+         *
+         * \exception InvalidArgument This and the given matrix do not have
+         * the same dimensions.
+         *
+         * \param rhs the matrix to subtract from this.
+         * \return a difference between this and the given matrix.
+         */
+        Matrix operator - (const Matrix& rhs) && requires Ring<T> {
+            *this -= rhs;
+            return std::move(*this);
+        }
+
+        /**
+         * Subtracts the given matrix from this matrix and returns the result.
+         *
+         * \pre The given matrix has the same dimensions as this matrix.
+         *
+         * \exception InvalidArgument This and the given matrix do not have
+         * the same dimensions.
+         *
+         * \param rhs the matrix to subtract from this.
+         * \return a difference between this and the given matrix.
+         */
+        Matrix operator - (Matrix&& rhs) && requires Ring<T> {
+            *this -= std::move(rhs);
+            return std::move(*this);
         }
 
         /**
@@ -1188,55 +1637,6 @@ class Matrix : public Output<Matrix<T>> {
                         }
                     ++dest;
                 }
-
-            return ans;
-        }
-
-        /**
-         * Multiplies this matrix by the given vector, and returns the result.
-         * The given vector is treated as a column vector.
-         *
-         * The matrix and vector may use different underlying types
-         * (e.g., you can multiply a matrix of LargeInteger objects with a
-         * vector of native C++ long integers).  The type of object that is
-         * stored in the resulting vector will be deduced accordingly
-         * (specifically, it will be the type obtained by multiplying objects
-         * of types \a T and \a U using the binary multiplication operator).
-         *
-         * \pre The length of the given vector is precisely the number of
-         * columns in this matrix.
-         *
-         * \exception InvalidArgument The matrix and vector dimensions are
-         * incompatible; that is, `columns() ≠ rhs.size()`.
-         *
-         * \param rhs the vector to multiply this matrix by.
-         * \return the product `this * rhs`, which will be a
-         * vector whose length is the number of rows in this matrix.
-         */
-        template <typename U>
-        Vector<decltype(T() * U())> operator * (const Vector<U>& rhs) const
-                requires Ring<T> && Ring<U> && Ring<decltype(T() * U())> {
-            if (cols_ != rhs.size())
-                throw InvalidArgument("Incompatible matrix/vector dimensions");
-
-            using Ans = decltype(T() * U());
-            Vector<Ans> ans(rows_);
-
-            const T* lhsPos = data_;
-            for (auto& dest : ans) {
-                if constexpr (! RingTraits<Ans>::zeroInitialised)
-                    dest = RingTraits<Ans>::zero;
-                for (const auto& rhsElt : rhs) {
-                    if constexpr (HasAddProduct<Ans>) {
-                        dest.addProduct(*lhsPos++, rhsElt);
-                    } else {
-                        if (*lhsPos != RingTraits<T>::zero &&
-                                rhsElt != RingTraits<U>::zero)
-                            dest += *lhsPos * rhsElt;
-                        ++lhsPos;
-                    }
-                }
-            }
 
             return ans;
         }
@@ -1394,6 +1794,7 @@ class Matrix : public Output<Matrix<T>> {
         std::pair<Matrix, T> adjugate(
                 AdjugateAlgorithm alg = AdjugateAlgorithm::Default) const
                 requires IntegralDomain<T> {
+            // TODO: Use divExact() / divByExact() if T satisfies ReginaInteger.
             if (rows_ != cols_)
                 throw FailedPrecondition("The adjugate can only be "
                     "computed for a square matrix");
@@ -1534,6 +1935,32 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
+         * Returns the negative of this matrix.
+         *
+         * \return the negative of this matrix.
+         */
+        Matrix operator - () const& requires Ring<T> {
+            Matrix ans(rows_, cols_);
+            if (size_t size = rows_ * cols_) {
+                const T* src = data_;
+                T* dest = ans.data_;
+                while (src != data_ + size)
+                    *dest++ = -*src++;
+            }
+            return ans;
+        }
+
+        /**
+         * Returns the negative of this matrix.
+         *
+         * \return the negative of this matrix.
+         */
+        Matrix operator - () && requires Ring<T> {
+            negate();
+            return std::move(*this);
+        }
+
+        /**
          * Negates all elements in the given row.
          *
          * \pre The given row number is between 0 and `rows()-1` inclusive.
@@ -1623,7 +2050,7 @@ class Matrix : public Output<Matrix<T>> {
          * \param row the index of the row whose gcd should be computed.
          * \return the greatest common divisor of all elements of this row.
          */
-        T gcdRow(size_t row) requires ReginaInteger<T> {
+        T gcdRow(size_t row) const requires ReginaInteger<T> {
             if (cols_ == 0)
                 return {}; // zero
 
@@ -1650,7 +2077,7 @@ class Matrix : public Output<Matrix<T>> {
          * \param col the index of the column whose gcd should be computed.
          * \return the greatest common divisor of all elements of this column.
          */
-        T gcdCol(size_t col) requires ReginaInteger<T> {
+        T gcdCol(size_t col) const requires ReginaInteger<T> {
             if (rows_ == 0)
                 return {}; // zero
 
@@ -1696,13 +2123,13 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
-         * Transforms this matrix into row echelon form.  The transformation
-         * will perform only row operations.
+         * Transforms this matrix into row Hermite normal form.
+         * The transformation will perform only unimodular row operations.
          *
          * This matrix will be modified directly, and its size will not change
          * (even if the rank is less than the number of rows).
          *
-         * Our convention is that a matrix is in row echelon form if:
+         * Our convention is that a matrix is in row Hermite normal form if:
          *
          * - each row is either zero or there is a first non-zero entry which
          *   is positive;
@@ -1725,16 +2152,16 @@ class Matrix : public Output<Matrix<T>> {
          * \return the rank of this matrix, i.e., the number of non-zero rows
          * remaining.
          */
-        size_t makeRowEchelon() requires ReginaInteger<T>;
+        size_t makeRowHermite() requires ReginaInteger<T>;
 
         /**
-         * Transforms this matrix into column echelon form.  The transformation
-         * will perform only column operations.
+         * Transforms this matrix into column Hermite normal form.
+         * The transformation will perform only unimodular column operations.
          *
          * This matrix will be modified directly, and its size will not change
          * (even if the rank is less than the number of columns).
          *
-         * Our convention is that a matrix is in column echelon form if:
+         * Our convention is that a matrix is in column Hermite normal form if:
          *
          * - each column is either zero or there is a first non-zero entry
          *   which is positive;
@@ -1757,17 +2184,17 @@ class Matrix : public Output<Matrix<T>> {
          * \return the rank of this matrix, i.e., the number of non-zero
          * columns remaining.
          */
-        size_t makeColumnEchelon() requires ReginaInteger<T>;
+        size_t makeColumnHermite() requires ReginaInteger<T>;
 
         /**
-         * Returns the row echelon form of this matrix along with the rank.
-         * This matrix itself will not be changed.
+         * Returns the row Hermite normal form of this matrix along with the
+         * rank.  This matrix itself will not be changed.
          *
-         * The row echelon form will have the same dimensions as this matrix,
-         * and will be obtained from this matrix by performing only row
-         * operations.
+         * The row Hermite normal form will have the same dimensions as this
+         * matrix, and will be obtained from this matrix by performing only
+         * unimodular row operations.
          *
-         * Our convention is that a matrix is in row echelon form if:
+         * Our convention is that a matrix is in row Hermite normal form if:
          *
          * - each row is either zero or there is a first non-zero entry which
          *   is positive;
@@ -1787,25 +2214,26 @@ class Matrix : public Output<Matrix<T>> {
          * for `Matrix<Integer>`, which is where this routine is most commonly
          * used.
          *
-         * \return a pair consisting of the row echelon form \a E, and the
-         * rank of this matrix (i.e., the number of non-zero rows in \a E).
+         * \return a pair consisting of the row Hermite normal form \a H, and
+         * the rank of this matrix (i.e., the number of non-zero rows in \a H).
          */
-        std::pair<Matrix, size_t> rowEchelon() const&
+        std::pair<Matrix, size_t> rowHermite() const&
                 requires ReginaInteger<T> {
             Matrix ans(*this);
-            size_t rank = ans.makeRowEchelon();
+            size_t rank = ans.makeRowHermite();
             return { std::move(ans), rank };
         }
 
         /**
-         * Returns the row echelon form of this matrix along with the rank.
+         * Returns the row Hermite normal form of this matrix along with the
+         * rank.
          *
-         * This rvalue variant of rowEchelon() is faster than the const
+         * This rvalue variant of rowHermite() is faster than the const
          * variant, because it reduces this matrix directly instead of
          * working on a deep copy.
          *
-         * See the const version of rowEchelon() for further information on
-         * row echelon form.
+         * See the const version of rowHermite() for further information on
+         * row Hermite normal form.
          *
          * \pre All entries in this matrix are finite.
          *
@@ -1816,23 +2244,23 @@ class Matrix : public Output<Matrix<T>> {
          * for `Matrix<Integer>`, which is where this routine is most commonly
          * used.
          *
-         * \return a pair consisting of the row echelon form \a E, and the
-         * rank of this matrix (i.e., the number of non-zero rows in \a E).
+         * \return a pair consisting of the row Hermite normal form \a H, and
+         * the rank of this matrix (i.e., the number of non-zero rows in \a H).
          */
-        std::pair<Matrix, size_t> rowEchelon() && requires ReginaInteger<T> {
-            size_t rank = makeRowEchelon();
+        std::pair<Matrix, size_t> rowHermite() && requires ReginaInteger<T> {
+            size_t rank = makeRowHermite();
             return { std::move(*this), rank };
         }
 
         /**
-         * Returns the column echelon form of this matrix along with the rank.
-         * This matrix itself will not be changed.
+         * Returns the column Hermite normal form of this matrix along with the
+         * rank.  This matrix itself will not be changed.
          *
-         * The column echelon form will have the same dimensions as this matrix,
-         * and will be obtained from this matrix by performing only column
-         * operations.
+         * The column Hermite normal form will have the same dimensions as this
+         * matrix, and will be obtained from this matrix by performing only
+         * unimodular column operations.
          *
-         * Our convention is that a matrix is in column echelon form if:
+         * Our convention is that a matrix is in column Hermite normal form if:
          *
          * - each column is either zero or there is a first non-zero entry
          *   which is positive;
@@ -1852,25 +2280,27 @@ class Matrix : public Output<Matrix<T>> {
          * for `Matrix<Integer>`, which is where this routine is most commonly
          * used.
          *
-         * \return a pair consisting of the column echelon form \a E, and the
-         * rank of this matrix (i.e., the number of non-zero columns in \a E).
+         * \return a pair consisting of the column Hermite normal form \a H,
+         * and the rank of this matrix (i.e., the number of non-zero columns
+         * in \a H).
          */
-        std::pair<Matrix, size_t> columnEchelon() const&
+        std::pair<Matrix, size_t> columnHermite() const&
                 requires ReginaInteger<T> {
             Matrix ans(*this);
-            size_t rank = ans.makeColumnEchelon();
+            size_t rank = ans.makeColumnHermite();
             return { std::move(ans), rank };
         }
 
         /**
-         * Returns the column echelon form of this matrix along with the rank.
+         * Returns the column Hermite normal form of this matrix along with the
+         * rank.
          *
-         * This rvalue variant of columnEchelon() is faster than the const
+         * This rvalue variant of columnHermite() is faster than the const
          * variant, because it reduces this matrix directly instead of
          * working on a deep copy.
          *
-         * See the const version of columnEchelon() for further information on
-         * column echelon form.
+         * See the const version of columnHermite() for further information on
+         * column Hermite normal form.
          *
          * \pre All entries in this matrix are finite.
          *
@@ -1881,12 +2311,129 @@ class Matrix : public Output<Matrix<T>> {
          * for `Matrix<Integer>`, which is where this routine is most commonly
          * used.
          *
-         * \return a pair consisting of the column echelon form \a E, and the
-         * rank of this matrix (i.e., the number of non-zero columns in \a E).
+         * \return a pair consisting of the column Hermite normal form \a H,
+         * and the rank of this matrix (i.e., the number of non-zero columns
+         * in \a H).
          */
-        std::pair<Matrix, size_t> columnEchelon() && requires ReginaInteger<T> {
-            size_t rank = makeColumnEchelon();
+        std::pair<Matrix, size_t> columnHermite() && requires ReginaInteger<T> {
+            size_t rank = makeColumnHermite();
             return { std::move(*this), rank };
+        }
+
+        /**
+         * Transforms this matrix into column Hermite normal form and returns
+         * change-of-basis matrices.  The transformation will perform only
+         * unimodular column operations.
+         *
+         * This routine is similar to makeColumnHermite(); however, it also
+         * computes and returns change-of-basis matrices describing all of the
+         * column operations that were performed.  These change-of-basis
+         * matrices work as follows.  Let \a M denote the initial value of this
+         * matrix, let \a H denote the final column Hermite normal form, and
+         * let the returned tuple be `(rowSpaceBasis, rowSpaceBasisInv, rank)`.
+         * Then:
+         *
+         * - this matrix will be converted from \a M into \a H;
+         * - the number of non-zero columns in \a H will be \a rank;
+         * - \a rowSpaceBasis will be square with side length `columns()`, and
+         *   \a rowSpaceBasisInv will be its inverse matrix;
+         * - `H = M * rowSpaceBasis`, and `M = H * rowSpaceBasisInv`;
+         *
+         * See makeColumnHermite() for details on exactly what is meant by
+         * column Hermite normal form.  This matrix will be modified directly,
+         * and its size will not change (even if the rank is less than the
+         * number of columns).
+         *
+         * \pre All entries in this matrix are finite.
+         *
+         * \headers This routine is implemented in a separate header
+         * (matrix-impl.h), which is not included automatically by this file.
+         * However, typical end users will not need this extra header, since
+         * Regina's calculation engine already includes explicit instantiations
+         * for `Matrix<Integer>`, which is where this routine is most commonly
+         * used.
+         *
+         * \return the tuple `(rowSpaceBasis, rowSpaceBasisInv, rank)`
+         * describing the change-of-basis matrices and rank, as explained above.
+         */
+        std::tuple<Matrix, Matrix, size_t> makeColumnHermiteCoB()
+                requires ReginaInteger<T>;
+
+        /**
+         * Returns the column Hermite normal form of this matrix along with
+         * change-of-basis matrices.  This matrix itself will not be changed.
+         *
+         * The column Hermite normal form will have the same dimensions as this
+         * matrix, and will be obtained from this matrix by performing only
+         * unimodular column operations.
+         *
+         * This routine is similar to columnHermite(); however, it also
+         * computes and returns change-of-basis matrices describing all of the
+         * column operations that were performed.  These change-of-basis
+         * matrices work as follows.  Let \a M denote the initial value of
+         * this matrix, and let the returned tuple be
+         * `(H, rowSpaceBasis, rowSpaceBasisInv, rank)`.  Then:
+         *
+         * - \a H will be the column Hermite normal form of the original
+         *   matrix \a M;
+         * - the number of non-zero columns in \a H will be \a rank;
+         * - \a rowSpaceBasis will be square with side length `columns()`, and
+         *   \a rowSpaceBasisInv will be its inverse matrix;
+         * - `H = M * rowSpaceBasis`, and `M = H * rowSpaceBasisInv`;
+         *
+         * See columnHermite() for details on exactly what is meant by
+         * column Hermite normal form.
+         *
+         * \pre All entries in this matrix are finite.
+         *
+         * \headers This routine is implemented in a separate header
+         * (matrix-impl.h), which is not included automatically by this file.
+         * However, typical end users will not need this extra header, since
+         * Regina's calculation engine already includes explicit instantiations
+         * for `Matrix<Integer>`, which is where this routine is most commonly
+         * used.
+         *
+         * \return the tuple `(H, rowSpaceBasis, rowSpaceBasisInv, rank)`
+         * describing the column Hermite normal form, change-of-basis matrices
+         * and rank, as explained above.
+         */
+        std::tuple<Matrix, Matrix, Matrix, size_t> columnHermiteCoB() const&
+                requires ReginaInteger<T> {
+            Matrix ans(*this);
+            auto cob = ans.makeColumnHermiteCoB();
+            return std::tuple_cat(std::make_tuple(std::move(ans)),
+                std::move(cob));
+        }
+
+        /**
+         * Returns the column Hermite normal form of this matrix along with
+         * change-of-basis matrices.
+         *
+         * This rvalue variant of columnHermiteCoB() is faster than the const
+         * variant, because it reduces this matrix directly instead of working
+         * on a deep copy.
+         *
+         * See the const version of columnHermiteCoB() for further information
+         * on column Hermite normal form and change-of-basis matrices.
+         *
+         * \pre All entries in this matrix are finite.
+         *
+         * \headers This routine is implemented in a separate header
+         * (matrix-impl.h), which is not included automatically by this file.
+         * However, typical end users will not need this extra header, since
+         * Regina's calculation engine already includes explicit instantiations
+         * for `Matrix<Integer>`, which is where this routine is most commonly
+         * used.
+         *
+         * \return the tuple `(H, rowSpaceBasis, rowSpaceBasisInv, rank)`
+         * describing the column Hermite normal form, change-of-basis matrices
+         * and rank.
+         */
+        std::tuple<Matrix, Matrix, Matrix, size_t> columnHermiteCoB() &&
+                requires ReginaInteger<T> {
+            auto cob = makeColumnHermiteCoB();
+            return std::tuple_cat(std::make_tuple(std::move(*this)),
+                std::move(cob));
         }
 
         /**
@@ -1905,14 +2452,14 @@ class Matrix : public Output<Matrix<T>> {
          */
         size_t rank() const& requires ReginaInteger<T> {
             // Make a deep copy, which we can modify as we compute rank.
-            return Matrix(*this).makeRowEchelon();
+            return Matrix(*this).makeRowHermite();
         }
 
         /**
          * Returns the rank of this matrix.
          *
          * A typical rank computation involves modifying the matrix (e.g., by
-         * converting it to row echelon form).  This rvalue variant of rank()
+         * converting it to Hermite normal form).  This rvalue variant of rank()
          * is faster than the const variant, because it modifies this matrix
          * directly instead of working on a temporary copy.
          *
@@ -1928,7 +2475,7 @@ class Matrix : public Output<Matrix<T>> {
          * \return the rank of this matrix.
          */
         size_t rank() && requires ReginaInteger<T> {
-            return makeRowEchelon();
+            return makeRowHermite();
         }
 
         /**
@@ -1942,6 +2489,8 @@ class Matrix : public Output<Matrix<T>> {
          * dimensions of the matrix.  After this routine returns, the rows of
          * this matrix will be linearly independent, and will together form a
          * basis (over the rationals) of the row space of the original matrix.
+         *
+         * \pre All entries in this matrix are finite.
          *
          * \headers This routine is implemented in a separate header
          * (matrix-impl.h), which is not included automatically by this file.
@@ -1964,6 +2513,8 @@ class Matrix : public Output<Matrix<T>> {
          * fewer rows than this matrix.  The rows of \a B will be linearly
          * independent, and will together form a basis (over the rationals) of
          * the row space of this matrix.
+         *
+         * \pre All entries in this matrix are finite.
          *
          * \headers This routine is implemented in a separate header
          * (matrix-impl.h), which is not included automatically by this file.
@@ -1993,6 +2544,8 @@ class Matrix : public Output<Matrix<T>> {
          * See the const version of rowBasis() for further information on row
          * bases.
          *
+         * \pre All entries in this matrix are finite.
+         *
          * \headers This routine is implemented in a separate header
          * (matrix-impl.h), which is not included automatically by this file.
          * However, typical end users will not need this extra header, since
@@ -2020,8 +2573,8 @@ class Matrix : public Output<Matrix<T>> {
          *   the matrix \a C will have dimensions `columns() × columns()`.
          *
          * - The rows of \a B will be a subset of the rows of this matrix, and
-         *   may possibly appear in a different order.  In particular, \a B might
-         *   have fewer rows than this matrix.
+         *   may possibly appear in a different order.  In particular, \a B
+         *   might have fewer rows than this matrix.
          *
          * - The rows of \a B will be linearly independent, and will together
          *   form a basis (over the rationals) of the row space of this matrix.
@@ -2029,6 +2582,8 @@ class Matrix : public Output<Matrix<T>> {
          * - For each \a i between 0 and `rank()` inclusive, the final
          *   `(columns() - i)` rows of \a C will form a basis for the orthogonal
          *   complement of the first \a i rows of \a B.
+         *
+         * \pre All entries in this matrix are finite.
          *
          * \headers This routine is implemented in a separate header
          * (matrix-impl.h), which is not included automatically by this file.
@@ -2056,6 +2611,7 @@ class Matrix : public Output<Matrix<T>> {
          * calling adjugate() instead.
          *
          * \pre This is a square matrix.
+         * \pre All entries in this matrix are finite.
          *
          * \exception FailedPrecondition This matrix is not square.
          * \exception NoSolution This matrix is not invertible over the
@@ -2089,11 +2645,12 @@ class Matrix : public Output<Matrix<T>> {
          * calling adjugate() instead.
          *
          * A typical inverse computation involves modifying the matrix (e.g., by
-         * converting it to row/column echelon form).  This rvalue variant of
+         * converting it to Hermite normal form).  This rvalue variant of
          * inverse() is faster than the const variant, because it modifies this
          * matrix directly instead of working on a temporary copy.
          *
          * \pre This is a square matrix.
+         * \pre All entries in this matrix are finite.
          *
          * \exception FailedPrecondition This matrix is not square.
          * \exception NoSolution This matrix is not invertible over the
@@ -2341,6 +2898,51 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
+         * Treats this matrix as a homomorphism from `Z^n` to `Z^k`, and
+         * computes the preimage of a given sublattice of `Z^k` under this
+         * homomorphism.
+         *
+         * Suppose this matrix (which describes the homomorphism from
+         * `Z^n` to `Z^k`) has dimensions `k × n`.  The sublattice is then of
+         * the form `(p1 Z) * (p2 Z) * ... * (pk Z)`, where the non-negative
+         * integers `p1,...,pk` are passed in the list \a sublattice.
+         *
+         * The preimage of the sublattice is some rank \a n lattice in `Z^n`.
+         * This routine computes a basis for that lattice.
+         *
+         * An equivalent problem is to treat this matrix as a homomorphism from
+         * `Z^n` to `Z_p1 + ... + Z_pk`; this routine then computes the kernel
+         * of this homomorphism.
+         *
+         * \pre All entries in this matrix are finite.
+         * \pre The given sublattice actually lies within the range of the
+         * homomorphism from `Z^n` to `Z^k` described by this matrix.
+         *
+         * \headers This routine is implemented in a separate header
+         * (matrix-impl.h), which is not included automatically by this file.
+         * However, typical end users will not need this extra header, since
+         * Regina's calculation engine already includes explicit instantiations
+         * for `Matrix<Integer>`, which is where this routine is most commonly
+         * used.
+         *
+         * \exception InvalidArgument The length of \a sublattice is different
+         * from the number of rows in this matrix.  Note that the _contents_ of
+         * \a sublattice (specifically, the signs of the integers it contains)
+         * are not checked.
+         *
+         * \param sublattice a list of length rows() describing the sublattice
+         * of `Z^k`; the elements of this list must be the non-negative integers
+         * `p1,...,pk` as described above.
+         * \return a matrix whose columns are a basis for the preimage lattice.
+         * The number of rows of the returned matrix will be the same as the
+         * number of _columns_ of this input matrix.
+         *
+         * \author Ryan Budney
+         */
+        Matrix preimageOfLattice(const std::vector<T>& sublattice) const
+                requires ReginaInteger<T>;
+
+        /**
          * A diagnostic routine that ensures that the internal representation
          * of this matrix is valid.
          *
@@ -2436,8 +3038,21 @@ class Matrix : public Output<Matrix<T>> {
 
     // Give internal access to Matrix<U> for conversion construction/assignment:
     template <typename U>
-    requires std::default_initializable<U> && std::copyable<U> && Writeable<U>
+    requires std::semiregular<U> && Writeable<U>
     friend class Matrix;
+
+    // In these friend declarations the matrix element type should be T.
+    // However, I cannot work out how to get that to compile (specifically,
+    // how to make these friend declarations connect to the implementations of
+    // these global operators), due to the extra requires clauses this would
+    // place on T.
+    template <Ring U, Ring V>
+    friend Vector<decltype(U() * V())> operator * (
+        const Matrix<U>&, const Vector<V>&) requires Ring<decltype(U() * V())>;
+
+    template <Ring U, Ring V>
+    friend Vector<decltype(U() * V())> operator * (
+        const Vector<U>&, const Matrix<V>&) requires Ring<decltype(U() * V())>;
 };
 
 /**
@@ -2454,6 +3069,110 @@ class Matrix : public Output<Matrix<T>> {
 template <typename T>
 inline void swap(Matrix<T>& a, Matrix<T>& b) noexcept {
     a.swap(b);
+}
+
+/**
+ * Multiplies the given matrix by the given column vector, and returns the
+ * result.
+ *
+ * The matrix and vector may use different underlying types (e.g., you can
+ * multiply a matrix of LargeInteger objects with a vector of native C++ long
+ * integers).  The type of object that is stored in the resulting vector will
+ * be deduced accordingly (specifically, it will be the type obtained by
+ * multiplying objects of types \a T and \a U using the binary multiplication
+ * operator).
+ *
+ * \pre The length of the vector \a v is precisely the number of columns in the
+ * matrix \a m.
+ *
+ * \pydocname{__mul_matrix_vector}
+ *
+ * \exception InvalidArgument The matrix and vector dimensions are incompatible;
+ * that is, `m.columns() ≠ v.size()`.
+ *
+ * \param m the matrix to multiply the given vector by.
+ * \param v the vector to multiply the given matrix by.
+ * \return the product `m * v`, which will be a column vector whose length is
+ * precisely `m.rows()`.
+ */
+template <Ring T, Ring U>
+Vector<decltype(T() * U())> operator * (const Matrix<T>& m, const Vector<U>& v)
+        requires Ring<decltype(T() * U())> {
+    if (m.cols_ != v.size())
+        throw InvalidArgument("Incompatible matrix/vector dimensions");
+
+    using Ans = decltype(T() * U());
+    Vector<Ans> ans(m.rows_);
+
+    const T* mPos = m.data_;
+    for (auto& dest : ans) {
+        if constexpr (! RingTraits<Ans>::zeroInitialised)
+            dest = RingTraits<Ans>::zero;
+        for (const auto& vElt : v) {
+            if constexpr (HasAddProduct<Ans>) {
+                dest.addProduct(*mPos++, vElt);
+            } else {
+                if (*mPos != RingTraits<T>::zero &&
+                        vElt != RingTraits<U>::zero)
+                    dest += *mPos * vElt;
+                ++mPos;
+            }
+        }
+    }
+
+    return ans;
+}
+
+/**
+ * Multiplies the given row vector by the given matrix, and returns the result.
+ *
+ * The vector and matrix may use different underlying types (e.g., you can
+ * multiply a vector of LargeInteger objects with a matrix of native C++ long
+ * integers).  The type of object that is stored in the resulting vector will
+ * be deduced accordingly (specifically, it will be the type obtained by
+ * multiplying objects of types \a T and \a U using the binary multiplication
+ * operator).
+ *
+ * \pre The length of the vector \a v is precisely the number of rows in the
+ * matrix \a m.
+ *
+ * \pydocname{__mul_vector_matrix}
+ *
+ * \exception InvalidArgument The vector and matrix dimensions are incompatible;
+ * that is, `v.size() ≠ m.rows()`.
+ *
+ * \param v the vector to multiply the given matrix by.
+ * \param m the matrix to multiply the given vector by.
+ * \return the product `v * m`, which will be a row vector whose length is
+ * precisely `m.columns()`.
+ */
+template <Ring T, Ring U>
+Vector<decltype(T() * U())> operator * (const Vector<T>& v, const Matrix<U>& m)
+        requires Ring<decltype(T() * U())> {
+    if (v.size() != m.rows_)
+        throw InvalidArgument("Incompatible vector/matrix dimensions");
+
+    using Ans = decltype(T() * U());
+    Vector<Ans> ans(m.cols_);
+
+    const U* colPos = m.data_;
+    for (auto& dest : ans) {
+        if constexpr (! RingTraits<Ans>::zeroInitialised)
+            dest = RingTraits<Ans>::zero;
+        const U* mPos = colPos++;
+        for (const auto& vElt : v) {
+            if constexpr (HasAddProduct<Ans>) {
+                dest.addProduct(*mPos, vElt);
+            } else {
+                if (*mPos != RingTraits<T>::zero &&
+                        vElt != RingTraits<U>::zero)
+                    dest += *mPos * vElt;
+            }
+            mPos += m.cols_;
+        }
+    }
+
+    return ans;
 }
 
 /**
@@ -2580,148 +3299,48 @@ using MatrixBool = Matrix<bool>;
 }
 
 /**
- * Deprecated routine that transforms a given matrix into column echelon form
- * with respect to a collection of rows.  The transformation will perform only
- * column operations.
+ * Deprecated function that, given a homomorphism from `Z^n` to `Z^k` and a
+ * sublattice of `Z^k`, compute the preimage of this sublattice under this
+ * homomorphism.
  *
- * Given the matrix \a M and the list \a rowList of rows from \a M, this
- * algorithm puts \a M in column echelon form with respect to the rows
- * in \a rowList.  The only purpose of \a rowList is to clarify and/or
- * weaken precisely what is meant by "column echelon form"; all rows of
- * \a M are affected by the resulting column operations that take place.
- *
- * This routine also returns the corresponding change of coordinate
- * matrices \a R and \a Ri:
- *
- * - The matrix \a R will have precisely the same column operations applied to
- *   it as the matrix \a M.  The matrix \a Ri will have the inverse _row_
- *   operations applied to it, thereby maintaining a constant value of the
- *   product `R * Ri` as the algorithm runs.
- *
- * - In particular, if \a R and \a Ri are passed into this routine as
- *   square identity matrices, then after the reduction is complete we will
- *   have `original_M * R = final_M` and `final_M * Ri = original_M`.
- *
- * Our convention is that a matrix is in column echelon form if:
- *
- * - each column is either zero or there is a first non-zero entry which
- *   is positive (but see the note regarding \a rowList below);
- *
- * - moving from the leftmost column to the rightmost column, the rows
- *   containing the first non-zero entries for these columns have strictly
- *   increasing indices in \a rowList;
- *
- * - given a first non-zero column entry, in that row all the elements to
- *   the left are smaller and non-negative (all elements to the right are
- *   already zero by the previous condition);
- *
- * - all the zero columns are on the right hand side of the matrix.
- *
- * By a "zero column" here we simply mean "zero for every row in \a
- * rowList".  Likewise, by "first non-zero entry" we mean "first row in
- * \a rowList with a non-zero entry".
- *
- * If you just wish to reduce the matrix, you do not care about the order of
- * rows, and you do not want the change-of-basis matrices, then you should
- * call MatrixInt::makeColumnEchelon() instead, which is simpler but also more
- * streamlined.
- *
- * \deprecated This routine was only being used to compute matrix inverses (and
- * only with a trivial \a rowList consisting of all rows).  It has therefore been
- * replaced with the simpler routine `Matrix::inverse()`.
- *
- * \pre If \a n is the number of _columns_ in \a M, then \a R has precisely
- * \a n columns also, and \a Ri has precisely \a n rows.
- *
- * \exception InvalidArgument Either `R.columns() ≠ M.columns()`, and/or
- * `Ri.rows() ≠ M.columns()`.
- *
- * \param M the matrix to reduce.
- * \param R used to return the row-reduction matrix, as described above.
- * \param Ri used to return the inverse of \a R.
- * \param rowList the rows to pay attention to.  This list must contain
- * distinct integers, all between 0 and M.rows()-1 inclusive (though it
- * need not contain _all_ of these integers).  The integers may appear in
- * any order (though changing the order will change the resulting column
- * echelon form).  For a "classical" column echelon form, this would be the
- * list of all rows: `0,...,(M.rows()-1)`.
- *
- * \author Ryan Budney
- *
- * \ingroup maths
- */
-[[deprecated]] void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
-        const std::vector<size_t> &rowList);
-
-/**
- * Given a homomorphism from Z^n to Z^k and a sublattice of Z^k,
- * compute the preimage of this sublattice under this homomorphism.
- *
- * The homomorphism from Z^n to Z^k is described by the given
- * \a k by \a n matrix \a hom.  The sublattice is of the form
+ * The homomorphism from `Z^n` to `Z^k` is described by the given
+ * `k × n` matrix \a hom.  The sublattice is of the form
  * `(p1 Z) * (p2 Z) * ... * (pk Z)`, where the non-negative integers
- * \a p1, ..., \a pk are passed in the given list \a sublattice.
+ * `p1,...,pk` are passed in the given list \a sublattice.
  *
- * An equivalent problem is to consider \a hom to be a homomorphism
- * from Z^n to Z_p1 + ... + Z_pk; this routine then finds the kernel
- * of this homomorphism.
+ * The preimage of the sublattice is some rank \a n lattice in `Z^n`.
+ * This routine computes a basis for that lattice.
  *
- * The preimage of the sublattice (equivalently, the kernel described
- * above) is some rank \a n lattice in Z^n.  This algorithm finds and
- * returns a basis for the lattice.
+ * An equivalent problem is to treat \a hom as a homomorphism from
+ * `Z^n` to `Z_p1 + ... + Z_pk`; this routine then computes the kernel of this
+ * homomorphism.
+ *
+ * \deprecated You should now call `hom.preimageOfLattice(sublattice)` instead
+ * (note also the change of case in the function name).
+ *
+ * \pre The given sublattice actually lies within the range of the homomorphism
+ * from `Z^n` to `Z^k` described by the matrix \a hom.
  *
  * \exception InvalidArgument The length of \a sublattice is different from
  * the number of rows of \a hom.  Note that the _contents_ of \a sublattice
  * (specifically, the signs of the integers it contains) are not checked.
  *
- * \param hom the matrix representing the homomorphism from Z^n to Z^k;
- * this must be a \a k by \a n matrix.
- * \param sublattice a list of length \a k describing the sublattice of Z^k;
- * the elements of this list must be the non-negative integers
- * \a p1, ..., \a pk as described above.
- * \return a new matrix whose columns are a basis for the preimage lattice.
+ * \param hom the `k × n` matrix representing the homomorphism from
+ * `Z^n` to `Z^k`.
+ * \param sublattice a list of length \a k describing the sublattice of `Z^k`;
+ * the elements of this list must be the non-negative integers `p1,...,pk`
+ * as described above.
+ * \return a matrix whose columns are a basis for the preimage lattice.
  * This matrix will have precisely \a n rows.
  *
  * \author Ryan Budney
  *
  * \ingroup maths
  */
-MatrixInt preImageOfLattice(const MatrixInt& hom,
-        const std::vector<Integer>& sublattice);
-
-/**
- * Given an automorphism of an abelian group,
- * this procedure computes the inverse automorphism.
- *
- * The abelian group is of the form `Z_p1 + Z_p2 + ... + Z_pn`.
- * The input is an n-by-n matrix \a A which represents a lift of the
- * automorphism to just some n-by-n matrix.  Specifically, you have a little
- * commutative diagram with `Z^n --A--> Z^n` covering the automorphism
- * of `Z_p1 + Z_p2 + ... + Z_pn`, where the maps down are the direct
- * sum of the standard quotients `Z --> Z_pi`.  So if you want this
- * procedure to give you meaningful output, \a A must be a lift of a genuine
- * automorphism of `Z_p1 + ... + Z_pn`.
- *
- * \pre The list p1, p2, ..., pn is a list of invariant factors,
- * which means that p1|p2, ..., p{n-1}|pn.
- *
- * \exception InvalidArgument Either \a input is not a square matrix, and/or
- * the length of \a invF is different from the side length of \a input.
- * Note that the _contents_ of \a invF (specifically, the divisibility
- * property) are not checked.
- *
- * \param input the n-by-n matrix \a A, which must be a lift of a genuine
- * automorphism as described above.
- * \param invF the list p1, p2, ..., pn.
- * \return the inverse automorphism, also described as an n-by-n matrix
- * as per the discussion above.
- *
- * \author Ryan Budney
- *
- * \ingroup maths
- */
-MatrixInt torsionAutInverse(const MatrixInt& input,
-    const std::vector<Integer> &invF);
+[[deprecated]] inline MatrixInt preImageOfLattice(const MatrixInt& hom,
+        const std::vector<Integer>& sublattice) {
+    return hom.preimageOfLattice(sublattice);
+}
 
 } // namespace regina
 

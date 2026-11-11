@@ -107,9 +107,9 @@ AbelianGroup TriangulationBase<dim>::homology() const {
                         // or backwards as we walk around the (dim-2)-face f.
                         if ((gen->front().simplex() == simp) &&
                                 (gen->front().face() == facet))
-                            pres.entry(i, genIndex[gen->index()]) += 1;
+                            pres(i, genIndex[gen->index()]) += 1;
                         else
-                            pres.entry(i, genIndex[gen->index()]) -= 1;
+                            pres(i, genIndex[gen->index()]) -= 1;
                     }
                 }
                 ++i;
@@ -273,15 +273,15 @@ MatrixInt TriangulationBase<dim>::boundaryMap() const {
                             * subface).sign() > 0) {
                     // The boundary face was not reflected.
                     if (i % 2 == 0)
-                        ++ans.entry(facet->index(), row);
+                        ++ans(facet->index(), row);
                     else
-                        --ans.entry(facet->index(), row);
+                        --ans(facet->index(), row);
                 } else {
                     // The boundary face was reflected.
                     if (i % 2 == 0)
-                        --ans.entry(facet->index(), row);
+                        --ans(facet->index(), row);
                     else
-                        ++ans.entry(facet->index(), row);
+                        ++ans(facet->index(), row);
                 }
 
                 if (i > 0) {
@@ -306,23 +306,23 @@ MatrixInt TriangulationBase<dim>::boundaryMap() const {
                     // (subdim-1)-faces, since these are vertices
                     // (and there is no Perm<1> class).
                     if (i % 2 == 0)
-                        ++ans.entry(facet->index(), row);
+                        ++ans(facet->index(), row);
                     else
-                        --ans.entry(facet->index(), row);
+                        --ans(facet->index(), row);
                 } else if (Perm<subdim>::contract(
                         s->template faceMapping<subdim - 1>(facetNum).inverse()
                             * subface).sign() > 0) {
                     // The boundary face was not reflected.
                     if (i % 2 == 0)
-                        ++ans.entry(facet->index(), row);
+                        ++ans(facet->index(), row);
                     else
-                        --ans.entry(facet->index(), row);
+                        --ans(facet->index(), row);
                 } else {
                     // The boundary face was reflected.
                     if (i % 2 == 0)
-                        --ans.entry(facet->index(), row);
+                        --ans(facet->index(), row);
                     else
-                        ++ans.entry(facet->index(), row);
+                        ++ans(facet->index(), row);
                 }
 
                 if (i > 0) {
@@ -359,8 +359,8 @@ MatrixInt TriangulationBase<dim>::dualBoundaryMap() const {
 
             // The endpoints of the dual edge are labelled (0, 1) according to
             // (f->back(), f->front()).
-            ++bdry.entry(f->front().simplex()->index(), col);
-            --bdry.entry(f->back().simplex()->index(), col);
+            ++bdry(f->front().simplex()->index(), col);
+            --bdry(f->back().simplex()->index(), col);
 
             ++col;
         }
@@ -404,14 +404,14 @@ MatrixInt TriangulationBase<dim>::dualBoundaryMap() const {
                     // {dim-subdim+1,...,dim}.
                     if constexpr (subdim == dim) {
                         if (p.sign() > 0)
-                            ++bdry.entry(row, lookup[facet->index()]);
+                            ++bdry(row, lookup[facet->index()]);
                         else
-                            --bdry.entry(row, lookup[facet->index()]);
+                            --bdry(row, lookup[facet->index()]);
                     } else {
                         if (Perm<dim-subdim+1>::contract(p).sign() == p.sign())
-                            ++bdry.entry(row, lookup[facet->index()]);
+                            ++bdry(row, lookup[facet->index()]);
                         else
-                            --bdry.entry(row, lookup[facet->index()]);
+                            --bdry(row, lookup[facet->index()]);
                     }
                 }
 
@@ -440,7 +440,7 @@ MatrixInt TriangulationBase<dim>::dualToPrimal() const {
 
         size_t col = 0;
         for (auto dual : simplices_)
-            ans.entry(dual->vertex(0)->index(), col++) = 1;
+            ans(dual->vertex(0)->index(), col++) = 1;
 
         return ans;
     } else {
@@ -468,9 +468,9 @@ MatrixInt TriangulationBase<dim>::dualToPrimal() const {
                         int e = (dim == 2 ? 3 - v0 : v0 - 1);
                         Edge<dim>* edge = emb.simplex()->edge(e);
                         if (emb.simplex()->edgeMapping(e)[0] == 0)
-                            --ans.entry(edge->index(), col);
+                            --ans(edge->index(), col);
                         else
-                            ++ans.entry(edge->index(), col);
+                            ++ans(edge->index(), col);
                     }
                 }
                 {
@@ -482,9 +482,9 @@ MatrixInt TriangulationBase<dim>::dualToPrimal() const {
                         int e = (dim == 2 ? 3 - v0 : v0 - 1);
                         Edge<dim>* edge = emb.simplex()->edge(e);
                         if (emb.simplex()->edgeMapping(e)[0] == 0)
-                            ++ans.entry(edge->index(), col);
+                            ++ans(edge->index(), col);
                         else
-                            --ans.entry(edge->index(), col);
+                            --ans(edge->index(), col);
                     }
                 }
             } else {
@@ -522,9 +522,9 @@ MatrixInt TriangulationBase<dim>::dualToPrimal() const {
                             // the inherent vertices {0,1,2}.
                             if (Perm<3>::contract(map.inverse() * primal).
                                     sign() > 0) {
-                                ++ans.entry(row, col);
+                                ++ans(row, col);
                             } else {
-                                --ans.entry(row, col);
+                                --ans(row, col);
                             }
                         }
 
@@ -551,9 +551,9 @@ MatrixInt TriangulationBase<dim>::dualToPrimal() const {
                             // the inherent vertices {0,1,2}.
                             if (Perm<3>::contract(map.inverse() * primal).
                                     sign() > 0) {
-                                --ans.entry(row, col);
+                                --ans(row, col);
                             } else {
-                                ++ans.entry(row, col);
+                                ++ans(row, col);
                             }
                         }
                     } else {
@@ -605,14 +605,14 @@ MatrixInt TriangulationBase<dim>::dualToPrimal() const {
                             if (Perm<subdim+1>::contract(
                                     map.inverse() * primal).sign() > 0) {
                                 if (p % 2 == 0)
-                                    ++ans.entry(row, col);
+                                    ++ans(row, col);
                                 else
-                                    --ans.entry(row, col);
+                                    --ans(row, col);
                             } else {
                                 if (p % 2 == 0)
-                                    --ans.entry(row, col);
+                                    --ans(row, col);
                                 else
-                                    ++ans.entry(row, col);
+                                    ++ans(row, col);
                             }
                         }
                     }

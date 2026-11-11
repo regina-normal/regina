@@ -91,7 +91,7 @@ TYPE_RANK = [
     # be the one with the larger index in this list.  Any type _not_ in this
     # list is treated as being simpler than all of the others.
     'IntegerBase', 'Rational', 'Cyclotomic', 'Polynomial',
-    'Laurent', 'Laurent2', 'Arrow'
+    'Laurent', 'Arrow'
 ]
 def type_rank(name):
     try:
@@ -254,6 +254,8 @@ def process_comment(comment, preserveAmpersands):
     s = re.sub(r'[\\@]ref\s*', r'', s)
 
     s = re.sub(r'[\\@]code\s?({\.[a-z]+}\s?)?(.*?)\s?[\\@]endcode',
+               r"```\n\2\n```\n", s, flags=re.DOTALL)
+    s = re.sub(r'```([a-z]+)\n(.*?)\n```',
                r"```\n\2\n```\n", s, flags=re.DOTALL)
     s = re.sub(r'[\\@]verbatim\s?(.*?)\s?[\\@]endverbatim',
                r"```\n\1\n```\n", s, flags=re.DOTALL)

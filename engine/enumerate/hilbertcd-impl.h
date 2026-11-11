@@ -77,7 +77,7 @@ void HilbertCD::enumerate(Action&& action,
         for (size_t i = 0; i < dim; ++i) {
             unitMatch[i] = new Vector<IntegerType>(nEqns);
             for (size_t j = 0; j < nEqns; ++j)
-                (*unitMatch[i])[j] = subspace.entry(j, i);
+                (*unitMatch[i])[j] = subspace(j, i);
         }
 
         // All vectors/rays are created and destroyed.

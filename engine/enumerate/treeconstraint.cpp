@@ -167,10 +167,8 @@ void LPConstraintNonSpun::addRows(
     // back to native integers now.  However, just in case:
     try {
         for (size_t i = 0; i < 3 * tri.size(); ++i) {
-            col[i].extra[0] =
-                coeffs.entry(0, columnPerm[i]).safeValue<Coefficient>();
-            col[i].extra[1] =
-                coeffs.entry(1, columnPerm[i]).safeValue<Coefficient>();
+            col[i].extra[0] = coeffs(0, columnPerm[i]).safeValue<Coefficient>();
+            col[i].extra[1] = coeffs(1, columnPerm[i]).safeValue<Coefficient>();
         }
     } catch (const IntegerOverflow&) {
         // Note: Coefficient is currently hard-coded as long.

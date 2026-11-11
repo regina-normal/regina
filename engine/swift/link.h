@@ -216,11 +216,11 @@ struct SharedLink {
             return packet_->jones();
         }
 
-        Laurent2<Integer> homflyAZ() const {
+        Laurent<Integer, 2> homflyAZ() const {
             return packet_->homflyAZ();
         }
 
-        Laurent2<Integer> homflyLM() const {
+        Laurent<Integer, 2> homflyLM() const {
             return packet_->homflyLM();
         }
 

@@ -37,10 +37,10 @@ namespace regina {
 AbelianGroup TorusBundle::homology() const {
     MatrixInt relns(2, 2);
 
-    relns.entry(0, 0) = monodromy_[0][0] - 1;
-    relns.entry(0, 1) = monodromy_[0][1];
-    relns.entry(1, 0) = monodromy_[1][0];
-    relns.entry(1, 1) = monodromy_[1][1] - 1;
+    relns(0, 0) = monodromy_[0][0] - 1;
+    relns(0, 1) = monodromy_[0][1];
+    relns(1, 0) = monodromy_[1][0];
+    relns(1, 1) = monodromy_[1][1] - 1;
 
     AbelianGroup ans(std::move(relns));
     ans.addRank();

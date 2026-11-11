@@ -6,10 +6,6 @@
 #
 # Prints basic properties of all wrapped objects and types.
 #
-# This file is a single component of Regina's Python test suite.  To run
-# the Python test suite, move to the main python directory in the source
-# tree and run "make check".
-#
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
 # published by the Free Software Foundation; either version 2 of the

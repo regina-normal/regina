@@ -29,6 +29,7 @@
  **************************************************************************/
 
 #include "hypersurface/normalhypersurfaces.h"
+#include "maths/laurent.h"
 #include "maths/permgroup.h"
 #include "surface/disc.h"
 #include "surface/normalsurfaces.h"
@@ -42,6 +43,10 @@ static_assert(std::forward_iterator<regina::ChildIterator<false>>);
 static_assert(std::forward_iterator<regina::SubtreeIterator<true>>);
 static_assert(std::forward_iterator<regina::SubtreeIterator<false>>);
 
+static_assert(std::bidirectional_iterator<
+    regina::LaurentCoefficient<regina::Integer, 1>>);
+static_assert(std::bidirectional_iterator<
+    regina::LaurentCoefficient<regina::Integer, 2>>);
 static_assert(std::bidirectional_iterator<
     regina::NormalSurfaces::VectorIterator>);
 static_assert(std::bidirectional_iterator<

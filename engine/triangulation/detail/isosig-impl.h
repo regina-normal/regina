@@ -65,11 +65,11 @@ void IsoSigData<1, dim>::fillFrom(const Simplex<dim>* simplex,
 
     // The preimage for each simplex (mapping from the canonical labelling to
     // the original triangulation):
-    FixedArray<ssize_t> preImage(size_, -1);
+    FixedArray<ssize_t> preimage(size_, -1);
 
     image[simp] = 0;
     vertexMap[simp] = vertices.inverse();
-    preImage[0] = simp;
+    preimage[0] = simp;
 
     size_t facetPos = 0;
     size_t joinPos = 0;
@@ -81,8 +81,8 @@ void IsoSigData<1, dim>::fillFrom(const Simplex<dim>* simplex,
     // This main loop is guaranteed to exit when (and only when) we have
     // exhausted the entire connected component containing the given simplex.
     for (size_t simpImg = 0; simpImg < size_; ++simpImg) {
-        // We are guaranteed that preImage[simpImg] >= 0.
-        size_t simpSrc = preImage[simpImg];
+        // We are guaranteed that preimage[simpImg] >= 0.
+        size_t simpSrc = preimage[simpImg];
         const Simplex<dim>* s = tri.simplex(simpSrc);
 
         if (! locks_.empty()) {
@@ -111,7 +111,7 @@ void IsoSigData<1, dim>::fillFrom(const Simplex<dim>* simplex,
 
             // INVARIANTS:
             // - nextUnusedSimp > simpImg
-            // - image[simpSrc], preImage[image[simpSrc]] and
+            // - image[simpSrc], preimage[image[simpSrc]] and
             //   vertexMap[simpSrc] are already filled in.
 
             // Work out what happens to our source facet.
@@ -143,7 +143,7 @@ void IsoSigData<1, dim>::fillFrom(const Simplex<dim>* simplex,
                     // It must take the next available index, and the
                     // corresponding gluing must be the identity.
                     image[dest] = nextUnusedSimp++;
-                    preImage[image[dest]] = dest;
+                    preimage[image[dest]] = dest;
                     vertexMap[dest] = vertexMap[simpSrc] *
                         s->adjacentGluing(facetSrc).inverse();
 
@@ -159,7 +159,7 @@ void IsoSigData<1, dim>::fillFrom(const Simplex<dim>* simplex,
     // Record the canonical isomorphism if required.
     if (relabelling)
         for (size_t i = 0; i < size_; ++i) {
-            size_t origIndex = preImage[i];
+            size_t origIndex = preimage[i];
             relabelling->simpImage(origIndex) = i; // image[origIndex]
             relabelling->facetPerm(origIndex) = vertexMap[origIndex];
         }
@@ -186,7 +186,7 @@ IsoSigData<2, dim> IsoSigData<2, dim>::minimal(Component<dim>* component,
 
     // The preimage for each simplex (mapping from the canonical labelling to
     // the original triangulation):
-    FixedArray<ssize_t> preImage(component->size());
+    FixedArray<ssize_t> preimage(component->size());
 
     Type type(*component, oriented);
     bool first = true;
@@ -194,14 +194,14 @@ IsoSigData<2, dim> IsoSigData<2, dim>::minimal(Component<dim>* component,
         // We need to fill curr with a canonical relabelling, starting from the
         // current choice of simplex 0 and its vertices 0,...,dim.
         std::fill(image.begin(), image.end(), -1);
-        std::fill(preImage.begin(), preImage.end(), -1);
+        std::fill(preimage.begin(), preimage.end(), -1);
 
         // Convert from component-based to triangulation-based indexing:
         size_t simp = component->simplex(type.simplex())->index();
 
         image[simp] = 0;
         vertexMap[simp] = type.perm().inverse();
-        preImage[0] = simp;
+        preimage[0] = simp;
 
         size_t facetPos = curr.countFacetBits() - 1;
         size_t simplexPos = 0, gluingPos = 0;
@@ -213,8 +213,8 @@ IsoSigData<2, dim> IsoSigData<2, dim>::minimal(Component<dim>* component,
         // This main loop is guaranteed to exit when (and only when) we have
         // exhausted the entire component containing the given simplex.
         for (size_t simpImg = 0; simpImg < component->size(); ++simpImg) {
-            // We are guaranteed that preImage[simpImg] >= 0.
-            size_t simpSrc = preImage[simpImg];
+            // We are guaranteed that preimage[simpImg] >= 0.
+            size_t simpSrc = preimage[simpImg];
             const Simplex<dim>* s = tri.simplex(simpSrc);
 
             if (! curr.locks_.empty()) {
@@ -241,7 +241,7 @@ IsoSigData<2, dim> IsoSigData<2, dim>::minimal(Component<dim>* component,
 
                 // INVARIANTS:
                 // - nextUnusedSimp > simpImg
-                // - image[simpSrc], preImage[image[simpSrc]] and
+                // - image[simpSrc], preimage[image[simpSrc]] and
                 //   vertexMap[simpSrc] are already filled in.
 
                 // Work out what happens to our source facet.
@@ -272,7 +272,7 @@ IsoSigData<2, dim> IsoSigData<2, dim>::minimal(Component<dim>* component,
                         // It must take the next available index, and the
                         // corresponding gluing must be the pair swap (0,1).
                         image[dest] = nextUnusedSimp++;
-                        preImage[image[dest]] = dest;
+                        preimage[image[dest]] = dest;
                         vertexMap[dest] = Perm<dim + 1>(0, 1) *
                             vertexMap[simpSrc] *
                             s->adjacentGluing(facetSrc).inverse();
@@ -296,7 +296,7 @@ IsoSigData<2, dim> IsoSigData<2, dim>::minimal(Component<dim>* component,
             // Record the canonical isomorphism if required.
             if (relabelling)
                 for (size_t i = 0; i < component->size(); ++i) {
-                    size_t origIndex = preImage[i];
+                    size_t origIndex = preimage[i];
                     relabelling->simpImage(origIndex) = i; // image[origIndex]
                     relabelling->facetPerm(origIndex) = vertexMap[origIndex];
                 }
