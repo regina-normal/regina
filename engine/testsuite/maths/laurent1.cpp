@@ -885,6 +885,30 @@ TEST_F(Laurent1Test, set) {
                 EXPECT_EQ(x.allocation(), alloc);
             }
         }
+
+        // Verify that the move variant of set() works correctly.
+        //
+        // The raw data we obtain below are of type __mpz_struct (since mpz_t
+        // is the address of an array of type __mpz_struct[1]).
+        // We wish to compare the contents of these structs (which contain some
+        // size/sign data, plus a pointer to the allocated GMP limbs which is
+        // how we tell the data was moved and not copied).
+        //
+        // Since __mpz_struct does not have a comparison operator and we do not
+        // want to rely on internal GMP implementation details (i.e., the names
+        // of individual __mpz_struct data members), we use memcmp() for our
+        // comparisons.
+        L x(c);
+        Integer v(bigInt);
+        const auto raw = *v.rawData(); // deep copy of the initial __mpz_struct
+
+        x.set(0, v);
+        EXPECT_EQ(x[0], bigInt);
+        EXPECT_NE(memcmp(x[0].rawData(), &raw, sizeof(raw)), 0);
+
+        x.set(1, std::move(v));
+        EXPECT_EQ(x[1], bigInt);
+        EXPECT_EQ(memcmp(x[1].rawData(), &raw, sizeof(raw)), 0);
     }
 }
 
