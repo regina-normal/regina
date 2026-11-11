@@ -33,6 +33,18 @@
 
 #include "testhelper.h"
 
+// An integer that cannot fit into 128 bits, and some small multiples of it.
+// We split the digits into chunks to not break syntax highlighting.
+#define BIG "5421309874" "5789403215" "6654013103" "5798756432" "1035741817"
+#define BIG2 "10842619749" "1578806431" "3308026207" "1597512864" "2071483634"
+#define BIG3 "16263929623" "7368209646" "9962039310" "7396269296" "3107225451"
+#define BIG4 "21685239498" "3157612862" "6616052414" "3195025728" "4142967268"
+
+// Note: We use std::type_identity_t in several functions here to force a
+// non-deduced context.  This means that the compiler will deduce the
+// coefficient type from the Laurent polynomial (not the other arguments,
+// such as initialiser lists, scalar integers, etc.).
+
 /**
  * Provides common code for testing Laurent polynomials.
  *
@@ -40,6 +52,17 @@
  */
 class LaurentTest : public testing::Test {
     public:
+        // A pack of exponents for a single term of a Laurent polynomial.
+        template <int vars> requires (vars > 0 && vars <= 3)
+        using Exponents = std::array<long, vars>;
+
+        // An integer that cannot fit into 128 bits.
+        inline static const regina::Integer bigInt { BIG };
+
+        // ---------------------------------------------------------------
+        // Validation functions
+        // ---------------------------------------------------------------
+
         template <regina::CoefficientDomain T, int vars>
         requires (vars > 0 && vars <= 3)
         static void validate(const regina::Laurent<T, vars>& poly) {
@@ -87,11 +110,6 @@ class LaurentTest : public testing::Test {
             EXPECT_FALSE(poly.first());
             EXPECT_FALSE(poly.last());
         }
-
-        // We use std::type_identity_t in several functions below to force a
-        // non-deduced context: this means that the compiler will deduce the
-        // coefficient type from the Laurent polynomial, not the initialiser
-        // list.
 
         template <regina::CoefficientDomain T>
         static void validate(const regina::Laurent<T>& poly, long minExp,
@@ -235,14 +253,16 @@ class LaurentTest : public testing::Test {
             EXPECT_FALSE(poly != expect);
         }
 
-        template <regina::CoefficientDomain T,
-            std::regular_invocable<long, long, const T&> TranslateTerm>
-        requires requires(TranslateTerm trans, long x, long y, const T& c) {
-            { trans(x, y, c) } ->
-                std::convertible_to<std::tuple<long, long, T>>;
-        }
-        static void validate(const regina::Laurent<T, 2>& poly,
-                const regina::Laurent<T, 2>& from, TranslateTerm&& trans) {
+        template <regina::CoefficientDomain T, int vars,
+            std::regular_invocable<const Exponents<vars>&, const T&> Translate>
+        requires
+            (vars > 0 && vars <= 3) &&
+            requires(Translate trans, const Exponents<vars> exp, const T& v) {
+                { trans(exp, v) } ->
+                    std::convertible_to<std::pair<Exponents<vars>, T>>;
+            }
+        static void validate(const regina::Laurent<T, vars>& poly,
+                const regina::Laurent<T, vars>& from, Translate&& trans) {
             // It is assumed that translate preserves the order of terms,
             // and does not create any zero terms.
             if (from.isZero()) {
@@ -251,7 +271,6 @@ class LaurentTest : public testing::Test {
                 // Note: validate() already verifies the internal array
                 // allocation against the polynomial's own min/max exponents.
                 validate(poly);
-
                 EXPECT_FALSE(poly.isZero());
 
                 ASSERT_TRUE(poly.first());
@@ -259,19 +278,23 @@ class LaurentTest : public testing::Test {
                 EXPECT_NE(*poly.first(), 0);
                 EXPECT_NE(*poly.last(), 0);
 
+                // Just run through the non-zero coefficients, which we
+                // can access via iterators.
                 auto pc = poly.first();
                 auto ec = from.first();
                 for ( ; pc && ec; ++pc, ++ec) {
-                    auto ans = trans(ec.template exp<0>(), ec.template exp<1>(),
-                        *ec);
-                    EXPECT_EQ(pc.template exp<0>(), std::get<0>(ans));
-                    EXPECT_EQ(pc.template exp<1>(), std::get<1>(ans));
-                    EXPECT_EQ(*pc, std::get<2>(ans));
+                    auto ans = trans(ec.exponents(), *ec);
+                    EXPECT_EQ(pc.exponents(), ans.first);
+                    EXPECT_EQ(*pc, ans.second);
                 }
                 EXPECT_FALSE(pc);
                 EXPECT_FALSE(ec);
             }
         }
+
+        // ---------------------------------------------------------------
+        // Other helper functions
+        // ---------------------------------------------------------------
 
         /**
          * Returns a polynomial equal to \a poly, but with more space for
@@ -305,6 +328,303 @@ class LaurentTest : public testing::Test {
                 while (exp <= poly.maxExp())
                     ans[idx++] = poly[exp++];
                 return ans;
+            }
+        }
+
+        /**
+         * Runs the given function over a comprehensive set of Integer scalars.
+         */
+        template <std::regular_invocable<const regina::Integer&> Test>
+        static void withScalars(Test&& test) {
+            for (int i = -3; i <= 3; ++i)
+                std::invoke(std::forward<Test>(test), i);
+
+            // Run through boundaries and "midpoints" for {8,16,32,64,128}-bit
+            // integers:
+            regina::Integer pow2 = 256; // 2^8
+            regina::Integer halfPow2 = 128;
+            regina::Integer quarterPow2 = 64;
+            for (int i = 0; i < 5; ++i) {
+                // pow2 = 2^bits = 2^{2^b} for some b
+                // halfPow2 = 2^(bits-1)
+                // quarterPow2 = 2^(bits-2)
+                for (int j = -1; j <= 1; ++j) {
+                    std::invoke(std::forward<Test>(test), pow2 + j);
+                    std::invoke(std::forward<Test>(test), -pow2 + j);
+                    std::invoke(std::forward<Test>(test), halfPow2 + j);
+                    std::invoke(std::forward<Test>(test), -halfPow2 + j);
+                    std::invoke(std::forward<Test>(test), quarterPow2 + j);
+                    std::invoke(std::forward<Test>(test), -quarterPow2 + j);
+                }
+                // Double the number of bits in pow2:
+                quarterPow2 *= pow2;
+                halfPow2 *= pow2;
+                pow2 *= pow2;
+            }
+
+            std::invoke(std::forward<Test>(test), bigInt);
+            std::invoke(std::forward<Test>(test), -bigInt);
+        }
+
+        /**
+         * Runs the given function over all *vars*-tuples of exponents, where
+         * each exponent come from the given list.
+         *
+         * The argument \a test must take a Laurent polynomial followed by
+         * precisely *vars* long integers as arguments.  We do not attempt to
+         * encode this with a `requires` clause here: it will be messy and this
+         * is just the test suite.
+         *
+         * This is unlike withScalars(), in that it takes a single Laurent
+         * polynomial directly (unlike withScalars(), where you use a lambda
+         * and capture as many polynomials as you need).  We do it this way
+         * so that the implementation knows the value of \a vars.
+         */
+        template <regina::CoefficientDomain T, int vars, typename Test>
+        requires (vars > 0 && vars <= 3)
+        static void withExponents(const regina::Laurent<T, vars>& poly,
+                std::initializer_list<long> exponents, Test&& test) {
+            // Probably we could make this generic by iterating over a
+            // std::array<long, vars> and then using std::apply to unpack
+            // the array into individual arguments.  But for now we just
+            // split into cases according to *vars*, which is easy to code.
+
+            if constexpr (vars == 1) {
+                for (long e : exponents)
+                    std::invoke(std::forward<Test>(test), poly, e);
+            } else if constexpr (vars == 2) {
+                for (long e : exponents)
+                    for (long f : exponents)
+                        std::invoke(std::forward<Test>(test), poly, e, f);
+            } else { // vars == 3
+                for (long e : exponents)
+                    for (long f : exponents)
+                        for (long g : exponents)
+                            std::invoke(std::forward<Test>(test), poly,
+                                e, f, g);
+            }
+        }
+
+        // ---------------------------------------------------------------
+        // Individual tests
+        // ---------------------------------------------------------------
+
+        /**
+         * Here \a junk indicates the initial value to assign to the
+         * test polynomial, or is `null` to indicate that the test polynomial
+         * should be default constructed.
+         */
+        template <int vars>
+        requires (vars > 0 && vars <= 3)
+        static void verifyMoveThenAssign(
+                const regina::Laurent<regina::Integer, vars>& c,
+                const regina::Laurent<regina::Integer, vars>& d,
+                std::type_identity_t<
+                    const regina::Laurent<regina::Integer, vars>*> junk) {
+            using L = regina::Laurent<regina::Integer, vars>;
+
+            {
+                L x(c);
+                validate(x, c);
+                L y;
+                if (junk) {
+                    y = *junk;
+                    validate(y, *junk);
+                } else {
+                    validateZero(y);
+                }
+
+                y = std::move(x);
+                x = d;
+                validate(x, d);
+                validate(y, c);
+            }
+            {
+                L x(c);
+                validate(x, c);
+                L y;
+                if (junk) {
+                    y = *junk;
+                    validate(y, *junk);
+                } else {
+                    validateZero(y);
+                }
+
+                y = std::move(x);
+                x = L(d);
+                validate(x, d);
+                validate(y, c);
+            }
+        }
+
+        /**
+         * Here \a junk indicates the initial value to assign to the
+         * test polynomial, or is `null` to indicate that the test polynomial
+         * should be default constructed.
+         */
+        template <int vars>
+        requires (vars > 0 && vars <= 3)
+        static void verifyMoveThenAssign(
+                const regina::Laurent<regina::Integer, vars>& c,
+                std::type_identity_t<
+                    const regina::Laurent<regina::Integer, vars>*> junk) {
+            using L = regina::Laurent<regina::Integer, vars>;
+
+            // The point of passing *junk* at all is to ensure that, when
+            // moving x into y, we don't end up with unwanted residue from
+            // this junk living within x.
+            {
+                L x(c);
+                validate(x, c);
+                L y;
+                if (junk) {
+                    y = *junk;
+                    validate(y, *junk);
+                } else {
+                    validateZero(y);
+                }
+
+                y = std::move(x);
+                x = 3;
+                validate(x, L(3));
+                validate(y, c);
+            }
+            {
+                L x(c);
+                validate(x, c);
+                L y;
+                if (junk) {
+                    y = *junk;
+                    validate(y, *junk);
+                } else {
+                    validateZero(y);
+                }
+
+                y = std::move(x);
+                x = bigInt;
+                validate(x, L(bigInt));
+                validate(y, c);
+            }
+            {
+                L x(c);
+                validate(x, c);
+                L y;
+                if (junk) {
+                    y = *junk;
+                    validate(y, *junk);
+                } else {
+                    validateZero(y);
+                }
+
+                y = std::move(x);
+                regina::Integer i(bigInt);
+                x = std::move(i);
+                validate(x, L(bigInt));
+                validate(y, c);
+            }
+            {
+                L x(c);
+                validate(x, c);
+                L y;
+                if (junk) {
+                    y = *junk;
+                    validate(y, *junk);
+                } else {
+                    validateZero(y);
+                }
+
+                y = std::move(x);
+                x.init();
+                validateZero(x);
+                validate(y, c);
+            }
+            {
+                L x(c);
+                validate(x, c);
+                L y;
+                if (junk) {
+                    y = *junk;
+                    validate(y, *junk);
+                } else {
+                    validateZero(y);
+                }
+
+                if constexpr (vars == 1) {
+                    const L m = L::monomial(-5);
+                    y = std::move(x);
+                    x.initExp(-5);
+                    validate(x, m);
+                    validate(y, c);
+                } else if constexpr (vars == 2) {
+                    const L m = L::monomial(-5, 3);
+                    y = std::move(x);
+                    x.initExp(-5, 3);
+                    validate(x, m);
+                    validate(y, c);
+                } else { // vars == 3
+                    const L m = L::monomial(-5, 3, -2);
+                    y = std::move(x);
+                    x.initExp(-5, 3, -2);
+                    validate(x, m);
+                    validate(y, c);
+                }
+            }
+        }
+
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        static void verifyShift(const regina::Laurent<T, vars>& c) {
+            using L = regina::Laurent<T, vars>;
+
+            withExponents(c, { -100, -5, 0, 5, 100 },
+                    [](const L& poly, auto... exp) {
+                const Exponents<vars> shifts{exp...};
+                L s = poly.shifted(exp...);
+                validate(s, poly, [shifts](Exponents<vars> e, const T& v) {
+                    for (int i = 0; i < vars; ++i)
+                        e[i] += shifts[i];
+                    return std::make_pair(e, v);
+                });
+                validate(L(poly).shifted(exp...), s);
+                {
+                    L x(poly);
+                    auto alloc = x.allocation();
+                    x.shift(exp...);
+                    validate(x, s);
+                    if (poly.isZero()) {
+                        EXPECT_EQ(x.allocation(), alloc);
+                    } else {
+                        EXPECT_EQ(x.allocation().first,
+                            alloc.first + shifts[0]);
+                        EXPECT_EQ(x.allocation().second, alloc.second);
+                    }
+                }
+            });
+
+            // The zero shift is already tested above, but verify explicitly
+            // that it matches the original polynomial:
+            if constexpr (vars == 1)
+                validate(c.shifted(0), c);
+            else if constexpr (vars == 2)
+                validate(c.shifted(0, 0), c);
+            else // vars == 3
+                validate(c.shifted(0, 0, 0), c);
+        }
+
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        static void verifyNegate(const regina::Laurent<T, vars>& c) {
+            using L = regina::Laurent<T, vars>;
+
+            L neg = -c;
+            validate(neg, c, [](const Exponents<vars>& e, const T& v) {
+                return std::make_pair(e, -v);
+            });
+            validate(-L(c), neg);
+            {
+                L x(c);
+                x.negate();
+                validate(x, neg);
             }
         }
 
@@ -355,6 +675,224 @@ class LaurentTest : public testing::Test {
                 });
                 validate(x, c / 2);
                 validate(y, c);
+            }
+        }
+
+        template <regina::CppInteger Native,
+            regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        static void verifyNativeProduct(const regina::Laurent<T, vars>& poly,
+                const T& scalar, const regina::Laurent<T, vars>& expect) {
+            using L = regina::Laurent<T, vars>;
+
+            SCOPED_TRACE_TYPE(Native);
+
+            Native native;
+            if (scalar >= std::numeric_limits<Native>::min() &&
+                    scalar <= std::numeric_limits<Native>::max()) {
+                EXPECT_NO_THROW(
+                    { native = scalar.template safeValue<Native>(); });
+            } else {
+                EXPECT_THROW({ scalar.template safeValue<Native>(); },
+                    regina::IntegerOverflow);
+                return;
+            }
+
+            validate(poly * native, expect);
+            validate(L(poly) * native, expect);
+            validate(native * poly, expect);
+            validate(native * L(poly), expect);
+            {
+                L x(poly);
+                validate(x *= native, expect);
+            }
+        }
+
+        template <regina::CppInteger Native, int vars>
+        requires (vars > 0 && vars <= 3)
+        static void verifyNativeQuotient(
+                const regina::Laurent<regina::Integer, vars>& poly,
+                const regina::Integer& scalar,
+                const regina::Laurent<regina::Integer, vars>& expect) {
+            // It is assumed that scalar != 0 (which is currently a
+            // requirement of scalar division for Laurent polynomials).
+            using L = regina::Laurent<regina::Integer, vars>;
+
+            SCOPED_TRACE_TYPE(Native);
+
+            Native native;
+            if (scalar >= std::numeric_limits<Native>::min() &&
+                    scalar <= std::numeric_limits<Native>::max()) {
+                EXPECT_NO_THROW(
+                    { native = scalar.template safeValue<Native>(); });
+            } else {
+                EXPECT_THROW({ scalar.template safeValue<Native>(); },
+                    regina::IntegerOverflow);
+                return;
+            }
+
+            validate(poly / native, expect);
+            validate(L(poly) / native, expect);
+            {
+                L x(poly);
+                validate(x /= native, expect);
+            }
+        }
+
+        template <int vars> requires (vars > 0 && vars <= 3)
+        static void verifyScalarMultiplyDivide(
+                const regina::Laurent<regina::Integer, vars>& poly,
+                const regina::Integer& scalar) {
+            using L = regina::Laurent<regina::Integer, vars>;
+
+            SCOPED_TRACE_REGINA(scalar);
+
+            const L product = poly * scalar;
+            if (scalar == 0) {
+                validateZero(product);
+            } else {
+                validate(product, poly, [&scalar](const Exponents<vars>& e,
+                        const regina::Integer& v) {
+                    return std::make_pair(e, v * scalar);
+                });
+            }
+            validate(L(poly) * scalar, product);
+            validate(scalar * poly, product);
+            validate(scalar * L(poly), product);
+            {
+                L x(poly);
+                validate(x *= scalar, product);
+            }
+
+            verifyNativeProduct<int8_t>(poly, scalar, product);
+            verifyNativeProduct<int16_t>(poly, scalar, product);
+            verifyNativeProduct<int32_t>(poly, scalar, product);
+            verifyNativeProduct<int64_t>(poly, scalar, product);
+            #ifdef INT128_AVAILABLE
+            verifyNativeProduct<regina::Int128>(poly, scalar, product);
+            #endif
+
+            if (scalar.sign() >= 0) {
+                verifyNativeProduct<uint8_t>(poly, scalar, product);
+                verifyNativeProduct<uint16_t>(poly, scalar, product);
+                verifyNativeProduct<uint32_t>(poly, scalar, product);
+                verifyNativeProduct<uint64_t>(poly, scalar, product);
+                #ifdef INT128_AVAILABLE
+                verifyNativeProduct<regina::UInt128>(poly, scalar, product);
+                #endif
+            }
+
+            // For now, scalar division for Laurent polynomials requires a
+            // non-zero divisor.
+            if (scalar != 0) {
+                const L quotient = poly / scalar;
+                if (poly.isZero()) {
+                    validateZero(quotient);
+                } else {
+                    validate(quotient);
+                    if constexpr (vars == 1) {
+                        if (poly[poly.minExp()].abs() >= scalar.abs()) {
+                            EXPECT_FALSE(quotient.isZero());
+                            EXPECT_EQ(quotient.minExp(), poly.minExp());
+                        } else {
+                            if (! quotient.isZero())
+                                EXPECT_GT(quotient.minExp(), poly.minExp());
+                        }
+
+                        if (poly[poly.maxExp()].abs() >= scalar.abs()) {
+                            EXPECT_FALSE(quotient.isZero());
+                            EXPECT_EQ(quotient.maxExp(), poly.maxExp());
+                        } else {
+                            if (! quotient.isZero())
+                                EXPECT_LT(quotient.maxExp(), poly.maxExp());
+                        }
+
+                        for (long i = poly.minExp(); i <= poly.maxExp(); ++i)
+                            EXPECT_EQ(quotient[i], poly[i] / scalar);
+                    } else {
+                        auto pit = poly.first();
+                        auto qit = quotient.first();
+                        while (pit || qit) {
+                            if (pit && qit &&
+                                    pit.exponents() == qit.exponents()) {
+                                auto q = *pit++ / scalar;
+                                EXPECT_NE(q, 0);
+                                EXPECT_EQ(*qit++, q);
+                            } else if (pit) {
+                                // We might have a coefficient which, when
+                                // divided by our scalar using integer division,
+                                // becomes zero.
+                                EXPECT_GT(*pit, -scalar.abs());
+                                EXPECT_LT(*pit, scalar.abs());
+                                EXPECT_EQ(*pit++ / scalar, 0);
+                            } else {
+                                // We have a deeper mismatch between terms that
+                                // we do not know how to recover from.
+                                ADD_FAILURE();
+                                break;
+                            }
+                        }
+                    }
+                }
+                validate(L(poly) / scalar, quotient);
+                {
+                    L x(poly);
+                    validate(x /= scalar, quotient);
+                }
+
+                verifyNativeQuotient<int8_t>(poly, scalar, quotient);
+                verifyNativeQuotient<int16_t>(poly, scalar, quotient);
+                verifyNativeQuotient<int32_t>(poly, scalar, quotient);
+                verifyNativeQuotient<int64_t>(poly, scalar, quotient);
+                #ifdef INT128_AVAILABLE
+                verifyNativeQuotient<regina::Int128>(poly, scalar, quotient);
+                #endif
+
+                if (scalar.sign() >= 0) {
+                    verifyNativeQuotient<uint8_t>(poly, scalar, quotient);
+                    verifyNativeQuotient<uint16_t>(poly, scalar, quotient);
+                    verifyNativeQuotient<uint32_t>(poly, scalar, quotient);
+                    verifyNativeQuotient<uint64_t>(poly, scalar, quotient);
+                    #ifdef INT128_AVAILABLE
+                    verifyNativeQuotient<regina::UInt128>(poly, scalar,
+                        quotient);
+                    #endif
+                }
+            }
+        }
+
+        template <int vars> requires (vars > 0 && vars <= 3)
+        static void verifyScalarMultiplyDivide(
+                const regina::Laurent<regina::Integer, vars>& poly) {
+            withScalars([&poly](const regina::Integer& scalar) {
+                verifyScalarMultiplyDivide(poly, scalar);
+            });
+
+            // Test expected arithmetic properties:
+            validateZero(poly * 0);
+            validate(poly * 1, poly);
+            validate(poly * -1, -poly);
+            validate(poly * 2, poly + poly);
+
+            if (! poly.isZero()) {
+                {
+                    const auto& t = poly.first();
+                    verifyScalarMultiplyDivide(poly, *t);
+
+                    regina::Laurent<regina::Integer, vars> p0 = poly / *t;
+                    const auto& t0 = p0.first();
+                    EXPECT_EQ(t0.exponents(), t.exponents());
+                    EXPECT_EQ(*t0, 1);
+                }
+                {
+                    const auto& t = poly.last();
+                    verifyScalarMultiplyDivide(poly, *t);
+
+                    regina::Laurent<regina::Integer, vars> p0 = poly / *t;
+                    const auto& t0 = p0.last();
+                    EXPECT_EQ(t0.exponents(), t.exponents());
+                    EXPECT_EQ(*t0, 1);
+                }
             }
         }
 
@@ -440,18 +978,9 @@ class LaurentTest : public testing::Test {
             } else if (d.isZero()) {
                 validate(diff, c);
             } else if (c.isZero()) {
-                if constexpr (vars == 1) {
-                    validate(diff);
-                    EXPECT_FALSE(diff.isZero()); // since d ≠ 0
-                    EXPECT_EQ(diff.minExp(), d.minExp());
-                    EXPECT_EQ(diff.maxExp(), d.maxExp());
-                    for (long i = d.minExp(); i <= d.maxExp(); ++i)
-                        EXPECT_EQ(diff[i], - d[i]);
-                } else {
-                    validate(diff, d, [](long x, long y, const T& v) {
-                        return std::make_tuple(x, y, -v);
-                    });
-                }
+                validate(diff, d, [](const Exponents<vars>& e, const T& v) {
+                    return std::make_pair(e, -v);
+                });
             } else {
                 validate(diff);
 
@@ -533,22 +1062,9 @@ class LaurentTest : public testing::Test {
 
             // Test operations upon one's self:
             const L dbl = c * 2;
-            if (c.isZero()) {
-                validateZero(dbl);
-            } else {
-                if constexpr (vars == 1) {
-                    validate(dbl);
-                    EXPECT_FALSE(dbl.isZero());
-                    EXPECT_EQ(dbl.minExp(), c.minExp());
-                    EXPECT_EQ(dbl.maxExp(), c.maxExp());
-                    for (long i = c.minExp(); i <= c.maxExp(); ++i)
-                        EXPECT_EQ(dbl[i], c[i] * 2);
-                } else {
-                    validate(dbl, c, [](long x, long y, const T& v) {
-                        return std::make_tuple(x, y, v * 2);
-                    });
-                }
-            }
+            validate(dbl, c, [](const Exponents<vars>& e, const T& v) {
+                return std::make_pair(e, v * 2);
+            });
             validate(c + c, dbl);
             {
                 L x(c);
@@ -567,6 +1083,288 @@ class LaurentTest : public testing::Test {
             validate(c - zero, c);
             validate(zero - c, -c);
             validateZero(c + -c);
+        }
+
+        /**
+         * Tests product operations involving two polynomials.
+         */
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        static void verifyMultiply(const regina::Laurent<T, vars>& c,
+                const regina::Laurent<T, vars>& d) {
+            using L = regina::Laurent<T, vars>;
+
+            if (c.isZero() || d.isZero()) {
+                validateZero(c * d);
+                validateZero(c * L(d));
+                validateZero(L(c) * d);
+                validateZero(L(c) * L(d));
+                {
+                    L x(c);
+                    validateZero(x *= d);
+                }
+                {
+                    L x(c);
+                    validateZero(x *= L(d));
+                }
+            } else {
+                const L product = c * d;
+                validate(product);
+                EXPECT_FALSE(product.isZero());
+
+                if constexpr (vars == 1) {
+                    EXPECT_EQ(product.minExp(), c.minExp() + d.minExp());
+                    EXPECT_EQ(product.maxExp(), c.maxExp() + d.maxExp());
+                    for (long i = product.minExp(); i <= product.maxExp();
+                            ++i) {
+                        long cExp = std::max(c.minExp(), i - d.maxExp());
+                        long dExp = i - cExp;
+                        T coeff;
+                        while (cExp <= c.maxExp() && dExp >= d.minExp())
+                            coeff += (c[cExp++] * d[dExp--]);
+                        EXPECT_EQ(product[i], coeff);
+                    }
+                } else {
+                    // We've already tested addition and scalar multiplication,
+                    // so we can attempt to reimplement multiplication in terms
+                    // of these.
+                    L expect;
+                    for (auto it = d.first(); it; ++it)
+                        std::apply([&](auto... exp) {
+                            expect += (c * *it).shifted(exp...);
+                        }, it.exponents());
+                    validate(product, expect);
+                }
+
+                validate(c * L(d), product);
+                validate(L(c) * d, product);
+                validate(L(c) * L(d), product);
+                {
+                    L x(c);
+                    validate(x *= d, product);
+                }
+                {
+                    L x(c);
+                    validate(x *= L(d), product);
+                }
+
+                // Test expected arithmetic properties:
+                validate(c * d, d * c);
+
+                if constexpr (vars == 1) {
+                    // Verify that our different multiplication algorithms
+                    // give the same results:
+                    using PPA = regina::PolynomialProductAlgorithm;
+                    using Array = regina::FixedArray<T>;
+
+                    auto cSeq = coefficientSequence(c);
+                    auto dSeq = coefficientSequence(d);
+
+                    auto def = polynomialProduct<PPA::Default>(
+                        Array(cSeq.begin(), cSeq.end()),
+                        Array(dSeq.begin(), dSeq.end()));
+                    auto classic = polynomialProduct<PPA::Classic>(
+                        Array(cSeq.begin(), cSeq.end()),
+                        Array(dSeq.begin(), dSeq.end()));
+                    EXPECT_EQ(def, classic);
+
+                    long cSpan = c.maxExp() - c.minExp();
+                    long dSpan = d.maxExp() - d.minExp();
+                    if (cSpan >= 1 && dSpan >= 1 &&
+                            (2 * cSpan <= dSpan || 2 * dSpan <= cSpan)) {
+                        EXPECT_THROW({
+                            polynomialProduct<PPA::Karatsuba>(
+                                Array(cSeq.begin(), cSeq.end()),
+                                Array(dSeq.begin(), dSeq.end()));
+                        }, regina::InvalidArgument);
+                    } else {
+                        EXPECT_NO_THROW({
+                            auto karatsuba = polynomialProduct<PPA::Karatsuba>(
+                                Array(cSeq.begin(), cSeq.end()),
+                                Array(dSeq.begin(), dSeq.end()));
+                            EXPECT_EQ(def, karatsuba);
+                        });
+                    }
+                }
+            }
+        }
+
+        /**
+         * Tests product operations involving a single polynomial.
+         */
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        static void verifyMultiply(const regina::Laurent<T, vars>& c) {
+            using L = regina::Laurent<T, vars>;
+
+            // Test operations upon one's self:
+            const L copy(c);
+            const L square = c * copy;
+            if (c.isZero()) {
+                validateZero(square);
+            } else {
+                EXPECT_FALSE(square.isZero());
+                if constexpr (vars == 1) {
+                    validate(square);
+                    EXPECT_EQ(square.minExp(), 2 * c.minExp());
+                    EXPECT_EQ(square.maxExp(), 2 * c.maxExp());
+                    for (long i = square.minExp(); i <= square.maxExp(); ++i) {
+                        long lhsExp = std::max(c.minExp(), i - c.maxExp());
+                        long rhsExp = i - lhsExp;
+                        T coeff;
+                        while (lhsExp <= c.maxExp() && rhsExp >= c.minExp())
+                            coeff += (c[lhsExp++] * c[rhsExp--]);
+                        EXPECT_EQ(square[i], coeff);
+                    }
+                } else {
+                    // As above, reimplement multiplication in terms of
+                    // addition and scalar multiplication.
+                    L expect;
+                    for (auto it = c.first(); it; ++it)
+                        std::apply([&](auto... exp) {
+                            expect += (c * *it).shifted(exp...);
+                        }, it.exponents());
+                    validate(square, expect);
+                }
+            }
+            validate(c * c, square);
+            {
+                L x(c);
+                validate(x *= x, square);
+            }
+
+            // More expected arithmetic properties:
+            validate(c * L(1), c);
+            validate(L(1) * c, c);
+            validate(c * L(2), c + c);
+            validate(L(2) * c, c + c);
+            validate(c * L(-1), -c);
+            validate(L(-1) * c, -c);
+
+            withExponents(c, { -2, -1, 0, 1, 2 },
+                    [](const L& poly, auto... exp) {
+                validate(poly * L::monomial(exp...), poly.shifted(exp...));
+                validate(L::monomial(exp...) * poly, poly.shifted(exp...));
+            });
+        }
+
+        /**
+         * Tests scalar addProduct() operations involving two polynomials.
+         */
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        static void verifyScalarAddProduct(const regina::Laurent<T, vars>& c,
+                const regina::Laurent<T, vars>& d) {
+            using L = regina::Laurent<T, vars>;
+
+            withScalars([&c, &d](const regina::Integer& scalar) {
+                const L expect = c + d * scalar;
+                {
+                    L x(c);
+                    x.addProduct(d, scalar);
+                    validate(x, expect);
+                }
+                {
+                    L x(c);
+                    x.addProduct(L(d), scalar);
+                    validate(x, expect);
+                }
+            });
+        }
+
+        /**
+         * Tests scalar addProduct() operations involving a single polynomial.
+         */
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        static void verifyScalarAddProduct(const regina::Laurent<T, vars>& c) {
+            using L = regina::Laurent<T, vars>;
+
+            // Here we just test operations upon one's self.
+            withScalars([&c](const regina::Integer& scalar) {
+                const L expect = c + c * scalar;
+                {
+                    L x(c);
+                    x.addProduct(x, scalar);
+                    validate(x, expect);
+                }
+            });
+        }
+
+        /**
+         * Tests polynomial addProduct() operations involving three polynomials.
+         */
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        static void verifyPolynomialAddProduct(
+                const regina::Laurent<T, vars>& c,
+                const regina::Laurent<T, vars>& d,
+                const regina::Laurent<T, vars>& e) {
+            using L = regina::Laurent<T, vars>;
+
+            const L expect = c + d * e;
+            {
+                L x(c);
+                x.addProduct(d, e);
+                validate(x, expect);
+            }
+            {
+                L x(c);
+                x.addProduct(L(d), L(e));
+                validate(x, expect);
+            }
+        }
+
+        /**
+         * Tests polynomial addProduct() operations involving two polynomials.
+         */
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        static void verifyPolynomialAddProduct(
+                const regina::Laurent<T, vars>& c,
+                const regina::Laurent<T, vars>& d) {
+            using L = regina::Laurent<T, vars>;
+
+            // Test operations where two of the three operands are the same
+            // object.
+            {
+                const L expect = c + d * d;
+                L x(c);
+                x.addProduct(d, d);
+                validate(x, expect);
+            }
+            {
+                const L expect = c * (d + L(1)); // c + c * d
+                {
+                    L x(c);
+                    x.addProduct(x, d);
+                    validate(x, expect);
+                }
+                {
+                    L x(c);
+                    x.addProduct(d, x);
+                    validate(x, expect);
+                }
+            }
+        }
+
+        /**
+         * Tests polynomial addProduct() operations involving a single
+         * polynomial.
+         */
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        static void verifyPolynomialAddProduct(
+                const regina::Laurent<T, vars>& c) {
+            using L = regina::Laurent<T, vars>;
+
+            // Test operations where all three operands are the same object.
+            {
+                const L expect = c * (c + L(1)); // c + c * c
+                L x(c);
+                x.addProduct(x, x);
+                validate(x, expect);
+            }
         }
 
         template <regina::Ring T>

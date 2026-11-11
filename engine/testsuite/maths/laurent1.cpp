@@ -45,18 +45,10 @@ using regina::polynomialProduct;
 
 using L = Laurent<Integer>;
 
-// An integer that cannot fit into 128 bits, and some small multiples of it.
-// We split the digits into chunks to not break syntax highlighting.
-#define BIG "5421309874" "5789403215" "6654013103" "5798756432" "1035741817"
-#define BIG2 "10842619749" "1578806431" "3308026207" "1597512864" "2071483634"
-#define BIG3 "16263929623" "7368209646" "9962039310" "7396269296" "3107225451"
-#define BIG4 "21685239498" "3157612862" "6616052414" "3195025728" "4142967268"
-
 class Laurent1Test : public LaurentTest {
     protected:
-        // An integer that cannot fit into 128 bits.
-        const Integer bigInt { BIG };
-        const std::array<Integer, 1> bigCoeff { bigInt };
+        // The coefficient sequence for the constant polynomial bigInt.
+        const std::array<regina::Integer, 1> bigCoeff { bigInt };
 
         const L zero {};
         const L zero2 { 0, {} };
@@ -378,137 +370,16 @@ TEST_F(Laurent1Test, moveThenAssign) {
     // Here we test both move-then-assign and move-then-init.
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
-
-        // Here *junk indicates the initial value of y.  The point of this is
-        // to ensure that, when moving x into y, we don't end up with unwanted
-        // residue from this junk living within x.
-        //
-        // We also allow junk to be cases.end() which means that y should be
-        // default constructed (hence the awkward structure of this loop).
-        auto junk = cases.begin();
-        while (true) {
-            {
-                L x(c);
-                validate(x, c);
-                L y;
-                if (junk != cases.end()) {
-                    y = *junk;
-                    validate(y, junk->get());
-                } else {
-                    validateZero(y);
-                }
-
-                y = std::move(x);
-                x = 3;
-                validate(x, L(3));
-                validate(y, c);
+        for (const L& d : cases) {
+            SCOPED_TRACE_REGINA(d);
+            for (const L& e : cases) {
+                SCOPED_TRACE_REGINA(e);
+                verifyMoveThenAssign(c, d, std::addressof(d));
             }
-            {
-                L x(c);
-                validate(x, c);
-                L y;
-                if (junk != cases.end()) {
-                    y = *junk;
-                    validate(y, junk->get());
-                } else {
-                    validateZero(y);
-                }
-
-                y = std::move(x);
-                x = bigInt;
-                validate(x, L(bigInt));
-                validate(y, c);
-            }
-            {
-                L x(c);
-                validate(x, c);
-                L y;
-                if (junk != cases.end()) {
-                    y = *junk;
-                    validate(y, junk->get());
-                } else {
-                    validateZero(y);
-                }
-
-                y = std::move(x);
-                Integer i(bigInt);
-                x = std::move(i);
-                validate(x, L(bigInt));
-                validate(y, c);
-            }
-            {
-                L x(c);
-                validate(x, c);
-                L y;
-                if (junk != cases.end()) {
-                    y = *junk;
-                    validate(y, junk->get());
-                } else {
-                    validateZero(y);
-                }
-
-                y = std::move(x);
-                x.init();
-                validateZero(x);
-                validate(y, c);
-            }
-            {
-                L x(c);
-                validate(x, c);
-                L y;
-                if (junk != cases.end()) {
-                    y = *junk;
-                    validate(y, junk->get());
-                } else {
-                    validateZero(y);
-                }
-
-                y = std::move(x);
-                x.initExp(-5);
-                validate(x, x5Inv);
-                validate(y, c);
-            }
-
-            for (const L& d : cases) {
-                SCOPED_TRACE_REGINA(d);
-                {
-                    L x(c);
-                    validate(x, c);
-                    L y;
-                    if (junk != cases.end()) {
-                        y = *junk;
-                        validate(y, junk->get());
-                    } else {
-                        validateZero(y);
-                    }
-
-                    y = std::move(x);
-                    x = d;
-                    validate(x, d);
-                    validate(y, c);
-                }
-                {
-                    L x(c);
-                    validate(x, c);
-                    L y;
-                    if (junk != cases.end()) {
-                        y = *junk;
-                        validate(y, junk->get());
-                    } else {
-                        validateZero(y);
-                    }
-
-                    y = std::move(x);
-                    x = L(d);
-                    validate(x, d);
-                    validate(y, c);
-                }
-            }
-
-            if (junk == cases.end())
-                break;
-            ++junk;
+            verifyMoveThenAssign(c, d, nullptr);
+            verifyMoveThenAssign(c, std::addressof(d));
         }
+        verifyMoveThenAssign(c, nullptr);
     }
 }
 
@@ -1037,42 +908,14 @@ TEST_F(Laurent1Test, comparison) {
 }
 
 TEST_F(Laurent1Test, shift) {
-    static constexpr int shifts[5] = { -100, -5, 0, 5, 100 };
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
-        for (int shift : shifts) {
-            SCOPED_TRACE_NUMERIC(shift);
-            if (c.isZero()) {
-                validateZero(c.shifted(shift));
-                validateZero(L(c).shifted(shift));
-                {
-                    L x(c);
-                    x.shift(shift);
-                    validateZero(x);
-                }
-            } else {
-                L ans = c.shifted(shift);
-                validate(ans);
-                EXPECT_FALSE(ans.isZero());
-                EXPECT_EQ(ans.minExp(), c.minExp() + shift);
-                EXPECT_EQ(ans.maxExp(), c.maxExp() + shift);
-                for (long i = c.minExp(); i <= c.maxExp(); ++i)
-                    EXPECT_EQ(ans[i + shift], c[i]);
-
-                validate(L(c).shifted(shift), ans);
-                {
-                    L x(c);
-                    size_t capacity = x.allocation().second;
-                    x.shift(shift);
-                    validate(x, ans);
-                    EXPECT_EQ(x.allocation().second, capacity);
-                }
-            }
-        }
+        verifyShift(c);
     }
 }
 
 TEST_F(Laurent1Test, scale) {
+    // This test is specific to single-variable Laurent polynomials.
     static constexpr int factors[6] = { 1, -1, 2, -2, 5, -5 };
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
@@ -1182,30 +1025,7 @@ TEST_F(Laurent1Test, scale) {
 TEST_F(Laurent1Test, negate) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
-        if (c.isZero()) {
-            validateZero(-c);
-            validateZero(-L(c));
-
-            L x(c);
-            x.negate();
-            validateZero(x);
-        } else {
-            L neg = -c;
-            validate(neg);
-
-            EXPECT_FALSE(neg.isZero());
-            EXPECT_EQ(neg.minExp(), c.minExp());
-            EXPECT_EQ(neg.maxExp(), c.maxExp());
-            for (long i = c.minExp(); i <= c.maxExp(); ++i)
-                EXPECT_EQ(neg[i], -c[i]);
-
-            validate(-L(c), neg);
-            {
-                L x(c);
-                x.negate();
-                validate(x, neg);
-            }
-        }
+        verifyNegate(c);
     }
 }
 
@@ -1241,257 +1061,10 @@ TEST_F(Laurent1Test, transform) {
     }
 }
 
-namespace {
-    // TODO: Putting verifyNativeProduct and verifyNativeQuotient inside an
-    // anonymous namespace is slowing down the tests.  I'd love to know why.
-    template <regina::CppInteger Native>
-    void verifyNativeProduct(const L& poly, const Integer& scalar,
-            const L& product) {
-        SCOPED_TRACE_TYPE(Native);
-
-        Native native;
-        if (scalar >= std::numeric_limits<Native>::min() &&
-                scalar <= std::numeric_limits<Native>::max()) {
-            EXPECT_NO_THROW({ native = scalar.safeValue<Native>(); });
-        } else {
-            EXPECT_THROW({ scalar.safeValue<Native>(); },
-                regina::IntegerOverflow);
-            return;
-        }
-
-        LaurentTest::validate(poly * native, product);
-        LaurentTest::validate(L(poly) * native, product);
-        LaurentTest::validate(native * poly, product);
-        LaurentTest::validate(native * L(poly), product);
-        {
-            L x(poly);
-            LaurentTest::validate(x *= native, product);
-        }
-    }
-
-    template <regina::CppInteger Native>
-    void verifyNativeQuotient(const L& poly, const Integer& scalar,
-            const std::optional<L>& quotient) {
-        SCOPED_TRACE_TYPE(Native);
-
-        Native native;
-        if (scalar >= std::numeric_limits<Native>::min() &&
-                scalar <= std::numeric_limits<Native>::max()) {
-            EXPECT_NO_THROW({ native = scalar.safeValue<Native>(); });
-        } else {
-            EXPECT_THROW({ scalar.safeValue<Native>(); },
-                regina::IntegerOverflow);
-            return;
-        }
-
-        if (quotient) {
-            LaurentTest::validate(poly / native, *quotient);
-            LaurentTest::validate(L(poly) / native, *quotient);
-            {
-                L x(poly);
-                LaurentTest::validate(x /= native, *quotient);
-            }
-        } else {
-            #if 0 // For now, Laurent division requires a non-zero divisor.
-            EXPECT_THROW({ poly / native; }, regina::DivisionByZero);
-            EXPECT_THROW({ L(poly) / native; }, regina::DivisionByZero);
-            {
-                L x(poly);
-                EXPECT_THROW({ x /= native; }, regina::DivisionByZero);
-            }
-            #endif
-        }
-    }
-
-    template <typename Container>
-    void verifyScalarMultiplyDivide(const L& poly, const Integer& scalar,
-            const Container& cases) {
-        SCOPED_TRACE_REGINA(scalar);
-
-        const L product = poly * scalar;
-        if (poly.isZero() || scalar == 0) {
-            LaurentTest::validateZero(product);
-        } else {
-            LaurentTest::validate(product);
-            EXPECT_FALSE(product.isZero());
-            EXPECT_EQ(product.minExp(), poly.minExp());
-            EXPECT_EQ(product.maxExp(), poly.maxExp());
-            for (long i = poly.minExp(); i <= poly.maxExp(); ++i)
-                EXPECT_EQ(product[i], poly[i] * scalar);
-        }
-        LaurentTest::validate(L(poly) * scalar, product);
-        LaurentTest::validate(scalar * poly, product);
-        LaurentTest::validate(scalar * L(poly), product);
-        {
-            L x(poly);
-            LaurentTest::validate(x *= scalar, product);
-        }
-
-        verifyNativeProduct<int8_t>(poly, scalar, product);
-        verifyNativeProduct<int16_t>(poly, scalar, product);
-        verifyNativeProduct<int32_t>(poly, scalar, product);
-        verifyNativeProduct<int64_t>(poly, scalar, product);
-        #ifdef INT128_AVAILABLE
-        verifyNativeProduct<regina::Int128>(poly, scalar, product);
-        #endif
-
-        if (scalar.sign() >= 0) {
-            verifyNativeProduct<uint8_t>(poly, scalar, product);
-            verifyNativeProduct<uint16_t>(poly, scalar, product);
-            verifyNativeProduct<uint32_t>(poly, scalar, product);
-            verifyNativeProduct<uint64_t>(poly, scalar, product);
-            #ifdef INT128_AVAILABLE
-            verifyNativeProduct<regina::UInt128>(poly, scalar, product);
-            #endif
-        }
-
-        if (scalar == 0) {
-            #if 0 // For now, Laurent division requires a non-zero divisor.
-            EXPECT_THROW({ poly / scalar; }, regina::DivisionByZero);
-            EXPECT_THROW({ L(poly) / scalar; }, regina::DivisionByZero);
-            {
-                L x(poly);
-                EXPECT_THROW({ x /= scalar; }, regina::DivisionByZero);
-            }
-
-            verifyNativeQuotient<int8_t>(poly, scalar, {});
-            verifyNativeQuotient<int16_t>(poly, scalar, {});
-            verifyNativeQuotient<int32_t>(poly, scalar, {});
-            verifyNativeQuotient<int64_t>(poly, scalar, {});
-            #ifdef INT128_AVAILABLE
-            verifyNativeQuotient<regina::Int128>(poly, scalar, {});
-            #endif
-
-            verifyNativeQuotient<uint8_t>(poly, scalar, {});
-            verifyNativeQuotient<uint16_t>(poly, scalar, {});
-            verifyNativeQuotient<uint32_t>(poly, scalar, {});
-            verifyNativeQuotient<uint64_t>(poly, scalar, {});
-            #ifdef INT128_AVAILABLE
-            verifyNativeQuotient<regina::UInt128>(poly, scalar, {});
-            #endif
-            #endif
-        } else {
-            const L quotient = poly / scalar;
-            if (poly.isZero()) {
-                LaurentTest::validateZero(quotient);
-            } else {
-                LaurentTest::validate(quotient);
-                if (poly[poly.minExp()].abs() >= scalar.abs()) {
-                    EXPECT_FALSE(quotient.isZero());
-                    EXPECT_EQ(quotient.minExp(), poly.minExp());
-                } else {
-                    if (! quotient.isZero())
-                        EXPECT_GT(quotient.minExp(), poly.minExp());
-                }
-                if (poly[poly.maxExp()].abs() >= scalar.abs()) {
-                    EXPECT_FALSE(quotient.isZero());
-                    EXPECT_EQ(quotient.maxExp(), poly.maxExp());
-                } else {
-                    if (! quotient.isZero())
-                        EXPECT_LT(quotient.maxExp(), poly.maxExp());
-                }
-                for (long i = poly.minExp(); i <= poly.maxExp(); ++i)
-                    EXPECT_EQ(quotient[i], poly[i] / scalar);
-            }
-            LaurentTest::validate(L(poly) / scalar, quotient);
-            {
-                L x(poly);
-                LaurentTest::validate(x /= scalar, quotient);
-            }
-
-            verifyNativeQuotient<int8_t>(poly, scalar, quotient);
-            verifyNativeQuotient<int16_t>(poly, scalar, quotient);
-            verifyNativeQuotient<int32_t>(poly, scalar, quotient);
-            verifyNativeQuotient<int64_t>(poly, scalar, quotient);
-            #ifdef INT128_AVAILABLE
-            verifyNativeQuotient<regina::Int128>(poly, scalar, quotient);
-            #endif
-
-            if (scalar.sign() >= 0) {
-                verifyNativeQuotient<uint8_t>(poly, scalar, quotient);
-                verifyNativeQuotient<uint16_t>(poly, scalar, quotient);
-                verifyNativeQuotient<uint32_t>(poly, scalar, quotient);
-                verifyNativeQuotient<uint64_t>(poly, scalar, quotient);
-                #ifdef INT128_AVAILABLE
-                verifyNativeQuotient<regina::UInt128>(poly, scalar, quotient);
-                #endif
-            }
-        }
-
-        // Verify the scalar version of addProduct() while we're here.
-        for (const L& c : cases) {
-            SCOPED_TRACE_REGINA(c);
-            {
-                L x(c);
-                x.addProduct(poly, scalar);
-                LaurentTest::validate(x, c + product);
-            }
-            {
-                L x(c);
-                x.addProduct(L(poly), scalar);
-                LaurentTest::validate(x, c + product);
-            }
-        }
-
-        // Finally, test the scalar addProduct() when operating upon one's self.
-        {
-            L x(poly);
-            x.addProduct(x, scalar);
-            LaurentTest::validate(x, poly + product);
-        }
-    }
-} // anonymous namespace
-
 TEST_F(Laurent1Test, scalarMultiplyDivide) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
-
-        for (int i = -3; i <= 3; ++i)
-            verifyScalarMultiplyDivide(c, i, cases);
-
-        // Run through boundaries and "midpoints" for {8,16,32,64,128}-bit ints:
-        Integer pow2 = 256; // 2^8
-        Integer halfPow2 = 128;
-        Integer quarterPow2 = 64;
-        for (int i = 0; i < 5; ++i) {
-            // pow2 = 2^bits = 2^{2^b} for some b
-            // halfPow2 = 2^(bits-1)
-            // quarterPow2 = 2^(bits-2)
-            for (int j = -1; j <= 1; ++j) {
-                verifyScalarMultiplyDivide(c, pow2 + j, cases);
-                verifyScalarMultiplyDivide(c, -pow2 + j, cases);
-                verifyScalarMultiplyDivide(c, halfPow2 + j, cases);
-                verifyScalarMultiplyDivide(c, -halfPow2 + j, cases);
-                verifyScalarMultiplyDivide(c, quarterPow2 + j, cases);
-                verifyScalarMultiplyDivide(c, -quarterPow2 + j, cases);
-            }
-            // Double the number of bits in pow2:
-            quarterPow2 *= pow2;
-            halfPow2 *= pow2;
-            pow2 *= pow2;
-        }
-
-        verifyScalarMultiplyDivide(c, bigInt, cases);
-        verifyScalarMultiplyDivide(c, -bigInt, cases);
-
-        // Test expected arithmetic properties:
-        validateZero(c * 0);
-        validate(c * 1, c);
-        validate(c * -1, -c);
-        validate(c * 2, c + c);
-
-        if (! c.isZero()) {
-            verifyScalarMultiplyDivide(c, c[c.minExp()], cases);
-            verifyScalarMultiplyDivide(c, c[c.maxExp()], cases);
-
-            L c0 = c / c[c.minExp()];
-            EXPECT_EQ(c0.minExp(), c.minExp());
-            EXPECT_EQ(c0[c0.minExp()], 1);
-
-            L c1 = c / c[c.maxExp()];
-            EXPECT_EQ(c1.maxExp(), c.maxExp());
-            EXPECT_EQ(c1[c1.maxExp()], 1);
-        }
+        verifyScalarMultiplyDivide(c);
     }
 }
 
@@ -1511,164 +1084,40 @@ TEST_F(Laurent1Test, multiply) {
         SCOPED_TRACE_REGINA(c);
         for (const L& d : cases) {
             SCOPED_TRACE_REGINA(d);
+            verifyMultiply(c, d);
+        }
+        verifyMultiply(c);
+    }
+}
 
-            if (c.isZero() || d.isZero()) {
-                validateZero(c * d);
-                validateZero(c * L(d));
-                validateZero(L(c) * d);
-                validateZero(L(c) * L(d));
-                {
-                    L x(c);
-                    validateZero(x *= d);
-                }
-                {
-                    L x(c);
-                    validateZero(x *= L(d));
-                }
-            } else {
-                const L product = c * d;
-                validate(product);
-                EXPECT_FALSE(product.isZero());
-                EXPECT_EQ(product.minExp(), c.minExp() + d.minExp());
-                EXPECT_EQ(product.maxExp(), c.maxExp() + d.maxExp());
-                for (long i = product.minExp(); i <= product.maxExp(); ++i) {
-                    long cExp = std::max(c.minExp(), i - d.maxExp());
-                    long dExp = i - cExp;
-                    Integer coeff;
-                    while (cExp <= c.maxExp() && dExp >= d.minExp())
-                        coeff.addProduct(c[cExp++], d[dExp--]);
-                    EXPECT_EQ(product[i], coeff);
-                }
+TEST_F(Laurent1Test, scalarAddProduct) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        for (const L& d : cases) {
+            SCOPED_TRACE_REGINA(d);
+            verifyScalarAddProduct(c, d);
+        }
+        verifyScalarAddProduct(c);
+    }
+}
 
-                validate(c * L(d), product);
-                validate(L(c) * d, product);
-                validate(L(c) * L(d), product);
-                {
-                    L x(c);
-                    validate(x *= d, product);
-                }
-                {
-                    L x(c);
-                    validate(x *= L(d), product);
-                }
-
-                {
-                    L x(c);
-                    x.addProduct(d, d);
-                    validate(x, c + d * d);
-                }
-                {
-                    // Compute the expected result of c -> c + c * d:
-                    const L expect = c * (d + L(1));
-                    {
-                        L x(c);
-                        x.addProduct(x, d);
-                        validate(x, expect);
-                    }
-                    {
-                        L x(c);
-                        x.addProduct(d, x);
-                        validate(x, expect);
-                    }
-                }
-
-                // Test expected arithmetic properties:
-                validate(c * d, d * c);
-
-                // Verify that our different multiplication algorithms
-                // give the same results:
-                using PPA = regina::PolynomialProductAlgorithm;
-                using Array = regina::FixedArray<Integer>;
-
-                auto cSeq = coefficientSequence(c);
-                auto dSeq = coefficientSequence(d);
-
-                auto def = polynomialProduct<PPA::Default>(
-                    Array(cSeq.begin(), cSeq.end()),
-                    Array(dSeq.begin(), dSeq.end()));
-                auto classic = polynomialProduct<PPA::Classic>(
-                    Array(cSeq.begin(), cSeq.end()),
-                    Array(dSeq.begin(), dSeq.end()));
-                EXPECT_EQ(def, classic);
-
-                long cSpan = c.maxExp() - c.minExp();
-                long dSpan = d.maxExp() - d.minExp();
-                if (cSpan >= 1 && dSpan >= 1 &&
-                        (2 * cSpan <= dSpan || 2 * dSpan <= cSpan)) {
-                    EXPECT_THROW({
-                        polynomialProduct<PPA::Karatsuba>(
-                            Array(cSeq.begin(), cSeq.end()),
-                            Array(dSeq.begin(), dSeq.end()));
-                    }, regina::InvalidArgument);
-                } else {
-                    EXPECT_NO_THROW({
-                        auto karatsuba = polynomialProduct<PPA::Karatsuba>(
-                            Array(cSeq.begin(), cSeq.end()),
-                            Array(dSeq.begin(), dSeq.end()));
-                        EXPECT_EQ(def, karatsuba);
-                    });
-                }
-            }
-
+TEST_F(Laurent1Test, polynomialAddProduct) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        for (const L& d : cases) {
+            SCOPED_TRACE_REGINA(d);
             for (const L& e : cases) {
                 SCOPED_TRACE_REGINA(e);
-                {
-                    L x(c);
-                    x.addProduct(d, e);
-                    validate(x, c + d * e);
-                }
-                {
-                    L x(c);
-                    x.addProduct(L(d), L(e));
-                    validate(x, c + d * e);
-                }
+                verifyPolynomialAddProduct(c, d, e);
             }
+            verifyPolynomialAddProduct(c, d);
         }
-
-        // Test operations upon one's self:
-        const L copy(c);
-        const L square = c * copy;
-        if (c.isZero()) {
-            validateZero(square);
-        } else {
-            validate(square);
-            EXPECT_FALSE(square.isZero());
-            EXPECT_EQ(square.minExp(), 2 * c.minExp());
-            EXPECT_EQ(square.maxExp(), 2 * c.maxExp());
-            for (long i = square.minExp(); i <= square.maxExp(); ++i) {
-                long lhsExp = std::max(c.minExp(), i - c.maxExp());
-                long rhsExp = i - lhsExp;
-                Integer coeff;
-                while (lhsExp <= c.maxExp() && rhsExp >= c.minExp())
-                    coeff.addProduct(c[lhsExp++], c[rhsExp--]);
-                EXPECT_EQ(square[i], coeff);
-            }
-        }
-        validate(c * c, square);
-        {
-            L x(c);
-            validate(x *= x, square);
-        }
-
-        {
-            L x(c);
-            x.addProduct(x, x);
-            validate(x, c + square);
-        }
-
-        // More expected arithmetic properties:
-        validate(c * one, c);
-        validate(one * c, c);
-        validate(c * minusOne, -c);
-        validate(minusOne * c, -c);
-        validate(c * x2, c.shifted(2));
-        validate(x2 * c, c.shifted(2));
-        validate(c * x5Inv, c.shifted(-5));
-        validate(x5Inv * c, c.shifted(-5));
+        verifyPolynomialAddProduct(c);
     }
 }
 
 TEST_F(Laurent1Test, polynomial) {
+    // This test is specific to single-variable Laurent polynomials.
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
         auto p = c.polynomial();
