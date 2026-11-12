@@ -47,19 +47,24 @@ using L = Laurent<Integer, 2>;
 
 class Laurent2Test : public LaurentTest {
     protected:
-        const std::array<const L, 12> cases {
-            L{},
-            L{{{0, 0}, 1}},
-            L{{{0, 0}, 2}},
-            L{{{0, 0}, -1}},
-            L{{{2, 0}, 1}},
-            L{{{1, 1}, 1}},
-            L{{{1, 2}, 1}},
-            L{{{0, 0}, 1}, {{1, 2}, -2}, {{-2, -1}, 3}},
-            L{{{1, 0}, 2}, {{1, 2}, -4}, {{0, -1}, -2}},
-            L{{{1, 1}, -1}, {{1, 2}, 1}, {{0, -1}, -2}, {{1, 0}, -2}},
-            L{{{-1, 0}, -5}, {{2, -2}, 3}, {{2, 0}, 2}, {{2, 1}, -1}},
-            L{{{1, 2}, bigInt}, {{1, -2}, -bigInt}, {{1, 1}, -1}}
+        const L zero {};
+        const L one {{{0, 0}, 1}};
+        const L two {{{0, 0}, 2}};
+        const L minusOne {{{0, 0}, -1}};
+        const L x2 {{{2, 0}, 1}};
+        const L xy {{{1, 1}, 1}};
+        const L xy2 {{{1, 2}, 1}};
+        const L a {{{0, 0}, 1}, {{1, 2}, -2}, {{-2, -1}, 3}};
+        const L b {{{1, 0}, 2}, {{1, 2}, -4}, {{0, -1}, -2}};
+        const L c {{{1, 1}, -1}, {{1, 2}, 1}, {{0, -1}, -2}, {{1, 0}, -2}};
+        const L d {{{-1, 0}, -5}, {{2, -2}, 3}, {{2, 0}, 2}, {{2, 1}, -1}};
+        const L e {{{1, 2}, bigInt}, {{1, -2}, -bigInt}, {{1, 1}, -1}};
+
+        const std::array<std::reference_wrapper<const L>, 12> cases {
+            std::cref(zero), std::cref(one), std::cref(two),
+            std::cref(minusOne),
+            std::cref(x2), std::cref(xy), std::cref(xy2),
+            std::cref(a), std::cref(b), std::cref(c), std::cref(d), std::cref(e)
         };
 
         // Some single-variable polynomials to use with routines such as
@@ -209,40 +214,11 @@ TEST_F(Laurent2Test, diagonalise) {
 TEST_F(Laurent2Test, assign) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
-
         for (const L& d : cases) {
             SCOPED_TRACE_REGINA(d);
-            {
-                L x(c);
-                validate(x, c);
-                x = d;
-                validate(x, d);
-            }
-            {
-                L x(c), y(d);
-                validate(x, c);
-                validate(y, d);
-                x = std::move(y);
-                validate(x, d);
-            }
+            verifyAssign(c, d);
         }
-
-        Integer zero(0), pos(4), neg(-4), big(bigInt);
-        { L x(c); validate(x, c); x = zero; validateZero(x); }
-        { L x(c); validate(x, c); x = std::move(zero); validateZero(x); }
-        { L x(c); validate(x, c); x = 0; validateZero(x); }
-        { L x(c); validate(x, c); x = pos; validate(x, {{{0,0},4}}); }
-        { L x(c); validate(x, c); x = std::move(pos);
-            validate(x, {{{0,0},4}}); }
-        { L x(c); validate(x, c); x = 4; validate(x, {{{0,0},4}}); }
-        { L x(c); validate(x, c); x = neg; validate(x, {{{0,0},-4}}); }
-        { L x(c); validate(x, c); x = std::move(neg);
-            validate(x, {{{0,0},-4}}); }
-        { L x(c); validate(x, c); x = -4; validate(x, {{{0,0},-4}}); }
-        { L x(c); validate(x, c); x = big; validate(x, {{{0,0},bigInt}}); }
-        { L x(c); validate(x, c); x = std::move(big);
-            validate(x, {{{0,0},bigInt}}); }
-        // At this point: zero, pos, neg, big are all unusable.
+        verifyAssign(c);
     }
 }
 
@@ -306,126 +282,37 @@ TEST_F(Laurent2Test, set) {
     validate(x, {{{-1,-1},1}});
 }
 
-TEST_F(Laurent2Test, iterators) {
+TEST_F(Laurent2Test, iteration) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
-
-        // Here is as good a time as any to test operator() also.
-        if (c.isZero()) {
-            EXPECT_FALSE(c.first());
-            EXPECT_FALSE(c.last());
-
-            for (int i : { -100, -1, 0, 1, 100 })
-                for (int j : { -100, -1, 0, 1, 100 })
-                    EXPECT_EQ(c(i, j), 0);
-        } else {
-            ASSERT_TRUE(c.first());
-            ASSERT_TRUE(c.last());
-
-            // Forward iteration:
-            {
-                auto it = c.first();
-                EXPECT_EQ(c(it.exp<0>() - 1, it.exp<1>()), 0);
-                EXPECT_EQ(c(it.exp<0>(), it.exp<1>() - 1), 0);
-
-                std::optional<regina::LaurentCoefficient<Integer, 2>> prev;
-                for ( ; it; prev = it++) {
-                    if (prev.has_value()) {
-                        // Manually verify the order of iteration:
-                        EXPECT_LT(prev->exponents(), it.exponents());
-                    }
-                    EXPECT_EQ(c(it.exp<0>(), it.exp<1>()), *it);
-                }
-
-                ASSERT_TRUE(prev);
-                ASSERT_TRUE(*prev);
-                EXPECT_EQ(*prev, c.last());
-                EXPECT_EQ(c(prev->exp<0>() + 1, prev->exp<1>()), 0);
-                EXPECT_EQ(c(prev->exp<0>(), prev->exp<1>() + 1), 0);
-            }
-
-            // Backward iteration:
-            {
-                auto it = c.last();
-                EXPECT_EQ(c(it.exp<0>() + 1, it.exp<1>()), 0);
-                EXPECT_EQ(c(it.exp<0>(), it.exp<1>() + 1), 0);
-
-                std::optional<regina::LaurentCoefficient<Integer, 2>> prev;
-                for ( ; it; prev = it--) {
-                    if (prev.has_value()) {
-                        // Manually verify the order of iteration:
-                        EXPECT_GT(prev->exponents(), it.exponents());
-                    }
-                    EXPECT_EQ(c(it.exp<0>(), it.exp<1>()), *it);
-                }
-
-                ASSERT_TRUE(prev);
-                ASSERT_TRUE(*prev);
-                EXPECT_EQ(*prev, c.first());
-                EXPECT_EQ(c(prev->exp<0>() - 1, prev->exp<1>()), 0);
-                EXPECT_EQ(c(prev->exp<0>(), prev->exp<1>() - 1), 0);
-            }
-        }
+        verifyIteration(c);
     }
 }
 
 TEST_F(Laurent2Test, comparison) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
-
-        EXPECT_TRUE(c == c);
-        EXPECT_TRUE(c == L(c));
-        EXPECT_FALSE(c != c);
-        EXPECT_FALSE(c != L(c));
-        EXPECT_EQ(c <=> c, std::strong_ordering::equal);
-        EXPECT_EQ(c <=> L(c), std::strong_ordering::equal);
-
         for (const L& d : cases) {
-            if (std::addressof(c) == std::addressof(d))
-                continue;
-
             SCOPED_TRACE_REGINA(d);
-
-            auto c_vs_d = c <=> d;
-            EXPECT_FALSE(c == d);
-            EXPECT_TRUE(c != d);
-            EXPECT_NE(c_vs_d, std::strong_ordering::equal);
-            EXPECT_EQ(d <=> c, 0 <=> c_vs_d);
-
-            // Test transitivity of comparisions:
             for (const L& e : cases) {
-                if (std::addressof(e) == std::addressof(c) ||
-                        std::addressof(e) == std::addressof(d))
-                    continue;
-                if ((d <=> e) != (0 <=> c_vs_d))
-                    EXPECT_EQ(c <=> e, c_vs_d);
+                SCOPED_TRACE_REGINA(e);
+                verifyComparison(c, d, e);
             }
+            verifyComparison(c, d, std::addressof(c) == std::addressof(d));
         }
+        verifyComparison(c);
 
-        EXPECT_EQ(L(), 0);
-        EXPECT_EQ(L(), Integer());
-        EXPECT_NE(L(), 2);
-        EXPECT_NE(L(), Integer(2));
-        EXPECT_NE(L(), bigInt);
-        EXPECT_NE(L(2), 0);
-        EXPECT_NE(L(2), Integer());
-        EXPECT_EQ(L(2), 2);
-        EXPECT_EQ(L(2), Integer(2));
-        EXPECT_NE(L(2), bigInt);
-        EXPECT_NE(L(bigInt), 0);
-        EXPECT_NE(L(bigInt), Integer());
-        EXPECT_NE(L(bigInt), 2);
-        EXPECT_NE(L(bigInt), Integer(2));
-        EXPECT_EQ(L(bigInt), bigInt);
-        EXPECT_NE(L::monomial(0, 0), 0);
-        EXPECT_NE(L::monomial(0, 0), Integer(0));
-        EXPECT_EQ(L::monomial(0, 0), 1);
-        EXPECT_EQ(L::monomial(0, 0), Integer(1));
-        EXPECT_NE(L::monomial(2, 0), 2);
-        EXPECT_NE(L::monomial(0, 2), 2);
-        EXPECT_NE(L::monomial(2, 0), Integer(2));
-        EXPECT_NE(L::monomial(0, 2), Integer(2));
+        // Comparisons against integers that appear in some of our tests:
+        verifyComparison(c, 0, std::addressof(c) == std::addressof(zero));
+        verifyComparison(c, 1, std::addressof(c) == std::addressof(one));
+        verifyComparison(c, 2, std::addressof(c) == std::addressof(two));
+        verifyComparison(c, -1, std::addressof(c) == std::addressof(minusOne));
+
+        // Comparisons against integers that appear in none of our tests:
+        verifyComparison(c, 3, false);
+        verifyComparison(c, bigInt, false);
     }
+    verifyComparisonBasic<2>();
 }
 
 TEST_F(Laurent2Test, shift) {

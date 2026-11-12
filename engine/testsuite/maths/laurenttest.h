@@ -146,7 +146,7 @@ class LaurentTest : public testing::Test {
         }
 
         template <regina::CoefficientDomain T, int vars>
-        requires (vars > 1 && vars <= 3)
+        requires (vars > 0 && vars <= 3)
         static void validate(const regina::Laurent<T, vars>& poly,
                 std::initializer_list<std::pair<std::array<long, vars>, T>>
                 coeffs) {
@@ -297,6 +297,22 @@ class LaurentTest : public testing::Test {
         // ---------------------------------------------------------------
 
         /**
+         * Returns the requested coefficient of the given polynomial, where the
+         * exponents are given as an array instead of individual arguments.
+         */
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        static const T& coeff(const regina::Laurent<T, vars>& poly,
+                const std::type_identity_t<std::array<long, vars>>& exp) {
+            if constexpr (vars == 1)
+                return poly[exp[0]];
+            else if constexpr (vars == 2)
+                return poly(exp[0], exp[1]);
+            else // vars == 3
+                return poly(exp[0], exp[1], exp[2]);
+        }
+
+        /**
          * Returns a polynomial equal to \a poly, but with more space for
          * coefficients allocated on each end than is necessary.
          */
@@ -408,6 +424,61 @@ class LaurentTest : public testing::Test {
         // ---------------------------------------------------------------
         // Individual tests
         // ---------------------------------------------------------------
+
+        /**
+         * Tests assignment operations involving two polynomials.
+         */
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        static void verifyAssign(const regina::Laurent<T, vars>& c,
+                const regina::Laurent<T, vars>& d) {
+            using L = regina::Laurent<T, vars>;
+
+            {
+                L x(c);
+                validate(x, c);
+                x = d;
+                validate(x, d);
+            }
+            {
+                L x(c), y(d);
+                validate(x, c);
+                validate(y, d);
+                const auto alloc = y.allocation();
+                x = std::move(y);
+                validate(x, d);
+                EXPECT_EQ(x.allocation(), alloc);
+            }
+        }
+
+        /**
+         * Tests assignment operations involving a single polynomial.
+         */
+        template <int vars> requires (vars > 0 && vars <= 3)
+        static void verifyAssign(
+                const regina::Laurent<regina::Integer, vars>& c) {
+            using L = regina::Laurent<regina::Integer, vars>;
+
+            regina::Integer zero(0), pos(4), neg(-4), big(bigInt);
+            std::array<long, vars> exp;
+            std::fill(exp.begin(), exp.end(), 0);
+
+            { L x(c); validate(x, c); x = zero; validateZero(x); }
+            { L x(c); validate(x, c); x = std::move(zero); validateZero(x); }
+            { L x(c); validate(x, c); x = 0; validateZero(x); }
+            { L x(c); validate(x, c); x = pos; validate(x, {{exp, 4}}); }
+            { L x(c); validate(x, c); x = std::move(pos);
+                validate(x, {{exp, 4}}); }
+            { L x(c); validate(x, c); x = 4; validate(x, {{exp, 4}}); }
+            { L x(c); validate(x, c); x = neg; validate(x, {{exp, -4}}); }
+            { L x(c); validate(x, c); x = std::move(neg);
+                validate(x, {{exp, -4}}); }
+            { L x(c); validate(x, c); x = -4; validate(x, {{exp, -4}}); }
+            { L x(c); validate(x, c); x = big; validate(x, {{exp, bigInt}}); }
+            { L x(c); validate(x, c); x = std::move(big);
+                validate(x, {{exp, bigInt}}); }
+            // At this point: zero, pos, neg, big are all unusable.
+        }
 
         /**
          * Here \a junk indicates the initial value to assign to the
@@ -567,6 +638,250 @@ class LaurentTest : public testing::Test {
                     x.initExp(-5, 3, -2);
                     validate(x, m);
                     validate(y, c);
+                }
+            }
+        }
+
+        /**
+         * Tests iteration, and also coefficient access via operator ()/[]
+         * (using LaurentTest::coeff() as a helper function to manage the
+         * variable number of arguments).
+         */
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        static void verifyIteration(const regina::Laurent<T, vars>& c) {
+            // Here is as good a time as any to test operator()/[] also.
+
+            using L = regina::Laurent<T, vars>;
+            const regina::LaurentCoefficient<T, vars> end{};
+
+            if (c.isZero()) {
+                EXPECT_FALSE(c.first());
+                EXPECT_FALSE(c.last());
+                EXPECT_EQ(c.first(), end);
+                EXPECT_EQ(c.last(), end);
+
+                withExponents(c, { -100, -1, 0, 1, 100 },
+                        [](const L& poly, long exp0, auto... exp) {
+                    if constexpr (vars == 1)
+                        EXPECT_EQ(poly[exp0], 0);
+                    else
+                        EXPECT_EQ(poly(exp0, exp...), 0);
+                });
+            } else {
+                ASSERT_TRUE(c.first());
+                ASSERT_TRUE(c.last());
+
+                std::array<long, vars> exp;
+
+                // Forward iteration:
+                {
+                    auto it = c.first();
+                    if constexpr (vars == 1)
+                        EXPECT_EQ(it.template exp<0>(), c.minExp());
+
+                    exp = it.exponents();
+                    for (int i = 0; i < vars; ++i) {
+                        EXPECT_NE(coeff(c, exp), 0);
+                        --exp[i];
+                        EXPECT_EQ(coeff(c, exp), 0);
+                        ++exp[i];
+                    }
+
+                    std::optional<regina::LaurentCoefficient<T, vars>> prev;
+                    for ( ; it; prev = it++) {
+                        EXPECT_NE(it, end);
+                        EXPECT_NE(*it, 0);
+                        if (prev.has_value()) {
+                            // Manually verify the order of iteration:
+                            EXPECT_LT(prev->exponents(), it.exponents());
+                        }
+                        EXPECT_EQ(coeff(c, it.exponents()), *it);
+                        EXPECT_EQ(it.constantTerm(),
+                            std::ranges::all_of(it.exponents(),
+                                [](long e) { return e == 0; }));
+                    }
+                    EXPECT_EQ(it, end);
+
+                    ASSERT_TRUE(prev);
+                    ASSERT_TRUE(*prev);
+                    EXPECT_EQ(*prev, c.last());
+                    if constexpr (vars == 1)
+                        EXPECT_EQ(prev->template exp<0>(), c.maxExp());
+
+                    exp = prev->exponents();
+                    for (int i = 0; i < vars; ++i) {
+                        EXPECT_NE(coeff(c, exp), 0);
+                        ++exp[i];
+                        EXPECT_EQ(coeff(c, exp), 0);
+                        exp[i] += 99;
+                        EXPECT_EQ(coeff(c, exp), 0);
+                        exp[i] -= 100;
+                    }
+                }
+
+                // Backward iteration:
+                {
+                    auto it = c.last();
+                    if constexpr (vars == 1)
+                        EXPECT_EQ(it.template exp<0>(), c.maxExp());
+
+                    exp = it.exponents();
+                    for (int i = 0; i < vars; ++i) {
+                        EXPECT_NE(coeff(c, exp), 0);
+                        ++exp[i];
+                        EXPECT_EQ(coeff(c, exp), 0);
+                        --exp[i];
+                    }
+
+                    std::optional<regina::LaurentCoefficient<T, vars>> prev;
+                    for ( ; it; prev = it--) {
+                        EXPECT_NE(it, end);
+                        EXPECT_NE(*it, 0);
+                        if (prev.has_value()) {
+                            // Manually verify the order of iteration:
+                            EXPECT_GT(prev->exponents(), it.exponents());
+                        }
+                        EXPECT_EQ(coeff(c, it.exponents()), *it);
+                        EXPECT_EQ(it.constantTerm(),
+                            std::ranges::all_of(it.exponents(),
+                                [](long e) { return e == 0; }));
+                    }
+                    EXPECT_EQ(it, end);
+
+                    ASSERT_TRUE(prev);
+                    ASSERT_TRUE(*prev);
+                    EXPECT_EQ(*prev, c.first());
+                    if constexpr (vars == 1)
+                        EXPECT_EQ(prev->template exp<0>(), c.minExp());
+
+                    exp = prev->exponents();
+                    for (int i = 0; i < vars; ++i) {
+                        EXPECT_NE(coeff(c, exp), 0);
+                        --exp[i];
+                        EXPECT_EQ(coeff(c, exp), 0);
+                        exp[i] -= 99;
+                        EXPECT_EQ(coeff(c, exp), 0);
+                        exp[i] += 100;
+                    }
+                }
+            }
+        }
+
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        static void verifyComparison(const regina::Laurent<T, vars>& c,
+                const regina::Laurent<T, vars>& d,
+                const regina::Laurent<T, vars>& e) {
+            using L = regina::Laurent<regina::Integer, vars>;
+
+            // Test transitivity of comparisions:
+            const auto c_vs_d = c <=> d;
+            if (c_vs_d == std::strong_ordering::equal)
+                EXPECT_EQ(c <=> e, d <=> e);
+            else if ((d <=> e) != (0 <=> c_vs_d))
+                EXPECT_EQ(c <=> e, c_vs_d);
+        }
+
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        static void verifyComparison(const regina::Laurent<T, vars>& c,
+                const regina::Laurent<T, vars>& d,
+                bool shouldBeEqual) {
+            using L = regina::Laurent<regina::Integer, vars>;
+
+            if (shouldBeEqual) {
+                EXPECT_TRUE(c == d);
+                EXPECT_FALSE(c != d);
+                EXPECT_EQ(c <=> d, std::strong_ordering::equal);
+            } else {
+                EXPECT_FALSE(c == d);
+                EXPECT_TRUE(c != d);
+                const auto c_vs_d = c <=> d;
+                EXPECT_NE(c_vs_d, std::strong_ordering::equal);
+                EXPECT_EQ(d <=> c, 0 <=> c_vs_d);
+            }
+        }
+
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        static void verifyComparison(const regina::Laurent<T, vars>& c) {
+            using L = regina::Laurent<regina::Integer, vars>;
+
+            EXPECT_TRUE(c == c);
+            EXPECT_TRUE(c == L(c));
+            EXPECT_FALSE(c != c);
+            EXPECT_FALSE(c != L(c));
+            EXPECT_EQ(c <=> c, std::strong_ordering::equal);
+            EXPECT_EQ(c <=> L(c), std::strong_ordering::equal);
+        }
+
+        template <int vars>
+        requires (vars > 0 && vars <= 3)
+        static void verifyComparison(
+                const regina::Laurent<regina::Integer, vars>& c,
+                const regina::Integer& value,
+                bool shouldBeEqual) {
+            EXPECT_EQ(c == value, shouldBeEqual);
+            EXPECT_EQ(c != value, ! shouldBeEqual);
+        }
+
+        template <int vars, regina::CppInteger Native>
+        requires (vars > 0 && vars <= 3)
+        static void verifyComparison(
+                const regina::Laurent<regina::Integer, vars>& c,
+                Native value, bool shouldBeEqual) {
+            EXPECT_EQ(c == value, shouldBeEqual);
+            EXPECT_EQ(c != value, ! shouldBeEqual);
+            verifyComparison(c, regina::Integer(value), shouldBeEqual);
+        }
+
+        template <int vars> requires (vars > 0 && vars <= 3)
+        static void verifyComparisonBasic() {
+            using L = regina::Laurent<regina::Integer, vars>;
+
+            EXPECT_EQ(L(), 0);
+            EXPECT_EQ(L(), regina::Integer());
+            EXPECT_NE(L(), 2);
+            EXPECT_NE(L(), regina::Integer(2));
+            EXPECT_NE(L(), bigInt);
+            EXPECT_NE(L(2), 0);
+            EXPECT_NE(L(2), regina::Integer());
+            EXPECT_EQ(L(2), 2);
+            EXPECT_EQ(L(2), regina::Integer(2));
+            EXPECT_NE(L(2), bigInt);
+            EXPECT_NE(L(bigInt), 0);
+            EXPECT_NE(L(bigInt), regina::Integer());
+            EXPECT_NE(L(bigInt), 2);
+            EXPECT_NE(L(bigInt), regina::Integer(2));
+            EXPECT_EQ(L(bigInt), bigInt);
+
+            std::array<long, vars> exp;
+            std::fill(exp.begin(), exp.end(), 0);
+            {
+                L m = std::apply([](auto... e) {
+                    return L::monomial(e...);
+                }, exp);
+                EXPECT_NE(m, 0);
+                EXPECT_NE(m, regina::Integer(0));
+                EXPECT_EQ(m, 1);
+                EXPECT_EQ(m, regina::Integer(1));
+            }
+            for (int i = 0; i < vars; ++i) {
+                exp[i] = 2;
+                {
+                    L m = std::apply([](auto... e) {
+                        return L::monomial(e...);
+                    }, exp);
+                    EXPECT_NE(m, 2);
+                    EXPECT_NE(m, regina::Integer(2));
+                }
+                exp[i] = 0;
+                {
+                    L m = std::apply([](auto... e) {
+                        return L::monomial(e...);
+                    }, exp);
+                    EXPECT_EQ(m, 1);
                 }
             }
         }

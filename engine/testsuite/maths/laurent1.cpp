@@ -177,40 +177,11 @@ TEST_F(Laurent1Test, construct) {
 TEST_F(Laurent1Test, assign) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
-
         for (const L& d : cases) {
             SCOPED_TRACE_REGINA(d);
-            {
-                L x(c);
-                validate(x, c);
-                x = d;
-                validate(x, d);
-            }
-            {
-                L x(c), y(d);
-                validate(x, c);
-                validate(y, d);
-                auto alloc = y.allocation();
-                x = std::move(y);
-                validate(x, d);
-                EXPECT_EQ(x.allocation(), alloc);
-            }
+            verifyAssign(c, d);
         }
-
-        Integer zero(0), pos(4), neg(-4), big(bigInt);
-        { L x(c); validate(x, c); x = zero; validateZero(x); }
-        { L x(c); validate(x, c); x = std::move(zero); validateZero(x); }
-        { L x(c); validate(x, c); x = 0; validateZero(x); }
-        { L x(c); validate(x, c); x = pos; validate(x, 0, { 4 }); }
-        { L x(c); validate(x, c); x = std::move(pos); validate(x, 0, { 4 }); }
-        { L x(c); validate(x, c); x = 4; validate(x, 0, { 4 }); }
-        { L x(c); validate(x, c); x = neg; validate(x, 0, { -4 }); }
-        { L x(c); validate(x, c); x = std::move(neg); validate(x, 0, { -4 }); }
-        { L x(c); validate(x, c); x = -4; validate(x, 0, { -4 }); }
-        { L x(c); validate(x, c); x = big; validate(x, 0, bigCoeff); }
-        { L x(c); validate(x, c); x = std::move(big);
-            validate(x, 0, bigCoeff); }
-        // At this point: zero, pos, neg, big are all unusable.
+        verifyAssign(c);
     }
 }
 
@@ -784,127 +755,41 @@ TEST_F(Laurent1Test, set) {
 }
 
 TEST_F(Laurent1Test, iteration) {
-    const regina::LaurentCoefficient<Integer, 1> end{};
-
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
-
-        // Here is as good a time as any to test operator[] also.
-        if (c.isZero()) {
-            EXPECT_FALSE(c.first());
-            EXPECT_FALSE(c.last());
-            EXPECT_EQ(c.first(), end);
-            EXPECT_EQ(c.last(), end);
-
-            EXPECT_EQ(c[-100], 0);
-            EXPECT_EQ(c[-1], 0);
-            EXPECT_EQ(c[0], 0);
-            EXPECT_EQ(c[1], 0);
-            EXPECT_EQ(c[100], 0);
-        } else {
-            {
-                long exp = c.minExp();
-                auto it = c.first();
-                while (exp <= c.maxExp() && it) {
-                    EXPECT_NE(it, end);
-                    EXPECT_EQ(exp, it.exp<0>());
-                    EXPECT_EQ(c[exp], *it);
-                    EXPECT_EQ(it.constantTerm(), exp == 0);
-                    ++exp;
-                    while (exp <= c.maxExp() && c[exp] == 0)
-                        ++exp;
-                    ++it;
-                }
-                EXPECT_EQ(exp, c.maxExp() + 1);
-                EXPECT_FALSE(it);
-                EXPECT_EQ(it, end);
-            }
-            {
-                long exp = c.maxExp();
-                auto it = c.last();
-                while (exp >= c.minExp() && it) {
-                    EXPECT_NE(it, end);
-                    EXPECT_EQ(exp, it.exp<0>());
-                    EXPECT_EQ(c[exp], *it);
-                    EXPECT_EQ(it.constantTerm(), exp == 0);
-                    --exp;
-                    while (exp >= c.minExp() && c[exp] == 0)
-                        --exp;
-                    --it;
-                }
-                EXPECT_EQ(exp, c.minExp() - 1);
-                EXPECT_FALSE(it);
-                EXPECT_EQ(it, end);
-            }
-
-            EXPECT_EQ(c[c.minExp() - 100], 0);
-            EXPECT_EQ(c[c.minExp() - 1], 0);
-            EXPECT_NE(c[c.minExp()], 0);
-            EXPECT_NE(c[c.maxExp()], 0);
-            EXPECT_EQ(c[c.maxExp() + 1], 0);
-            EXPECT_EQ(c[c.maxExp() + 100], 0);
-        }
+        verifyIteration(c);
     }
 }
 
 TEST_F(Laurent1Test, comparison) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
-        Batch cBatch = batch(c);
-
-        EXPECT_TRUE(c == c);
-        EXPECT_TRUE(c == L(c));
-        EXPECT_FALSE(c != c);
-        EXPECT_FALSE(c != L(c));
-        EXPECT_EQ(c <=> c, std::strong_ordering::equal);
-        EXPECT_EQ(c <=> L(c), std::strong_ordering::equal);
-
+        const auto cBatch = batch(c);
         for (const L& d : cases) {
-            if (std::addressof(c) == std::addressof(d))
-                continue;
-
             SCOPED_TRACE_REGINA(d);
-            Batch dBatch = batch(d);
-            auto c_vs_d = c <=> d;
-
-            if (cBatch != Batch::Unique && cBatch == dBatch) {
-                EXPECT_TRUE(c == d);
-                EXPECT_FALSE(c != d);
-                EXPECT_EQ(c_vs_d, std::strong_ordering::equal);
-            } else {
-                EXPECT_FALSE(c == d);
-                EXPECT_TRUE(c != d);
-                EXPECT_NE(c_vs_d, std::strong_ordering::equal);
-                EXPECT_EQ(d <=> c, 0 <=> c_vs_d);
-            }
-
-            // Test transitivity of comparisions:
+            const auto dBatch = batch(d);
             for (const L& e : cases) {
-                if (std::addressof(e) == std::addressof(c) ||
-                        std::addressof(e) == std::addressof(d))
-                    continue;
-                if (c_vs_d == std::strong_ordering::equal)
-                    EXPECT_EQ(c <=> e, d <=> e);
-                else if ((d <=> e) != (0 <=> c_vs_d))
-                    EXPECT_EQ(c <=> e, c_vs_d);
+                SCOPED_TRACE_REGINA(e);
+                verifyComparison(c, d, e);
             }
+            verifyComparison(c, d,
+                std::addressof(c) == std::addressof(d) ||
+                (cBatch == dBatch && cBatch != Batch::Unique));
         }
+        verifyComparison(c);
 
-        EXPECT_EQ(c == 0, cBatch == Batch::Zero);
-        EXPECT_EQ(c != 0, cBatch != Batch::Zero);
-        EXPECT_EQ(c == Integer(), cBatch == Batch::Zero);
-        EXPECT_EQ(c != Integer(), cBatch != Batch::Zero);
-        EXPECT_EQ(c == 2, cBatch == Batch::Two);
-        EXPECT_EQ(c != 2, cBatch != Batch::Two);
-        EXPECT_EQ(c == Integer(2), cBatch == Batch::Two);
-        EXPECT_EQ(c != Integer(2), cBatch != Batch::Two);
-        EXPECT_FALSE(c == 3);
-        EXPECT_TRUE(c != 3);
-        EXPECT_FALSE(c == Integer(3));
-        EXPECT_TRUE(c != Integer(3));
-        EXPECT_FALSE(c == bigInt);
-        EXPECT_TRUE(c != bigInt);
+        // Comparisons against integers that appear in some of our tests:
+        verifyComparison(c, 0, cBatch == Batch::Zero);
+        verifyComparison(c, 2, cBatch == Batch::Two);
+        verifyComparison(c, 1, std::addressof(c) == std::addressof(one));
+        verifyComparison(c, -1, std::addressof(c) == std::addressof(minusOne));
+
+        // Comparisons against integers that appear in none of our tests:
+        verifyComparison(c, 3, false);
+        verifyComparison(c, bigInt, false);
     }
+
+    verifyComparisonBasic<1>();
 }
 
 TEST_F(Laurent1Test, shift) {
