@@ -1032,15 +1032,16 @@ TEST_F(Laurent1Test, negate) {
 TEST_F(Laurent1Test, invert) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
+
+        L x(c);
+        x.invert<0>();
+
         if (c.isZero()) {
-            L x(c);
-            x.invert<0>();
             validateZero(x);
         } else {
-            L x(c);
-            x.invert<0>();
             validate(x);
             EXPECT_FALSE(x.isZero());
+
             EXPECT_EQ(x.maxExp(), -c.minExp());
             EXPECT_EQ(x.minExp(), -c.maxExp());
             long cExp = c.minExp();

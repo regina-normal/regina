@@ -172,6 +172,8 @@ TEST_F(Laurent2Test, construct) {
         // At this point: zero, pos, neg, big are all unusable.
     }
 
+    // Test the product constructor (which is specific to multivariate Laurent
+    // polynomials).
     for (const auto& s : sub) {
         validateZero(L(sub[0], s));
         validateZero(L(s, sub[0]));
@@ -188,6 +190,7 @@ TEST_F(Laurent2Test, construct) {
 }
 
 TEST_F(Laurent2Test, embed) {
+    // This test is specific to multivariate Laurent polynomials.
     validateZero(L::embed<0>(sub[0]));
     validateZero(L::embed<1>(sub[0]));
     validate(L::embed<0>(sub[1]), {{{0,0},-5}});
@@ -197,6 +200,7 @@ TEST_F(Laurent2Test, embed) {
 }
 
 TEST_F(Laurent2Test, diagonalise) {
+    // This test is specific to multivariate Laurent polynomials.
     validateZero(L::diagonalise(sub[0]));
     validate(L::diagonalise(sub[1]), {{{0,0},-5}});
     validate(L::diagonalise(sub[2]), {{{-2,-2},3}, {{0,0},2}, {{1,1},-1}});
@@ -446,41 +450,62 @@ TEST_F(Laurent2Test, invert) {
         invX.invert<0>();
         invY.invert<1>();
 
-        validate(invX);
-        validate(invY);
+        if (c.isZero()) {
+            validateZero(invX);
+            validateZero(invY);
+        } else {
+            validate(invX);
+            validate(invY);
+            EXPECT_FALSE(invX.isZero());
+            EXPECT_FALSE(invY.isZero());
 
-        using Term = std::tuple<long, long, Integer>;
-        {
-            std::vector<Term> expect;
-            for (auto it = c.first(); it; ++it)
-                expect.emplace_back(-it.exp<0>(), it.exp<1>(), *it);
-            std::sort(expect.begin(), expect.end());
+            using Term = std::tuple<long, long, Integer>;
+            {
+                std::vector<Term> expect;
+                for (auto it = c.first(); it; ++it)
+                    expect.emplace_back(-it.exp<0>(), it.exp<1>(), *it);
+                std::sort(expect.begin(), expect.end());
 
-            std::vector<Term> found;
-            for (auto it = invX.first(); it; ++it)
-                found.emplace_back(it.exp<0>(), it.exp<1>(), *it);
+                std::vector<Term> found;
+                for (auto it = invX.first(); it; ++it)
+                    found.emplace_back(it.exp<0>(), it.exp<1>(), *it);
 
-            EXPECT_EQ(found, expect);
+                EXPECT_EQ(found, expect);
+            }
+            {
+                std::vector<Term> expect;
+                for (auto it = c.first(); it; ++it)
+                    expect.emplace_back(it.exp<0>(), -it.exp<1>(), *it);
+                std::sort(expect.begin(), expect.end());
+
+                std::vector<Term> found;
+                for (auto it = invY.first(); it; ++it)
+                    found.emplace_back(it.exp<0>(), it.exp<1>(), *it);
+
+                EXPECT_EQ(found, expect);
+            }
+
+            // Invert all remaining variables for each polynomial.
+            invX.invert<1>();
+            invY.invert<0>();
+
+            validate(invX);
+            validate(invY);
+            EXPECT_EQ(invX, invY);
+            {
+                // Verify the terms of just one of these (we use invX here).
+                std::vector<Term> expect;
+                for (auto it = c.first(); it; ++it)
+                    expect.emplace_back(-it.exp<0>(), -it.exp<1>(), *it);
+                std::reverse(expect.begin(), expect.end());
+
+                std::vector<Term> found;
+                for (auto it = invX.first(); it; ++it)
+                    found.emplace_back(it.exp<0>(), it.exp<1>(), *it);
+
+                EXPECT_EQ(found, expect);
+            }
         }
-        {
-            std::vector<Term> expect;
-            for (auto it = c.first(); it; ++it)
-                expect.emplace_back(it.exp<0>(), -it.exp<1>(), *it);
-            std::sort(expect.begin(), expect.end());
-
-            std::vector<Term> found;
-            for (auto it = invY.first(); it; ++it)
-                found.emplace_back(it.exp<0>(), it.exp<1>(), *it);
-
-            EXPECT_EQ(found, expect);
-        }
-
-        invX.invert<1>();
-        invY.invert<0>();
-
-        validate(invX);
-        validate(invY);
-        EXPECT_EQ(invX, invY);
     }
 }
 
