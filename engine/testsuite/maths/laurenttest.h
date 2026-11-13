@@ -303,13 +303,31 @@ class LaurentTest : public testing::Test {
         template <regina::CoefficientDomain T, int vars>
         requires (vars > 0 && vars <= 3)
         static const T& coeff(const regina::Laurent<T, vars>& poly,
-                const std::type_identity_t<std::array<long, vars>>& exp) {
+                std::type_identity_t<const std::array<long, vars>>& exp) {
             if constexpr (vars == 1)
                 return poly[exp[0]];
             else if constexpr (vars == 2)
                 return poly(exp[0], exp[1]);
             else // vars == 3
                 return poly(exp[0], exp[1], exp[2]);
+        }
+
+        /**
+         * Sets the given coefficient of the given polynomial, where the
+         * exponents are given as an array instead of individual arguments.
+         */
+        template <regina::CoefficientDomain T, int vars,
+            regina::AssignableTo<T&> Value>
+        requires (vars > 0 && vars <= 3)
+        static void set(regina::Laurent<T, vars>& poly,
+                std::type_identity_t<const std::array<long, vars>>& exp,
+                Value&& value) {
+            if constexpr (vars == 1)
+                poly.set(exp[0], std::forward<Value>(value));
+            else if constexpr (vars == 2)
+                poly.set(exp[0], exp[1], std::forward<Value>(value));
+            else // vars == 3
+                poly.set(exp[0], exp[1], exp[2], std::forward<Value>(value));
         }
 
         /**
@@ -325,6 +343,37 @@ class LaurentTest : public testing::Test {
             ans.set(ans.maxExp() + 2, 1); // changes maxExp
             ans.set(ans.minExp(), 0);
             ans.set(ans.maxExp(), 0);
+            return ans;
+        }
+
+        /**
+         * Returns a polynomial equal to \a poly, but with more space
+         * allocated for coefficients at each coordinate position.
+         */
+        template <regina::CoefficientDomain T>
+        static regina::Laurent<T, 2> padded(const regina::Laurent<T, 2>& poly) {
+            using L = regina::Laurent<T, 2>;
+
+            L ans(poly);
+            if (poly.isZero()) {
+                withExponents(poly, { -3, 0, 2 },
+                        [&ans](const L&, auto... exp) {
+                    ans += L::monomial(exp...);
+                });
+                withExponents(poly, { -3, 0, 2 },
+                        [&ans](const L&, auto... exp) {
+                    ans -= L::monomial(exp...);
+                });
+            } else {
+                withExponents(poly, { -3, 0, 2 },
+                        [&ans](const L& p, auto... exp) {
+                    ans += p.shifted(exp...);
+                });
+                withExponents(poly, { -3, 0, 2 },
+                        [&ans](const L& p, auto... exp) {
+                    ans -= p.shifted(exp...);
+                });
+            }
             return ans;
         }
 
@@ -481,6 +530,61 @@ class LaurentTest : public testing::Test {
         }
 
         /**
+         * Verifies that \a padded does indeed to be a padded version of the
+         * given source polynomial (i.e., has more space allocated than it
+         * requires).
+         *
+         * Since we are restricted to public APIs, we can only verify the
+         * padding in the first coordinate (i.e., we cannot verify that the
+         * inner polynomials spanning the later coordinates are padded also).
+         */
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        static void verifyPadding(const regina::Laurent<T, vars>& padded,
+                const regina::Laurent<T, vars>& source) {
+            validate(padded, source);
+
+            auto alloc = padded.allocation();
+            EXPECT_GT(alloc.second, 0);
+            if (source.isZero()) {
+                EXPECT_TRUE(padded.isZero());
+                // In this case, alloc.first is arbitrary.
+            } else {
+                EXPECT_LT(alloc.first, source.first().template exp<0>());
+                EXPECT_GT(alloc.first + static_cast<long>(alloc.second),
+                    source.last().template exp<0>() + 1);
+            }
+        }
+
+        /**
+         * Verifies init(), `init(exp...)`, and `monomial(exp...)`.
+         */
+        template <regina::CoefficientDomain T, int vars,
+            std::convertible_to<long>... Exponents>
+        requires (vars > 0 && vars <= 3)
+        static void verifyInit(const regina::Laurent<T, vars>& c,
+                Exponents... exp) {
+            using L = regina::Laurent<T, vars>;
+
+            {
+                L x(c);
+                x.init();
+                validateZero(x);
+            }
+            {
+                L x(c);
+                x.initExp(exp...);
+                validate(x, {{{exp...},1}});
+
+                // Here is as good a place as any to test monomial().
+                validate(L::monomial(exp...), x);
+            }
+        }
+
+        /**
+         * Tests moving out of a polynomial then reassigning a new value, via
+         * either the assignment operator or one of our init functions.
+         *
          * Here \a junk indicates the initial value to assign to the
          * test polynomial, or is `null` to indicate that the test polynomial
          * should be default constructed.
@@ -529,6 +633,9 @@ class LaurentTest : public testing::Test {
         }
 
         /**
+         * Tests moving out of a polynomial then reassigning a new value, via
+         * either the assignment operator or one of our init functions.
+         *
          * Here \a junk indicates the initial value to assign to the
          * test polynomial, or is `null` to indicate that the test polynomial
          * should be default constructed.
@@ -640,6 +747,40 @@ class LaurentTest : public testing::Test {
                     validate(y, c);
                 }
             }
+        }
+
+        template <int vars> requires (vars > 0 && vars <= 3)
+        static void verifySet(const regina::Laurent<regina::Integer, vars>& c) {
+            // Verify that the move variant of set() works correctly.
+            //
+            // The raw data we obtain below are of type __mpz_struct (since
+            // mpz_t is the address of an array of type __mpz_struct[1]).
+            // We wish to compare the contents of these structs (which contain
+            // some size/sign data, plus a pointer to the allocated GMP limbs
+            // which is how we tell the data was moved and not copied).
+            //
+            // Since __mpz_struct does not have a comparison operator and we
+            // do not want to rely on internal GMP implementation details
+            // (i.e., the names of individual __mpz_struct data members),
+            // we use memcmp() for our comparisons.
+            regina::Laurent<regina::Integer, vars> x(c);
+            regina::Integer v(bigInt);
+            const auto raw = *v.rawData(); // deep copy of initial __mpz_struct
+
+            // Start at any term of the polynomial.
+            std::array<long, vars> exp;
+            std::fill(exp.begin(), exp.end(), 0);
+
+            set(x, exp, v);
+            EXPECT_EQ(coeff(x, exp), bigInt);
+            EXPECT_NE(memcmp(coeff(x, exp).rawData(), &raw, sizeof(raw)), 0);
+
+            // Move to any different term of the polynomial.
+            ++exp[0];
+
+            set(x, exp, std::move(v));
+            EXPECT_EQ(coeff(x, exp), bigInt);
+            EXPECT_EQ(memcmp(coeff(x, exp).rawData(), &raw, sizeof(raw)), 0);
         }
 
         /**

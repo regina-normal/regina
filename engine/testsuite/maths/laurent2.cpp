@@ -60,11 +60,21 @@ class Laurent2Test : public LaurentTest {
         const L d {{{-1, 0}, -5}, {{2, -2}, 3}, {{2, 0}, 2}, {{2, 1}, -1}};
         const L e {{{1, 2}, bigInt}, {{1, -2}, -bigInt}, {{1, 1}, -1}};
 
-        const std::array<std::reference_wrapper<const L>, 12> cases {
+        // Some polynomials with more space allocated than they need
+        // (with padding occurring along both coordinate axes):
+        const L paddedZero = padded(zero);
+        const L paddedConst = padded(two);
+        const L paddedPower = padded(xy2);
+        const L paddedPoly = padded(a);
+
+        const std::array<std::reference_wrapper<const L>, 16> cases {
             std::cref(zero), std::cref(one), std::cref(two),
             std::cref(minusOne),
             std::cref(x2), std::cref(xy), std::cref(xy2),
-            std::cref(a), std::cref(b), std::cref(c), std::cref(d), std::cref(e)
+            std::cref(a), std::cref(b), std::cref(c), std::cref(d),
+            std::cref(e),
+            std::cref(paddedZero), std::cref(paddedConst),
+            std::cref(paddedPower), std::cref(paddedPoly)
         };
 
         // Some single-variable polynomials to use with routines such as
@@ -74,6 +84,25 @@ class Laurent2Test : public LaurentTest {
             Laurent<Integer>(-5),
             Laurent<Integer>(-2, {3,0,2,-1})
         };
+
+        // Note which of our cases represent the same mathematical polynomial.
+        enum class Batch { Unique, Zero, Const, Power, Poly };
+        Batch batch(const L& poly) {
+            if (std::addressof(poly) == std::addressof(zero) ||
+                    std::addressof(poly) == std::addressof(paddedZero))
+                return Batch::Zero;
+            else if (std::addressof(poly) == std::addressof(two) ||
+                    std::addressof(poly) == std::addressof(paddedConst))
+                return Batch::Const;
+            else if (std::addressof(poly) == std::addressof(xy2) ||
+                    std::addressof(poly) == std::addressof(paddedPower))
+                return Batch::Power;
+            else if (std::addressof(poly) == std::addressof(a) ||
+                    std::addressof(poly) == std::addressof(paddedPoly))
+                return Batch::Poly;
+            else
+                return Batch::Unique;
+        }
 };
 
 TEST_F(Laurent2Test, construct) {
@@ -222,27 +251,26 @@ TEST_F(Laurent2Test, assign) {
     }
 }
 
+TEST_F(Laurent2Test, padding) {
+    verifyPadding(paddedZero, zero);
+    verifyPadding(paddedConst, two);
+    verifyPadding(paddedPower, xy2);
+    verifyPadding(paddedPoly, a);
+
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        verifyPadding(padded(c), c);
+    }
+}
+
 TEST_F(Laurent2Test, init) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
-        {
-            L x(c);
-            x.init();
-            validateZero(x);
-        }
-        {
-            L x(c);
-            x.initExp(-2, 3);
-            validate(x, {{{-2,3},1}});
-
-            // Here is as good a place as any to test monomial().
-            validate(L::monomial(-2, 3), x);
-        }
+        verifyInit(c, -2, 3);
     }
 }
 
 TEST_F(Laurent2Test, moveThenAssign) {
-    // Here we test both move-then-assign and move-then-init.
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
         for (const L& d : cases) {
@@ -280,6 +308,11 @@ TEST_F(Laurent2Test, set) {
     validate(x, {});
     x.set(-1, -1, 1);
     validate(x, {{{-1,-1},1}});
+
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        verifySet(c);
+    }
 }
 
 TEST_F(Laurent2Test, iteration) {
@@ -292,20 +325,24 @@ TEST_F(Laurent2Test, iteration) {
 TEST_F(Laurent2Test, comparison) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
+        const auto cBatch = batch(c);
         for (const L& d : cases) {
             SCOPED_TRACE_REGINA(d);
+            const auto dBatch = batch(d);
             for (const L& e : cases) {
                 SCOPED_TRACE_REGINA(e);
                 verifyComparison(c, d, e);
             }
-            verifyComparison(c, d, std::addressof(c) == std::addressof(d));
+            verifyComparison(c, d,
+                std::addressof(c) == std::addressof(d) ||
+                (cBatch == dBatch && cBatch != Batch::Unique));
         }
         verifyComparison(c);
 
         // Comparisons against integers that appear in some of our tests:
-        verifyComparison(c, 0, std::addressof(c) == std::addressof(zero));
+        verifyComparison(c, 0, cBatch == Batch::Zero);
+        verifyComparison(c, 2, cBatch == Batch::Const);
         verifyComparison(c, 1, std::addressof(c) == std::addressof(one));
-        verifyComparison(c, 2, std::addressof(c) == std::addressof(two));
         verifyComparison(c, -1, std::addressof(c) == std::addressof(minusOne));
 
         // Comparisons against integers that appear in none of our tests:

@@ -186,45 +186,14 @@ TEST_F(Laurent1Test, assign) {
 }
 
 TEST_F(Laurent1Test, padding) {
-    {
-        auto alloc = paddedZero.allocation();
-        EXPECT_GT(alloc.second, 0);
-    }
-    {
-        // paddedConst: exponent range [0]
-        auto alloc = paddedConst.allocation();
-        EXPECT_LT(alloc.first, 0);
-        EXPECT_GT(alloc.first + static_cast<long>(alloc.second), 1);
-    }
-    {
-        // paddedPower: exponent range [2]
-        auto alloc = paddedPower.allocation();
-        EXPECT_LT(alloc.first, 2);
-        EXPECT_GT(alloc.first + static_cast<long>(alloc.second), 3);
-    }
-    {
-        // paddedPoly: exponent range [1..3]
-        auto alloc = paddedPoly.allocation();
-        EXPECT_LT(alloc.first, 1);
-        EXPECT_GT(alloc.first + static_cast<long>(alloc.second), 4);
-    }
+    verifyPadding(paddedZero, zero);
+    verifyPadding(paddedConst, two);
+    verifyPadding(paddedPower, x2);
+    verifyPadding(paddedPoly, c);
+
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
-        {
-            L x = padded(c);
-            validate(x, c);
-
-            auto alloc = x.allocation();
-            EXPECT_GT(alloc.second, 0);
-            if (c.isZero()) {
-                EXPECT_TRUE(x.isZero());
-                // In this case, alloc.first is arbitrary.
-            } else {
-                EXPECT_LT(alloc.first, x.minExp());
-                EXPECT_GT(alloc.first + static_cast<long>(alloc.second),
-                    x.maxExp() + 1);
-            }
-        }
+        verifyPadding(padded(c), c);
     }
 }
 
@@ -321,24 +290,11 @@ TEST_F(Laurent1Test, reserveRange) {
 TEST_F(Laurent1Test, init) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
-        {
-            L x(c);
-            x.init();
-            validateZero(x);
-        }
-        {
-            L x(c);
-            x.initExp(-2);
-            validate(x, -2, { 1 });
-
-            // Here is as good a place as any to test monomial().
-            validate(L::monomial(-2), x);
-        }
+        verifyInit(c, -2);
     }
 }
 
 TEST_F(Laurent1Test, moveThenAssign) {
-    // Here we test both move-then-assign and move-then-init.
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
         for (const L& d : cases) {
@@ -727,30 +683,7 @@ TEST_F(Laurent1Test, set) {
                 EXPECT_EQ(x.allocation(), alloc);
             }
         }
-
-        // Verify that the move variant of set() works correctly.
-        //
-        // The raw data we obtain below are of type __mpz_struct (since mpz_t
-        // is the address of an array of type __mpz_struct[1]).
-        // We wish to compare the contents of these structs (which contain some
-        // size/sign data, plus a pointer to the allocated GMP limbs which is
-        // how we tell the data was moved and not copied).
-        //
-        // Since __mpz_struct does not have a comparison operator and we do not
-        // want to rely on internal GMP implementation details (i.e., the names
-        // of individual __mpz_struct data members), we use memcmp() for our
-        // comparisons.
-        L x(c);
-        Integer v(bigInt);
-        const auto raw = *v.rawData(); // deep copy of the initial __mpz_struct
-
-        x.set(0, v);
-        EXPECT_EQ(x[0], bigInt);
-        EXPECT_NE(memcmp(x[0].rawData(), &raw, sizeof(raw)), 0);
-
-        x.set(1, std::move(v));
-        EXPECT_EQ(x[1], bigInt);
-        EXPECT_EQ(memcmp(x[1].rawData(), &raw, sizeof(raw)), 0);
+        verifySet(c);
     }
 }
 
