@@ -474,6 +474,133 @@ class LaurentTest : public testing::Test {
         // Individual tests
         // ---------------------------------------------------------------
 
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        static void verifyConstruct(const regina::Laurent<T, vars>& c) {
+            using L = regina::Laurent<T, vars>;
+
+            {
+                L x(c);
+                validate(x, c);
+                L y(std::move(x));
+                validate(y, c);
+            }
+
+            // This code tests the iterator-based constructor, but since
+            // the std::initializer_list constructor is implemented using that,
+            // it effectively tests the std::initializer_list constructor also.
+            if constexpr (vars == 1) {
+                auto seq = coefficientSequence(c);
+                validate(L(c.minExp(), seq.begin(), seq.end()), c);
+
+                // Test iterator ranges with zero padding at either end.
+                // This also covers the case where the range contains entirely
+                // zeroes (this is tested when c is the zero polynomial).
+                {
+                    std::vector<T> coeffs(3); // some initial zeroes
+                    coeffs.insert(coeffs.end(), seq.begin(), seq.end());
+                    coeffs.resize(coeffs.size() + 2); // some final zeroes
+                    EXPECT_FALSE(coeffs.empty());
+                    EXPECT_EQ(coeffs.front(), 0);
+                    EXPECT_EQ(coeffs.back(), 0);
+                    validate(L(c.minExp() - 3, coeffs.begin(), coeffs.end()),
+                        c);
+                }
+            } else {
+                using Term = std::pair<std::array<long, vars>, T>;
+                {
+                    std::vector<Term> terms;
+                    for (auto it = c.first(); it; ++it)
+                        terms.emplace_back(it.exponents(), *it);
+                    validate(L(terms.begin(), terms.end()), c);
+                    validate(L(terms.rbegin(), terms.rend()), c);
+
+                    {
+                        // Zero terms will be ignored entirely.
+                        std::vector<Term> messy;
+                        for (size_t i = 1; i < terms.size(); i += 2)
+                            messy.emplace_back(terms[i].first, 0);
+                        for (size_t i = 0; i < terms.size(); i += 2)
+                            messy.push_back(terms[i]);
+                        for (size_t i = 0; i < terms.size(); i += 2)
+                            messy.emplace_back(terms[i].first, 0);
+                        for (size_t i = 1; i < terms.size(); i += 2)
+                            messy.push_back(terms[i]);
+                        for (size_t i = 1; i < terms.size(); i += 2)
+                            messy.emplace_back(terms[i].first, 0);
+
+                        std::array<long, vars> exp;
+                        for (int i = 0; i < vars; ++i)
+                            exp[i] = (i % 2 == 0 ? 1000 : -1000);
+                        messy.push_back(Term(exp, 0));
+
+                        validate(L(messy.begin(), messy.end()), c);
+                        validate(L(messy.rbegin(), messy.rend()), c);
+                    }
+
+                    for (const auto& t : terms) {
+                        std::vector<Term> broken = terms;
+                        broken.push_back(t);
+                        EXPECT_THROW({ L(broken.begin(), broken.end()); },
+                            regina::InvalidArgument);
+                    }
+
+                    {
+                        using BadTerm =
+                            std::pair<std::array<long, vars - 1>, T>;
+                        std::vector<BadTerm> bad;
+
+                        validateZero(L(bad.begin(), bad.end()));
+                        bad.push_back(BadTerm());
+                        EXPECT_THROW({ L(bad.begin(), bad.end()); },
+                            regina::InvalidArgument);
+                    }
+
+                    {
+                        using BadTerm
+                            = std::pair<std::array<long, vars + 1>, T>;
+                        std::vector<BadTerm> bad;
+
+                        validateZero(L(bad.begin(), bad.end()));
+                        bad.push_back(BadTerm());
+                        EXPECT_THROW({ L(bad.begin(), bad.end()); },
+                            regina::InvalidArgument);
+                    }
+                }
+            }
+        }
+
+        template <int vars> requires (vars > 0 && vars <= 3)
+        static void verifyConstructBasic() {
+            using L = regina::Laurent<regina::Integer, vars>;
+
+            validateZero(L());
+            if constexpr (vars == 1) {
+                validateZero(L(0, {}));
+                validateZero(L(100, {}));
+                validateZero(L(-100, {}));
+            } else {
+                validateZero(L({}));
+            }
+
+            regina::Integer zero(0), pos(4), neg(-4), big(bigInt);
+            std::array<long, vars> exp;
+            std::fill(exp.begin(), exp.end(), 0);
+
+            validateZero(L(zero));
+            validateZero(L(std::move(zero)));
+            validateZero(L(0));
+            validate(L(pos), {{exp, 4}});
+            validate(L(std::move(pos)), {{exp, 4}});
+            validate(L(4), {{exp, 4}});
+            validate(L(neg), {{exp, -4}});
+            validate(L(std::move(neg)), {{exp, -4}});
+            validate(L(-4), {{exp, -4}});
+            validate(L(big), {{exp, bigInt}});
+            validate(L(std::move(big)), {{exp, bigInt}});
+            // At this point: zero, pos, neg, big are all unusable.
+        }
+
         /**
          * Tests assignment operations involving two polynomials.
          */
@@ -553,6 +680,109 @@ class LaurentTest : public testing::Test {
                 EXPECT_LT(alloc.first, source.first().template exp<0>());
                 EXPECT_GT(alloc.first + static_cast<long>(alloc.second),
                     source.last().template exp<0>() + 1);
+            }
+        }
+
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        void verifyReserveRange(const regina::Laurent<T, vars>& poly,
+                long fromExp, long toExp, bool noop = false) {
+            SCOPED_TRACE_NUMERIC(fromExp);
+            SCOPED_TRACE_NUMERIC(toExp);
+
+            using L = regina::Laurent<T, vars>;
+
+            long minExp = poly.isZero() ? 0 : poly.first().template exp<0>();
+            long maxExp = poly.isZero() ? 0 : poly.last().template exp<0>();
+
+            L x(poly); // should set the range precisely from poly.
+            const auto initAlloc = x.allocation();
+            if (poly.isZero()) {
+                EXPECT_EQ(initAlloc.second, 0);
+                // initAlloc.first (the base) is arbitrary in this case.
+            } else {
+                EXPECT_EQ(initAlloc.first, minExp);
+                EXPECT_EQ(initAlloc.second, maxExp - minExp + 1);
+            }
+
+            x.reserveRange(fromExp, toExp);
+
+            validate(x, poly);
+            EXPECT_EQ(x.first().exponents(), poly.first().exponents());
+            EXPECT_EQ(x.last().exponents(), poly.last().exponents());
+
+            if (noop) {
+                // Nothing should have changed.
+                EXPECT_EQ(x.allocation(), initAlloc);
+            }
+
+            if (fromExp > toExp) {
+                EXPECT_TRUE(noop);
+                // The numerical values of (fromExp, toExp) are meaningless,
+                // so there is nothing more to test here.
+            } else {
+                const auto newAlloc = x.allocation();
+                EXPECT_GT(newAlloc.second, 0);
+                EXPECT_GE(newAlloc.second, initAlloc.second);
+                if (! poly.isZero()) {
+                    EXPECT_LE(newAlloc.first, minExp);
+                    EXPECT_GT(newAlloc.first +
+                        static_cast<long>(newAlloc.second), maxExp);
+                }
+                EXPECT_LE(newAlloc.first, fromExp);
+                EXPECT_GT(newAlloc.first + static_cast<long>(newAlloc.second),
+                    toExp);
+
+                std::array<long, vars> exp;
+                std::fill(exp.begin() + 1, exp.end(), 0);
+                for (long i = fromExp; i <= toExp; ++i) {
+                    exp[0] = i;
+                    set(x, exp, 1);
+                    EXPECT_EQ(x.allocation(), newAlloc);
+                }
+            }
+        }
+
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        void verifyReserveRange(const regina::Laurent<T, vars>& c) {
+            if (c.isZero()) {
+                verifyReserveRange(c, 1000, 999, true /* no-op */);
+                verifyReserveRange(c, -999, -1000, true /* no-op */);
+                verifyReserveRange(c, 0, 0);
+                verifyReserveRange(c, 100, 100);
+                verifyReserveRange(c, -100, -100);
+                verifyReserveRange(c, -100, -90);
+                verifyReserveRange(c, -10, 10);
+                verifyReserveRange(c, 90, 100);
+            } else {
+                long min = c.first().template exp<0>();
+                long max = c.last().template exp<0>();
+                long mid = (min + max) / 2;
+                long span = max - min;
+                verifyReserveRange(c, 1000, 999, true /* no-op */);
+                verifyReserveRange(c, -999, -1000, true /* no-op */);
+                verifyReserveRange(c, min, min, true /* no-op */);
+                verifyReserveRange(c, mid, mid, true /* no-op */);
+                verifyReserveRange(c, max, max, true /* no-op */);
+                verifyReserveRange(c, min, max, true /* no-op */);
+                verifyReserveRange(c, min, mid, true /* no-op */);
+                verifyReserveRange(c, mid, max, true /* no-op */);
+                verifyReserveRange(c, mid - 1, mid + 1, span >= 2 /* no-op */);
+                verifyReserveRange(c, min - 100, min - 100);
+                verifyReserveRange(c, min - 1, min - 1);
+                verifyReserveRange(c, min - 1, min);
+                verifyReserveRange(c, max, max + 1);
+                verifyReserveRange(c, max + 1, max + 1);
+                verifyReserveRange(c, max + 100, max + 100);
+                verifyReserveRange(c, min - 1, max + 1);
+                verifyReserveRange(c, min - 100, max + 100);
+                verifyReserveRange(c, min - 100, mid);
+                verifyReserveRange(c, min - 1, mid);
+                verifyReserveRange(c, mid, max + 1);
+                verifyReserveRange(c, mid, max + 100);
+                verifyReserveRange(c, min - 2 * span, min - span);
+                verifyReserveRange(c, max + span, max + 2 * span);
             }
         }
 

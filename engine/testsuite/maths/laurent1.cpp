@@ -128,50 +128,50 @@ class Laurent1Test : public LaurentTest {
 };
 
 TEST_F(Laurent1Test, construct) {
-    validateZero(L());
+    // Start by verifying our hand-coded test cases.
+    // This also effectively tests isZero() via the calls to validate() and
+    // validateZero().
     validateZero(zero);
     validateZero(zero2);
     validateZero(zero3);
+    validate(one, 0, { 1 });
+    validate(two, 0, { 2 });
+    validate(minusOne, 0, { -1 });
+    validate(x2, 2, { 1 });
+    validate(x5Inv, -5, { 1 });
+    validate(a, -1, { 1, -1, 1 });
+    validate(b, 0, { 1, -1, 1 });
+    validate(c, 1, { 1, -1, 1 });
+    validate(d, -2, { -1, 1, -1, 1 });
+    validate(e, 4, { 2, 4, -2, 2 });
+    validate(f, 3, { -1, 0, 0, 0, 1 });
+    validate(g, 20, { 2, -3 });
+    validate(low, -7, { 1, -2, 3, -4 });
+    validate(lowish, -4, { -1, 2, -3, 4 });
+    validate(mid, -1, { 1, -2, 3 });
+    validate(highish, 1, { 1, -2, -3, 4 });
+    validate(high, 4, { -1, 2, 3, -4 });
+    validate(bigLow, -7, { bigInt, bigInt * -2, bigInt * 3, bigInt * -4 });
+    validate(bigLowish, -4,
+            { -bigInt, bigInt * 2, bigInt * -3, bigInt * 4 });
+    validate(bigMid, -1, { bigInt, bigInt * -2, bigInt * 3 });
+    validate(bigHighish, 1,
+            { bigInt, bigInt * -2, bigInt * -3, bigInt * 4 });
+    validate(bigHigh, 4, { -bigInt, bigInt * 2, bigInt * 3, bigInt * -4 });
+    validate(long1, 2, { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 });
+    validate(long2, 3, { -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 });
     validateZero(paddedZero);
+    validate(paddedConst, 0, {2});
+    validate(paddedPower, 2, {1});
+    validate(paddedPoly, 1, { 1, -1, 1 });
 
+    // On to our generic tests:
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
-        {
-            L x(c);
-            validate(x, c);
-            L y(std::move(x));
-            validate(y, c);
-        }
-
-        auto seq = coefficientSequence(c);
-        validate(L(c.minExp(), seq.begin(), seq.end()), c);
-        {
-            // This test (for iterator ranges with zero padding at either end)
-            // also covers the case where the iterator range contains entirely
-            // zeroes (this is tested when c is the zero polynomial).
-            std::vector<Integer> coeffs(3); // some initial zeroes
-            coeffs.insert(coeffs.end(), seq.begin(), seq.end());
-            coeffs.resize(coeffs.size() + 2); // some final zeroes
-            EXPECT_FALSE(coeffs.empty());
-            EXPECT_EQ(coeffs.front(), 0);
-            EXPECT_EQ(coeffs.back(), 0);
-            validate(L(c.minExp() - 3, coeffs.begin(), coeffs.end()), c);
-        }
+        verifyConstruct(c);
     }
 
-    Integer zero(0), pos(4), neg(-4), big(bigInt);
-    validateZero(L(zero));
-    validateZero(L(std::move(zero)));
-    validateZero(L(0));
-    validate(L(pos), 0, { 4 });
-    validate(L(std::move(pos)), 0, { 4 });
-    validate(L(4), 0, { 4 });
-    validate(L(neg), 0, { -4 });
-    validate(L(std::move(neg)), 0, { -4 });
-    validate(L(-4), 0, { -4 });
-    validate(L(big), 0, bigCoeff);
-    validate(L(std::move(big)), 0, bigCoeff);
-    // At this point: zero, pos, neg, big are all unusable.
+    verifyConstructBasic<1>();
 }
 
 TEST_F(Laurent1Test, assign) {
@@ -197,93 +197,10 @@ TEST_F(Laurent1Test, padding) {
     }
 }
 
-namespace {
-    void verifyReserveRange(const L& poly, long fromExp, long toExp) {
-        SCOPED_TRACE_NUMERIC(fromExp);
-        SCOPED_TRACE_NUMERIC(toExp);
-
-        L x(poly); // should set the range precisely from poly.
-        const auto initAlloc = x.allocation();
-        if (poly.isZero()) {
-            EXPECT_EQ(initAlloc.second, 0);
-            // initAlloc.first (the base) is arbitrary in this case.
-        } else {
-            EXPECT_EQ(initAlloc.first, poly.minExp());
-            EXPECT_EQ(initAlloc.second, poly.maxExp() - poly.minExp() + 1);
-        }
-
-        x.reserveRange(fromExp, toExp);
-
-        EXPECT_EQ(x.minExp(), poly.minExp());
-        EXPECT_EQ(x.maxExp(), poly.maxExp());
-
-        if (fromExp > toExp) {
-            // Nothing should have changed.
-            EXPECT_EQ(x.allocation(), initAlloc);
-        } else {
-            const auto newAlloc = x.allocation();
-            EXPECT_GT(newAlloc.second, 0);
-            EXPECT_GE(newAlloc.second, initAlloc.second);
-            if (! poly.isZero()) {
-                EXPECT_LE(newAlloc.first, poly.minExp());
-                EXPECT_GT(newAlloc.first + static_cast<long>(newAlloc.second),
-                    poly.maxExp());
-            }
-            EXPECT_LE(newAlloc.first, fromExp);
-            EXPECT_GT(newAlloc.first + static_cast<long>(newAlloc.second),
-                toExp);
-
-            LaurentTest::validate(x, poly);
-
-            for (long i = fromExp; i <= toExp; ++i) {
-                x.set(i, 1);
-                EXPECT_EQ(x.allocation(), newAlloc);
-            }
-        }
-    }
-} // anonymous namespace
-
 TEST_F(Laurent1Test, reserveRange) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
-        if (c.isZero()) {
-            verifyReserveRange(c, 1000, 999); // no-op
-            verifyReserveRange(c, -999, -1000); // no-op
-            verifyReserveRange(c, 0, 0);
-            verifyReserveRange(c, 100, 100);
-            verifyReserveRange(c, -100, -100);
-            verifyReserveRange(c, -100, -90);
-            verifyReserveRange(c, -10, 10);
-            verifyReserveRange(c, 90, 100);
-        } else {
-            long min = c.minExp();
-            long max = c.maxExp();
-            long mid = (c.minExp() + c.maxExp()) / 2;
-            long span = max - min;
-            verifyReserveRange(c, 1000, 999); // no-op
-            verifyReserveRange(c, -999, -1000); // no-op
-            verifyReserveRange(c, min, min);
-            verifyReserveRange(c, mid, mid);
-            verifyReserveRange(c, max, max);
-            verifyReserveRange(c, min, max);
-            verifyReserveRange(c, min, mid);
-            verifyReserveRange(c, mid, max);
-            verifyReserveRange(c, mid - 1, mid + 1);
-            verifyReserveRange(c, min - 100, min - 100);
-            verifyReserveRange(c, min - 1, min - 1);
-            verifyReserveRange(c, min - 1, min);
-            verifyReserveRange(c, max, max + 1);
-            verifyReserveRange(c, max + 1, max + 1);
-            verifyReserveRange(c, max + 100, max + 100);
-            verifyReserveRange(c, min - 1, max + 1);
-            verifyReserveRange(c, min - 100, max + 100);
-            verifyReserveRange(c, min - 100, mid);
-            verifyReserveRange(c, min - 1, mid);
-            verifyReserveRange(c, mid, max + 1);
-            verifyReserveRange(c, mid, max + 100);
-            verifyReserveRange(c, min - 2 * span, min - span);
-            verifyReserveRange(c, max + span, max + 2 * span);
-        }
+        verifyReserveRange(c);
     }
 }
 

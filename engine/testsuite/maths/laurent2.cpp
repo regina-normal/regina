@@ -48,17 +48,21 @@ using L = Laurent<Integer, 2>;
 class Laurent2Test : public LaurentTest {
     protected:
         const L zero {};
-        const L one {{{0, 0}, 1}};
-        const L two {{{0, 0}, 2}};
-        const L minusOne {{{0, 0}, -1}};
-        const L x2 {{{2, 0}, 1}};
-        const L xy {{{1, 1}, 1}};
-        const L xy2 {{{1, 2}, 1}};
-        const L a {{{0, 0}, 1}, {{1, 2}, -2}, {{-2, -1}, 3}};
-        const L b {{{1, 0}, 2}, {{1, 2}, -4}, {{0, -1}, -2}};
-        const L c {{{1, 1}, -1}, {{1, 2}, 1}, {{0, -1}, -2}, {{1, 0}, -2}};
-        const L d {{{-1, 0}, -5}, {{2, -2}, 3}, {{2, 0}, 2}, {{2, 1}, -1}};
-        const L e {{{1, 2}, bigInt}, {{1, -2}, -bigInt}, {{1, 1}, -1}};
+        const L one {{{0,0},1}};
+        const L two {{{0,0},2}};
+        const L minusOne {{{0,0},-1}};
+        const L x2 {{{2,0},1}};
+        const L xy {{{1,1},1}};
+        const L xy2 {{{1,2},1}};
+        const L xTerm {{{2,0},3}};
+        const L yTerm {{{0,-2},-3}};
+        const L a {{{0,0},1}, {{1,2},-2}, {{-2,-1},3}};
+        const L b {{{1,0},2}, {{1,2},-4}, {{0,-1},-2}};
+        const L c {{{1,0},-2}, {{1,1},5}, {{0,1},7}};
+        const L d {{{1,1},-1}, {{1,2},1}, {{0,-1},-2}, {{1,0},-2}};
+        const L e {{{-1,0},-5}, {{2,-2},3}, {{2,0},2}, {{2,1},-1}};
+        const L f {{{0,0},1}, {{0,1},2}, {{0,2},3}, {{-1,0},4}, {{-2,0},5}};
+        const L big {{{1,2},bigInt}, {{1,-2},-bigInt}, {{1,1},-1}};
 
         // Some polynomials with more space allocated than they need
         // (with padding occurring along both coordinate axes):
@@ -67,12 +71,13 @@ class Laurent2Test : public LaurentTest {
         const L paddedPower = padded(xy2);
         const L paddedPoly = padded(a);
 
-        const std::array<std::reference_wrapper<const L>, 16> cases {
+        const std::array<std::reference_wrapper<const L>, 20> cases {
             std::cref(zero), std::cref(one), std::cref(two),
             std::cref(minusOne),
             std::cref(x2), std::cref(xy), std::cref(xy2),
+            std::cref(xTerm), std::cref(yTerm),
             std::cref(a), std::cref(b), std::cref(c), std::cref(d),
-            std::cref(e),
+            std::cref(e), std::cref(f), std::cref(big),
             std::cref(paddedZero), std::cref(paddedConst),
             std::cref(paddedPower), std::cref(paddedPoly)
         };
@@ -106,105 +111,37 @@ class Laurent2Test : public LaurentTest {
 };
 
 TEST_F(Laurent2Test, construct) {
-    // Here we also test isZero() via the calls to validate() and
-    // validateZero(), through the initialiser list tests below.
-    validateZero(L());
-    validateZero(L({}));
-    validate(L{{{0,0},1}}, {{{0,0},1}});
-    validate(L{{{0,0},-1}}, {{{0,0},-1}});
-    validate(L{{{2,0},3}}, {{{2,0},3}});
-    validate(L{{{0,-2},-3}}, {{{0,-2},-3}});
-    validate(L{{{1,0},-2}, {{1,1},5}, {{0,1},7}},
-        {{{0,1},7}, {{1,0},-2}, {{1,1},5}});
-    validate(L{{{0,1},7}, {{1,1},5}, {{1,0},-2}},
-        {{{0,1},7}, {{1,0},-2}, {{1,1},5}});
-    validate(L{{{0,0},1}, {{0,1},2}, {{0,2},3}, {{-1,0},4}, {{-2,0},5}},
-        {{{-2,0},5}, {{-1,0},4}, {{0,0},1}, {{0,1},2}, {{0,2},3}});
-    validate(L{{{-2,0},5}, {{-1,0},4}, {{0,2},3}, {{0,1},2}, {{0,0},1}},
-        {{{-2,0},5}, {{-1,0},4}, {{0,0},1}, {{0,1},2}, {{0,2},3}});
+    // Start by verifying our hand-coded test cases.
+    // This also effectively tests isZero() via the calls to validate() and
+    // validateZero().
+    validateZero(zero);
+    validate(one, {{{0,0},1}});
+    validate(two, {{{0,0},2}});
+    validate(minusOne, {{{0,0},-1}});
+    validate(x2, {{{2,0},1}});
+    validate(xy, {{{1,1},1}});
+    validate(xy2, {{{1,2},1}});
+    validate(xTerm, {{{2,0},3}});
+    validate(yTerm, {{{0,-2},-3}});
+    validate(a, {{{-2,-1},3}, {{0,0},1}, {{1,2},-2}});
+    validate(b, {{{0,-1},-2}, {{1,0},2}, {{1,2},-4}});
+    validate(c, {{{0,1},7}, {{1,0},-2}, {{1,1},5}});
+    validate(d, {{{0,-1},-2}, {{1,0},-2}, {{1,1},-1}, {{1,2},1}});
+    validate(e, {{{-1,0},-5}, {{2,-2},3}, {{2,0},2}, {{2,1},-1}});
+    validate(f, {{{-2,0},5}, {{-1,0},4}, {{0,0},1}, {{0,1},2}, {{0,2},3}});
+    validate(big, {{{1,-2},-bigInt}, {{1,1},-1}, {{1,2},bigInt}});
+    validateZero(paddedZero);
+    validate(paddedConst, {{{0,0},2}});
+    validate(paddedPower, {{{1,2},1}});
+    validate(paddedPoly, {{{-2,-1},3}, {{0,0},1}, {{1,2},-2}});
 
+    // On to our generic tests:
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
-        {
-            L x(c);
-            validate(x, c);
-            L y(std::move(x));
-            validate(y, c);
-        }
-
-        // This code tests the iterator-based constructor, but since
-        // the std::initializer_list constructor is implemented using that,
-        // it effectively tests the std::initializer_list constructor also.
-        using Term = std::pair<std::array<long, 2>, Integer>;
-        {
-            std::vector<Term> terms;
-            for (auto it = c.first(); it; ++it)
-                terms.emplace_back(it.exponents(), *it);
-            validate(L(terms.begin(), terms.end()), c);
-            validate(L(terms.rbegin(), terms.rend()), c);
-
-            {
-                // Zero terms will be ignored entirely.
-                std::vector<Term> messy;
-                for (size_t i = 1; i < terms.size(); i += 2)
-                    messy.emplace_back(terms[i].first, 0);
-                for (size_t i = 0; i < terms.size(); i += 2)
-                    messy.push_back(terms[i]);
-                for (size_t i = 0; i < terms.size(); i += 2)
-                    messy.emplace_back(terms[i].first, 0);
-                for (size_t i = 1; i < terms.size(); i += 2)
-                    messy.push_back(terms[i]);
-                for (size_t i = 1; i < terms.size(); i += 2)
-                    messy.emplace_back(terms[i].first, 0);
-                messy.push_back(Term({1000, -1000}, 0));
-                validate(L(messy.begin(), messy.end()), c);
-                validate(L(messy.rbegin(), messy.rend()), c);
-            }
-
-            for (const auto& t : terms) {
-                std::vector<Term> broken = terms;
-                broken.push_back(t);
-                EXPECT_THROW({ L(broken.begin(), broken.end()); },
-                    regina::InvalidArgument);
-            }
-
-            {
-                using BadTerm = std::pair<std::array<long, 1>, Integer>;
-                std::vector<BadTerm> bad;
-
-                validateZero(L(bad.begin(), bad.end()));
-                bad.push_back(BadTerm({1}, 0));
-                EXPECT_THROW({ L(bad.begin(), bad.end()); },
-                    regina::InvalidArgument);
-            }
-
-            {
-                using BadTerm = std::pair<std::array<long, 3>, Integer>;
-                std::vector<BadTerm> bad;
-
-                validateZero(L(bad.begin(), bad.end()));
-                bad.push_back(BadTerm({1,2,3}, 0));
-                EXPECT_THROW({ L(bad.begin(), bad.end()); },
-                    regina::InvalidArgument);
-            }
-        }
+        verifyConstruct(c);
     }
 
-    {
-        Integer zero(0), pos(4), neg(-4), big(bigInt);
-        validateZero(L(zero));
-        validateZero(L(std::move(zero)));
-        validateZero(L(0));
-        validate(L(pos), {{{0,0},4}});
-        validate(L(std::move(pos)), {{{0,0},4}});
-        validate(L(4), {{{0,0},4}});
-        validate(L(neg), {{{0,0},-4}});
-        validate(L(std::move(neg)), {{{0,0},-4}});
-        validate(L(-4), {{{0,0},-4}});
-        validate(L(big), {{{0,0},bigInt}});
-        validate(L(std::move(big)), {{{0,0},bigInt}});
-        // At this point: zero, pos, neg, big are all unusable.
-    }
+    verifyConstructBasic<2>();
 
     // Test the product constructor (which is specific to multivariate Laurent
     // polynomials).
@@ -260,6 +197,13 @@ TEST_F(Laurent2Test, padding) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
         verifyPadding(padded(c), c);
+    }
+}
+
+TEST_F(Laurent2Test, reserveRange) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        verifyReserveRange(c);
     }
 }
 
