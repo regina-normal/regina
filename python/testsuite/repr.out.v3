@@ -559,8 +559,8 @@ L(7,2)
 <regina.LensSpace: L(7,2)>
 
 SFSpace
-SFS [D/o2: (3,1) (4,-3)]
-<regina.SFSpace: SFS [D/o2: (3,1) (4,-3)]>
+SFS [D: (3,1) (4,-3)]
+<regina.SFSpace: SFS [D: (3,1) (4,-3)]>
 
 SimpleSurfaceBundle
 RP2 x S1
@@ -579,26 +579,26 @@ T x I / [ 0,1 | 1,0 ]
 <regina.TorusBundle: T x I / [ 0,1 | 1,0 ]>
 
 GraphLoop
-SFS [A/o2: (2,1) (5,3)] / [ 0,-1 | 1,0 ]
-<regina.GraphLoop: SFS [A/o2: (2,1) (5,3)] / [ 0,-1 | 1,0 ]>
+SFS [A: (2,1) (5,3)] / [ 0,-1 | 1,0 ]
+<regina.GraphLoop: SFS [A: (2,1) (5,3)] / [ 0,-1 | 1,0 ]>
 
 GraphPair
-SFS [D/o2: (3,1) (4,3)] U/m SFS [D/o2: (3,1) (4,3)], m = [ 0,1 | 1,2 ]
-<regina.GraphPair: SFS [D/o2: (3,1) (4,3)] U/m SFS [D/o2: (3,1) (4,3)], m = [ 0,1 | 1,2 ]>
+SFS [D: (3,1) (4,1)] U/m SFS [D: (3,2) (4,3)], m = [ -2,1 | 1,0 ]
+<regina.GraphPair: SFS [D: (3,1) (4,1)] U/m SFS [D: (3,2) (4,3)], m = [ -2,1 | 1,0 ]>
 
 GraphTriple
-SFS [D/o2: (3,1) (4,3)] U/m SFS [A/o2: (2,1) (5,2)] U/n SFS [D/o2: (3,1) (4,3)], m = [ -2,1 | 1,0 ], n = [ 1,2 | 3,5 ]
-<regina.GraphTriple: SFS [D/o2: (3,1) (4,3)] U/m SFS [A/o2: (2,1) (5,2)] U/n SFS [D/o2: (3,1) (4,3)], m = [ -2,1 | 1,0 ], n = [ 1,2 | 3,5 ]>
+SFS [D: (3,1) (4,1)] U/m SFS [A: (2,1) (5,3)] U/n SFS [D: (3,1) (4,1)], m = [ -2,1 | 1,0 ], n = [ 1,2 | 3,5 ]
+<regina.GraphTriple: SFS [D: (3,1) (4,1)] U/m SFS [A: (2,1) (5,3)] U/n SFS [D: (3,1) (4,1)], m = [ -2,1 | 1,0 ], n = [ 1,2 | 3,5 ]>
 
 list of SFSAlt
-  SFS [D/o2: (3,1) (4,3)], via [[ 1 0 ] [ 0 1 ]], without reflection
-  SFS [D/o2: (3,1) (4,3)], via [[ 1 0 ] [ 0 -1 ]], using reflection
-[<regina.SFSAlt: SFS [D/o2: (3,1) (4,3)], via [[ 1 0 ] [ 0 1 ]], without reflection>, <regina.SFSAlt: SFS [D/o2: (3,1) (4,3)], via [[ 1 0 ] [ 0 -1 ]], using reflection>]
+  SFS [D: (3,1) (4,1)], via [[ 1 0 ] [ 0 1 ]], without reflection
+  SFS [D: (3,2) (4,3)], via [[ 1 0 ] [ 0 -1 ]], using reflection
+[<regina.SFSAlt: SFS [D: (3,1) (4,1)], via [[ 1 0 ] [ 0 1 ]], without reflection>, <regina.SFSAlt: SFS [D: (3,2) (4,3)], via [[ 1 0 ] [ 0 -1 ]], using reflection>]
 
 list of SFSAlt
-  SFS [A/o2: (2,1) (5,2)], via [[ 1 0 ] [ 0 1 ]], without reflection
-  SFS [A/o2: (2,1) (5,2)], via [[ 1 0 ] [ 0 -1 ]], using reflection
-[<regina.SFSAlt: SFS [A/o2: (2,1) (5,2)], via [[ 1 0 ] [ 0 1 ]], without reflection>, <regina.SFSAlt: SFS [A/o2: (2,1) (5,2)], via [[ 1 0 ] [ 0 -1 ]], using reflection>]
+  SFS [A: (2,1) (5,2)], via [[ 1 0 ] [ 0 1 ]], without reflection
+  SFS [A: (2,1) (5,3)], via [[ 1 0 ] [ 0 -1 ]], using reflection
+[<regina.SFSAlt: SFS [A: (2,1) (5,2)], via [[ 1 0 ] [ 0 1 ]], without reflection>, <regina.SFSAlt: SFS [A: (2,1) (5,3)], via [[ 1 0 ] [ 0 -1 ]], using reflection>]
 
 SnapPeaCensusTri
 SnapPea m004

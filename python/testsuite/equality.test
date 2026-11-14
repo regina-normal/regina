@@ -217,7 +217,7 @@ cmp('ValidityConstraints', v1, v3)
 cmp('Signature', Signature('(aba)(b)'), Signature('aba.b'))
 cmp('Signature', Signature('(aba)(b)'), Signature('(ab)(a)(b)'))
 
-sfsDisc = SFSpace(SFSpace.o2, 0, 1)
+sfsDisc = SFSpace(SFSpace.BundleType.o1, 0, 1)
 s1 = SFSAlt.altSet(sfsDisc)
 s2 = SFSAlt.altSet(sfsDisc)
 cmp('SFSAlt', s1[0], s2[0])

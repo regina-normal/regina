@@ -518,15 +518,24 @@ class SatRegion : public Output<SatRegion> {
          * now) be analysed by hand.
          *
          * There are situations in which Regina is not (yet) capable of
-         * determining the Seifert fibred space precisely.  This can only
-         * happen if the Seifert fibred space is closed, non-orientable,
-         * belongs to the class \c n3 or \c n4, and has sufficiently large
-         * base orbifold genus.  In such situations this routine will
-         * throw an exception.
+         * determining the Seifert fibred space precisely. This can only
+         * happen if the Seifert fibred space is non-orientable, has bundle
+         * type \c n3 or \c n4, and has sufficiently large base orbifold
+         * genus. In such situations this routine will throw an exception.
          *
-         * \exception NotImplemented This is one of the closed
-         * non-orientable cases where Regina cannot distinguish between
-         * classes \c n3 and \c n4, as described above.
+         * \warning In Regina 7.4.1 and earlier, for non-orientable Seifert
+         * fibred spaces with at least one puncture and/or reflector, the
+         * bundle types \c n3 and \c n4 were lumped together into a single
+         * class called \c bn3. The inability to distinguish \c n3 and \c n4
+         * therefore only mattered for closed Seifert fibred spaces, and
+         * hence an exception could only ever be thrown in the closed case.
+         * With the expansion of the more precise bundle types \c n3 and
+         * \c n4 to include non-closed Seifert fibred spaces, it is now
+         * possible for an exception to be thrown in the non-closed case.
+         *
+         * \exception NotImplemented This is one of the non-orientable cases
+         * where Regina cannot distinguish between bundle types \c n3 and
+         * \c n4, as described above.
          *
          * \param reflect \c true if this region is to be reflected
          * as the Seifert fibred space is created, or \c false if not.

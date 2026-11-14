@@ -33,6 +33,7 @@ if (${REGINA_INSTALL_DEV})
     notation.h
     sfs.h
     sfsalt.h
+    sfs-impl.h
     simplesurfacebundle.h
     snappeacensusmfd.h
     torusbundle.h
