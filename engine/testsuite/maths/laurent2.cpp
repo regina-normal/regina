@@ -51,11 +51,19 @@ class Laurent2Test : public LaurentTest {
         const L one {{{0,0},1}};
         const L two {{{0,0},2}};
         const L minusOne {{{0,0},-1}};
+        const L x {{{1,0},1}};
+        const L y {{{0,1},1}};
         const L x2 {{{2,0},1}};
+        const L y2 {{{0,2},1}};
+        const L xInv {{{-1,0},1}};
+        const L yInv {{{0,-1},1}};
         const L xy {{{1,1},1}};
         const L xy2 {{{1,2},1}};
+        const L xyInvX {{{-1,1},1}};
+        const L xyInvY {{{1,-1},1}};
         const L xTerm {{{2,0},3}};
         const L yTerm {{{0,-2},-3}};
+        const L xyTerm {{{-2,3},-1}};
         const L a {{{0,0},1}, {{1,2},-2}, {{-2,-1},3}};
         const L b {{{1,0},2}, {{1,2},-4}, {{0,-1},-2}};
         const L c {{{1,0},-2}, {{1,1},5}, {{0,1},7}};
@@ -76,11 +84,13 @@ class Laurent2Test : public LaurentTest {
         const L corners2 {corners1, corners1};
         const L lattice2 {lattice1, lattice1};
 
-        const std::array<std::reference_wrapper<const L>, 22> cases {
+        const std::array<std::reference_wrapper<const L>, 30> cases {
             std::cref(zero), std::cref(one), std::cref(two),
             std::cref(minusOne),
-            std::cref(x2), std::cref(xy), std::cref(xy2),
-            std::cref(xTerm), std::cref(yTerm),
+            std::cref(x), std::cref(y), std::cref(x2), std::cref(y2),
+            std::cref(xInv), std::cref(yInv), std::cref(xy), std::cref(xy2),
+            std::cref(xyInvX), std::cref(xyInvY),
+            std::cref(xTerm), std::cref(yTerm), std::cref(xyTerm),
             std::cref(a), std::cref(b), std::cref(c), std::cref(d),
             std::cref(e), std::cref(f), std::cref(big),
             std::cref(paddedZero), std::cref(paddedConst),
@@ -440,23 +450,40 @@ TEST_F(Laurent2Test, ringConstants) {
 
 TEST_F(Laurent2Test, str) {
     verifyStr(zero, "0");
+    verifyStr(one, "1");
     verifyStr(two, "2");
     verifyStr(minusOne, "-1");
-    verifyStr(L::monomial(1, 0), "x");
+    verifyStr(x, "x");
+    verifyStr(y, "y");
     verifyStr(x2, "x^2");
-    verifyStr(L::monomial(-1, 0), "x^-1");
-    verifyStr(L::monomial(0, 1), "y");
-    verifyStr(L::monomial(0, 2), "y^2");
-    verifyStr(L::monomial(0, -1), "y^-1");
-    verifyStr(L::monomial(1, -1), "x y^-1");
-    verifyStr(L::monomial(-1, 1), "x^-1 y");
-    verifyStr(L::monomial(2, -2), "x^2 y^-2");
-    verifyStr(L::monomial(-2, 2), "x^-2 y^2");
-    verifyStr(L{{{-2,3},-1}}, "-x^-2 y^3");
-    verifyStr(L{{{-2,3},5}}, "5 x^-2 y^3");
-    verifyStr(L{{{-2,3},-6}}, "-6 x^-2 y^3");
+    verifyStr(y2, "y^2");
+    verifyStr(xInv, "x^-1");
+    verifyStr(yInv, "y^-1");
+    verifyStr(xy, "x y");
+    verifyStr(xy2, "x y^2");
+    verifyStr(xyInvX, "x^-1 y");
+    verifyStr(xyInvY, "x y^-1");
+    verifyStr(xTerm, "3 x^2");
+    verifyStr(yTerm, "-3 y^-2");
+    verifyStr(xyTerm, "-x^-2 y^3");
     verifyStr(a, "-2 x y^2 + 1 + 3 x^-2 y^-1");
     verifyStr(b, "-4 x y^2 + 2 x - 2 y^-1");
+    verifyStr(c, "5 x y - 2 x + 7 y");
+    verifyStr(d, "x y^2 - x y - 2 x - 2 y^-1");
+    verifyStr(e, "-x^2 y + 2 x^2 + 3 x^2 y^-2 - 5 x^-1");
+    verifyStr(f, "3 y^2 + 2 y + 1 + 4 x^-1 + 5 x^-2");
+    verifyStr(big, BIG " x y^2 - x y - " BIG " x y^-2");
+    verifyStr(paddedZero, "0");
+    verifyStr(paddedConst, "2");
+    verifyStr(paddedPower, "x y^2");
+    verifyStr(paddedPoly, "-2 x y^2 + 1 + 3 x^-2 y^-1");
+
+    // Test some more monomials and single-term polynomials:
+    verifyStr(L::monomial(2, -2), "x^2 y^-2");
+    verifyStr(L::monomial(-2, 2), "x^-2 y^2");
+    verifyStr(xyTerm * -5, "5 x^-2 y^3");
+    verifyStr(xyTerm * 6, "-6 x^-2 y^3");
+    // Test some more multi-term polynomials:
     verifyStr(L{{{0,0},3}, {{2,1},3}, {{2,-1},-2}, {{1,-1},5}},
         "3 x^2 y - 2 x^2 y^-1 + 5 x y^-1 + 3");
     verifyStr(L{{{0,0},3}, {{-2,1},3}, {{-2,-1},-2}, {{-1,-1},5}},
@@ -469,23 +496,40 @@ TEST_F(Laurent2Test, utf8) {
     // Here we directly use unicode superscripts and minus signs in the C++
     // source code.
     verifyUtf8(zero, u8"0");
+    verifyUtf8(one, u8"1");
     verifyUtf8(two, u8"2");
     verifyUtf8(minusOne, u8"−1");
-    verifyUtf8(L::monomial(1, 0), u8"x");
+    verifyUtf8(x, u8"x");
+    verifyUtf8(y, u8"y");
     verifyUtf8(x2, u8"x²");
-    verifyUtf8(L::monomial(-1, 0), u8"x⁻¹");
-    verifyUtf8(L::monomial(0, 1), u8"y");
-    verifyUtf8(L::monomial(0, 2), u8"y²");
-    verifyUtf8(L::monomial(0, -1), u8"y⁻¹");
-    verifyUtf8(L::monomial(1, -1), u8"x y⁻¹");
-    verifyUtf8(L::monomial(-1, 1), u8"x⁻¹ y");
-    verifyUtf8(L::monomial(2, -2), u8"x² y⁻²");
-    verifyUtf8(L::monomial(-2, 2), u8"x⁻² y²");
-    verifyUtf8(L{{{-2,3},-1}}, u8"−x⁻² y³");
-    verifyUtf8(L{{{-2,3},5}}, u8"5 x⁻² y³");
-    verifyUtf8(L{{{-2,3},-6}}, u8"−6 x⁻² y³");
+    verifyUtf8(y2, u8"y²");
+    verifyUtf8(xInv, u8"x⁻¹");
+    verifyUtf8(yInv, u8"y⁻¹");
+    verifyUtf8(xy, u8"x y");
+    verifyUtf8(xy2, u8"x y²");
+    verifyUtf8(xyInvX, u8"x⁻¹ y");
+    verifyUtf8(xyInvY, u8"x y⁻¹");
+    verifyUtf8(xTerm, u8"3 x²");
+    verifyUtf8(yTerm, u8"−3 y⁻²");
+    verifyUtf8(xyTerm, u8"−x⁻² y³");
     verifyUtf8(a, u8"−2 x y² + 1 + 3 x⁻² y⁻¹");
     verifyUtf8(b, u8"−4 x y² + 2 x − 2 y⁻¹");
+    verifyUtf8(c, u8"5 x y − 2 x + 7 y");
+    verifyUtf8(d, u8"x y² − x y − 2 x − 2 y⁻¹");
+    verifyUtf8(e, u8"−x² y + 2 x² + 3 x² y⁻² − 5 x⁻¹");
+    verifyUtf8(f, u8"3 y² + 2 y + 1 + 4 x⁻¹ + 5 x⁻²");
+    verifyUtf8(big, u8"" BIG " x y² − x y − " BIG " x y⁻²");
+    verifyUtf8(paddedZero, u8"0");
+    verifyUtf8(paddedConst, u8"2");
+    verifyUtf8(paddedPower, u8"x y²");
+    verifyUtf8(paddedPoly, u8"−2 x y² + 1 + 3 x⁻² y⁻¹");
+
+    // Test some more monomials and single-term polynomials:
+    verifyUtf8(L::monomial(2, -2), u8"x² y⁻²");
+    verifyUtf8(L::monomial(-2, 2), u8"x⁻² y²");
+    verifyUtf8(xyTerm * -5, u8"5 x⁻² y³");
+    verifyUtf8(xyTerm * 6, u8"−6 x⁻² y³");
+    // Test some more multi-term polynomials:
     verifyUtf8(L{{{0,0},3}, {{2,1},3}, {{2,-1},-2}, {{1,-1},5}},
         u8"3 x² y − 2 x² y⁻¹ + 5 x y⁻¹ + 3");
     verifyUtf8(L{{{0,0},3}, {{-2,1},3}, {{-2,-1},-2}, {{-1,-1},5}},
