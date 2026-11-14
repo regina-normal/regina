@@ -33,6 +33,7 @@
 #include "angle/anglestructures.h"
 #include "progress/progresstracker.h"
 #include "triangulation/dim3.h"
+#include "snappea/snappeatriangulation.h"
 #include "../helpers.h"
 #include "../helpers/packet.h"
 #include "../docstrings/angle/anglestructures.h"
@@ -48,6 +49,9 @@ void addAngleStructures(pybind11::module_& m) {
 
     m.def("makeAngleEquations", regina::makeAngleEquations,
         rdoc::makeAngleEquations);
+    m.def("makeBoundaryNullAngleEquations",
+            regina::makeBoundaryNullAngleEquations,
+            rdoc::makeBoundaryNullAngleEquations);
 
     RDOC_SCOPE_SWITCH(AngleStructures)
 
