@@ -439,11 +439,11 @@ TEST_F(Laurent2Test, ringConstants) {
 }
 
 TEST_F(Laurent2Test, str) {
-    verifyStr(L(), "0");
-    verifyStr(L(2), "2");
-    verifyStr(L(-1), "-1");
+    verifyStr(zero, "0");
+    verifyStr(two, "2");
+    verifyStr(minusOne, "-1");
     verifyStr(L::monomial(1, 0), "x");
-    verifyStr(L::monomial(2, 0), "x^2");
+    verifyStr(x2, "x^2");
     verifyStr(L::monomial(-1, 0), "x^-1");
     verifyStr(L::monomial(0, 1), "y");
     verifyStr(L::monomial(0, 2), "y^2");
@@ -455,10 +455,8 @@ TEST_F(Laurent2Test, str) {
     verifyStr(L{{{-2,3},-1}}, "-x^-2 y^3");
     verifyStr(L{{{-2,3},5}}, "5 x^-2 y^3");
     verifyStr(L{{{-2,3},-6}}, "-6 x^-2 y^3");
-    verifyStr(L{{{0,0},1}, {{1,2},-2}, {{-2,-1},3}},
-        "-2 x y^2 + 1 + 3 x^-2 y^-1");
-    verifyStr(L{{{1,0},2}, {{1,2},-4}, {{0,-1},-2}},
-        "-4 x y^2 + 2 x - 2 y^-1");
+    verifyStr(a, "-2 x y^2 + 1 + 3 x^-2 y^-1");
+    verifyStr(b, "-4 x y^2 + 2 x - 2 y^-1");
     verifyStr(L{{{0,0},3}, {{2,1},3}, {{2,-1},-2}, {{1,-1},5}},
         "3 x^2 y - 2 x^2 y^-1 + 5 x y^-1 + 3");
     verifyStr(L{{{0,0},3}, {{-2,1},3}, {{-2,-1},-2}, {{-1,-1},5}},
@@ -470,11 +468,11 @@ TEST_F(Laurent2Test, str) {
 TEST_F(Laurent2Test, utf8) {
     // Here we directly use unicode superscripts and minus signs in the C++
     // source code.
-    verifyUtf8(L(), u8"0");
-    verifyUtf8(L(2), u8"2");
-    verifyUtf8(L(-1), u8"−1");
+    verifyUtf8(zero, u8"0");
+    verifyUtf8(two, u8"2");
+    verifyUtf8(minusOne, u8"−1");
     verifyUtf8(L::monomial(1, 0), u8"x");
-    verifyUtf8(L::monomial(2, 0), u8"x²");
+    verifyUtf8(x2, u8"x²");
     verifyUtf8(L::monomial(-1, 0), u8"x⁻¹");
     verifyUtf8(L::monomial(0, 1), u8"y");
     verifyUtf8(L::monomial(0, 2), u8"y²");
@@ -486,10 +484,8 @@ TEST_F(Laurent2Test, utf8) {
     verifyUtf8(L{{{-2,3},-1}}, u8"−x⁻² y³");
     verifyUtf8(L{{{-2,3},5}}, u8"5 x⁻² y³");
     verifyUtf8(L{{{-2,3},-6}}, u8"−6 x⁻² y³");
-    verifyUtf8(L{{{0,0},1}, {{1,2},-2}, {{-2,-1},3}},
-        u8"−2 x y² + 1 + 3 x⁻² y⁻¹");
-    verifyUtf8(L{{{1,0},2}, {{1,2},-4}, {{0,-1},-2}},
-        u8"−4 x y² + 2 x − 2 y⁻¹");
+    verifyUtf8(a, u8"−2 x y² + 1 + 3 x⁻² y⁻¹");
+    verifyUtf8(b, u8"−4 x y² + 2 x − 2 y⁻¹");
     verifyUtf8(L{{{0,0},3}, {{2,1},3}, {{2,-1},-2}, {{1,-1},5}},
         u8"3 x² y − 2 x² y⁻¹ + 5 x y⁻¹ + 3");
     verifyUtf8(L{{{0,0},3}, {{-2,1},3}, {{-2,-1},-2}, {{-1,-1},5}},
