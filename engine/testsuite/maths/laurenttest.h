@@ -30,6 +30,7 @@
 
 #include "maths/integer.h"
 #include "maths/laurent.h"
+#include "utilities/randutils.h"
 
 #include "testhelper.h"
 
@@ -981,6 +982,152 @@ class LaurentTest : public testing::Test {
 
         template <int vars> requires (vars > 0 && vars <= 3)
         static void verifySet(const regina::Laurent<regina::Integer, vars>& c) {
+            using L = regina::Laurent<regina::Integer, vars>;
+
+            // Give ourselves random access to the individual non-zero terms.
+            std::vector<std::pair<std::array<long, vars>, regina::Integer>>
+                terms;
+            for (auto it = c.first(); it; ++it)
+                terms.emplace_back(it.exponents(), *it);
+
+            // Test setting out-of-range coefficients to zero.
+            for (int i = 0; i < vars; ++i) {
+                L x(c);
+                const auto alloc = x.allocation();
+                auto exp = c.first().exponents();
+                --exp[i];
+                set(x, exp, 0);
+                validate(x, c);
+                EXPECT_EQ(x.allocation(), alloc);
+            }
+            for (int i = 0; i < vars; ++i) {
+                L x(c);
+                const auto alloc = x.allocation();
+                auto exp = c.first().exponents();
+                exp[i] -= 100;
+                set(x, exp, 0);
+                validate(x, c);
+                EXPECT_EQ(x.allocation(), alloc);
+            }
+            for (int i = 0; i < vars; ++i) {
+                L x(c);
+                const auto alloc = x.allocation();
+                auto exp = c.last().exponents();
+                ++exp[i];
+                set(x, exp, 0);
+                validate(x, c);
+                EXPECT_EQ(x.allocation(), alloc);
+            }
+            for (int i = 0; i < vars; ++i) {
+                L x(c);
+                const auto alloc = x.allocation();
+                auto exp = c.last().exponents();
+                exp[i] += 100;
+                set(x, exp, 0);
+                validate(x, c);
+                EXPECT_EQ(x.allocation(), alloc);
+            }
+
+            // Test eliminating all coefficients, one at a time.
+            if (! c.isZero()) {
+                ASSERT_FALSE(terms.empty());
+
+                for (int pad = 0; pad < 2; ++pad) {
+                    // Eliminate from front to back:
+                    {
+                        L x(c);
+                        if (pad)
+                            x.reserveRange(c.first().template exp<0>() - 5,
+                                c.last().template exp<0>() + 5);
+                        for (size_t i = 0; i < terms.size(); ++i) {
+                            set(x, terms[i].first, 0);
+                            if (i == terms.size() - 1) {
+                                validateZero(x);
+                            } else {
+                                validate(x);
+                                EXPECT_NE(x, c);
+                                EXPECT_EQ(x.first().exponents(),
+                                    terms[i + 1].first);
+                                EXPECT_EQ(x.last().exponents(),
+                                    terms.back().first);
+                            }
+                        }
+                    }
+                    // Eliminate from back to front:
+                    {
+                        L x(c);
+                        if (pad)
+                            x.reserveRange(c.first().template exp<0>() - 5,
+                                c.last().template exp<0>() + 5);
+                        for (ssize_t i = terms.size() - 1; i >= 0; --i) {
+                            set(x, terms[i].first, 0);
+                            if (i == 0) {
+                                validateZero(x);
+                            } else {
+                                validate(x);
+                                EXPECT_NE(x, c);
+                                EXPECT_EQ(x.first().exponents(),
+                                    terms.front().first);
+                                EXPECT_EQ(x.last().exponents(),
+                                    terms[i - 1].first);
+                            }
+                        }
+                    }
+                    // Eliminate from the inside out:
+                    if (terms.size() > 2) {
+                        auto mixed = terms;
+                        std::swap(mixed.front(), mixed[mixed.size() - 2]);
+                        {
+                            regina::RandomEngine r;
+                            std::shuffle(mixed.begin(), mixed.end() - 2,
+                                r.engine());
+                        }
+                        L x(c);
+                        if (pad)
+                            x.reserveRange(c.first().template exp<0>() - 5,
+                                c.last().template exp<0>() + 5);
+                        for (size_t i = 0; i < mixed.size(); ++i) {
+                            set(x, mixed[i].first, 0);
+                            validate(x);
+                            EXPECT_NE(x, c);
+                            if (i < mixed.size() - 2) {
+                                EXPECT_EQ(x.first().exponents(),
+                                    terms.front().first);
+                                EXPECT_EQ(x.last().exponents(),
+                                    terms.back().first);
+                            } else if (i == mixed.size() - 2) {
+                                EXPECT_EQ(x.first().exponents(),
+                                    terms.back().first);
+                                EXPECT_EQ(x.last().exponents(),
+                                    terms.back().first);
+                            } else {
+                                validateZero(x);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Test setting in-range coefficients to zero that are already zero:
+            if (terms.size() > 1) {
+                L x(c);
+                for (size_t i = 0; i < terms.size() - 1; ++i) {
+                    std::array<long, vars> exp;
+                    for (int j = 0; j < vars; ++j)
+                        exp[j] =
+                            (terms[i].first[j] + terms[i + 1].first[j]) >> 1;
+                    // We want exp to be strictly between the two terms we
+                    // just examined.  This might not always happen; e.g.,
+                    // integer rounding between exponent sequences (0, 1) and
+                    // (1, 0) will give (0, 0).  For now just exclude such
+                    // scenarios from the test.
+                    if (terms[i].first < exp && exp < terms[i + 1].first) {
+                        set(x, exp, 0);
+                        validate(x, c);
+                    }
+                }
+            }
+
             // Verify that the move variant of set() works correctly.
             //
             // The raw data we obtain below are of type __mpz_struct (since
@@ -993,7 +1140,7 @@ class LaurentTest : public testing::Test {
             // do not want to rely on internal GMP implementation details
             // (i.e., the names of individual __mpz_struct data members),
             // we use memcmp() for our comparisons.
-            regina::Laurent<regina::Integer, vars> x(c);
+            L x(c);
             regina::Integer v(bigInt);
             const auto raw = *v.rawData(); // deep copy of initial __mpz_struct
 

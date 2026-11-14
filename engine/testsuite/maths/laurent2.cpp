@@ -231,28 +231,6 @@ TEST_F(Laurent2Test, moveThenAssign) {
 }
 
 TEST_F(Laurent2Test, set) {
-    // We rely on C++ standard data structures for our coefficient map, and so
-    // there is not really any specialised code to test here other than
-    // ensuring that the map remains free of zero coefficients.
-
-    L x{{{0,0},1}, {{1,-1},2}};
-
-    validate(x, {{{0,0},1}, {{1,-1},2}});
-    x.set(-1, 1, 3);
-    validate(x, {{{-1,1},3}, {{0,0},1}, {{1,-1},2}});
-    x.set(0, 0, 0);
-    validate(x, {{{-1,1},3}, {{1,-1},2}});
-    x.set(1, -1, 0);
-    validate(x, {{{-1,1},3} });
-    x.set(1, -1, 0);
-    validate(x, {{{-1,1},3} });
-    x.set(-1, 1, 0);
-    validate(x, {});
-    x.set(0, 0, 0);
-    validate(x, {});
-    x.set(-1, -1, 1);
-    validate(x, {{{-1,-1},1}});
-
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
         verifySet(c);
