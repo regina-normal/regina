@@ -60,6 +60,13 @@ class LaurentTest : public testing::Test {
         // An integer that cannot fit into 128 bits.
         inline static const regina::Integer bigInt { BIG };
 
+        // Single-variable Laurent polynomials that can help build
+        // multivariate test cases:
+        inline static const regina::Laurent<regina::Integer> corners1 {
+            -2, {1,0,0,-1} };
+        inline static const regina::Laurent<regina::Integer> lattice1 {
+            -2, {1,-1,1,-1} };
+
         // ---------------------------------------------------------------
         // Validation functions
         // ---------------------------------------------------------------
@@ -348,33 +355,46 @@ class LaurentTest : public testing::Test {
         }
 
         /**
-         * Returns a polynomial equal to \a poly, but with more space
+         * Ensures that the given polynomial has more space than necessary
          * allocated for coefficients at each coordinate position.
          */
-        template <regina::CoefficientDomain T>
-        static regina::Laurent<T, 2> padded(const regina::Laurent<T, 2>& poly) {
-            using L = regina::Laurent<T, 2>;
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        static void pad(regina::Laurent<T, vars>& poly) {
+            using L = regina::Laurent<T, vars>;
+            const L clone(poly);
 
-            L ans(poly);
             if (poly.isZero()) {
-                withExponents(poly, { -3, 0, 2 },
-                        [&ans](const L&, auto... exp) {
-                    ans += L::monomial(exp...);
+                withExponents(clone, { -3, 0, 2 },
+                        [&poly](const L&, auto... exp) {
+                    poly += L::monomial(exp...);
                 });
-                withExponents(poly, { -3, 0, 2 },
-                        [&ans](const L&, auto... exp) {
-                    ans -= L::monomial(exp...);
+                withExponents(clone, { -3, 0, 2 },
+                        [&poly](const L&, auto... exp) {
+                    poly -= L::monomial(exp...);
                 });
             } else {
-                withExponents(poly, { -3, 0, 2 },
-                        [&ans](const L& p, auto... exp) {
-                    ans += p.shifted(exp...);
+                withExponents(clone, { -3, 0, 2 },
+                        [&poly](const L& p, auto... exp) {
+                    poly += p.shifted(exp...);
                 });
-                withExponents(poly, { -3, 0, 2 },
-                        [&ans](const L& p, auto... exp) {
-                    ans -= p.shifted(exp...);
+                withExponents(clone, { -3, 0, 2 },
+                        [&poly](const L& p, auto... exp) {
+                    poly -= p.shifted(exp...);
                 });
             }
+        }
+
+        /**
+         * Returns a polynomial equal to \a poly, but with more space than
+         * necessary allocated for coefficients at each coordinate position.
+         */
+        template <regina::CoefficientDomain T, int vars>
+        requires (vars > 0 && vars <= 3)
+        static regina::Laurent<T, vars> padded(
+                const regina::Laurent<T, vars>& poly) {
+            regina::Laurent<T, vars> ans(poly);
+            pad(ans);
             return ans;
         }
 
@@ -981,6 +1001,81 @@ class LaurentTest : public testing::Test {
         }
 
         template <int vars> requires (vars > 0 && vars <= 3)
+        static void verifySetFromZero() {
+            using L = regina::Laurent<regina::Integer, vars>;
+            using R = std::pair<long, long>;
+
+            std::array<long, vars> exp;
+            for (int i = 0; i < vars; ++i)
+                exp[i] = 2 + i;
+
+            {
+                L x;
+                const auto alloc = x.allocation();
+                EXPECT_EQ(alloc.second, 0);
+                set(x, exp, 0);
+                validateZero(x);
+                EXPECT_EQ(x.allocation(), alloc);
+            }
+            for (auto range : {R{-5, 5}, R{10, 20}, R{-20, -10}}) {
+                L x;
+                x.reserveRange(range.first, range.second);
+                const auto alloc = x.allocation();
+                EXPECT_GT(alloc.second, 0);
+                set(x, exp, 0);
+                validateZero(x);
+                EXPECT_EQ(x.allocation(), alloc);
+            }
+            {
+                L small;
+                set(small, exp, -7);
+                validate(small);
+                ASSERT_FALSE(small.isZero());
+                ASSERT_TRUE(small.first());
+                EXPECT_EQ(small.last(), small.first());
+                EXPECT_EQ(small.first().exponents(), exp);
+                EXPECT_EQ(*small.first(), -7);
+
+                for (auto range : {R{-5, 5}, R{10, 20}, R{-20, -10 }}) {
+                    L x;
+                    x.reserveRange(range.first, range.second);
+                    const auto alloc = x.allocation();
+                    EXPECT_GT(alloc.second, 0);
+                    set(x, exp, -7);
+                    validate(x, small);
+                    if (range == R{-5, 5})
+                        EXPECT_EQ(x.allocation(), alloc);
+                    else
+                        EXPECT_NE(x.allocation(), alloc);
+                }
+            }
+            {
+                L big;
+                set(big, exp, bigInt);
+                validate(big);
+                ASSERT_FALSE(big.isZero());
+                ASSERT_TRUE(big.first());
+                EXPECT_EQ(big.last(), big.first());
+                EXPECT_EQ(big.first().exponents(), exp);
+                EXPECT_EQ(*big.first(), bigInt);
+
+                using R = std::pair<long, long>;
+                for (auto range : {R{-5, 5}, R{10, 20}, R{-20, -10 }}) {
+                    L x;
+                    x.reserveRange(range.first, range.second);
+                    const auto alloc = x.allocation();
+                    EXPECT_GT(alloc.second, 0);
+                    set(x, exp, bigInt);
+                    validate(x, big);
+                    if (range == R{-5, 5})
+                        EXPECT_EQ(x.allocation(), alloc);
+                    else
+                        EXPECT_NE(x.allocation(), alloc);
+                }
+            }
+        }
+
+        template <int vars> requires (vars > 0 && vars <= 3)
         static void verifySet(const regina::Laurent<regina::Integer, vars>& c) {
             using L = regina::Laurent<regina::Integer, vars>;
 
@@ -1037,8 +1132,7 @@ class LaurentTest : public testing::Test {
                     {
                         L x(c);
                         if (pad)
-                            x.reserveRange(c.first().template exp<0>() - 5,
-                                c.last().template exp<0>() + 5);
+                            LaurentTest::pad(x);
                         for (size_t i = 0; i < terms.size(); ++i) {
                             set(x, terms[i].first, 0);
                             if (i == terms.size() - 1) {
@@ -1050,6 +1144,8 @@ class LaurentTest : public testing::Test {
                                     terms[i + 1].first);
                                 EXPECT_EQ(x.last().exponents(),
                                     terms.back().first);
+                                EXPECT_EQ(*x.first(), terms[i + 1].second);
+                                EXPECT_EQ(*x.last(), terms.back().second);
                             }
                         }
                     }
@@ -1057,8 +1153,7 @@ class LaurentTest : public testing::Test {
                     {
                         L x(c);
                         if (pad)
-                            x.reserveRange(c.first().template exp<0>() - 5,
-                                c.last().template exp<0>() + 5);
+                            LaurentTest::pad(x);
                         for (ssize_t i = terms.size() - 1; i >= 0; --i) {
                             set(x, terms[i].first, 0);
                             if (i == 0) {
@@ -1070,6 +1165,8 @@ class LaurentTest : public testing::Test {
                                     terms.front().first);
                                 EXPECT_EQ(x.last().exponents(),
                                     terms[i - 1].first);
+                                EXPECT_EQ(*x.first(), terms.front().second);
+                                EXPECT_EQ(*x.last(), terms[i - 1].second);
                             }
                         }
                     }
@@ -1084,8 +1181,7 @@ class LaurentTest : public testing::Test {
                         }
                         L x(c);
                         if (pad)
-                            x.reserveRange(c.first().template exp<0>() - 5,
-                                c.last().template exp<0>() + 5);
+                            LaurentTest::pad(x);
                         for (size_t i = 0; i < mixed.size(); ++i) {
                             set(x, mixed[i].first, 0);
                             validate(x);
@@ -1095,11 +1191,15 @@ class LaurentTest : public testing::Test {
                                     terms.front().first);
                                 EXPECT_EQ(x.last().exponents(),
                                     terms.back().first);
+                                EXPECT_EQ(*x.first(), terms.front().second);
+                                EXPECT_EQ(*x.last(), terms.back().second);
                             } else if (i == mixed.size() - 2) {
                                 EXPECT_EQ(x.first().exponents(),
                                     terms.back().first);
                                 EXPECT_EQ(x.last().exponents(),
                                     terms.back().first);
+                                EXPECT_EQ(*x.first(), terms.back().second);
+                                EXPECT_EQ(*x.last(), terms.back().second);
                             } else {
                                 validateZero(x);
                             }
@@ -1125,6 +1225,222 @@ class LaurentTest : public testing::Test {
                         set(x, exp, 0);
                         validate(x, c);
                     }
+                }
+            }
+
+            // Tests setting additional coefficients to non-zero for a
+            // polynomial that is already non-zero:
+            if (! c.isZero()) {
+                const auto min = c.first().exponents();
+                const auto max = c.last().exponents();
+
+                std::array<long, vars> mid;
+                for (int i = 0; i < vars; ++i)
+                    mid[i] = (min[i] + max[i]) >> 1;
+
+                const regina::Integer minCoeff = coeff(c, min);
+                const regina::Integer midCoeff = coeff(c, mid);
+                const regina::Integer maxCoeff = coeff(c, max);
+
+                // Changes within the degree span:
+                {
+                    L x(c);
+                    set(x, min, minCoeff + bigInt + 5);
+                    validate(x);
+                    EXPECT_NE(x, c);
+                    EXPECT_EQ(x.first().exponents(), min);
+                    EXPECT_EQ(x.last().exponents(), max);
+                    EXPECT_EQ(coeff(x, min), minCoeff + bigInt + 5);
+                    set(x, min, minCoeff);
+                    validate(x, c);
+                }
+                {
+                    L x(c);
+                    set(x, mid, midCoeff + bigInt + 5);
+                    validate(x);
+                    EXPECT_NE(x, c);
+                    EXPECT_EQ(x.first().exponents(), min);
+                    EXPECT_EQ(x.last().exponents(), max);
+                    EXPECT_EQ(coeff(x, mid), midCoeff + bigInt + 5);
+                    set(x, mid, midCoeff);
+                    validate(x, c);
+                }
+                {
+                    L x(c);
+                    set(x, max, maxCoeff + bigInt + 5);
+                    validate(x);
+                    EXPECT_NE(x, c);
+                    EXPECT_EQ(x.first().exponents(), min);
+                    EXPECT_EQ(x.last().exponents(), max);
+                    EXPECT_EQ(coeff(x, max), maxCoeff + bigInt + 5);
+                    set(x, max, maxCoeff);
+                    validate(x, c);
+                }
+                {
+                    L x = padded(c);
+                    set(x, mid, midCoeff + bigInt + 5);
+                    validate(x);
+                    EXPECT_NE(x, c);
+                    EXPECT_EQ(x.first().exponents(), min);
+                    EXPECT_EQ(x.last().exponents(), max);
+                    EXPECT_EQ(coeff(x, mid), midCoeff + bigInt + 5);
+                    set(x, mid, midCoeff);
+                    validate(x, c);
+                }
+
+                // Changes outside the degree span, but within the allocated
+                // range:
+                for (int i = 0; i < vars; ++i) {
+                    {
+                        L x = padded(c);
+                        const auto alloc = x.allocation();
+                        auto exp = min;
+                        --exp[i];
+
+                        set(x, exp, -7);
+                        validate(x);
+                        EXPECT_EQ(x.allocation(), alloc);
+                        EXPECT_NE(x, c);
+                        EXPECT_EQ(x.first().exponents(), exp);
+                        EXPECT_EQ(x.last().exponents(), max);
+                        EXPECT_EQ(coeff(x, exp), -7);
+
+                        set(x, exp, 0);
+                        validate(x, c);
+                        EXPECT_EQ(x.allocation(), alloc);
+                    }
+                    {
+                        L x = padded(c);
+                        const auto alloc = x.allocation();
+                        auto exp = max;
+                        ++exp[i];
+
+                        set(x, exp, -7);
+                        validate(x);
+                        EXPECT_EQ(x.allocation(), alloc);
+                        EXPECT_NE(x, c);
+                        EXPECT_EQ(x.first().exponents(), min);
+                        EXPECT_EQ(x.last().exponents(), exp);
+                        EXPECT_EQ(coeff(x, exp), -7);
+
+                        set(x, exp, 0);
+                        validate(x, c);
+                        EXPECT_EQ(x.allocation(), alloc);
+                    }
+                    {
+                        L x = padded(c);
+                        const auto alloc = x.allocation();
+                        auto exp = min;
+                        exp[i] -= 2;
+
+                        set(x, exp, bigInt);
+                        validate(x);
+                        EXPECT_EQ(x.allocation(), alloc);
+                        EXPECT_NE(x, c);
+                        EXPECT_EQ(x.first().exponents(), exp);
+                        EXPECT_EQ(x.last().exponents(), max);
+                        EXPECT_EQ(coeff(x, exp), bigInt);
+
+                        set(x, exp, 0);
+                        validate(x, c);
+                        EXPECT_EQ(x.allocation(), alloc);
+                    }
+                    {
+                        L x = padded(c);
+                        const auto alloc = x.allocation();
+                        auto exp = max;
+                        exp[i] += 2;
+
+                        set(x, exp, bigInt);
+                        validate(x);
+                        EXPECT_EQ(x.allocation(), alloc);
+                        EXPECT_NE(x, c);
+                        EXPECT_EQ(x.first().exponents(), min);
+                        EXPECT_EQ(x.last().exponents(), exp);
+                        EXPECT_EQ(coeff(x, exp), bigInt);
+
+                        set(x, exp, 0);
+                        validate(x, c);
+                        EXPECT_EQ(x.allocation(), alloc);
+                    }
+                }
+
+                // Changes outside the allocated range:
+                {
+                    L x = padded(c);
+                    auto alloc = x.allocation();
+                    auto exp = min;
+                    exp[0] = alloc.first - 1;
+
+                    set(x, exp, -7);
+                    validate(x);
+                    EXPECT_NE(x.allocation(), alloc);
+                    EXPECT_NE(x, c);
+                    EXPECT_EQ(x.first().exponents(), exp);
+                    EXPECT_EQ(x.last().exponents(), max);
+                    EXPECT_EQ(coeff(x, exp), -7);
+                    alloc = x.allocation();
+
+                    set(x, exp, 0);
+                    validate(x, c);
+                    EXPECT_EQ(x.allocation(), alloc);
+                }
+                {
+                    L x = padded(c);
+                    auto alloc = x.allocation();
+                    auto exp = max;
+                    exp[0] = alloc.first + alloc.second;
+
+                    set(x, exp, -7);
+                    validate(x);
+                    EXPECT_NE(x.allocation(), alloc);
+                    EXPECT_NE(x, c);
+                    EXPECT_EQ(x.first().exponents(), min);
+                    EXPECT_EQ(x.last().exponents(), exp);
+                    EXPECT_EQ(coeff(x, exp), -7);
+                    alloc = x.allocation();
+
+                    set(x, exp, 0);
+                    validate(x, c);
+                    EXPECT_EQ(x.allocation(), alloc);
+                }
+                {
+                    L x = padded(c);
+                    auto alloc = x.allocation();
+                    auto exp = min;
+                    exp[0] = alloc.first - 5;
+
+                    set(x, exp, bigInt);
+                    validate(x);
+                    EXPECT_NE(x.allocation(), alloc);
+                    EXPECT_NE(x, c);
+                    EXPECT_EQ(x.first().exponents(), exp);
+                    EXPECT_EQ(x.last().exponents(), max);
+                    EXPECT_EQ(coeff(x, exp), bigInt);
+                    alloc = x.allocation();
+
+                    set(x, exp, 0);
+                    validate(x, c);
+                    EXPECT_EQ(x.allocation(), alloc);
+                }
+                {
+                    L x = padded(c);
+                    auto alloc = x.allocation();
+                    auto exp = max;
+                    exp[0] = alloc.first + alloc.second + 5;
+
+                    set(x, exp, bigInt);
+                    validate(x);
+                    EXPECT_NE(x.allocation(), alloc);
+                    EXPECT_NE(x, c);
+                    EXPECT_EQ(x.first().exponents(), min);
+                    EXPECT_EQ(x.last().exponents(), exp);
+                    EXPECT_EQ(coeff(x, exp), bigInt);
+                    alloc = x.allocation();
+
+                    set(x, exp, 0);
+                    validate(x, c);
+                    EXPECT_EQ(x.allocation(), alloc);
                 }
             }
 

@@ -71,7 +71,12 @@ class Laurent2Test : public LaurentTest {
         const L paddedPower = padded(xy2);
         const L paddedPoly = padded(a);
 
-        const std::array<std::reference_wrapper<const L>, 20> cases {
+        // Some polynomials whose exponent sequences span a square in the
+        // 2-D space of all exponent sequences:
+        const L corners2 {corners1, corners1};
+        const L lattice2 {lattice1, lattice1};
+
+        const std::array<std::reference_wrapper<const L>, 22> cases {
             std::cref(zero), std::cref(one), std::cref(two),
             std::cref(minusOne),
             std::cref(x2), std::cref(xy), std::cref(xy2),
@@ -79,7 +84,8 @@ class Laurent2Test : public LaurentTest {
             std::cref(a), std::cref(b), std::cref(c), std::cref(d),
             std::cref(e), std::cref(f), std::cref(big),
             std::cref(paddedZero), std::cref(paddedConst),
-            std::cref(paddedPower), std::cref(paddedPoly)
+            std::cref(paddedPower), std::cref(paddedPoly),
+            std::cref(corners2), std::cref(lattice2)
         };
 
         // Some single-variable polynomials to use with routines such as
@@ -134,6 +140,16 @@ TEST_F(Laurent2Test, construct) {
     validate(paddedConst, {{{0,0},2}});
     validate(paddedPower, {{{1,2},1}});
     validate(paddedPoly, {{{-2,-1},3}, {{0,0},1}, {{1,2},-2}});
+
+    // For the product-generated cases, just check that they have the expected
+    // number of non-zero terms.
+    {
+        regina::LaurentCoefficient<regina::Integer, 2> end;
+        validate(corners2);
+        EXPECT_EQ(std::distance(corners2.first(), end), 4);
+        validate(lattice2);
+        EXPECT_EQ(std::distance(lattice2.first(), end), 16);
+    }
 
     // On to our generic tests:
     for (const L& c : cases) {
@@ -235,6 +251,7 @@ TEST_F(Laurent2Test, set) {
         SCOPED_TRACE_REGINA(c);
         verifySet(c);
     }
+    verifySetFromZero<2>();
 }
 
 TEST_F(Laurent2Test, iteration) {
