@@ -380,6 +380,7 @@
 		05373B182771739900E9418B /* tree.py in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05373B102771734D00E9418B /* tree.py */; };
 		05373B192771739C00E9418B /* triangulation.py in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05373B112771734D00E9418B /* triangulation.py */; };
 		05373B1A277173A300E9418B /* sample.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05373B0F2771734D00E9418B /* sample.rga */; };
+		053A0FE430A913FE00EF1E46 /* laurent3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053A0FE330A913FE00EF1E46 /* laurent3.cpp */; };
 		053CAB2C1DA710FE00A92F98 /* perm2.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB281DA710FE00A92F98 /* perm2.h */; };
 		053CAB2D1DA710FE00A92F98 /* perm3.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB291DA710FE00A92F98 /* perm3.h */; };
 		053CAB2E1DA710FE00A92F98 /* perm4.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB2A1DA710FE00A92F98 /* perm4.h */; };
@@ -2746,6 +2747,7 @@
 		05373B112771734D00E9418B /* triangulation.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = triangulation.py; sourceTree = "<group>"; };
 		05373B122771734D00E9418B /* progress.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = progress.py; sourceTree = "<group>"; };
 		05373B1B2771740800E9418B /* sample.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = sample.rga; sourceTree = "<group>"; };
+		053A0FE330A913FE00EF1E46 /* laurent3.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = laurent3.cpp; sourceTree = "<group>"; };
 		053CAB271DA710FE00A92F98 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		053CAB281DA710FE00A92F98 /* perm2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = perm2.h; sourceTree = "<group>"; };
 		053CAB291DA710FE00A92F98 /* perm3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = perm3.h; sourceTree = "<group>"; };
@@ -7300,6 +7302,7 @@
 				05F3DABD2A5CE3B3007A2CE2 /* integer.cpp */,
 				056AED2F2A431AE200EAF4FA /* laurent1.cpp */,
 				056AED2A2A431AE200EAF4FA /* laurent2.cpp */,
+				053A0FE330A913FE00EF1E46 /* laurent3.cpp */,
 				058A344030A28658005D8F91 /* laurenttest.h */,
 				05BF6FCF2DB0001D0093D7A2 /* matrix.cpp */,
 				056AED322A431AE200EAF4FA /* numbertheory.cpp */,
@@ -9987,6 +9990,7 @@
 				05E629A52FBFD04600AE1B84 /* homologicaldata.cpp in Sources */,
 				05E629A62FBFD04600AE1B84 /* facenumbering.cpp in Sources */,
 				05E629A72FBFD04600AE1B84 /* triangulation2.cpp in Sources */,
+				053A0FE430A913FE00EF1E46 /* laurent3.cpp in Sources */,
 				05E629A82FBFD04600AE1B84 /* triangulation4.cpp in Sources */,
 				05E629A92FBFD04600AE1B84 /* facetpairing2.cpp in Sources */,
 				05E629AA2FBFD04600AE1B84 /* decomposition.cpp in Sources */,
