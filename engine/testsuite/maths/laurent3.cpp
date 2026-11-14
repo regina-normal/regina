@@ -205,24 +205,26 @@ TEST_F(Laurent3Test, construct) {
     #endif
 }
 
-#if 0
 TEST_F(Laurent3Test, embed) {
     // This test is specific to multivariate Laurent polynomials.
     validateZero(L::embed<0>(sub[0]));
     validateZero(L::embed<1>(sub[0]));
-    validate(L::embed<0>(sub[1]), {{{0,0},-5}});
-    validate(L::embed<1>(sub[1]), {{{0,0},-5}});
-    validate(L::embed<0>(sub[2]), {{{-2,0},3}, {{0,0},2}, {{1,0},-1}});
-    validate(L::embed<1>(sub[2]), {{{0,-2},3}, {{0,0},2}, {{0,1},-1}});
+    validateZero(L::embed<2>(sub[0]));
+    validate(L::embed<0>(sub[1]), {{{0,0,0},-5}});
+    validate(L::embed<1>(sub[1]), {{{0,0,0},-5}});
+    validate(L::embed<2>(sub[1]), {{{0,0,0},-5}});
+    validate(L::embed<0>(sub[2]), {{{-2,0,0},3}, {{0,0,0},2}, {{1,0,0},-1}});
+    validate(L::embed<1>(sub[2]), {{{0,-2,0},3}, {{0,0,0},2}, {{0,1,0},-1}});
+    validate(L::embed<2>(sub[2]), {{{0,0,-2},3}, {{0,0,0},2}, {{0,0,1},-1}});
 }
 
 TEST_F(Laurent3Test, diagonalise) {
     // This test is specific to multivariate Laurent polynomials.
     validateZero(L::diagonalise(sub[0]));
-    validate(L::diagonalise(sub[1]), {{{0,0},-5}});
-    validate(L::diagonalise(sub[2]), {{{-2,-2},3}, {{0,0},2}, {{1,1},-1}});
+    validate(L::diagonalise(sub[1]), {{{0,0,0},-5}});
+    validate(L::diagonalise(sub[2]),
+        {{{-2,-2,-2},3}, {{0,0,0},2}, {{1,1,1},-1}});
 }
-#endif
 
 TEST_F(Laurent3Test, assign) {
     for (const L& c : cases) {
@@ -336,74 +338,103 @@ TEST_F(Laurent3Test, negate) {
     }
 }
 
-#if 0
 TEST_F(Laurent3Test, invert) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
 
-        L invX(c), invY(c);
+        L invX(c), invY(c), invZ(c);
         invX.invert<0>();
         invY.invert<1>();
+        invZ.invert<2>();
 
         if (c.isZero()) {
             validateZero(invX);
             validateZero(invY);
+            validateZero(invZ);
         } else {
             validate(invX);
             validate(invY);
+            validate(invZ);
             EXPECT_FALSE(invX.isZero());
             EXPECT_FALSE(invY.isZero());
+            EXPECT_FALSE(invZ.isZero());
 
-            using Term = std::tuple<long, long, Integer>;
+            using Term = std::tuple<long, long, long, Integer>;
             {
                 std::vector<Term> expect;
                 for (auto it = c.first(); it; ++it)
-                    expect.emplace_back(-it.exp<0>(), it.exp<1>(), *it);
+                    expect.emplace_back(-it.exp<0>(), it.exp<1>(), it.exp<2>(),
+                        *it);
                 std::sort(expect.begin(), expect.end());
 
                 std::vector<Term> found;
                 for (auto it = invX.first(); it; ++it)
-                    found.emplace_back(it.exp<0>(), it.exp<1>(), *it);
+                    found.emplace_back(it.exp<0>(), it.exp<1>(), it.exp<2>(),
+                        *it);
 
                 EXPECT_EQ(found, expect);
             }
             {
                 std::vector<Term> expect;
                 for (auto it = c.first(); it; ++it)
-                    expect.emplace_back(it.exp<0>(), -it.exp<1>(), *it);
+                    expect.emplace_back(it.exp<0>(), -it.exp<1>(), it.exp<2>(),
+                        *it);
                 std::sort(expect.begin(), expect.end());
 
                 std::vector<Term> found;
                 for (auto it = invY.first(); it; ++it)
-                    found.emplace_back(it.exp<0>(), it.exp<1>(), *it);
+                    found.emplace_back(it.exp<0>(), it.exp<1>(), it.exp<2>(),
+                        *it);
+
+                EXPECT_EQ(found, expect);
+            }
+            {
+                std::vector<Term> expect;
+                for (auto it = c.first(); it; ++it)
+                    expect.emplace_back(it.exp<0>(), it.exp<1>(), -it.exp<2>(),
+                        *it);
+                std::sort(expect.begin(), expect.end());
+
+                std::vector<Term> found;
+                for (auto it = invZ.first(); it; ++it)
+                    found.emplace_back(it.exp<0>(), it.exp<1>(), it.exp<2>(),
+                        *it);
 
                 EXPECT_EQ(found, expect);
             }
 
             // Invert all remaining variables for each polynomial.
             invX.invert<1>();
+            invX.invert<2>();
             invY.invert<0>();
+            invY.invert<2>();
+            invZ.invert<0>();
+            invZ.invert<1>();
 
             validate(invX);
             validate(invY);
+            validate(invZ);
             EXPECT_EQ(invX, invY);
+            EXPECT_EQ(invX, invZ);
+            EXPECT_EQ(invY, invZ);
             {
                 // Verify the terms of just one of these (we use invX here).
                 std::vector<Term> expect;
                 for (auto it = c.first(); it; ++it)
-                    expect.emplace_back(-it.exp<0>(), -it.exp<1>(), *it);
+                    expect.emplace_back(-it.exp<0>(), -it.exp<1>(),
+                        -it.exp<2>(), *it);
                 std::reverse(expect.begin(), expect.end());
 
                 std::vector<Term> found;
                 for (auto it = invX.first(); it; ++it)
-                    found.emplace_back(it.exp<0>(), it.exp<1>(), *it);
+                    found.emplace_back(it.exp<0>(), it.exp<1>(), it.exp<2>(),
+                        *it);
 
                 EXPECT_EQ(found, expect);
             }
         }
     }
 }
-#endif
 
 TEST_F(Laurent3Test, transform) {
     for (const L& c : cases) {
@@ -568,28 +599,27 @@ TEST_F(Laurent3Test, tightEncoding) {
         TightEncodingTest<L>::verifyTightEncoding(c);
     }
 
-    #if 0
     // Test a handful of cases manually, to ensure the format does not change
     // between releases.  (The following tight encodings were all computed
-    // using Regina 7.4.1.)
+    // using Regina 8.0, which was the first to support 3-variable Laurent
+    // polynomials.)
     EXPECT_EQ(L().tightEncoding(), "M");
     {
-        L p{{{2,0},3}};
-        EXPECT_EQ(p.tightEncoding(), "POMM");
+        L p{{{2,0,0},3}};
+        EXPECT_EQ(p.tightEncoding(), "POMMM");
     }
     {
-        L p{{{-1,2},5}};
-        EXPECT_EQ(p.tightEncoding(), "RLOM");
+        L p{{{-1,2,3},5}};
+        EXPECT_EQ(p.tightEncoding(), "RLOPM");
     }
     {
-        L p{{{0,0},1}, {{1,2},-2}, {{-2,-1},3}};
-        EXPECT_EQ(p.tightEncoding(), "PKLNMMKNOM");
+        L p{{{0,0,0},1}, {{1,2,3},-2}, {{-3,-2,-1},4}};
+        EXPECT_EQ(p.tightEncoding(), "QJKLNMMMKNOPM");
     }
     {
-        L p{{{1,1},-1}, {{1,3},1}, {{0,-1},-2}, {{1,-1},-2}};
-        EXPECT_EQ(p.tightEncoding(), "KMLKNLLNNNNPM");
+        L p{{{1,1,2},-1}, {{1,3,-4},1}, {{0,-1,2},-2}, {{1,-1,-4},-2}};
+        EXPECT_EQ(p.tightEncoding(), "KMLOKNLILNNONNPIM");
     }
-    #endif
 }
 
 TEST_F(Laurent3Test, swap) {
