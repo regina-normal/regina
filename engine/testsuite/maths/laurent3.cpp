@@ -47,7 +47,6 @@ using L = Laurent<Integer, 3>;
 
 class Laurent3Test : public LaurentTest {
     protected:
-        // TODO: MORE
         const L zero {};
         const L one {{{0,0,0},1}};
         const L two {{{0,0,0},2}};
@@ -70,6 +69,8 @@ class Laurent3Test : public LaurentTest {
         const L yTerm {{{0,-2,0},-3}};
         const L zTerm {{{0,0,2},-3}};
         const L xyzTerm {{{-2,3,4},-1}};
+        const L a {{{3,-1,0},-5}, {{3,2,-2},3}, {{3,2,0},2}, {{3,2,1},-1},
+            {{5,-1,0},7}, {{5,2,0},-3}, {{5,3,0},2}};
         #if 0
         const L a {{{0,0},1}, {{1,2},-2}, {{-2,-1},3}};
         const L b {{{1,0},2}, {{1,2},-4}, {{0,-1},-2}};
@@ -85,14 +86,14 @@ class Laurent3Test : public LaurentTest {
         const L paddedZero = padded(zero);
         const L paddedConst = padded(two);
         const L paddedPower = padded(xy2z3);
-        // TODO const L paddedPoly = padded(a);
+        const L paddedPoly = padded(a);
 
         // Some polynomials whose exponent sequences span a cube in the
         // 3-D space of all exponent sequences:
         const L corners3 {corners1, Laurent<Integer, 2>(corners1, corners1)};
         const L lattice3 {lattice1, Laurent<Integer, 2>(lattice1, lattice1)};
 
-        const std::array<std::reference_wrapper<const L>, 27> cases {
+        const std::array<std::reference_wrapper<const L>, 29> cases {
             std::cref(zero), std::cref(one), std::cref(two),
             std::cref(minusOne),
             std::cref(x), std::cref(y), std::cref(z),
@@ -102,21 +103,28 @@ class Laurent3Test : public LaurentTest {
             std::cref(xyzInvX), std::cref(xyzInvY), std::cref(xyzInvZ),
             std::cref(xTerm), std::cref(yTerm), std::cref(zTerm),
             std::cref(xyzTerm),
+            std::cref(a),
             #if 0
             std::cref(a), std::cref(b), std::cref(c), std::cref(d),
             std::cref(e), std::cref(f), std::cref(big),
             #endif
             std::cref(paddedZero), std::cref(paddedConst),
-            std::cref(paddedPower), // TODO std::cref(paddedPoly),
+            std::cref(paddedPower), std::cref(paddedPoly),
             std::cref(corners3), std::cref(lattice3)
         };
 
-        // Some single-variable polynomials to use with routines such as
-        // embed() and diagonalise().
-        const std::array<const Laurent<Integer>, 3> sub {
-            Laurent<Integer>(),
-            Laurent<Integer>(-5),
-            Laurent<Integer>(-2, {3,0,2,-1})
+        // Some single-variable polynomials and two-variable polynomials to use
+        // with routines such as embed() and diagonalise() and the product
+        // constructor.
+        const std::array<const Laurent<Integer>, 3> sub1 {
+            Laurent<Integer>{},
+            Laurent<Integer>{-5},
+            Laurent<Integer>{-2, {3,0,2,-1}}
+        };
+        const std::array<const Laurent<Integer, 2>, 3> sub2 {
+            Laurent<Integer, 2>{},
+            Laurent<Integer, 2>{6},
+            Laurent<Integer, 2>{{{0,0},1}, {{1,2},-2}, {{-2,-1},3}}
         };
 
         // Note which of our cases represent the same mathematical polynomial.
@@ -131,11 +139,9 @@ class Laurent3Test : public LaurentTest {
             else if (std::addressof(poly) == std::addressof(xy2z3) ||
                     std::addressof(poly) == std::addressof(paddedPower))
                 return Batch::Power;
-            #if 0
             else if (std::addressof(poly) == std::addressof(a) ||
                     std::addressof(poly) == std::addressof(paddedPoly))
                 return Batch::Poly;
-            #endif
             else
                 return Batch::Unique;
         }
@@ -188,41 +194,55 @@ TEST_F(Laurent3Test, construct) {
 
     // Test the product constructor (which is specific to multivariate Laurent
     // polynomials).
-    #if 0
-    for (const auto& s : sub) {
-        validateZero(L(sub[0], s));
-        validateZero(L(s, sub[0]));
+    for (const auto& s : sub2) {
+        validateZero(L(sub1[0], s));
+        validateZero(L(s, sub1[0]));
+    }
+    for (const auto& s : sub1) {
+        validateZero(L(sub2[0], s));
+        validateZero(L(s, sub2[0]));
     }
 
-    validate(L(sub[1], sub[1]), {{{0,0},25}});
-    validate(L(sub[1], sub[2]), {{{0,-2},-15}, {{0,0},-10}, {{0,1},5}});
-    validate(L(sub[2], sub[1]), {{{-2,0},-15}, {{0,0},-10}, {{1,0},5}});
-    validate(L(sub[2], sub[2]), {
-        {{-2,-2},9}, {{-2,0},6}, {{-2,1},-3},
-        {{0,-2},6}, {{0,0},4}, {{0,1},-2},
-        {{1,-2},-3}, {{1,0},-2}, {{1,1},1}
+    validate(L(sub1[1], sub2[1]), {{{0,0,0},-30}});
+    validate(L(sub2[1], sub1[1]), {{{0,0,0},-30}});
+    validate(L(sub1[1], sub2[2]),
+        {{{0,-2,-1},-15}, {{0,0,0},-5}, {{0,1,2},10}});
+    validate(L(sub2[2], sub1[1]),
+        {{{-2,-1,0},-15}, {{0,0,0},-5}, {{1,2,0},10}});
+    validate(L(sub1[2], sub2[1]),
+        {{{-2,0,0},18}, {{0,0,0},12}, {{1,0,0},-6}});
+    validate(L(sub2[1], sub1[2]),
+        {{{0,0,-2},18}, {{0,0,0},12}, {{0,0,1},-6}});
+    validate(L(sub1[2], sub2[2]), {
+        {{-2,-2,-1},9}, {{-2,0,0},3}, {{-2,1,2},-6},
+        {{0,-2,-1},6}, {{0,0,0},2}, {{0,1,2},-4},
+        {{1,-2,-1},-3}, {{1,0,0},-1}, {{1,1,2},2}
     });
-    #endif
+    validate(L(sub2[2], sub1[2]), {
+        {{-2,-1,-2},9}, {{-2,-1,0},6}, {{-2,-1,1},-3},
+        {{0,0,-2},3}, {{0,0,0},2}, {{0,0,1},-1},
+        {{1,2,-2},-6}, {{1,2,0},-4}, {{1,2,1},2}
+    });
 }
 
 TEST_F(Laurent3Test, embed) {
     // This test is specific to multivariate Laurent polynomials.
-    validateZero(L::embed<0>(sub[0]));
-    validateZero(L::embed<1>(sub[0]));
-    validateZero(L::embed<2>(sub[0]));
-    validate(L::embed<0>(sub[1]), {{{0,0,0},-5}});
-    validate(L::embed<1>(sub[1]), {{{0,0,0},-5}});
-    validate(L::embed<2>(sub[1]), {{{0,0,0},-5}});
-    validate(L::embed<0>(sub[2]), {{{-2,0,0},3}, {{0,0,0},2}, {{1,0,0},-1}});
-    validate(L::embed<1>(sub[2]), {{{0,-2,0},3}, {{0,0,0},2}, {{0,1,0},-1}});
-    validate(L::embed<2>(sub[2]), {{{0,0,-2},3}, {{0,0,0},2}, {{0,0,1},-1}});
+    validateZero(L::embed<0>(sub1[0]));
+    validateZero(L::embed<1>(sub1[0]));
+    validateZero(L::embed<2>(sub1[0]));
+    validate(L::embed<0>(sub1[1]), {{{0,0,0},-5}});
+    validate(L::embed<1>(sub1[1]), {{{0,0,0},-5}});
+    validate(L::embed<2>(sub1[1]), {{{0,0,0},-5}});
+    validate(L::embed<0>(sub1[2]), {{{-2,0,0},3}, {{0,0,0},2}, {{1,0,0},-1}});
+    validate(L::embed<1>(sub1[2]), {{{0,-2,0},3}, {{0,0,0},2}, {{0,1,0},-1}});
+    validate(L::embed<2>(sub1[2]), {{{0,0,-2},3}, {{0,0,0},2}, {{0,0,1},-1}});
 }
 
 TEST_F(Laurent3Test, diagonalise) {
     // This test is specific to multivariate Laurent polynomials.
-    validateZero(L::diagonalise(sub[0]));
-    validate(L::diagonalise(sub[1]), {{{0,0,0},-5}});
-    validate(L::diagonalise(sub[2]),
+    validateZero(L::diagonalise(sub1[0]));
+    validate(L::diagonalise(sub1[1]), {{{0,0,0},-5}});
+    validate(L::diagonalise(sub1[2]),
         {{{-2,-2,-2},3}, {{0,0,0},2}, {{1,1,1},-1}});
 }
 
@@ -241,7 +261,7 @@ TEST_F(Laurent3Test, padding) {
     verifyPadding(paddedZero, zero);
     verifyPadding(paddedConst, two);
     verifyPadding(paddedPower, xy2z3);
-    // TODO verifyPadding(paddedPoly, a);
+    verifyPadding(paddedPoly, a);
 
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
