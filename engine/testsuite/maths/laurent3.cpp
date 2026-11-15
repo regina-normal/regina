@@ -67,19 +67,16 @@ class Laurent3Test : public LaurentTest {
         const L xyzInvZ {{{1,1,-1},1}};
         const L xTerm {{{2,0,0},3}};
         const L yTerm {{{0,-2,0},-3}};
-        const L zTerm {{{0,0,2},-3}};
+        const L zTerm {{{0,0,2},4}};
+        const L xyTerm {{{2,-3,0},6}};
+        const L yzTerm {{{0,3,-4},-7}};
+        const L xzTerm {{{-5,0,4},8}};
         const L xyzTerm {{{-2,3,4},-1}};
         const L a {{{3,-1,0},-5}, {{3,2,-2},3}, {{3,2,0},2}, {{3,2,1},-1},
             {{5,-1,0},7}, {{5,2,0},-3}, {{5,3,0},2}};
-        #if 0
-        const L a {{{0,0},1}, {{1,2},-2}, {{-2,-1},3}};
-        const L b {{{1,0},2}, {{1,2},-4}, {{0,-1},-2}};
-        const L c {{{1,0},-2}, {{1,1},5}, {{0,1},7}};
-        const L d {{{1,1},-1}, {{1,2},1}, {{0,-1},-2}, {{1,0},-2}};
-        const L e {{{-1,0},-5}, {{2,-2},3}, {{2,0},2}, {{2,1},-1}};
-        const L f {{{0,0},1}, {{0,1},2}, {{0,2},3}, {{-1,0},4}, {{-2,0},5}};
-        const L big {{{1,2},bigInt}, {{1,-2},-bigInt}, {{1,1},-1}};
-        #endif
+        const L b {{{0,0,0}, 3}, {{-2,0,0}, 2}, {{0,3,0}, -5}, {{0,0,-3}, -4},
+            {{1,-2,0}, -5}, {{0,2,-1}, 6}, {{3,0,1}, -7}, {{2,-1,1}, 8}};
+        const L big {{{1,2,3},bigInt}, {{1,0,-2},-bigInt}, {{1,1,1},-1}};
 
         // Some polynomials with more space allocated than they need
         // (with padding occurring along both coordinate axes):
@@ -93,7 +90,7 @@ class Laurent3Test : public LaurentTest {
         const L corners3 {corners1, Laurent<Integer, 2>(corners1, corners1)};
         const L lattice3 {lattice1, Laurent<Integer, 2>(lattice1, lattice1)};
 
-        const std::array<std::reference_wrapper<const L>, 29> cases {
+        const std::array<std::reference_wrapper<const L>, 34> cases {
             std::cref(zero), std::cref(one), std::cref(two),
             std::cref(minusOne),
             std::cref(x), std::cref(y), std::cref(z),
@@ -102,12 +99,9 @@ class Laurent3Test : public LaurentTest {
             std::cref(xyz), std::cref(xy2z3),
             std::cref(xyzInvX), std::cref(xyzInvY), std::cref(xyzInvZ),
             std::cref(xTerm), std::cref(yTerm), std::cref(zTerm),
+            std::cref(xyTerm), std::cref(yzTerm), std::cref(xzTerm),
             std::cref(xyzTerm),
-            std::cref(a),
-            #if 0
-            std::cref(a), std::cref(b), std::cref(c), std::cref(d),
-            std::cref(e), std::cref(f), std::cref(big),
-            #endif
+            std::cref(a), std::cref(b), std::cref(big),
             std::cref(paddedZero), std::cref(paddedConst),
             std::cref(paddedPower), std::cref(paddedPoly),
             std::cref(corners3), std::cref(lattice3)
@@ -151,28 +145,41 @@ TEST_F(Laurent3Test, construct) {
     // Start by verifying our hand-coded test cases.
     // This also effectively tests isZero() via the calls to validate() and
     // validateZero().
-    #if 0
     validateZero(zero);
-    validate(one, {{{0,0},1}});
-    validate(two, {{{0,0},2}});
-    validate(minusOne, {{{0,0},-1}});
-    validate(x2, {{{2,0},1}});
-    validate(xy, {{{1,1},1}});
-    validate(xy2, {{{1,2},1}});
-    validate(xTerm, {{{2,0},3}});
-    validate(yTerm, {{{0,-2},-3}});
-    validate(a, {{{-2,-1},3}, {{0,0},1}, {{1,2},-2}});
-    validate(b, {{{0,-1},-2}, {{1,0},2}, {{1,2},-4}});
-    validate(c, {{{0,1},7}, {{1,0},-2}, {{1,1},5}});
-    validate(d, {{{0,-1},-2}, {{1,0},-2}, {{1,1},-1}, {{1,2},1}});
-    validate(e, {{{-1,0},-5}, {{2,-2},3}, {{2,0},2}, {{2,1},-1}});
-    validate(f, {{{-2,0},5}, {{-1,0},4}, {{0,0},1}, {{0,1},2}, {{0,2},3}});
-    validate(big, {{{1,-2},-bigInt}, {{1,1},-1}, {{1,2},bigInt}});
+    validate(one, {{{0,0,0},1}});
+    validate(two, {{{0,0,0},2}});
+    validate(minusOne, {{{0,0,0},-1}});
+    validate(x, {{{1,0,0},1}});
+    validate(y, {{{0,1,0},1}});
+    validate(z, {{{0,0,1},1}});
+    validate(x2, {{{2,0,0},1}});
+    validate(y2, {{{0,2,0},1}});
+    validate(z2, {{{0,0,2},1}});
+    validate(xInv, {{{-1,0,0},1}});
+    validate(yInv, {{{0,-1,0},1}});
+    validate(zInv, {{{0,0,-1},1}});
+    validate(xyz, {{{1,1,1},1}});
+    validate(xy2z3, {{{1,2,3},1}});
+    validate(xyzInvX, {{{-1,1,1},1}});
+    validate(xyzInvY, {{{1,-1,1},1}});
+    validate(xyzInvZ, {{{1,1,-1},1}});
+    validate(xTerm, {{{2,0,0},3}});
+    validate(yTerm, {{{0,-2,0},-3}});
+    validate(zTerm, {{{0,0,2},4}});
+    validate(xyTerm, {{{2,-3,0},6}});
+    validate(yzTerm, {{{0,3,-4},-7}});
+    validate(xzTerm, {{{-5,0,4},8}});
+    validate(xyzTerm, {{{-2,3,4},-1}});
+    validate(a, {{{3,-1,0},-5}, {{3,2,-2},3}, {{3,2,0},2}, {{3,2,1},-1},
+        {{5,-1,0},7}, {{5,2,0},-3}, {{5,3,0},2}});
+    validate(b, {{{-2,0,0}, 2}, {{0,0,-3}, -4}, {{0,0,0}, 3}, {{0,2,-1}, 6},
+        {{0,3,0}, -5}, {{1,-2,0}, -5}, {{2,-1,1}, 8}, {{3,0,1}, -7}});
+    validate(big, {{{1,0,-2},-bigInt}, {{1,1,1},-1}, {{1,2,3},bigInt}});
     validateZero(paddedZero);
-    validate(paddedConst, {{{0,0},2}});
-    validate(paddedPower, {{{1,2},1}});
-    validate(paddedPoly, {{{-2,-1},3}, {{0,0},1}, {{1,2},-2}});
-    #endif
+    validate(paddedConst, {{{0,0,0},2}});
+    validate(paddedPower, {{{1,2,3},1}});
+    validate(paddedPoly, {{{3,-1,0},-5}, {{3,2,-2},3}, {{3,2,0},2},
+        {{3,2,1},-1}, {{5,-1,0},7}, {{5,2,0},-3}, {{5,3,0},2}});
 
     // For the product-generated cases, just check that they have the expected
     // number of non-zero terms.
@@ -522,7 +529,6 @@ TEST_F(Laurent3Test, ringConstants) {
     verifyRingConstants<L>();
 }
 
-#if 0
 TEST_F(Laurent3Test, str) {
     verifyStr(zero, "0");
     verifyStr(one, "1");
@@ -530,41 +536,42 @@ TEST_F(Laurent3Test, str) {
     verifyStr(minusOne, "-1");
     verifyStr(x, "x");
     verifyStr(y, "y");
+    verifyStr(z, "z");
     verifyStr(x2, "x^2");
     verifyStr(y2, "y^2");
+    verifyStr(z2, "z^2");
     verifyStr(xInv, "x^-1");
     verifyStr(yInv, "y^-1");
-    verifyStr(xy, "x y");
-    verifyStr(xy2, "x y^2");
-    verifyStr(xyInvX, "x^-1 y");
-    verifyStr(xyInvY, "x y^-1");
+    verifyStr(zInv, "z^-1");
+    verifyStr(xyz, "x y z");
+    verifyStr(xy2z3, "x y^2 z^3");
+    verifyStr(xyzInvX, "x^-1 y z");
+    verifyStr(xyzInvY, "x y^-1 z");
+    verifyStr(xyzInvZ, "x y z^-1");
     verifyStr(xTerm, "3 x^2");
     verifyStr(yTerm, "-3 y^-2");
-    verifyStr(xyTerm, "-x^-2 y^3");
-    verifyStr(a, "-2 x y^2 + 1 + 3 x^-2 y^-1");
-    verifyStr(b, "-4 x y^2 + 2 x - 2 y^-1");
-    verifyStr(c, "5 x y - 2 x + 7 y");
-    verifyStr(d, "x y^2 - x y - 2 x - 2 y^-1");
-    verifyStr(e, "-x^2 y + 2 x^2 + 3 x^2 y^-2 - 5 x^-1");
-    verifyStr(f, "3 y^2 + 2 y + 1 + 4 x^-1 + 5 x^-2");
-    verifyStr(big, BIG " x y^2 - x y - " BIG " x y^-2");
+    verifyStr(zTerm, "4 z^2");
+    verifyStr(xyTerm, "6 x^2 y^-3");
+    verifyStr(yzTerm, "-7 y^3 z^-4");
+    verifyStr(xzTerm, "8 x^-5 z^4");
+    verifyStr(xyzTerm, "-x^-2 y^3 z^4");
+    verifyStr(a, "2 x^5 y^3 - 3 x^5 y^2 + 7 x^5 y^-1"
+        " - x^3 y^2 z + 2 x^3 y^2 + 3 x^3 y^2 z^-2 - 5 x^3 y^-1");
+    verifyStr(b, "-7 x^3 z + 8 x^2 y^-1 z - 5 x y^-2 - 5 y^3"
+        " + 6 y^2 z^-1 + 3 - 4 z^-3 + 2 x^-2");
+    verifyStr(big, BIG " x y^2 z^3 - x y z - " BIG " x z^-2");
     verifyStr(paddedZero, "0");
     verifyStr(paddedConst, "2");
-    verifyStr(paddedPower, "x y^2");
-    verifyStr(paddedPoly, "-2 x y^2 + 1 + 3 x^-2 y^-1");
+    verifyStr(paddedPower, "x y^2 z^3");
+    verifyStr(paddedPoly, "2 x^5 y^3 - 3 x^5 y^2 + 7 x^5 y^-1"
+        " - x^3 y^2 z + 2 x^3 y^2 + 3 x^3 y^2 z^-2 - 5 x^3 y^-1");
 
     // Test some more monomials and single-term polynomials:
-    verifyStr(L::monomial(2, -2), "x^2 y^-2");
-    verifyStr(L::monomial(-2, 2), "x^-2 y^2");
-    verifyStr(xyTerm * -5, "5 x^-2 y^3");
-    verifyStr(xyTerm * 6, "-6 x^-2 y^3");
-    // Test some more multi-term polynomials:
-    verifyStr(L{{{0,0},3}, {{2,1},3}, {{2,-1},-2}, {{1,-1},5}},
-        "3 x^2 y - 2 x^2 y^-1 + 5 x y^-1 + 3");
-    verifyStr(L{{{0,0},3}, {{-2,1},3}, {{-2,-1},-2}, {{-1,-1},5}},
-        "3 + 5 x^-1 y^-1 + 3 x^-2 y - 2 x^-2 y^-1");
-    verifyStr(L{{{0,0},-3}, {{-2,1},3}, {{-2,-1},-2}, {{-1,-1},5}},
-        "-3 + 5 x^-1 y^-1 + 3 x^-2 y - 2 x^-2 y^-1");
+    verifyStr(L::monomial(2, -2, 0), "x^2 y^-2");
+    verifyStr(L::monomial(0, 2, -2), "y^2 z^-2");
+    verifyStr(L::monomial(-2, 0, 2), "x^-2 z^2");
+    verifyStr(xyzTerm * -5, "5 x^-2 y^3 z^4");
+    verifyStr(xyzTerm * 6, "-6 x^-2 y^3 z^4");
 }
 
 TEST_F(Laurent3Test, utf8) {
@@ -576,43 +583,43 @@ TEST_F(Laurent3Test, utf8) {
     verifyUtf8(minusOne, u8"−1");
     verifyUtf8(x, u8"x");
     verifyUtf8(y, u8"y");
+    verifyUtf8(z, u8"z");
     verifyUtf8(x2, u8"x²");
     verifyUtf8(y2, u8"y²");
+    verifyUtf8(z2, u8"z²");
     verifyUtf8(xInv, u8"x⁻¹");
     verifyUtf8(yInv, u8"y⁻¹");
-    verifyUtf8(xy, u8"x y");
-    verifyUtf8(xy2, u8"x y²");
-    verifyUtf8(xyInvX, u8"x⁻¹ y");
-    verifyUtf8(xyInvY, u8"x y⁻¹");
+    verifyUtf8(zInv, u8"z⁻¹");
+    verifyUtf8(xyz, u8"x y z");
+    verifyUtf8(xy2z3, u8"x y² z³");
+    verifyUtf8(xyzInvX, u8"x⁻¹ y z");
+    verifyUtf8(xyzInvY, u8"x y⁻¹ z");
+    verifyUtf8(xyzInvZ, u8"x y z⁻¹");
     verifyUtf8(xTerm, u8"3 x²");
     verifyUtf8(yTerm, u8"−3 y⁻²");
-    verifyUtf8(xyTerm, u8"−x⁻² y³");
-    verifyUtf8(a, u8"−2 x y² + 1 + 3 x⁻² y⁻¹");
-    verifyUtf8(b, u8"−4 x y² + 2 x − 2 y⁻¹");
-    verifyUtf8(c, u8"5 x y − 2 x + 7 y");
-    verifyUtf8(d, u8"x y² − x y − 2 x − 2 y⁻¹");
-    verifyUtf8(e, u8"−x² y + 2 x² + 3 x² y⁻² − 5 x⁻¹");
-    verifyUtf8(f, u8"3 y² + 2 y + 1 + 4 x⁻¹ + 5 x⁻²");
-    verifyUtf8(big, u8"" BIG " x y² − x y − " BIG " x y⁻²");
+    verifyUtf8(zTerm, u8"4 z²");
+    verifyUtf8(xyTerm, u8"6 x² y⁻³");
+    verifyUtf8(yzTerm, u8"−7 y³ z⁻⁴");
+    verifyUtf8(xzTerm, u8"8 x⁻⁵ z⁴");
+    verifyUtf8(xyzTerm, u8"−x⁻² y³ z⁴");
+    verifyUtf8(a, u8"2 x⁵ y³ − 3 x⁵ y² + 7 x⁵ y⁻¹"
+        " − x³ y² z + 2 x³ y² + 3 x³ y² z⁻² − 5 x³ y⁻¹");
+    verifyUtf8(b, u8"−7 x³ z + 8 x² y⁻¹ z − 5 x y⁻² − 5 y³"
+        " + 6 y² z⁻¹ + 3 − 4 z⁻³ + 2 x⁻²");
+    verifyUtf8(big, u8"" BIG " x y² z³ − x y z − " BIG " x z⁻²");
     verifyUtf8(paddedZero, u8"0");
     verifyUtf8(paddedConst, u8"2");
-    verifyUtf8(paddedPower, u8"x y²");
-    verifyUtf8(paddedPoly, u8"−2 x y² + 1 + 3 x⁻² y⁻¹");
+    verifyUtf8(paddedPower, u8"x y² z³");
+    verifyUtf8(paddedPoly, u8"2 x⁵ y³ − 3 x⁵ y² + 7 x⁵ y⁻¹"
+        " − x³ y² z + 2 x³ y² + 3 x³ y² z⁻² − 5 x³ y⁻¹");
 
     // Test some more monomials and single-term polynomials:
-    verifyUtf8(L::monomial(2, -2), u8"x² y⁻²");
-    verifyUtf8(L::monomial(-2, 2), u8"x⁻² y²");
-    verifyUtf8(xyTerm * -5, u8"5 x⁻² y³");
-    verifyUtf8(xyTerm * 6, u8"−6 x⁻² y³");
-    // Test some more multi-term polynomials:
-    verifyUtf8(L{{{0,0},3}, {{2,1},3}, {{2,-1},-2}, {{1,-1},5}},
-        u8"3 x² y − 2 x² y⁻¹ + 5 x y⁻¹ + 3");
-    verifyUtf8(L{{{0,0},3}, {{-2,1},3}, {{-2,-1},-2}, {{-1,-1},5}},
-        u8"3 + 5 x⁻¹ y⁻¹ + 3 x⁻² y − 2 x⁻² y⁻¹");
-    verifyUtf8(L{{{0,0},-3}, {{-2,1},3}, {{-2,-1},-2}, {{-1,-1},5}},
-        u8"−3 + 5 x⁻¹ y⁻¹ + 3 x⁻² y − 2 x⁻² y⁻¹");
+    verifyUtf8(L::monomial(2, -2, 0), u8"x² y⁻²");
+    verifyUtf8(L::monomial(0, 2, -2), u8"y² z⁻²");
+    verifyUtf8(L::monomial(-2, 0, 2), u8"x⁻² z²");
+    verifyUtf8(xyzTerm * -5, u8"5 x⁻² y³ z⁴");
+    verifyUtf8(xyzTerm * 6, u8"−6 x⁻² y³ z⁴");
 }
-#endif
 
 TEST_F(Laurent3Test, tightEncoding) {
     for (const L& c : cases) {
