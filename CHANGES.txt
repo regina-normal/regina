@@ -676,6 +676,9 @@ Version 8.0  [ TODO ]
             - Renamed buildStructure() to buildTautStructure(), to emphasise
               that this is for use specifically with taut angle structures.
               The old routine is kept but deprecated.
+            - The template parameters now appear in the different order
+              <IntType, Constraint, BanConstraint>.  This is because the
+              requirements for BanConstraint depend on the other parameters.
         Class Triangulation<dim>:
             - Routines involving fundamental group now throw an exception if
               the triangulation has > 1 component.  This is true also of

@@ -96,15 +96,15 @@ void addLPConstraint(pybind11::module_& m, const char* name) {
     regina::python::no_eq_static(c);
 }
 
-template <typename BanConstraint, typename... BanArgs>
+template <typename Ban, typename... BanArgs>
+requires regina::BanConstraint<Ban, Integer, LPConstraintNone>
 void addBanConstraint(pybind11::module_& m, const char* name,
         const char* classDoc, const char* initDoc) {
     RDOC_SCOPE_BEGIN(BanConstraintBase)
 
-    auto c = pybind11::class_<BanConstraint>(m, name, classDoc)
+    auto c = pybind11::class_<Ban>(m, name, classDoc)
         .def(pybind11::init<
-            const LPInitialTableaux<LPConstraintNone>&, BanArgs...>(),
-            initDoc)
+            const LPInitialTableaux<LPConstraintNone>&, BanArgs...>(), initDoc)
         .def(pybind11::init<
             const LPInitialTableaux<LPConstraintEulerPositive>&, BanArgs...>(),
             initDoc)
@@ -115,21 +115,19 @@ void addBanConstraint(pybind11::module_& m, const char* name,
             const LPInitialTableaux<LPConstraintNonSpun>&, BanArgs...>(),
             initDoc)
         .def("enforceBans",
-            &BanConstraint::template enforceBans<LPConstraintNone, Integer>,
+            &Ban::template enforceBans<LPConstraintNone, Integer>,
             rdoc::enforceBans)
         .def("enforceBans",
-            &BanConstraint::template enforceBans<LPConstraintEulerPositive,
-                Integer>,
+            &Ban::template enforceBans<LPConstraintEulerPositive, Integer>,
             rdoc::enforceBans)
         .def("enforceBans",
-            &BanConstraint::template enforceBans<LPConstraintEulerZero,
-                Integer>,
+            &Ban::template enforceBans<LPConstraintEulerZero, Integer>,
             rdoc::enforceBans)
         .def("enforceBans",
-            &BanConstraint::template enforceBans<LPConstraintNonSpun, Integer>,
+            &Ban::template enforceBans<LPConstraintNonSpun, Integer>,
             rdoc::enforceBans)
-        .def("marked", &BanConstraint::marked, rdoc::marked)
-        .def_static("supported", &BanConstraint::supported, rdoc::supported)
+        .def("marked", &Ban::marked, rdoc::marked)
+        .def_static("supported", &Ban::supported, rdoc::supported)
         ;
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);

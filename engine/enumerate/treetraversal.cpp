@@ -33,51 +33,49 @@
 namespace regina {
 
 // Instantiate templates for standard combinations of template arguments.
-template class TreeTraversal<LPConstraintNone, BanNone, Integer>;
-template class TreeTraversal<LPConstraintNone, BanNone, NativeLong>;
-template class TreeEnumeration<LPConstraintNone, BanNone, Integer>;
-template class TreeEnumeration<LPConstraintNone, BanNone, NativeLong>;
-template class TautEnumeration<LPConstraintNone, BanNone, Integer>;
-template class TautEnumeration<LPConstraintNone, BanNone, NativeLong>;
+template class TreeTraversal<Integer>;
+template class TreeTraversal<NativeLong>;
+template class TreeEnumeration<Integer>;
+template class TreeEnumeration<NativeLong>;
+template class TautEnumeration<Integer>;
+template class TautEnumeration<NativeLong>;
 
-template class TreeTraversal<LPConstraintNone, BanBoundary, Integer>;
-template class TreeTraversal<LPConstraintNone, BanBoundary, NativeLong>;
-template class TreeEnumeration<LPConstraintNone, BanBoundary, Integer>;
-template class TreeEnumeration<LPConstraintNone, BanBoundary, NativeLong>;
+template class TreeTraversal<Integer, LPConstraintNone, BanBoundary>;
+template class TreeTraversal<NativeLong, LPConstraintNone, BanBoundary>;
+template class TreeEnumeration<Integer, LPConstraintNone, BanBoundary>;
+template class TreeEnumeration<NativeLong, LPConstraintNone, BanBoundary>;
 
-template class TreeTraversal<LPConstraintEulerPositive, BanNone, Integer>;
-template class TreeTraversal<LPConstraintEulerPositive, BanNone, NativeLong>;
-template class TreeSingleSoln<LPConstraintEulerPositive, BanNone, Integer>;
-template class TreeSingleSoln<LPConstraintEulerPositive, BanNone, NativeLong>;
+template class TreeTraversal<Integer, LPConstraintEulerPositive>;
+template class TreeTraversal<NativeLong, LPConstraintEulerPositive>;
+template class TreeSingleSoln<Integer, LPConstraintEulerPositive>;
+template class TreeSingleSoln<NativeLong, LPConstraintEulerPositive>;
 
-template class TreeTraversal<LPConstraintEulerZero, BanNone, Integer>;
-template class TreeTraversal<LPConstraintEulerZero, BanNone, NativeLong>;
-template class TreeEnumeration<LPConstraintEulerZero, BanNone, Integer>;
-template class TreeEnumeration<LPConstraintEulerZero, BanNone, NativeLong>;
+template class TreeTraversal<Integer, LPConstraintEulerZero>;
+template class TreeTraversal<NativeLong, LPConstraintEulerZero>;
+template class TreeEnumeration<Integer, LPConstraintEulerZero>;
+template class TreeEnumeration<NativeLong, LPConstraintEulerZero>;
 
-template class TreeTraversal<LPConstraintNonSpun, BanNone, Integer>;
-template class TreeTraversal<LPConstraintNonSpun, BanNone, NativeLong>;
-template class TreeEnumeration<LPConstraintNonSpun, BanNone, Integer>;
-template class TreeEnumeration<LPConstraintNonSpun, BanNone, NativeLong>;
+template class TreeTraversal<Integer, LPConstraintNonSpun>;
+template class TreeTraversal<NativeLong, LPConstraintNonSpun>;
+template class TreeEnumeration<Integer, LPConstraintNonSpun>;
+template class TreeEnumeration<NativeLong, LPConstraintNonSpun>;
 
 #ifdef INT128_AVAILABLE
-template class TreeTraversal<LPConstraintNone, BanNone, NativeInteger<16>>;
-template class TreeEnumeration<LPConstraintNone, BanNone, NativeInteger<16>>;
-template class TautEnumeration<LPConstraintNone, BanNone, NativeInteger<16>>;
+template class TreeTraversal<NativeInteger<16>>;
+template class TreeEnumeration<NativeInteger<16>>;
+template class TautEnumeration<NativeInteger<16>>;
 
-template class TreeTraversal<LPConstraintNone, BanBoundary, NativeInteger<16>>;
-template class TreeEnumeration<LPConstraintNone, BanBoundary, NativeInteger<16>>;
+template class TreeTraversal<NativeInteger<16>, LPConstraintNone, BanBoundary>;
+template class TreeEnumeration<NativeInteger<16>, LPConstraintNone, BanBoundary>;
 
-template class TreeTraversal<LPConstraintEulerPositive, BanNone,
-    NativeInteger<16>>;
-template class TreeSingleSoln<LPConstraintEulerPositive, BanNone,
-    NativeInteger<16>>;
+template class TreeTraversal<NativeInteger<16>, LPConstraintEulerPositive>;
+template class TreeSingleSoln<NativeInteger<16>, LPConstraintEulerPositive>;
 
-template class TreeTraversal<LPConstraintEulerZero, BanNone, NativeInteger<16>>;
-template class TreeEnumeration<LPConstraintEulerZero, BanNone, NativeInteger<16>>;
+template class TreeTraversal<NativeInteger<16>, LPConstraintEulerZero>;
+template class TreeEnumeration<NativeInteger<16>, LPConstraintEulerZero>;
 
-template class TreeTraversal<LPConstraintNonSpun, BanNone, NativeInteger<16>>;
-template class TreeEnumeration<LPConstraintNonSpun, BanNone, NativeInteger<16>>;
+template class TreeTraversal<NativeInteger<16>, LPConstraintNonSpun>;
+template class TreeEnumeration<NativeInteger<16>, LPConstraintNonSpun>;
 #endif
 
 } // namespace regina

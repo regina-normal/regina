@@ -190,13 +190,12 @@ void NormalSurfaces::Enumerator::fillVertex() {
             // Tree traversal is not supported for immersed/singular surfaces.
             list_->algorithm_ ^= (NormalAlg::VertexTree | NormalAlg::VertexDD);
         } else if (useNonSpunConstraint(list_->coords_)) {
-            if (! TreeTraversal<LPConstraintNonSpun, BanNone, Integer>::
+            if (! TreeTraversal<Integer, LPConstraintNonSpun>::
                     supported(list_->coords_))
                 list_->algorithm_ ^=
                     (NormalAlg::VertexTree | NormalAlg::VertexDD);
         } else {
-            if (! TreeTraversal<LPConstraintNone, BanNone, Integer>::
-                    supported(list_->coords_))
+            if (! TreeTraversal<>::supported(list_->coords_))
                 list_->algorithm_ ^=
                     (NormalAlg::VertexTree | NormalAlg::VertexDD);
         }
@@ -292,10 +291,9 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
     // algorithm are sufficiently small in magnitude.
     //
     // Here we compute an upper bound on the magnitude of the integers that
-    // could appear in a vanilla TreeEnumeration<LPConstraintNone, BanNone>
-    // algorithm.  For details on how these arguments work, see
-    // section 4 of the tree traversal algorithm paper (Burton & Ozlen,
-    // Algorithmica, 2013).
+    // could appear in a vanilla TreeEnumeration<> algorithm.
+    // For details on how these arguments work, see section 4 of the
+    // tree traversal algorithm paper (Burton & Ozlen, Algorithmica, 2013).
     //
     // All "maximum" quantities in the calculations below refer to
     // maximum absolute value, and are always non-negative.
@@ -457,7 +455,7 @@ void NormalSurfaces::Enumerator::fillVertexTreeWith() {
         // the matching equations as the first step of the enumeration process,
         // we are assured that LPConstraintNonSpun can be used without problems.
         // TODO: Convert TreeEnumeration to use SnapshotRef
-        TreeEnumeration<LPConstraintNonSpun, BanNone, IntType> search(
+        TreeEnumeration<IntType, LPConstraintNonSpun> search(
             *list_->triangulation_, list_->coords_);
         while (search.next(tracker_)) {
             list_->surfaces_.push_back(search.buildSurface());
@@ -466,7 +464,7 @@ void NormalSurfaces::Enumerator::fillVertexTreeWith() {
         }
     } else {
         // TODO: Convert TreeEnumeration to use SnapshotRef
-        TreeEnumeration<LPConstraintNone, BanNone, IntType> search(
+        TreeEnumeration<IntType> search(
             *list_->triangulation_, list_->coords_);
         while (search.next(tracker_)) {
             list_->surfaces_.push_back(search.buildSurface());
