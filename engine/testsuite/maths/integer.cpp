@@ -4011,7 +4011,7 @@ static void verifyCppIntegerMultiplyDivide() {
 
     if constexpr (sizeof(Native) >= sizeof(long)) {
         // Probe the boundaries between native vs large representation.
-        Native rootBit = (Native(1) << (4 * sizeof(long)));
+        static constexpr Native rootBit = (Native(1) << (4 * sizeof(long)));
 
         verifyCppIntegerMultiplyDivide<IntegerType, Native>(
             LONG_MIN, 2, -IntegerType(ULONG_MAX) - 1);
@@ -4179,7 +4179,7 @@ static void verifyCppIntegerMultiplyDivide() {
 
     if constexpr (sizeof(Native) >= sizeof(long)) {
         // Probe the boundaries between native vs large representation.
-        Native rootBit = (Native(1) << (4 * sizeof(long)));
+        static constexpr Native rootBit = (Native(1) << (4 * sizeof(long)));
 
         verifyCppIntegerMultiplyDivide<IntegerType, Native>(
             LONG_MIN, 2, -IntegerType(ULONG_MAX) - 1);
@@ -4286,6 +4286,8 @@ TYPED_TEST(IntegerTest, cppIntegerMultiplyDivide) {
 
 template <ArbitraryPrecisionInteger IntegerType, CppInteger Native>
 static void verifyCppIntegerDivMod(IntegerType lhs, Native rhs) {
+    // We don't need to pass expected values here, because correctness can be
+    // certified via +, *, and the definitions of div/mod.
     SCOPED_TRACE_REGINA(lhs);
     SCOPED_TRACE_REGINA(IntegerType(rhs)); // to support 128-bit ints
 
@@ -4394,47 +4396,85 @@ static void verifyCppIntegerDivMod(IntegerType lhs, Native rhs) {
     }
 }
 
-template <ArbitraryPrecisionInteger IntegerType, SignedCppInteger Native>
+template <ArbitraryPrecisionInteger IntegerType, CppInteger Native>
 static void verifyCppIntegerDivMod() {
     SCOPED_TRACE_TYPE(Native);
 
-    using Limits = NativeSignedLimits<Native>;
-    using Unsigned = typename Limits::Unsigned;
-    using UnsignedLimits = NativeUnsignedLimits<Unsigned>;
-    Limits::verify();
-    UnsignedLimits::verify();
+    using I = IntegerType;
 
-    for (const auto& x : UnsignedLimits::template reginaCases<IntegerType>)
-        for (auto y : Limits::nativeCases)
-            verifyCppIntegerDivMod<IntegerType, Native>(x, y);
+    if constexpr (SignedCppInteger<Native>) {
+        using Limits = NativeSignedLimits<Native>;
+        using Unsigned = typename Limits::Unsigned;
+        using UnsignedLimits = NativeUnsignedLimits<Unsigned>;
+        Limits::verify();
+        UnsignedLimits::verify();
 
-    if constexpr (IntegerType::supportsInfinity) {
-        verifyCppIntegerDivMod<IntegerType, Native>(
-            IntegerType::infinity, Limits::min);
-        verifyCppIntegerDivMod<IntegerType, Native>(
-            IntegerType::infinity, Limits::max);
+        for (const auto& x : UnsignedLimits::template reginaCases<IntegerType>)
+            for (auto y : Limits::nativeCases)
+                verifyCppIntegerDivMod<I, Native>(x, y);
+
+        if constexpr (IntegerType::supportsInfinity) {
+            verifyCppIntegerDivMod<I, Native>(I::infinity, Limits::min);
+            verifyCppIntegerDivMod<I, Native>(I::infinity, Limits::max);
+        }
+    } else {
+        using Limits = NativeUnsignedLimits<Native>;
+        using Signed = typename Limits::Signed;
+        using SignedLimits = NativeSignedLimits<Signed>;
+        Limits::verify();
+        SignedLimits::verify();
+
+        for (const auto& x : Limits::template reginaCases<IntegerType>)
+            for (auto y : Limits::nativeCases)
+                verifyCppIntegerDivMod<I, Native>(x, y);
+
+        if constexpr (IntegerType::supportsInfinity) {
+            verifyCppIntegerDivMod<I, Native>(I::infinity, 0);
+            verifyCppIntegerDivMod<I, Native>(I::infinity, Limits::max);
+        }
     }
-}
 
-template <ArbitraryPrecisionInteger IntegerType, UnsignedCppInteger Native>
-static void verifyCppIntegerDivMod() {
-    SCOPED_TRACE_TYPE(Native);
+    // Probe the boundaries between native vs large representation.
+    std::vector<Native> divisors { 1, 2, 3 };
+    // Make sure we got the initializer_list constructor just now:
+    ASSERT_EQ(divisors.size(), 3);
+    if constexpr (SignedCppInteger<Native>) {
+        divisors.insert(divisors.end(), { -1, -2, -3 });
+    }
 
-    using Limits = NativeUnsignedLimits<Native>;
-    using Signed = typename Limits::Signed;
-    using SignedLimits = NativeSignedLimits<Signed>;
-    Limits::verify();
-    SignedLimits::verify();
+    if constexpr (sizeof(Native) >= sizeof(long)) {
+        static constexpr long halfLong = (LONG_MAX >> 1) + 1; // of the form 2^k
 
-    for (const auto& x : Limits::template reginaCases<IntegerType>)
-        for (auto y : Limits::nativeCases)
-            verifyCppIntegerDivMod<IntegerType, Native>(x, y);
+        divisors.insert(divisors.end(), { halfLong - 1, halfLong, halfLong + 1,
+            LONG_MAX - 1, LONG_MAX });
+        if constexpr (SignedCppInteger<Native>)
+            divisors.insert(divisors.end(), { LONG_MIN, LONG_MIN + 1,
+                -halfLong - 1, -halfLong, -halfLong + 1 });
+    }
 
-    if constexpr (IntegerType::supportsInfinity) {
-        verifyCppIntegerDivMod<IntegerType, Native>(
-            IntegerType::infinity, 0);
-        verifyCppIntegerDivMod<IntegerType, Native>(
-            IntegerType::infinity, Limits::max);
+    for (Native n : divisors) {
+        verifyCppIntegerDivMod<I, Native>(I(LONG_MIN) - 1, n);
+        verifyCppIntegerDivMod<I, Native>(LONG_MIN, n);
+        verifyCppIntegerDivMod<I, Native>(LONG_MIN + 1, n);
+        verifyCppIntegerDivMod<I, Native>(LONG_MAX - 1, n);
+        verifyCppIntegerDivMod<I, Native>(LONG_MAX, n);
+        verifyCppIntegerDivMod<I, Native>(I(LONG_MAX) + 1, n);
+
+        verifyCppIntegerDivMod<I, Native>(I(LONG_MIN) * n - n, n);
+        verifyCppIntegerDivMod<I, Native>(I(LONG_MIN) * n - (n - 1), n);
+        verifyCppIntegerDivMod<I, Native>(I(LONG_MIN) * n - 1, n);
+        verifyCppIntegerDivMod<I, Native>(I(LONG_MIN) * n, n);
+        verifyCppIntegerDivMod<I, Native>(I(LONG_MIN) * n + 1, n);
+        verifyCppIntegerDivMod<I, Native>(I(LONG_MIN) * n + (n - 1), n);
+        verifyCppIntegerDivMod<I, Native>(I(LONG_MIN) * n + n, n);
+
+        verifyCppIntegerDivMod<I, Native>(I(LONG_MAX) * n - n, n);
+        verifyCppIntegerDivMod<I, Native>(I(LONG_MAX) * n - (n - 1), n);
+        verifyCppIntegerDivMod<I, Native>(I(LONG_MAX) * n - 1, n);
+        verifyCppIntegerDivMod<I, Native>(I(LONG_MAX) * n, n);
+        verifyCppIntegerDivMod<I, Native>(I(LONG_MAX) * n + 1, n);
+        verifyCppIntegerDivMod<I, Native>(I(LONG_MAX) * n + (n - 1), n);
+        verifyCppIntegerDivMod<I, Native>(I(LONG_MAX) * n + n, n);
     }
 }
 
