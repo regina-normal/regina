@@ -294,10 +294,10 @@ dump(h)
 
 dump(SFSFibre(5,-2))
 
-sfsDisc = SFSpace(SFSpace.o2, 0, 1)
+sfsDisc = SFSpace(SFSpace.BundleType.o1, 0, 1)
 sfsDisc.insertFibre(3,1)
 sfsDisc.insertFibre(4,-3)
-sfsAnnulus = SFSpace(SFSpace.o2, 0, 2)
+sfsAnnulus = SFSpace(SFSpace.BundleType.o1, 0, 2)
 sfsAnnulus.insertFibre(2,1)
 sfsAnnulus.insertFibre(5,7)
 
