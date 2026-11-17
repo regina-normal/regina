@@ -405,28 +405,26 @@ Matrix<Integer> NormalSurface::boundaryIntersections() const {
     size_t cusps = equations.rows() / 2;
     size_t numTet = snapPea->size();
     Matrix<Integer> slopes(cusps, 2);
-    for(unsigned int i=0; i < cusps; i++) {
+    for(size_t i = 0; i < cusps; ++i) {
         Integer meridian; // constructor sets this to 0
         Integer longitude; // constructor sets this to 0
         // Note: we are converting from LargeInteger to Integer below.
-        for(unsigned int j=0; j < numTet; j++) {
-            meridian +=
-                equations(2*i, 3*j) *
-                    Integer(quads(j, quadSeparating[0][1])) +
-                equations(2*i, 3*j+1) *
-                    Integer(quads(j, quadSeparating[0][2])) +
-                equations(2*i, 3*j+2) *
-                    Integer(quads(j, quadSeparating[0][3]));
-            longitude +=
-                equations(2*i+1, 3*j) *
-                    Integer(quads(j, quadSeparating[0][1])) +
-                equations(2*i+1, 3*j+1) *
-                    Integer(quads(j, quadSeparating[0][2])) +
-                equations(2*i+1, 3*j+2) *
-                    Integer(quads(j, quadSeparating[0][3]));
+        for(size_t j = 0; j < numTet; ++j) {
+            meridian.addProduct(equations(2*i, 3*j),
+                quads(j, quadSeparating[0][1]));
+            meridian.addProduct(equations(2*i, 3*j+1),
+                quads(j, quadSeparating[0][2]));
+            meridian.addProduct(equations(2*i, 3*j+2),
+                quads(j, quadSeparating[0][3]));
+            longitude.addProduct(equations(2*i+1, 3*j),
+                quads(j, quadSeparating[0][1]));
+            longitude.addProduct(equations(2*i+1, 3*j+1),
+                quads(j, quadSeparating[0][2]));
+            longitude.addProduct(equations(2*i+1, 3*j+2),
+                quads(j, quadSeparating[0][3]));
         }
-        slopes(i,0) = meridian;
-        slopes(i,1) = longitude;
+        slopes(i, 0) = meridian;
+        slopes(i, 1) = longitude;
     }
     return slopes;
 }

@@ -81,7 +81,7 @@ std::optional<NormalSurface> Triangulation<3>::nonTrivialSphereOrDisc() const {
     // Use combinatorial optimisation if we can.
     if (isValid() && countVertices() == 1) {
         // For now, just use the safe arbitrary-precision Integer type.
-        TreeSingleSoln<LPConstraintEulerPositive> tree(*this,
+        TreeSingleSoln<Integer, LPConstraintEulerPositive> tree(*this,
             NormalCoords::Standard);
         if (tree.find()) {
             NormalSurface s = tree.buildSurface();
@@ -141,7 +141,7 @@ std::optional<NormalSurface> Triangulation<3>::octagonalAlmostNormalSphere()
     // ones we need to be more fussy about.
     if (countVertices() == 1) {
         // For now, just use the safe arbitrary-precision Integer type.
-        TreeSingleSoln<LPConstraintEulerPositive> tree(*this,
+        TreeSingleSoln<Integer, LPConstraintEulerPositive> tree(*this,
             NormalCoords::AlmostNormal);
         if (tree.find()) {
             // Since our preconditions ensure the triangulation is

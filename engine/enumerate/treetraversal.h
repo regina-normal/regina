@@ -170,9 +170,11 @@ class ProgressTracker;
  *
  * \ingroup enumerate
  */
-template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
+template <ReginaInteger IntType = Integer,
+          LPConstraint Constraint = LPConstraintNone,
+          BanConstraint<IntType, Constraint> Ban = BanNone>
 class TreeTraversal :
-        public ShortOutput<TreeTraversal<Constraint, Ban, IntType>> {
+        public ShortOutput<TreeTraversal<IntType, Constraint, Ban>> {
     protected:
         // Global information about the search:
         const LPInitialTableaux<Constraint> origTableaux_;
@@ -221,7 +223,7 @@ class TreeTraversal :
                  allow octagons at all), then `octLevel_ = nTypes_`.
                  If we are allowing almost normal surfaces but we have not yet
                  chosen an octagon type, then `octLevel_ = -1`. */
-        using TableauxArray = FixedArray<LPData<Constraint, IntType>>;
+        using TableauxArray = FixedArray<LPData<IntType, Constraint>>;
             /**< A FixedArray of linear programming tableaux. */
         TableauxArray lp_;
             /**< Stores tableaux for linear programming at various nodes
@@ -268,7 +270,7 @@ class TreeTraversal :
                  have visited thus far.  This may grow much faster than the
                  number of solutions, since it also counts traversals
                  through "dead ends" in the search tree. */
-        LPData<Constraint, IntType> tmpLP_[4];
+        LPData<IntType, Constraint> tmpLP_[4];
             /**< Temporary tableaux used by the function feasibleBranches()
                  to determine which quadrilateral types or angle types have
                  good potential for pruning the search tree.
@@ -584,7 +586,7 @@ class TreeTraversal :
          * point.  Specifically, this routine returns the first unmarked
          * triangle type whose type number is greater than or equal to
          * \a startFrom.  For more information on marking, see the
-         * BanConstraintBase class notes.
+         * BanConstraint concept documentation.
          *
          * This routine simply searches through types by increasing index
          * into the type vector; in particular, it does _not_ make any use
@@ -691,8 +693,8 @@ class TreeTraversal :
  * In this case, the notion of "vertex surface" is modified to mean a normal
  * surface whose coordinates lie on an extreme ray of the restricted solution
  * cone under these additional constraints (and whose coordinates are integers
- * with no common divisor).  See the LPConstraint concept and BanConstraintBase
- * class documentation for details.
+ * with no common divisor).  See the LPConstraint and BanConstraint concept
+ * documentation for details.
  *
  * Note that some constraint classes may cause the TreeEnumeration class
  * constructor to throw an exception; see the constructor documentation for
@@ -744,34 +746,34 @@ class TreeTraversal :
  *
  * \ingroup enumerate
  */
-template <LPSurfaceSubspace Constraint = LPConstraintNone,
-          BanConstraint Ban = BanNone,
-          ReginaInteger IntType = Integer>
-class TreeEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
+template <ReginaInteger IntType = Integer,
+          LPSurfaceSubspace Constraint = LPConstraintNone,
+          BanConstraint<IntType, Constraint> Ban = BanNone>
+class TreeEnumeration : public TreeTraversal<IntType, Constraint, Ban> {
     public:
-        using TreeTraversal<Constraint, Ban, IntType>::dumpTypes;
-        using TreeTraversal<Constraint, Ban, IntType>::typeString;
+        using TreeTraversal<IntType, Constraint, Ban>::dumpTypes;
+        using TreeTraversal<IntType, Constraint, Ban>::typeString;
 
     protected:
         // Since we have a template base class, we need to explicitly
         // list the inherited member variables that we use.
         // Note that these are all protected in the base class, and so
         // we are not changing any access restrictions here.
-        using TreeTraversal<Constraint, Ban, IntType>::ban_;
-        using TreeTraversal<Constraint, Ban, IntType>::level_;
-        using TreeTraversal<Constraint, Ban, IntType>::lp_;
-        using TreeTraversal<Constraint, Ban, IntType>::lpSlot_;
-        using TreeTraversal<Constraint, Ban, IntType>::nextSlot_;
-        using TreeTraversal<Constraint, Ban, IntType>::nTets_;
-        using TreeTraversal<Constraint, Ban, IntType>::nTypes_;
-        using TreeTraversal<Constraint, Ban, IntType>::nVisited_;
-        using TreeTraversal<Constraint, Ban, IntType>::octLevel_;
-        using TreeTraversal<Constraint, Ban, IntType>::type_;
-        using TreeTraversal<Constraint, Ban, IntType>::typeOrder_;
+        using TreeTraversal<IntType, Constraint, Ban>::ban_;
+        using TreeTraversal<IntType, Constraint, Ban>::level_;
+        using TreeTraversal<IntType, Constraint, Ban>::lp_;
+        using TreeTraversal<IntType, Constraint, Ban>::lpSlot_;
+        using TreeTraversal<IntType, Constraint, Ban>::nextSlot_;
+        using TreeTraversal<IntType, Constraint, Ban>::nTets_;
+        using TreeTraversal<IntType, Constraint, Ban>::nTypes_;
+        using TreeTraversal<IntType, Constraint, Ban>::nVisited_;
+        using TreeTraversal<IntType, Constraint, Ban>::octLevel_;
+        using TreeTraversal<IntType, Constraint, Ban>::type_;
+        using TreeTraversal<IntType, Constraint, Ban>::typeOrder_;
 
-        using TreeTraversal<Constraint, Ban, IntType>::feasibleBranches;
-        using TreeTraversal<Constraint, Ban, IntType>::percent;
-        using TreeTraversal<Constraint, Ban, IntType>::setNext;
+        using TreeTraversal<IntType, Constraint, Ban>::feasibleBranches;
+        using TreeTraversal<IntType, Constraint, Ban>::percent;
+        using TreeTraversal<IntType, Constraint, Ban>::setNext;
 
     private:
         TypeTrie<7> solns_;
@@ -840,7 +842,7 @@ class TreeEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
         template <typename... BanArgs>
         TreeEnumeration(const Triangulation<3>& tri, NormalEncoding enc,
                 BanArgs&&... banArgs) :
-                TreeTraversal<Constraint, Ban, IntType>(tri, enc,
+                TreeTraversal<IntType, Constraint, Ban>(tri, enc,
                     (enc.storesOctagons() ? 7 : 4) /* branches per quad */,
                     2 /* branches per triangle */, true /* enumeration */,
                     std::forward<BanArgs>(banArgs)...) {
@@ -1065,8 +1067,7 @@ class TreeEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
  * By using appropriate template parameters \a Constraint and/or \a Ban, it is
  * possible to impose additional linear constraints on the angle structure
  * solution space, and/or explicitly force particular angles to be zero.
- * See the LPConstraint concept and BanConstraintBase class documentation for
- * details.
+ * See the LPConstraint and BanConstraint concept documentation for details.
  *
  * Note that some constraint classes may cause the TautEnumeration class
  * constructor to throw an exception; see the constructor documentation for
@@ -1104,33 +1105,33 @@ class TreeEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
  *
  * \ingroup enumerate
  */
-template <LPStructureSubspace Constraint = LPConstraintNone,
-          BanConstraint Ban = BanNone,
-          ReginaInteger IntType = Integer>
-class TautEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
+template <ReginaInteger IntType = Integer,
+          LPStructureSubspace Constraint = LPConstraintNone,
+          BanConstraint<IntType, Constraint> Ban = BanNone>
+class TautEnumeration : public TreeTraversal<IntType, Constraint, Ban> {
     public:
-        using TreeTraversal<Constraint, Ban, IntType>::dumpTypes;
-        using TreeTraversal<Constraint, Ban, IntType>::typeString;
+        using TreeTraversal<IntType, Constraint, Ban>::dumpTypes;
+        using TreeTraversal<IntType, Constraint, Ban>::typeString;
 
     protected:
         // Since we have a template base class, we need to explicitly
         // list the inherited member variables that we use.
         // Note that these are all protected in the base class, and so
         // we are not changing any access restrictions here.
-        using TreeTraversal<Constraint, Ban, IntType>::ban_;
-        using TreeTraversal<Constraint, Ban, IntType>::level_;
-        using TreeTraversal<Constraint, Ban, IntType>::lp_;
-        using TreeTraversal<Constraint, Ban, IntType>::lpSlot_;
-        using TreeTraversal<Constraint, Ban, IntType>::nextSlot_;
-        using TreeTraversal<Constraint, Ban, IntType>::nTets_;
-        using TreeTraversal<Constraint, Ban, IntType>::nTypes_;
-        using TreeTraversal<Constraint, Ban, IntType>::nVisited_;
-        using TreeTraversal<Constraint, Ban, IntType>::origTableaux_;
-        using TreeTraversal<Constraint, Ban, IntType>::type_;
-        using TreeTraversal<Constraint, Ban, IntType>::typeOrder_;
+        using TreeTraversal<IntType, Constraint, Ban>::ban_;
+        using TreeTraversal<IntType, Constraint, Ban>::level_;
+        using TreeTraversal<IntType, Constraint, Ban>::lp_;
+        using TreeTraversal<IntType, Constraint, Ban>::lpSlot_;
+        using TreeTraversal<IntType, Constraint, Ban>::nextSlot_;
+        using TreeTraversal<IntType, Constraint, Ban>::nTets_;
+        using TreeTraversal<IntType, Constraint, Ban>::nTypes_;
+        using TreeTraversal<IntType, Constraint, Ban>::nVisited_;
+        using TreeTraversal<IntType, Constraint, Ban>::origTableaux_;
+        using TreeTraversal<IntType, Constraint, Ban>::type_;
+        using TreeTraversal<IntType, Constraint, Ban>::typeOrder_;
 
-        using TreeTraversal<Constraint, Ban, IntType>::percent;
-        using TreeTraversal<Constraint, Ban, IntType>::setNext;
+        using TreeTraversal<IntType, Constraint, Ban>::percent;
+        using TreeTraversal<IntType, Constraint, Ban>::setNext;
 
     private:
         size_t nSolns_ { 0 };
@@ -1176,7 +1177,7 @@ class TautEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
          */
         template <typename... BanArgs>
         TautEnumeration(const Triangulation<3>& tri, BanArgs&&... banArgs) :
-                TreeTraversal<Constraint, Ban, IntType>(tri,
+                TreeTraversal<IntType, Constraint, Ban>(tri,
                     NormalCoords::Angle, 3 /* branches per quad */,
                     0 /* branches per triangle; irrelevant here */,
                     true /* enumeration */, std::forward<BanArgs>(banArgs)...) {
@@ -1495,33 +1496,33 @@ class TautEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
  *
  * \ingroup enumerate
  */
-template <LPSurfaceConstraint Constraint = LPConstraintNone,
-          BanConstraint Ban = BanNone,
-          ReginaInteger IntType = Integer>
-class TreeSingleSoln : public TreeTraversal<Constraint, Ban, IntType> {
+template <ReginaInteger IntType = Integer,
+          LPSurfaceConstraint Constraint = LPConstraintNone,
+          BanConstraint<IntType, Constraint> Ban = BanNone>
+class TreeSingleSoln : public TreeTraversal<IntType, Constraint, Ban> {
     public:
-        using TreeTraversal<Constraint, Ban, IntType>::dumpTypes;
-        using TreeTraversal<Constraint, Ban, IntType>::typeString;
+        using TreeTraversal<IntType, Constraint, Ban>::dumpTypes;
+        using TreeTraversal<IntType, Constraint, Ban>::typeString;
 
     protected:
-        using TreeTraversal<Constraint, Ban, IntType>::ban_;
-        using TreeTraversal<Constraint, Ban, IntType>::level_;
-        using TreeTraversal<Constraint, Ban, IntType>::lp_;
-        using TreeTraversal<Constraint, Ban, IntType>::lpSlot_;
-        using TreeTraversal<Constraint, Ban, IntType>::nextSlot_;
-        using TreeTraversal<Constraint, Ban, IntType>::nTets_;
-        using TreeTraversal<Constraint, Ban, IntType>::nTypes_;
-        using TreeTraversal<Constraint, Ban, IntType>::nVisited_;
-        using TreeTraversal<Constraint, Ban, IntType>::octLevel_;
-        using TreeTraversal<Constraint, Ban, IntType>::origTableaux_;
-        using TreeTraversal<Constraint, Ban, IntType>::tmpLP_;
-        using TreeTraversal<Constraint, Ban, IntType>::type_;
-        using TreeTraversal<Constraint, Ban, IntType>::typeOrder_;
+        using TreeTraversal<IntType, Constraint, Ban>::ban_;
+        using TreeTraversal<IntType, Constraint, Ban>::level_;
+        using TreeTraversal<IntType, Constraint, Ban>::lp_;
+        using TreeTraversal<IntType, Constraint, Ban>::lpSlot_;
+        using TreeTraversal<IntType, Constraint, Ban>::nextSlot_;
+        using TreeTraversal<IntType, Constraint, Ban>::nTets_;
+        using TreeTraversal<IntType, Constraint, Ban>::nTypes_;
+        using TreeTraversal<IntType, Constraint, Ban>::nVisited_;
+        using TreeTraversal<IntType, Constraint, Ban>::octLevel_;
+        using TreeTraversal<IntType, Constraint, Ban>::origTableaux_;
+        using TreeTraversal<IntType, Constraint, Ban>::tmpLP_;
+        using TreeTraversal<IntType, Constraint, Ban>::type_;
+        using TreeTraversal<IntType, Constraint, Ban>::typeOrder_;
 
-        using TreeTraversal<Constraint, Ban, IntType>::feasibleBranches;
-        using TreeTraversal<Constraint, Ban, IntType>::nextUnmarkedTriangleType;
-        using TreeTraversal<Constraint, Ban, IntType>::percent;
-        using TreeTraversal<Constraint, Ban, IntType>::setNext;
+        using TreeTraversal<IntType, Constraint, Ban>::feasibleBranches;
+        using TreeTraversal<IntType, Constraint, Ban>::nextUnmarkedTriangleType;
+        using TreeTraversal<IntType, Constraint, Ban>::percent;
+        using TreeTraversal<IntType, Constraint, Ban>::setNext;
 
     private:
         ssize_t nextZeroLevel_ { 0 };
@@ -1580,7 +1581,7 @@ class TreeSingleSoln : public TreeTraversal<Constraint, Ban, IntType> {
         template <typename... BanArgs>
         TreeSingleSoln(const Triangulation<3>& tri, NormalEncoding enc,
                 BanArgs&&... banArgs) :
-                TreeTraversal<Constraint, Ban, IntType>(tri, enc,
+                TreeTraversal<IntType, Constraint, Ban>(tri, enc,
                     (enc.storesOctagons() ? 6 : 3) /* branches per quad */,
                     2 /* branches per triangle */, false /* enumeration */,
                     std::forward<BanArgs>(banArgs)...) {

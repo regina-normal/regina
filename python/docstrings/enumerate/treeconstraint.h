@@ -15,8 +15,9 @@ struct BanBoundary {
 
 // Docstring regina::python::doc::BanBoundary::__class
 static constexpr const char __class[] =
-R"doc(A class that bans normal disc types that meet the boundary of the
-underlying triangulation. No disc types are marked at all.
+R"doc(A ban constraint type that bans normal disc types that meet the
+boundary of the underlying triangulation. No disc types are marked at
+all.
 
 This class is only for use with normal or almost normal surfaces, not
 angle structures.
@@ -31,9 +32,6 @@ angle structures.
     coordinate systems). The supported() routine will only return
     ``True`` for encodings that include triangles.
 
-See the BanConstraintBase class notes for details on all member
-functions and structs.
-
 These ban constraint classes are designed mainly to act as C++
 template arguments, and end users will typically not need to construct
 their own object of these classes. Instead, to use a ban constraint
@@ -46,8 +44,8 @@ Python:
     through Python. Instead, to use a ban constraint class, you would
     typically create a tree traversal object with the appropriate
     class suffix (e.g., one such Python class is
-    ``TreeEnumeration_BanBoundary``). See the BanConstraintBase class
-    notes for further details.
+    ``TreeEnumeration_BanBoundary``). See the BanConstraint concept
+    documentation for further details.
 
 .. warning::
     The API for this class or function has not yet been finalised.
@@ -59,149 +57,15 @@ Python:
 
 // Docstring regina::python::doc::BanBoundary::__init
 static constexpr const char __init[] =
-R"doc(Constructs a new set of banning and marking constraints.
-
-This base class constructor will construct the *banned_* and *marked_*
-arrays to be the correct size based on the given tableaux, and will
-initialise their contents to ban disc types that meet the
-triangulation boundary.
-
-No disc types will be marked.
+R"doc(Constructs a new set of banning and marking constraints for the given
+tableaux. (For BanBoundary, no disc types will be marked.)
 
 Parameter ``init``:
     the original starting tableaux being used for this enumeration
     task. This tableaux must work with normal or almost normal surface
     coordinates (not angle structure coordinates).)doc";
 
-}; // struct BanBoundary
-
-struct BanConstraintBase {
-
-// Docstring regina::python::doc::BanConstraintBase::__class
-static constexpr const char __class[] =
-R"doc(A base class for additional banning and marking constraints that we
-can place on tree traversal algorithms. This is used with
-TreeEnumeration, TreeSingleSoln and related algorithms for enumerating
-and locating normal surfaces and angle structures in a 3-manifold
-triangulation.
-
-This class adds constraints of two types:
-
-* _Banning_ constraints, which ensure that certain coordinates are set
-  to zero;
-
-* _Marking_ constraints, which are more flexible and can be used in
-  different ways by different algorithms.
-
-All of these constraints operate only on normal or angle structure
-coordinates in the underlying tableaux (and in particular not the
-additional variables introduced by additional linear constraints, as
-described in the LPConstraint concept documentation).
-
-Currently marking is used in the following ways:
-
-* The TreeEnumeration and TautEnumeration algorithms do not use
-  marking at all.
-
-* In the TreeSingleSoln algorithm, marking affects what is considered
-  a non-trivial normal surface. Normally, a non-trivial surface is
-  defined to be one in which some triangle coordinate is zero. With
-  marking, a non-trivial surface is redefined to be one in which some
-  _unmarked_ triangle coordinate is zero. In other words, marked
-  triangle types are effectively ignored when determining whether a
-  surface is non-trivial or not.
-
-At present, marking is not used at all for quadrilateral coordinates
-or angle structures. However, marking is a very new feature, and this
-concept may be expanded in future versions of Regina.
-
-This class does not record disc types in the order of their normal or
-angle structure coordinates; instead it records them in the order of
-their columns in a tableaux for linear programming (as used in
-LPInitialTableaux). This means that there is a little more work
-required in setting up the initial lists of banned and marked columns,
-but then these lists are easy to use on the fly during tree traversal
-algorithms.
-
-Bear in mind that the tableaux that these constraints are working with
-will not necessarily use the same coordinates as the underlying
-enumeration task (e.g., the tableaux will never include separate
-columns for octagon coordinates). See LPInitialTableaux for a more
-detailed discussion of this.
-
-This base class provides limited functionality (as documented below).
-Subclasses _must_ implement a constructor (which, like this base
-class, takes an initial tableaux and determines which coordinates are
-banned and/or marked), and must implement supported(), which indicates
-which normal or angle structure coordinate system this constraint
-class can work with. The constructor may take additional arguments
-beyond the initial tableaux; if so, then the tree traversal classes
-(mentioned below) will forward these arguments at runtime from their
-own class constructors.
-
-These ban constraint classes are designed mainly to act as C++
-template arguments, and end users will typically not need to construct
-their own object of these classes. Instead, to use a ban constraint
-class, pass it as a template parameter to one of the tree traversal
-subclasses (e.g., TreeEnumeration, TreeSingleSolution, or
-TautEnumeration).
-
-Python:
-    This base class is not present, but all subclasses are available.
-    However, as noted above, it is rare that you would need to access
-    any of these ban constraint classes directly through Python.
-    Instead, to use a ban constraint class, you would typically create
-    a tree traversal object with the appropriate class suffix (e.g.,
-    one such Python class is ``TreeEnumeration_BanBoundary``).
-
-.. warning::
-    The API for this class or function has not yet been finalised.
-    This means that the interface may change in new versions of
-    Regina, without maintaining backward compatibility. If you use
-    this class directly in your own code, please check the detailed
-    changelog with each new release to see if you need to make changes
-    to your code.)doc";
-
-// Docstring regina::python::doc::BanConstraintBase::__eq
-static constexpr const char __eq[] =
-R"doc(Determines if this and the given object ban and mark the same tableaux
-coordinates as each other.
-
-Even if this and the given object are of different subclasses of
-BanConstraintBase, as long as they ban the same coordinates and mark
-the same coordinates, they will compare as equal.
-
-It does not matter whether the two objects use the same underlying
-tableaux. However, if the underlying tableaux use triangulations of
-different sizes and/or different broad classes of vector encodings (as
-described by LPSystem), then these two objects will compare as not
-equal.
-
-Parameter ``other``:
-    the object to compare with this.
-
-Returns:
-    ``True`` if and only if this and the object ban and mark the same
-    tableaux coordinates, as described above.)doc";
-
-// Docstring regina::python::doc::BanConstraintBase::__init
-static constexpr const char __init[] =
-R"doc(Constructs a new set of banning and marking constraints.
-
-This base class constructor will create *banned_* and *marked_* arrays
-of the correct size, and will initialise their contents to be entirely
-``False``. This means that there will be no banned or marked disc
-types at all.
-
-Subclass constructors should identify which coordinates to ban and
-mark, and adjust the contents of the *banned_* and *marked_* arrays
-accordingly.
-
-Parameter ``init``:
-    the original starting tableaux being used for this enumeration
-    task.)doc";
-
-// Docstring regina::python::doc::BanConstraintBase::enforceBans
+// Docstring regina::python::doc::BanBoundary::enforceBans
 static constexpr const char enforceBans[] =
 R"doc(Enforces all bans described by this class in the given tableaux.
 Specifically, for each banned coordinate, this routine calls
@@ -210,56 +74,38 @@ LPData::constrainZero() on the corresponding coordinate column.
 Parameter ``lp``:
     the tableaux in which to enforce the bans.)doc";
 
-// Docstring regina::python::doc::BanConstraintBase::marked
+// Docstring regina::python::doc::BanBoundary::marked
 static constexpr const char marked[] =
 R"doc(Identifies whether the given column of the tableaux corresponds to a
-marked coordinate (e.g., a marked normal disc type).
-
-Parameter ``column``:
-    a column of the tableaux. This must be one of the columns
-    corresponding to a normal or angle structure coordinate, not one
-    of the extra columns induced by an LPConstraint parameter for the
-    tree traversal class.
+marked coordinate. For BanBoundary (which does not mark any
+coordinates), this always returns ``False``.
 
 Returns:
     ``True`` if and only if the given column corresponds to a marked
     coordinate.)doc";
 
-// Docstring regina::python::doc::BanConstraintBase::supported
+// Docstring regina::python::doc::BanBoundary::supported
 static constexpr const char supported[] =
-R"doc(Indicates whether the given coordinate system is supported by this
+R"doc(Indicates whether the given vector encoding is supported by this
 constraint class.
 
-This routine assumes that the given system is already known to be
-supported by the generic tree traversal infrastructure, and only
-returns ``False`` if there are additional prerequisites imposed by
-this particular constraint class that the given system does not
-satisfy. If this constraint class does not impose any of its own
-additional conditions, this routine may simply return ``True``.
-
-The only features of the encoding that this routine should examine are
-what coordinates are stored (e.g., NormalEncoding::storesTriangles()).
-In particular, this routine will not look at any "semantic guarantees"
-(e.g. NormalEncoding::couldBeNonCompact()).
-
 Parameter ``enc``:
-    the vector encoding being queried. This must be one of the vector
-    encodings known to be supported by the generic TreeTraversal
-    infrastructure, and in particular it may be the special angle
-    structure encoding.
+    the vector encoding being queried, which must already be known to
+    be supported by the generic TreeTraversal infrastructure.
 
 Returns:
-    ``True`` if and only if this vector encoding is also supported by
-    this specific constraint class.)doc";
+    ``True`` if and only if the given encoding is supported by this
+    specific constraint class.)doc";
 
-}; // struct BanConstraintBase
+}; // struct BanBoundary
 
 struct BanEdge {
 
 // Docstring regina::python::doc::BanEdge::__class
 static constexpr const char __class[] =
-R"doc(A class that bans normal disc types that meet a particular edge of the
-underlying triangulation. No disc types are marked at all.
+R"doc(A ban constraint type that bans normal disc types that meet a
+particular edge of the underlying triangulation. No disc types are
+marked at all.
 
 This class is only for use with normal or almost normal surfaces, not
 angle structures.
@@ -274,9 +120,6 @@ angle structures.
     coordinate systems). The supported() routine will only return
     ``True`` for encodings that include triangles.
 
-See the BanConstraintBase class notes for details on all member
-functions and structs.
-
 These ban constraint classes are designed mainly to act as C++
 template arguments, and end users will typically not need to construct
 their own object of these classes. Instead, to use a ban constraint
@@ -289,8 +132,8 @@ Python:
     through Python. Instead, to use a ban constraint class, you would
     typically create a tree traversal object with the appropriate
     class suffix (e.g., one such Python class is
-    ``TreeEnumeration_BanEdge``). See the BanConstraintBase class
-    notes for further details.
+    ``TreeEnumeration_BanEdge``). See the BanConstraint concept
+    documentation for further details.
 
 .. warning::
     The API for this class or function has not yet been finalised.
@@ -302,13 +145,8 @@ Python:
 
 // Docstring regina::python::doc::BanEdge::__init
 static constexpr const char __init[] =
-R"doc(Constructs a new set of banning and marking constraints.
-
-This base class constructor will construct the *banned_* and *marked_*
-arrays to be the correct size based on the given tableaux, and will
-initialise their contents to ban disc types that meet the given edge.
-
-No disc types will be marked.
+R"doc(Constructs a new set of banning and marking constraints for the given
+tableaux. (For BanEdge, no disc types will be marked.)
 
 Parameter ``init``:
     the original starting tableaux being used for this enumeration
@@ -318,21 +156,46 @@ Parameter ``init``:
 Parameter ``edge``:
     the specific edge that our normal discs must not meet.)doc";
 
+// Docstring regina::python::doc::BanEdge::enforceBans
+static constexpr const char enforceBans[] =
+R"doc(Enforces all bans described by this class in the given tableaux.
+Specifically, for each banned coordinate, this routine calls
+LPData::constrainZero() on the corresponding coordinate column.
+
+Parameter ``lp``:
+    the tableaux in which to enforce the bans.)doc";
+
+// Docstring regina::python::doc::BanEdge::marked
+static constexpr const char marked[] =
+R"doc(Identifies whether the given column of the tableaux corresponds to a
+marked coordinate. For BanEdge (which does not mark any coordinates),
+this always returns ``False``.
+
+Returns:
+    ``True`` if and only if the given column corresponds to a marked
+    coordinate.)doc";
+
+// Docstring regina::python::doc::BanEdge::supported
+static constexpr const char supported[] =
+R"doc(Indicates whether the given vector encoding is supported by this
+constraint class.
+
+Parameter ``enc``:
+    the vector encoding being queried, which must already be known to
+    be supported by the generic TreeTraversal infrastructure.
+
+Returns:
+    ``True`` if and only if the given encoding is supported by this
+    specific constraint class.)doc";
+
 }; // struct BanEdge
 
 struct BanNone {
 
 // Docstring regina::python::doc::BanNone::__class
 static constexpr const char __class[] =
-R"doc(A do-nothing class that bans no coordinates and marks no coordinates.
-
-This is intended to act as a drop-in replacement for a "real"
-BanConstraint class (i.e., a subclass of BanConstraintBase). However,
-to avoid any overhead in this trivial case, BanNone does _not_ derive
-from BanConstraintBase, and all of its routines do nothing at all.
-
-See the BanConstraintBase class notes for details on the interface
-that this class adheres to.
+R"doc(A ban constraint type that does not ban or mark any coordinates at
+all.
 
 These ban constraint classes are designed mainly to act as C++
 template arguments, and end users will typically not need to construct
@@ -349,8 +212,8 @@ Python:
     behaviour). For example, all of the Python classes
     ``TreeEnumeration_NonSpun``, ``TreeSingleSoln_EulerPositive`` and
     ``TautEnumeration`` use this do-nothing BanNone class. See the
-    BanConstraintBase class notes for further details on accessing
-    other types of ban constraints from within Python.
+    BanConstraint concept documentation for further details on
+    accessing other types of ban constraints from within Python.
 
 .. warning::
     The API for this class or function has not yet been finalised.
@@ -360,15 +223,55 @@ Python:
     changelog with each new release to see if you need to make changes
     to your code.)doc";
 
+// Docstring regina::python::doc::BanNone::__init
+static constexpr const char __init[] =
+R"doc(Constructs a new set of banning and marking constraints for the given
+tableaux. (For BanNone, no disc types will be banned or marked.)
+
+Parameter ``init``:
+    the original starting tableaux being used for this enumeration
+    task. This tableaux must work with normal or almost normal surface
+    coordinates (not angle structure coordinates).)doc";
+
+// Docstring regina::python::doc::BanNone::enforceBans
+static constexpr const char enforceBans[] =
+R"doc(Enforces all bans described by this class in the given tableaux. For
+BanNone (which does not ban any coordinates), this routine does
+nothing.)doc";
+
+// Docstring regina::python::doc::BanNone::marked
+static constexpr const char marked[] =
+R"doc(Identifies whether the given column of the tableaux corresponds to a
+marked coordinate. For BanNone (which does not mark any coordinates),
+this always returns ``False``.
+
+Returns:
+    ``True`` if and only if the given column corresponds to a marked
+    coordinate.)doc";
+
+// Docstring regina::python::doc::BanNone::supported
+static constexpr const char supported[] =
+R"doc(Indicates whether the given vector encoding is supported by this
+constraint class.
+
+Parameter ``enc``:
+    the vector encoding being queried, which must already be known to
+    be supported by the generic TreeTraversal infrastructure.
+
+Returns:
+    ``True`` if and only if the given encoding is supported by this
+    specific constraint class.)doc";
+
 }; // struct BanNone
 
 struct BanTorusBoundary {
 
 // Docstring regina::python::doc::BanTorusBoundary::__class
 static constexpr const char __class[] =
-R"doc(A class that bans and marks disc types associated with torus boundary
-components. Here we refer exclusively to real torus boundary
-components (not ideal vertices with torus cusps). Specifically:
+R"doc(A ban constraint type that bans and marks normal disc types associated
+with torus boundary components. Here we refer exclusively to real
+torus boundary components (not ideal vertices with torus cusps).
+Specifically:
 
 * this class bans any normal triangle or quadrilateral that meets a
   torus boundary;
@@ -389,9 +292,6 @@ angle structures.
     not counted in these coordinate systems). The supported() routine
     will only return ``True`` for encodings that include triangles.
 
-See the BanConstraintBase class notes for details on all member
-functions and structs.
-
 These ban constraint classes are designed mainly to act as C++
 template arguments, and end users will typically not need to construct
 their own object of these classes. Instead, to use a ban constraint
@@ -404,8 +304,8 @@ Python:
     through Python. Instead, to use a ban constraint class, you would
     typically create a tree traversal object with the appropriate
     class suffix (e.g., one such Python class is
-    ``TreeEnumeration_BanTorusBoundary``). See the BanConstraintBase
-    class notes for further details.
+    ``TreeEnumeration_BanTorusBoundary``). See the BanConstraint
+    concept documentation for further details.
 
 .. warning::
     The API for this class or function has not yet been finalised.
@@ -417,17 +317,49 @@ Python:
 
 // Docstring regina::python::doc::BanTorusBoundary::__init
 static constexpr const char __init[] =
-R"doc(Constructs a new set of banning and marking constraints.
-
-This base class constructor will construct the *banned_* and *marked_*
-arrays to be the correct size based on the given tableaux, and will
-initialise their contents to ban and mark disc types associated with
-torus boundary components, as described in the class notes.
+R"doc(Constructs a new set of banning and marking constraints for the given
+tableaux.
 
 Parameter ``init``:
     the original starting tableaux being used for this enumeration
     task. This tableaux must work with normal or almost normal surface
     coordinates (not angle structure coordinates).)doc";
+
+// Docstring regina::python::doc::BanTorusBoundary::enforceBans
+static constexpr const char enforceBans[] =
+R"doc(Enforces all bans described by this class in the given tableaux.
+Specifically, for each banned coordinate, this routine calls
+LPData::constrainZero() on the corresponding coordinate column.
+
+Parameter ``lp``:
+    the tableaux in which to enforce the bans.)doc";
+
+// Docstring regina::python::doc::BanTorusBoundary::marked
+static constexpr const char marked[] =
+R"doc(Identifies whether the given column of the tableaux corresponds to a
+marked normal disc type.
+
+Parameter ``column``:
+    a column of the tableaux. This must be one of the columns
+    corresponding to a normal coordinate, not one of the extra columns
+    induced by an LPConstraint parameter for the tree traversal class.
+
+Returns:
+    ``True`` if and only if the given column corresponds to a marked
+    coordinate.)doc";
+
+// Docstring regina::python::doc::BanTorusBoundary::supported
+static constexpr const char supported[] =
+R"doc(Indicates whether the given vector encoding is supported by this
+constraint class.
+
+Parameter ``enc``:
+    the vector encoding being queried, which must already be known to
+    be supported by the generic TreeTraversal infrastructure.
+
+Returns:
+    ``True`` if and only if the given encoding is supported by this
+    specific constraint class.)doc";
 
 }; // struct BanTorusBoundary
 
