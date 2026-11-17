@@ -1029,6 +1029,10 @@ Version 8.0  [ TODO ]
         trisetcmp:
             - Now finds matches (or non-matches) in any dimension, not just
               dimensions 3 and 4.
+    TEST SUITE:
+        - CMake now sees all of the individual fine-grained tests (not just six
+          major test categories).  This means you can now parallelise the test
+          suite: try "make test ARGS=-j10" (or however many cores you have).
 
 Version 7.4.1  [ 30 November, 2025 ]
 
