@@ -43,6 +43,10 @@ Version 8.0  [ TODO ]
               instead of creating an empty attachment.
             - The save() routine also throws an exception on error, and no
               longer returns a boolean (which used to indicate success/failure).
+        Class BanConstraintBase, BanNone, BanBoundary, BanTorusBoundary:
+            - The old base class BanConstraintBase is removed, and is instead
+              replaced with the new concept BanConstraint.
+            - Ban constraint classes no longer support equality tests (==, !=).
         Class Base64BitEncoder, Base64BitDecoder:
             - New classes to support signatures that pack bits into base64
               strings, without worrying about byte/character boundaries.

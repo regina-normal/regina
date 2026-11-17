@@ -62,7 +62,6 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 namespace regina {
 
 class AngleStructure;
-class BanConstraintBase;
 class BanNone;
 class NormalSurface;
 namespace detail { template <size_t, SignedCppInteger> class LPCol; }
@@ -405,7 +404,12 @@ template <LPConstraint, ReginaInteger> class LPData;
  * - A constructor `T(const LPInitialTableaux<Constraint>&, ...)`.
  *   This constructor allows the ban constraint to identify any banned and/or
  *   marked coordinates and cache this information for subsequent calls to
- *   `enforceBans()` and/or `marked()`.
+ *   `enforceBans()` and/or `marked()`.  For most ban types, this constructor
+ *   will just take the initial tableaux with no further arguments; if there
+ *   _are_ any additional arguments (such as for the type BanEdge) then you
+ *   should supply these to the constructor for the relevant tree traversal
+ *   class (e.g., TreeEnumeration), which will in turn forward them to the
+ *   constructor for this ban constraint.
  *
  * - A function `void enforceBans(LPData<Constraint, IntType&>) const`, which
  *   enforces all coordinate bans in the given tableaux.  Typically this
@@ -418,13 +422,12 @@ template <LPConstraint, ReginaInteger> class LPData;
  * - A static function `constexpr bool supported(NormalEncoding)`, which
  *   indicates whether the given vector encoding is supported by the ban
  *   constraint type \a T.  This function may assume that the given encoding is
- *   already supported by the generic tree traversal infrastructure and the
- *   linear programming constraint type \a Constraint, and only needs to
- *   test any additional prerequisites specific to the ban constraint type \a T.
- *   This function should _only_ depend upon which coordinates the encoding
- *   stores (e.g., it could query NormalEncoding::storesTriangles()), and it
- *   must not require any "semantic guarantees" of the encoding (e.g., it must
- *   not query NormalEncoding::couldBeNonCompact()).
+ *   already supported by the generic tree traversal infrastructure, and only
+ *   needs to test any additional prerequisites specific to the ban constraint
+ *   type \a T.  This function should _only_ depend upon which coordinates the
+ *   encoding stores (e.g., it could query NormalEncoding::storesTriangles()),
+ *   and it must not require any "semantic guarantees" of the encoding
+ *   (e.g., it must not query NormalEncoding::couldBeNonCompact()).
  *
  * \apinotfinal
  *
@@ -434,6 +437,8 @@ template <typename T, typename IntType, typename Constraint>
 concept BanConstraint =
     ReginaInteger<IntType> &&
     LPConstraint<Constraint> &&
+    // We do not enforce the constructor signature, since its arguments are
+    // not known at this point in the code.
     requires(const T ban, LPData<Constraint, IntType> data,
             const size_t coord, const NormalEncoding enc) {
         ban.enforceBans(data);

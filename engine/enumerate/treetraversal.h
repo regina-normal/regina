@@ -586,7 +586,7 @@ class TreeTraversal :
          * point.  Specifically, this routine returns the first unmarked
          * triangle type whose type number is greater than or equal to
          * \a startFrom.  For more information on marking, see the
-         * BanConstraintBase class notes.
+         * BanConstraint concept documentation.
          *
          * This routine simply searches through types by increasing index
          * into the type vector; in particular, it does _not_ make any use
@@ -693,8 +693,8 @@ class TreeTraversal :
  * In this case, the notion of "vertex surface" is modified to mean a normal
  * surface whose coordinates lie on an extreme ray of the restricted solution
  * cone under these additional constraints (and whose coordinates are integers
- * with no common divisor).  See the LPConstraint concept and BanConstraintBase
- * class documentation for details.
+ * with no common divisor).  See the LPConstraint and BanConstraint concept
+ * documentation for details.
  *
  * Note that some constraint classes may cause the TreeEnumeration class
  * constructor to throw an exception; see the constructor documentation for
@@ -1067,8 +1067,7 @@ class TreeEnumeration : public TreeTraversal<IntType, Constraint, Ban> {
  * By using appropriate template parameters \a Constraint and/or \a Ban, it is
  * possible to impose additional linear constraints on the angle structure
  * solution space, and/or explicitly force particular angles to be zero.
- * See the LPConstraint concept and BanConstraintBase class documentation for
- * details.
+ * See the LPConstraint and BanConstraint concept documentation for details.
  *
  * Note that some constraint classes may cause the TautEnumeration class
  * constructor to throw an exception; see the constructor documentation for
