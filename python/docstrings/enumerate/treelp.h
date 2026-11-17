@@ -15,12 +15,102 @@ struct BanConstraint {
 
 // Docstring regina::python::doc::BanConstraint::__concept
 static constexpr const char __concept[] =
-R"doc(A type used to force certain normal coordinates or angle structure
-coordinates to be zero. This concept is used with Regina's linear
-programming machinery when enumerating or locating normal surfaces or
-angle structures.
+R"doc(A type used to enforce additional coordinate banning/marking
+constraints on tree traversal algorithms. This concept is used with
+Regina's linear programming machinery, in particular with the
+TreeEnumeration, TreeSingleSoln and related algorithms for enumerating
+and locating normal surfaces or angle structures in a 3-manifold
+triangulation.
 
-See BanConstraintBase for further information.
+Such a type describes two forms of constraints:
+
+* _Banning_ constraints, which ensure that certain normal coordinates
+  or angle struture coordinates are set to zero;
+
+* _Marking_ constraints, which are more flexible and can be used in
+  different ways by different algorithms. Currently Regina uses
+  marking in the following ways:
+
+* The TreeEnumeration and TautEnumeration algorithms do not use
+  marking at all.
+
+* In the TreeSingleSoln algorithm, marking affects what is considered
+  a non-trivial normal surface. Normally, a non-trivial surface is
+  defined to be one in which some triangle coordinate is zero. With
+  marking, a non-trivial surface is redefined to be one in which some
+  _unmarked_ triangle coordinate is zero. In other words, marked
+  triangle types are effectively ignored when determining whether a
+  surface is non-trivial or not.
+
+* At present, marking is not used at all for quadrilateral coordinates
+  or angle structures. However, marking is a very new feature, and
+  this concept may be expanded in future versions of Regina.
+
+Regarding the indexing of normal coordinates and angle structure
+coordinates:
+
+* A BanConstraint should _not_ work with coordinates in their
+  "natural" order (e.g., ordered by tetrahedron and then by normal
+  disc type), but should instead use the order of the corresponding
+  columns in a linear programming tableaux. This order is typically
+  permuted, and you can access this permutation via
+  ``LPInitialTableaux::columnPerm()`` when the LPInitialTableaux is
+  passed to the BanConstraint class constructor.
+
+* A BanConstraint must _only_ work with columns of the tableaux that
+  represent normal or angle structure coordinates (not the columns
+  introduced by additional linear constraints via the LPConstraint
+  template argument).
+
+* In particular, all of this means that a BanConstraint should work
+  with the coordinate system used by the tableaux, not the
+  (potentially different) coordinate system of the underlying
+  enumeration task (e.g., the tableaux will never include separate
+  columns for octagon coordinates). See LPInitialTableaux for a more
+  detailed discussion of this.
+
+Unlike the LPConstraint concept, a "ban constraint" type *T* holds
+state, and so provides most of its functionality through ordinary
+(non-static) member functions. In particular, a ban constraint type
+*T* must provide:
+
+* A constructor ``T(const LPInitialTableaux<Constraint>&, ...)``. This
+  constructor allows the ban constraint to identify any banned and/or
+  marked coordinates and cache this information for subsequent calls
+  to ``enforceBans()`` and/or ``marked()``. For most ban types, this
+  constructor will just take the initial tableaux with no further
+  arguments; if there _are_ any additional arguments (such as for the
+  type BanEdge) then you should supply these to the constructor for
+  the relevant tree traversal class (e.g., TreeEnumeration), which
+  will in turn forward them to the constructor for this ban
+  constraint.
+
+* A function ``void enforceBans(LPData<Constraint, IntType&>) const``,
+  which enforces all coordinate bans in the given tableaux. Typically
+  this function would call ``LPData::constrainZero()`` for each column
+  of the tableaux corresponding to a banned coordinate.
+
+* A function ``bool marked(size_t) const``, which indicates whether
+  the given column of the tableaux corresponds to a marked coordinate.
+
+* A static function ``constexpr bool supported(NormalEncoding)``,
+  which indicates whether the given vector encoding is supported by
+  the ban constraint type *T*. This function may assume that the given
+  encoding is already supported by the generic tree traversal
+  infrastructure, and only needs to test any additional prerequisites
+  specific to the ban constraint type *T*. This function should _only_
+  depend upon which coordinates the encoding stores (e.g., it could
+  query NormalEncoding::storesTriangles()), and it must not require
+  any "semantic guarantees" of the encoding (e.g., it must not query
+  NormalEncoding::couldBeNonCompact()).
+
+.. warning::
+    The API for this class or function has not yet been finalised.
+    This means that the interface may change in new versions of
+    Regina, without maintaining backward compatibility. If you use
+    this class directly in your own code, please check the detailed
+    changelog with each new release to see if you need to make changes
+    to your code.
 
 Concepts:
     BanConstraint is a C++ concept. Concepts work with the C++

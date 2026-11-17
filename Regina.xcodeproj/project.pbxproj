@@ -380,6 +380,7 @@
 		05373B182771739900E9418B /* tree.py in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05373B102771734D00E9418B /* tree.py */; };
 		05373B192771739C00E9418B /* triangulation.py in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05373B112771734D00E9418B /* triangulation.py */; };
 		05373B1A277173A300E9418B /* sample.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05373B0F2771734D00E9418B /* sample.rga */; };
+		053A0FE430A913FE00EF1E46 /* laurent3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053A0FE330A913FE00EF1E46 /* laurent3.cpp */; };
 		053CAB2C1DA710FE00A92F98 /* perm2.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB281DA710FE00A92F98 /* perm2.h */; };
 		053CAB2D1DA710FE00A92F98 /* perm3.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB291DA710FE00A92F98 /* perm3.h */; };
 		053CAB2E1DA710FE00A92F98 /* perm4.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB2A1DA710FE00A92F98 /* perm4.h */; };
@@ -2371,7 +2372,7 @@
 		050F5D9F1B9BAB9C00C1F681 /* sample.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = sample.pdf; sourceTree = "<group>"; };
 		050F5DA01B9BAB9C00C1F681 /* surfaces.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = surfaces.out; sourceTree = "<group>"; };
 		050F5DA11B9BAB9C00C1F681 /* surfaces.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = surfaces.test; sourceTree = "<group>"; };
-		050F5DA21B9BAB9C00C1F681 /* testall.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = testall.in; sourceTree = "<group>"; };
+		050F5DA21B9BAB9C00C1F681 /* testone.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = testone.in; sourceTree = "<group>"; };
 		050F5DA31B9BAB9C00C1F681 /* theta_in_solid_torus.orb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = theta_in_solid_torus.orb; sourceTree = "<group>"; };
 		050F5DA41B9BAB9C00C1F681 /* trigeneral.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = trigeneral.out; sourceTree = "<group>"; };
 		050F5DA51B9BAB9C00C1F681 /* trigeneral.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = trigeneral.test; sourceTree = "<group>"; };
@@ -2746,6 +2747,7 @@
 		05373B112771734D00E9418B /* triangulation.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = triangulation.py; sourceTree = "<group>"; };
 		05373B122771734D00E9418B /* progress.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = progress.py; sourceTree = "<group>"; };
 		05373B1B2771740800E9418B /* sample.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = sample.rga; sourceTree = "<group>"; };
+		053A0FE330A913FE00EF1E46 /* laurent3.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = laurent3.cpp; sourceTree = "<group>"; };
 		053CAB271DA710FE00A92F98 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		053CAB281DA710FE00A92F98 /* perm2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = perm2.h; sourceTree = "<group>"; };
 		053CAB291DA710FE00A92F98 /* perm3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = perm3.h; sourceTree = "<group>"; };
@@ -2989,7 +2991,6 @@
 		054DF95428CABC8500EC3D81 /* sigcensus.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = sigcensus.out; sourceTree = "<group>"; };
 		054DF95528CABC8500EC3D81 /* regconvert.filter */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = regconvert.filter; sourceTree = "<group>"; };
 		054DF95628CABC8500EC3D81 /* genout.in */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = genout.in; sourceTree = "<group>"; };
-		054DF95728CABC8500EC3D81 /* testall.in */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = testall.in; sourceTree = "<group>"; };
 		054DF95828CABC8500EC3D81 /* regfiletype.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = regfiletype.out; sourceTree = "<group>"; };
 		054DF95928CABC8500EC3D81 /* censuslookup.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = censuslookup.out; sourceTree = "<group>"; };
 		054DF95A28CABC8600EC3D81 /* retriangulate.test */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = retriangulate.test; sourceTree = "<group>"; };
@@ -3600,6 +3601,7 @@
 		05888BD6283F0F8B00181D2D /* tightencoding-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "tightencoding-impl.h"; sourceTree = "<group>"; };
 		0588C2A11FD8D1340093C2C9 /* rewrite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rewrite.cpp; sourceTree = "<group>"; };
 		0588F1171808D43B006BDC79 /* packettype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packettype.h; sourceTree = "<group>"; };
+		05892E1B30AC78C2008DE7AA /* testone.in */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = testone.in; sourceTree = "<group>"; };
 		0589B32E2E00432E007A8F64 /* basic_alltypes.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = basic_alltypes.cpp; sourceTree = "<group>"; };
 		058A343C30A19D4D005D8F91 /* laurent.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = laurent.out; sourceTree = "<group>"; };
 		058A343D30A19D4D005D8F91 /* laurent.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = laurent.test; sourceTree = "<group>"; };
@@ -5511,7 +5513,7 @@
 				050F5DA11B9BAB9C00C1F681 /* surfaces.test */,
 				0598027C2667067C002D5D57 /* swapping.out */,
 				059802802667067C002D5D57 /* swapping.test */,
-				050F5DA21B9BAB9C00C1F681 /* testall.in */,
+				050F5DA21B9BAB9C00C1F681 /* testone.in */,
 				054DF94128CABC2900EC3D81 /* testbasic.in */,
 				0591FB372E5C38C70061D270 /* testcallback.in */,
 				050EC0052E04D3CF006755ED /* testsub.in */,
@@ -7087,7 +7089,7 @@
 				054DF94A28CABC8400EC3D81 /* sigcensus.test */,
 				0545A04B2FB5BD43008D3ADB /* sigconvert.out */,
 				0545A04C2FB5BD43008D3ADB /* sigconvert.test */,
-				054DF95728CABC8500EC3D81 /* testall.in */,
+				05892E1B30AC78C2008DE7AA /* testone.in */,
 				054DF94328CABC8300EC3D81 /* tricensus.filter */,
 				054DF94E28CABC8400EC3D81 /* tricensus.out */,
 				054DF94D28CABC8400EC3D81 /* tricensus.test */,
@@ -7300,6 +7302,7 @@
 				05F3DABD2A5CE3B3007A2CE2 /* integer.cpp */,
 				056AED2F2A431AE200EAF4FA /* laurent1.cpp */,
 				056AED2A2A431AE200EAF4FA /* laurent2.cpp */,
+				053A0FE330A913FE00EF1E46 /* laurent3.cpp */,
 				058A344030A28658005D8F91 /* laurenttest.h */,
 				05BF6FCF2DB0001D0093D7A2 /* matrix.cpp */,
 				056AED322A431AE200EAF4FA /* numbertheory.cpp */,
@@ -9987,6 +9990,7 @@
 				05E629A52FBFD04600AE1B84 /* homologicaldata.cpp in Sources */,
 				05E629A62FBFD04600AE1B84 /* facenumbering.cpp in Sources */,
 				05E629A72FBFD04600AE1B84 /* triangulation2.cpp in Sources */,
+				053A0FE430A913FE00EF1E46 /* laurent3.cpp in Sources */,
 				05E629A82FBFD04600AE1B84 /* triangulation4.cpp in Sources */,
 				05E629A92FBFD04600AE1B84 /* facetpairing2.cpp in Sources */,
 				05E629AA2FBFD04600AE1B84 /* decomposition.cpp in Sources */,

@@ -38,8 +38,8 @@ please.
 By using appropriate template parameters *Constraint* and/or *Ban*, it
 is possible to impose additional linear constraints on the angle
 structure solution space, and/or explicitly force particular angles to
-be zero. See the LPConstraint concept and BanConstraintBase class
-documentation for details.
+be zero. See the LPConstraint and BanConstraint concept documentation
+for details.
 
 Note that some constraint classes may cause the TautEnumeration class
 constructor to throw an exception; see the constructor documentation
@@ -356,8 +356,7 @@ coordinates to zero. In this case, the notion of "vertex surface" is
 modified to mean a normal surface whose coordinates lie on an extreme
 ray of the restricted solution cone under these additional constraints
 (and whose coordinates are integers with no common divisor). See the
-LPConstraint concept and BanConstraintBase class documentation for
-details.
+LPConstraint and BanConstraint concept documentation for details.
 
 Note that some constraint classes may cause the TreeEnumeration class
 constructor to throw an exception; see the constructor documentation

@@ -1096,7 +1096,7 @@ bool Triangulation<3>::hasCompressingDisc() const {
                 // so that there are no outstanding snapshots of the
                 // original triangulation that might want to take a deep
                 // copy when we modify the triangulation later on.
-                TreeSingleSoln<LPConstraintEulerPositive> search(use,
+                TreeSingleSoln<Integer, LPConstraintEulerPositive> search(use,
                     NormalCoords::Standard);
                 if (! search.find()) {
                     // No compressing discs!

@@ -3530,11 +3530,9 @@ class Laurent :
                     throw ImpossibleScenario(
                         "Maximum exponent lies outside the terms array");
                 if (term_[minExp_ - base_] == 0)
-                    throw ImpossibleScenario(
-                        "Minimum exponent has zero term");
+                    throw ImpossibleScenario("Minimum exponent has zero term");
                 if (term_[maxExp_ - base_] == 0)
-                    throw ImpossibleScenario(
-                        "Maximum exponent has zero term");
+                    throw ImpossibleScenario("Maximum exponent has zero term");
 
                 if constexpr (CanValidate<T>) {
                     // Recursively validate the individual terms.
