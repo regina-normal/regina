@@ -177,11 +177,41 @@ void LPConstraintNonSpun::addRows(
     }
 }
 
-void BanConstraintBase::writeTextShort(std::ostream& out) const {
-    const size_t nCols = system_.coords(tri_.size());
-    bool foundBanned = false, foundMarked = false;
+// TODO: Probably we should unify these implementations of writeTextShort()...
 
-    for (size_t i = 0; i < nCols; ++i)
+void BanBoundary::writeTextShort(std::ostream& out) const {
+    bool foundBanned = false;
+    for (size_t i = 0; i < banned_.size(); ++i)
+        if (banned_[i]) {
+            if (! foundBanned) {
+                out << "Banned:";
+                foundBanned = true;
+            }
+            out << ' ' << i;
+        }
+    if (! foundBanned)
+        out << "Nothing banned";
+    out << ", nothing marked";
+}
+
+void BanEdge::writeTextShort(std::ostream& out) const {
+    bool foundBanned = false;
+    for (size_t i = 0; i < banned_.size(); ++i)
+        if (banned_[i]) {
+            if (! foundBanned) {
+                out << "Banned:";
+                foundBanned = true;
+            }
+            out << ' ' << i;
+        }
+    if (! foundBanned)
+        out << "Nothing banned";
+    out << ", nothing marked";
+}
+
+void BanTorusBoundary::writeTextShort(std::ostream& out) const {
+    bool foundBanned = false;
+    for (size_t i = 0; i < banned_.size(); ++i)
         if (banned_[i]) {
             if (! foundBanned) {
                 out << "Banned:";
@@ -194,7 +224,8 @@ void BanConstraintBase::writeTextShort(std::ostream& out) const {
 
     out << ", ";
 
-    for (size_t i = 0; i < nCols; ++i)
+    bool foundMarked = false;
+    for (size_t i = 0; i < marked_.size(); ++i)
         if (marked_[i]) {
             if (! foundMarked) {
                 out << "marked:";

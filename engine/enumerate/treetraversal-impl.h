@@ -83,8 +83,9 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
-template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
-NormalSurface TreeTraversal<Constraint, Ban, IntType>::buildSurface() const
+template <ReginaInteger IntType, LPConstraint Constraint,
+    BanConstraint<IntType, Constraint> Ban>
+NormalSurface TreeTraversal<IntType, Constraint, Ban>::buildSurface() const
         requires LPSurfaceConstraint<Constraint> {
     if (enc_.storesAngles())
         throw regina::FailedPrecondition(
@@ -139,8 +140,9 @@ NormalSurface TreeTraversal<Constraint, Ban, IntType>::buildSurface() const
     }
 }
 
-template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
-AngleStructure TreeTraversal<Constraint, Ban, IntType>::buildTautStructure()
+template <ReginaInteger IntType, LPConstraint Constraint,
+    BanConstraint<IntType, Constraint> Ban>
+AngleStructure TreeTraversal<IntType, Constraint, Ban>::buildTautStructure()
         const requires LPStructureConstraint<Constraint> {
     if (! enc_.storesAngles())
         throw regina::FailedPrecondition(
@@ -151,8 +153,9 @@ AngleStructure TreeTraversal<Constraint, Ban, IntType>::buildTautStructure()
         lpSlot_[nTypes_]->template extractTautSolution<VectorInt>());
 }
 
-template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
-void TreeTraversal<Constraint, Ban, IntType>::setNext(size_t nextType) {
+template <ReginaInteger IntType, LPConstraint Constraint,
+    BanConstraint<IntType, Constraint> Ban>
+void TreeTraversal<IntType, Constraint, Ban>::setNext(size_t nextType) {
     auto from = typeOrder_.begin() + level_ + 1;
     auto pos = std::find(from, typeOrder_.end(), nextType);
     if (pos != from) {
@@ -163,8 +166,9 @@ void TreeTraversal<Constraint, Ban, IntType>::setNext(size_t nextType) {
     }
 }
 
-template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
-int TreeTraversal<Constraint, Ban, IntType>::feasibleBranches(size_t quadType) {
+template <ReginaInteger IntType, LPConstraint Constraint,
+    BanConstraint<IntType, Constraint> Ban>
+int TreeTraversal<IntType, Constraint, Ban>::feasibleBranches(size_t quadType) {
     // Spin off clones for the new linear programs (reusing as much
     // work as possible).
     if (enc_.storesAngles()) {
@@ -235,8 +239,9 @@ int TreeTraversal<Constraint, Ban, IntType>::feasibleBranches(size_t quadType) {
     }
 }
 
-template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
-double TreeTraversal<Constraint, Ban, IntType>::percent() const {
+template <ReginaInteger IntType, LPConstraint Constraint,
+    BanConstraint<IntType, Constraint> Ban>
+double TreeTraversal<IntType, Constraint, Ban>::percent() const {
     double percent = 0.0;
     double range = 100.0;
     size_t den;
@@ -279,9 +284,9 @@ double TreeTraversal<Constraint, Ban, IntType>::percent() const {
     return percent;
 }
 
-template <LPSurfaceSubspace Constraint, BanConstraint Ban,
-    ReginaInteger IntType>
-bool TreeEnumeration<Constraint, Ban, IntType>::next(ProgressTracker* tracker) {
+template <ReginaInteger IntType, LPSurfaceSubspace Constraint,
+    BanConstraint<IntType, Constraint> Ban>
+bool TreeEnumeration<IntType, Constraint, Ban>::next(ProgressTracker* tracker) {
     if (lastNonZero_ < 0) {
         // Our type vector is the zero vector.
         // This means we are starting the search from the very
@@ -653,9 +658,9 @@ bool TreeEnumeration<Constraint, Ban, IntType>::next(ProgressTracker* tracker) {
     return false;
 }
 
-template <LPStructureSubspace Constraint, BanConstraint Ban,
-    ReginaInteger IntType>
-bool TautEnumeration<Constraint, Ban, IntType>::next(ProgressTracker* tracker) {
+template <ReginaInteger IntType, LPStructureSubspace Constraint,
+    BanConstraint<IntType, Constraint> Ban>
+bool TautEnumeration<IntType, Constraint, Ban>::next(ProgressTracker* tracker) {
     // Note that for taut angle structures we have no domination test and
     // no zero test.  The domination comes for free (every taut angle
     // structure is at a vertex of the angle structure polytope), and the
@@ -821,9 +826,9 @@ bool TautEnumeration<Constraint, Ban, IntType>::next(ProgressTracker* tracker) {
     return false;
 }
 
-template <LPSurfaceConstraint Constraint, BanConstraint Ban,
-    ReginaInteger IntType>
-bool TreeSingleSoln<Constraint, Ban, IntType>::find() {
+template <ReginaInteger IntType, LPSurfaceConstraint Constraint,
+    BanConstraint<IntType, Constraint> Ban>
+bool TreeSingleSoln<IntType, Constraint, Ban>::find() {
     // This code is similar to next(), but makes some changes to
     // account for the facts that:
     // - we only need a single solution that satisfies our
