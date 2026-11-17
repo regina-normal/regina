@@ -43,6 +43,10 @@ Version 8.0  [ TODO ]
               instead of creating an empty attachment.
             - The save() routine also throws an exception on error, and no
               longer returns a boolean (which used to indicate success/failure).
+        Class BanConstraintBase, BanNone, BanBoundary, BanTorusBoundary:
+            - The old base class BanConstraintBase is removed, and is instead
+              replaced with the new concept BanConstraint.
+            - Ban constraint classes no longer support equality tests (==, !=).
         Class Base64BitEncoder, Base64BitDecoder:
             - New classes to support signatures that pack bits into base64
               strings, without worrying about byte/character boundaries.
@@ -467,6 +471,9 @@ Version 8.0  [ TODO ]
         Enum LPConstraintType:
             - New enumeration for use with the various LPConstraint classes.
         Class LPData:
+            - Reordered the template parameters to LPData<IntType, Constraint>,
+              for consistency with the tree traversal classes (where a similar
+              reordering was unavoidable).
             - Routine extractSolution() has now been split into three routines:
               + a new routine extractSurfaceSolution() designed for normal
                 surfaces, which takes an arbitrary random access iterator
@@ -676,6 +683,9 @@ Version 8.0  [ TODO ]
             - Renamed buildStructure() to buildTautStructure(), to emphasise
               that this is for use specifically with taut angle structures.
               The old routine is kept but deprecated.
+            - The template parameters now appear in the different order
+              <IntType, Constraint, BanConstraint>.  This is because the
+              requirements for BanConstraint depend on the other parameters.
         Class Triangulation<dim>:
             - Routines involving fundamental group now throw an exception if
               the triangulation has > 1 component.  This is true also of
@@ -1019,6 +1029,10 @@ Version 8.0  [ TODO ]
         trisetcmp:
             - Now finds matches (or non-matches) in any dimension, not just
               dimensions 3 and 4.
+    TEST SUITE:
+        - CMake now sees all of the individual fine-grained tests (not just six
+          major test categories).  This means you can now parallelise the test
+          suite: try "make test ARGS=-j10" (or however many cores you have).
 
 Version 7.4.1  [ 30 November, 2025 ]
 

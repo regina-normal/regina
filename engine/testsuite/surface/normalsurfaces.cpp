@@ -39,6 +39,7 @@
 #include "triangulation/exhaustive-tri.h"
 
 using regina::Example;
+using regina::Integer;
 using regina::NormalAlg;
 using regina::NormalCoords;
 using regina::NormalList;
@@ -837,7 +838,7 @@ static void verifyEulerConstraints(const Triangulation<3>& tri,
     // Build a sorted list of all vertex surfaces enumerated using the
     // chi=0 constraint.
     std::vector<NormalSurface> eulerZero;
-    regina::TreeEnumeration<regina::LPConstraintEulerZero> tree(
+    regina::TreeEnumeration<Integer, regina::LPConstraintEulerZero> tree(
         tri, NormalCoords::Standard);
     while (tree.next()) {
         NormalSurface s = tree.buildSurface();

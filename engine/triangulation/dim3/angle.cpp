@@ -73,7 +73,7 @@ bool Triangulation<3>::hasStrictAngleStructure() const {
     // Run the full computation and cache the resulting structure, if any.
     LPInitialTableaux<LPConstraintNone> eqns(*this, NormalCoords::Angle, false);
 
-    LPData<LPConstraintNone, Integer> lp;
+    LPData<Integer, LPConstraintNone> lp;
     lp.reserve(eqns);
 
     // Find an initial basis.

@@ -104,7 +104,7 @@ template <regina::LPConstraint Constraint>
 void addLPData(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(LPData)
 
-    using Data = LPData<Constraint, Integer>;
+    using Data = LPData<Integer, Constraint>;
 
     auto c = pybind11::class_<Data>(m, name, rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
