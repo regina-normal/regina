@@ -535,8 +535,8 @@ void LPInitialTableaux<Constraint>::writeTextLong(std::ostream& out) const {
     }
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-void LPData<Constraint, IntType>::initStart() {
+template <ReginaInteger IntType, LPConstraint Constraint>
+void LPData<IntType, Constraint>::initStart() {
     // In this routine we rely on the fact that the
     // LPInitialTableaux constructor ensures that the original
     // tableaux has full rank.
@@ -571,8 +571,8 @@ void LPData<Constraint, IntType>::initStart() {
     }
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-void LPData<Constraint, IntType>::initClone(const LPData& parent) {
+template <ReginaInteger IntType, LPConstraint Constraint>
+void LPData<IntType, Constraint>::initClone(const LPData& parent) {
     // If the parent tableaux is infeasible, mark this tableaux as
     // infeasible also and abort.
     feasible_ = parent.feasible_;
@@ -590,8 +590,8 @@ void LPData<Constraint, IntType>::initClone(const LPData& parent) {
     octSecondary_ = parent.octSecondary_;
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-void LPData<Constraint, IntType>::constrainZero(size_t pos) {
+template <ReginaInteger IntType, LPConstraint Constraint>
+void LPData<IntType, Constraint>::constrainZero(size_t pos) {
     // If the variable has already been deactivated, there is
     // nothing to do.
     if (! isActive(pos))
@@ -694,8 +694,8 @@ void LPData<Constraint, IntType>::constrainZero(size_t pos) {
 #endif
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-void LPData<Constraint, IntType>::constrainPositive(size_t pos) {
+template <ReginaInteger IntType, LPConstraint Constraint>
+void LPData<IntType, Constraint>::constrainPositive(size_t pos) {
     // If the variable has already been deactivated, it cannot
     // be positive.
     if (! isActive(pos)) {
@@ -736,8 +736,8 @@ void LPData<Constraint, IntType>::constrainPositive(size_t pos) {
     }
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-void LPData<Constraint, IntType>::constrainOct(size_t quad1, size_t quad2)
+template <ReginaInteger IntType, LPConstraint Constraint>
+void LPData<IntType, Constraint>::constrainOct(size_t quad1, size_t quad2)
         requires LPSurfaceConstraint<Constraint> {
     // If either variable has already been deactivated, it cannot
     // be positive.
@@ -947,8 +947,8 @@ void LPData<Constraint, IntType>::constrainOct(size_t quad1, size_t quad2)
     }
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-void LPData<Constraint, IntType>::writeTextShort(std::ostream& out) const {
+template <ReginaInteger IntType, LPConstraint Constraint>
+void LPData<IntType, Constraint>::writeTextShort(std::ostream& out) const {
     if (! basis_) {
         out << "Uninitialised";
         return;
@@ -965,8 +965,8 @@ void LPData<Constraint, IntType>::writeTextShort(std::ostream& out) const {
         out << " (empty)";
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-void LPData<Constraint, IntType>::writeTextLong(std::ostream& out) const {
+template <ReginaInteger IntType, LPConstraint Constraint>
+void LPData<IntType, Constraint>::writeTextLong(std::ostream& out) const {
     if (! basis_) {
         out << "Uninitialised";
         return;
@@ -990,13 +990,13 @@ void LPData<Constraint, IntType>::writeTextLong(std::ostream& out) const {
     }
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
+template <ReginaInteger IntType, LPConstraint Constraint>
 template <IntegerVector Ray, std::random_access_iterator Iterator>
 requires
     std::same_as<std::common_type_t<IntType, typename Ray::value_type>,
         typename Ray::value_type> &&
     CppInteger<std::iter_value_t<Iterator>>
-Ray LPData<Constraint, IntType>::extractSurfaceSolution(Iterator beginTypes)
+Ray LPData<IntType, Constraint>::extractSurfaceSolution(Iterator beginTypes)
         const requires LPSurfaceConstraint<Constraint> {
     // Fetch details on how to undo the column permutation.
     const size_t* columnPerm = origTableaux_->columnPerm();
@@ -1061,11 +1061,11 @@ Ray LPData<Constraint, IntType>::extractSurfaceSolution(Iterator beginTypes)
     return v;
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
+template <ReginaInteger IntType, LPConstraint Constraint>
 template <IntegerVector Ray>
 requires (std::same_as<std::common_type_t<IntType, typename Ray::value_type>,
     typename Ray::value_type>)
-Ray LPData<Constraint, IntType>::extractStrictSolution() const
+Ray LPData<IntType, Constraint>::extractStrictSolution() const
         requires LPStructureConstraint<Constraint> {
     // This follows the logic for extractSurfaceSolution(), but with a simpler
     // implementation because we do not need to deal with type vectors.
@@ -1098,11 +1098,11 @@ Ray LPData<Constraint, IntType>::extractStrictSolution() const
     return v;
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
+template <ReginaInteger IntType, LPConstraint Constraint>
 template <IntegerVector Ray>
 requires (std::same_as<std::common_type_t<IntType, typename Ray::value_type>,
     typename Ray::value_type>)
-Ray LPData<Constraint, IntType>::extractTautSolution() const
+Ray LPData<IntType, Constraint>::extractTautSolution() const
         requires LPStructureConstraint<Constraint> {
     // This follows the logic for extractSurfaceSolution(), but with a simpler
     // implementation because we do not need to deal with type vectors.
@@ -1136,8 +1136,8 @@ Ray LPData<Constraint, IntType>::extractTautSolution() const
     return v;
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-void LPData<Constraint, IntType>::pivot(size_t outCol, size_t inCol) {
+template <ReginaInteger IntType, LPConstraint Constraint>
+void LPData<IntType, Constraint>::pivot(size_t outCol, size_t inCol) {
     size_t defRow = basisRow_[outCol];
     basisRow_[outCol] = -1;
     basisRow_[inCol] = defRow;
@@ -1180,8 +1180,8 @@ void LPData<Constraint, IntType>::pivot(size_t outCol, size_t inCol) {
     }
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-void LPData<Constraint, IntType>::findInitialBasis() {
+template <ReginaInteger IntType, LPConstraint Constraint>
+void LPData<IntType, Constraint>::findInitialBasis() {
     // Start with all variables active but non-basic.
     std::fill(basisRow_, basisRow_ + origTableaux_->columns(), -1);
 
@@ -1282,8 +1282,8 @@ void LPData<Constraint, IntType>::findInitialBasis() {
         }
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-void LPData<Constraint, IntType>::makeFeasible() {
+template <ReginaInteger IntType, LPConstraint Constraint>
+void LPData<IntType, Constraint>::makeFeasible() {
     ssize_t outCol;
     size_t outRow;
     IntType outEntry, tmp, v1, v2;
@@ -1387,8 +1387,8 @@ void LPData<Constraint, IntType>::makeFeasible() {
     }
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-void LPData<Constraint, IntType>::makeFeasibleAntiCycling() {
+template <ReginaInteger IntType, LPConstraint Constraint>
+void LPData<IntType, Constraint>::makeFeasibleAntiCycling() {
     ssize_t outCol;
 #ifdef REGINA_COUNT_PIVOTS
     size_t Pivots = 0;
@@ -1431,8 +1431,8 @@ void LPData<Constraint, IntType>::makeFeasibleAntiCycling() {
     }
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-void LPData<Constraint, IntType>::verify() const {
+template <ReginaInteger IntType, LPConstraint Constraint>
+void LPData<IntType, Constraint>::verify() const {
     size_t r, c;
     for (r = 0; r < rank_; ++r) {
         // Check that rowOps_ is an inverse matrix.

@@ -110,8 +110,7 @@ void AngleStructures::enumerateInternal(ProgressTracker* tracker,
             // For now just stick to arbitrary precision arithmetic.
             // TODO: Use native integer types when the angle equation matrix
             // is sufficiently small / simple.
-            TautEnumeration<LPConstraintNone, BanNone, Integer> search(
-                *triangulation_);
+            TautEnumeration search(*triangulation_);
             while (search.next(tracker)) {
                 structures_.push_back(search.buildTautStructure());
                 if (tracker && tracker->isCancelled())

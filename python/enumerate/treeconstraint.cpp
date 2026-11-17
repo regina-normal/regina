@@ -44,7 +44,6 @@ using regina::LPInitialTableaux;
 using regina::NormalEncoding;
 using regina::Triangulation;
 
-using regina::BanConstraintBase;
 using regina::BanNone;
 using regina::BanBoundary;
 using regina::BanEdge;
@@ -96,50 +95,42 @@ void addLPConstraint(pybind11::module_& m, const char* name) {
     regina::python::no_eq_static(c);
 }
 
-template <typename BanConstraint, typename... BanArgs>
-void addBanConstraint(pybind11::module_& m, const char* name,
-        const char* classDoc, const char* initDoc) {
-    RDOC_SCOPE_BEGIN(BanConstraintBase)
-
-    auto c = pybind11::class_<BanConstraint>(m, name, classDoc)
+template <typename Ban, regina::python::ClassDocType Docs, typename... BanArgs>
+requires regina::BanConstraint<Ban, Integer, LPConstraintNone>
+void addBanConstraint(pybind11::module_& m, const char* name) {
+    auto c = pybind11::class_<Ban>(m, name, Docs::__class)
         .def(pybind11::init<
             const LPInitialTableaux<LPConstraintNone>&, BanArgs...>(),
-            initDoc)
+            Docs::__init)
         .def(pybind11::init<
             const LPInitialTableaux<LPConstraintEulerPositive>&, BanArgs...>(),
-            initDoc)
+            Docs::__init)
         .def(pybind11::init<
             const LPInitialTableaux<LPConstraintEulerZero>&, BanArgs...>(),
-            initDoc)
+            Docs::__init)
         .def(pybind11::init<
             const LPInitialTableaux<LPConstraintNonSpun>&, BanArgs...>(),
-            initDoc)
+            Docs::__init)
         .def("enforceBans",
-            &BanConstraint::template enforceBans<LPConstraintNone, Integer>,
-            rdoc::enforceBans)
+            &Ban::template enforceBans<Integer, LPConstraintNone>,
+            Docs::enforceBans)
         .def("enforceBans",
-            &BanConstraint::template enforceBans<LPConstraintEulerPositive,
-                Integer>,
-            rdoc::enforceBans)
+            &Ban::template enforceBans<Integer, LPConstraintEulerPositive>,
+            Docs::enforceBans)
         .def("enforceBans",
-            &BanConstraint::template enforceBans<LPConstraintEulerZero,
-                Integer>,
-            rdoc::enforceBans)
+            &Ban::template enforceBans<Integer, LPConstraintEulerZero>,
+            Docs::enforceBans)
         .def("enforceBans",
-            &BanConstraint::template enforceBans<LPConstraintNonSpun, Integer>,
-            rdoc::enforceBans)
-        .def("marked", &BanConstraint::marked, rdoc::marked)
-        .def_static("supported", &BanConstraint::supported, rdoc::supported)
+            &Ban::template enforceBans<Integer, LPConstraintNonSpun>,
+            Docs::enforceBans)
+        .def("marked", &Ban::marked, Docs::marked)
+        .def_static("supported", &Ban::supported, Docs::supported)
         ;
     regina::python::add_output_rich(c);
-    regina::python::add_eq_operators(c, rdoc::__eq);
-
-    RDOC_SCOPE_END
+    regina::python::disable_eq_operators(c);
 }
 
 void addTreeConstraint(pybind11::module_& m) {
-    // The constraint classes do not have their own method docs, and so
-    // the class-specific doc namespaces are unavailable.
     RDOC_SCOPE_BEGIN_MAIN
 
     addLPConstraint<LPConstraintNone, rdoc::LPConstraintNone>(
@@ -151,22 +142,11 @@ void addTreeConstraint(pybind11::module_& m) {
     addLPConstraint<LPConstraintNonSpun, rdoc::LPConstraintNonSpun>(
         m, "LPConstraintNonSpun");
 
-    // BanNone does not have its own constructor documentation, since it
-    // behaves identically to the base class constructor.
-    addBanConstraint<BanNone>(m, "BanNone", rdoc::BanNone::__class,
-        rdoc::BanConstraintBase::__init);
-
-    RDOC_SCOPE_SWITCH(BanBoundary)
-    addBanConstraint<BanBoundary>(m, "BanBoundary", rdoc::__class,
-        rdoc::__init);
-
-    RDOC_SCOPE_SWITCH(BanEdge)
-    addBanConstraint<BanEdge, regina::Edge<3>*>(m, "BanEdge", rdoc::__class,
-        rdoc::__init);
-
-    RDOC_SCOPE_SWITCH(BanTorusBoundary)
-    addBanConstraint<BanTorusBoundary>(m, "BanTorusBoundary", rdoc::__class,
-        rdoc::__init);
+    addBanConstraint<BanNone, rdoc::BanNone>(m, "BanNone");
+    addBanConstraint<BanBoundary, rdoc::BanBoundary>(m, "BanBoundary");
+    addBanConstraint<BanEdge, rdoc::BanEdge, regina::Edge<3>*>(m, "BanEdge");
+    addBanConstraint<BanTorusBoundary, rdoc::BanTorusBoundary>(
+        m, "BanTorusBoundary");
 
     RDOC_SCOPE_END
 }
