@@ -191,6 +191,7 @@ void BanBoundary::writeTextShort(std::ostream& out) const {
         }
     if (! foundBanned)
         out << "Nothing banned";
+    out << ", nothing marked";
 }
 
 void BanEdge::writeTextShort(std::ostream& out) const {
@@ -205,6 +206,7 @@ void BanEdge::writeTextShort(std::ostream& out) const {
         }
     if (! foundBanned)
         out << "Nothing banned";
+    out << ", nothing marked";
 }
 
 void BanTorusBoundary::writeTextShort(std::ostream& out) const {
