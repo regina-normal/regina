@@ -13,7 +13,7 @@
 # in the file <test_name>.out.  Specifically: <test_name>.test will be run
 # through utils/testsuite/runtest.sh, the results will be passed through
 # <test_name>.filter if it exists and then compared byte-by-byte with
-# <test_name>.out, and any mismatches will considered to be test failures.
+# <test_name>.out, and any mismatches will be considered test failures.
 #
 # This script MUST be run from the utils/testsuite directory in the build tree.
 # It runs the command-line utilities directly out of the build tree.
@@ -40,9 +40,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 set -e
-
-# To see the output, you need to run:
-#     make test ARGS="-V"
 
 testdir='@BASH_CMAKE_SOURCE_DIR@/utils/testsuite'
 testoutdir=`mktemp -d -t regina.XXX`
@@ -81,7 +78,7 @@ if ! test -f "$testfile"; then
 fi
 
 expected="$testdir/$testname.out"
-if ! test -f "$testfile"; then
+if ! test -f "$expected"; then
 	echo "ERROR: Missing expected output: $expected"
 	exit 1
 fi

@@ -2372,7 +2372,7 @@
 		050F5D9F1B9BAB9C00C1F681 /* sample.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = sample.pdf; sourceTree = "<group>"; };
 		050F5DA01B9BAB9C00C1F681 /* surfaces.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = surfaces.out; sourceTree = "<group>"; };
 		050F5DA11B9BAB9C00C1F681 /* surfaces.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = surfaces.test; sourceTree = "<group>"; };
-		050F5DA21B9BAB9C00C1F681 /* testall.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = testall.in; sourceTree = "<group>"; };
+		050F5DA21B9BAB9C00C1F681 /* testone.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = testone.in; sourceTree = "<group>"; };
 		050F5DA31B9BAB9C00C1F681 /* theta_in_solid_torus.orb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = theta_in_solid_torus.orb; sourceTree = "<group>"; };
 		050F5DA41B9BAB9C00C1F681 /* trigeneral.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = trigeneral.out; sourceTree = "<group>"; };
 		050F5DA51B9BAB9C00C1F681 /* trigeneral.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = trigeneral.test; sourceTree = "<group>"; };
@@ -5513,7 +5513,7 @@
 				050F5DA11B9BAB9C00C1F681 /* surfaces.test */,
 				0598027C2667067C002D5D57 /* swapping.out */,
 				059802802667067C002D5D57 /* swapping.test */,
-				050F5DA21B9BAB9C00C1F681 /* testall.in */,
+				050F5DA21B9BAB9C00C1F681 /* testone.in */,
 				054DF94128CABC2900EC3D81 /* testbasic.in */,
 				0591FB372E5C38C70061D270 /* testcallback.in */,
 				050EC0052E04D3CF006755ED /* testsub.in */,
