@@ -112,21 +112,22 @@ void addBanConstraint(pybind11::module_& m, const char* name) {
             const LPInitialTableaux<LPConstraintNonSpun>&, BanArgs...>(),
             Docs::__init)
         .def("enforceBans",
-            &Ban::template enforceBans<LPConstraintNone, Integer>,
+            &Ban::template enforceBans<Integer, LPConstraintNone>,
             Docs::enforceBans)
         .def("enforceBans",
-            &Ban::template enforceBans<LPConstraintEulerPositive, Integer>,
+            &Ban::template enforceBans<Integer, LPConstraintEulerPositive>,
             Docs::enforceBans)
         .def("enforceBans",
-            &Ban::template enforceBans<LPConstraintEulerZero, Integer>,
+            &Ban::template enforceBans<Integer, LPConstraintEulerZero>,
             Docs::enforceBans)
         .def("enforceBans",
-            &Ban::template enforceBans<LPConstraintNonSpun, Integer>,
+            &Ban::template enforceBans<Integer, LPConstraintNonSpun>,
             Docs::enforceBans)
         .def("marked", &Ban::marked, Docs::marked)
         .def_static("supported", &Ban::supported, Docs::supported)
         ;
     regina::python::add_output_rich(c);
+    regina::python::disable_eq_operators(c);
 }
 
 void addTreeConstraint(pybind11::module_& m) {

@@ -223,7 +223,7 @@ class TreeTraversal :
                  allow octagons at all), then `octLevel_ = nTypes_`.
                  If we are allowing almost normal surfaces but we have not yet
                  chosen an octagon type, then `octLevel_ = -1`. */
-        using TableauxArray = FixedArray<LPData<Constraint, IntType>>;
+        using TableauxArray = FixedArray<LPData<IntType, Constraint>>;
             /**< A FixedArray of linear programming tableaux. */
         TableauxArray lp_;
             /**< Stores tableaux for linear programming at various nodes
@@ -270,7 +270,7 @@ class TreeTraversal :
                  have visited thus far.  This may grow much faster than the
                  number of solutions, since it also counts traversals
                  through "dead ends" in the search tree. */
-        LPData<Constraint, IntType> tmpLP_[4];
+        LPData<IntType, Constraint> tmpLP_[4];
             /**< Temporary tableaux used by the function feasibleBranches()
                  to determine which quadrilateral types or angle types have
                  good potential for pruning the search tree.

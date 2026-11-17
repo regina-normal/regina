@@ -595,8 +595,8 @@ class BanNone : public ShortOutput<BanNone> {
          * For BanNone (which does not ban any coordinates), this routine does
          * nothing.
          */
-        template <LPConstraint Constraint, ReginaInteger IntType>
-        void enforceBans(LPData<Constraint, IntType>&) const {}
+        template <ReginaInteger IntType, LPConstraint Constraint>
+        void enforceBans(LPData<IntType, Constraint>&) const {}
 
         /**
          * Identifies whether the given column of the tableaux corresponds to
@@ -706,8 +706,8 @@ class BanBoundary : public ShortOutput<BanBoundary> {
          *
          * \param lp the tableaux in which to enforce the bans.
          */
-        template <LPConstraint Constraint, ReginaInteger IntType>
-        void enforceBans(LPData<Constraint, IntType>& lp) const {
+        template <ReginaInteger IntType, LPConstraint Constraint>
+        void enforceBans(LPData<IntType, Constraint>& lp) const {
             for (size_t i = 0; i < lp.coordinateColumns(); ++i)
                 if (banned_[i])
                     lp.constrainZero(i);
@@ -822,8 +822,8 @@ class BanEdge : public ShortOutput<BanEdge> {
          *
          * \param lp the tableaux in which to enforce the bans.
          */
-        template <LPConstraint Constraint, ReginaInteger IntType>
-        void enforceBans(LPData<Constraint, IntType>& lp) const {
+        template <ReginaInteger IntType, LPConstraint Constraint>
+        void enforceBans(LPData<IntType, Constraint>& lp) const {
             for (size_t i = 0; i < lp.coordinateColumns(); ++i)
                 if (banned_[i])
                     lp.constrainZero(i);
@@ -950,8 +950,8 @@ class BanTorusBoundary : public ShortOutput<BanTorusBoundary> {
          *
          * \param lp the tableaux in which to enforce the bans.
          */
-        template <LPConstraint Constraint, ReginaInteger IntType>
-        void enforceBans(LPData<Constraint, IntType>& lp) const {
+        template <ReginaInteger IntType, LPConstraint Constraint>
+        void enforceBans(LPData<IntType, Constraint>& lp) const {
             for (size_t i = 0; i < lp.coordinateColumns(); ++i)
                 if (banned_[i])
                     lp.constrainZero(i);

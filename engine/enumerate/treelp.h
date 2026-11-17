@@ -345,7 +345,7 @@ concept LPStructureSubspace =
     std::count(T::constraints.begin(), T::constraints.end(),
         LPConstraintType::Zero) == T::constraints.size();
 
-template <LPConstraint, ReginaInteger> class LPData;
+template <ReginaInteger, LPConstraint> class LPData;
 
 /**
  * A type used to enforce additional coordinate banning/marking constraints
@@ -411,7 +411,7 @@ template <LPConstraint, ReginaInteger> class LPData;
  *   class (e.g., TreeEnumeration), which will in turn forward them to the
  *   constructor for this ban constraint.
  *
- * - A function `void enforceBans(LPData<Constraint, IntType&>) const`, which
+ * - A function `void enforceBans(LPData<IntType, Constraint&>) const`, which
  *   enforces all coordinate bans in the given tableaux.  Typically this
  *   function would call `LPData::constrainZero()` for each column of the
  *   tableaux corresponding to a banned coordinate.
@@ -439,7 +439,7 @@ concept BanConstraint =
     LPConstraint<Constraint> &&
     // We do not enforce the constructor signature, since its arguments are
     // not known at this point in the code.
-    requires(const T ban, LPData<Constraint, IntType> data,
+    requires(const T ban, LPData<IntType, Constraint> data,
             const size_t coord, const NormalEncoding enc) {
         ban.enforceBans(data);
         { ban.marked(coord) } -> std::same_as<bool>;
@@ -1774,8 +1774,8 @@ inline void swap(LPInitialTableaux<Constraint>& a,
  *
  * \ingroup enumerate
  */
-template <LPConstraint Constraint, ReginaInteger IntType>
-class LPData : public Output<LPData<Constraint, IntType>> {
+template <ReginaInteger IntType, LPConstraint Constraint>
+class LPData : public Output<LPData<IntType, Constraint>> {
     private:
         const LPInitialTableaux<Constraint>* origTableaux_;
             /**< The original starting tableaux that holds the adjusted
@@ -2438,8 +2438,8 @@ class LPData : public Output<LPData<Constraint, IntType>> {
 /**
  * Swaps the contents of the given tableaux.
  *
- * This global routine simply calls LPData<Constraint, IntType>::swap();
- * it is provided so that LPData<Constraint, IntType> meets the C++ Swappable
+ * This global routine simply calls LPData<IntType, Constraint>::swap();
+ * it is provided so that LPData<IntType, Constraint> meets the C++ Swappable
  * requirements.
  *
  * \param a the first tableaux whose contents should be swapped.
@@ -2447,9 +2447,9 @@ class LPData : public Output<LPData<Constraint, IntType>> {
  *
  * \ingroup enumerate
  */
-template <LPConstraint Constraint, ReginaInteger IntType>
-inline void swap(LPData<Constraint, IntType>& a,
-        LPData<Constraint, IntType>& b) noexcept;
+template <ReginaInteger IntType, LPConstraint Constraint>
+inline void swap(LPData<IntType, Constraint>& a,
+        LPData<IntType, Constraint>& b) noexcept;
 
 } // namespace regina
 
@@ -2690,13 +2690,13 @@ inline void swap(LPInitialTableaux<Constraint>& a,
 
 // Template functions for LPData
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-inline LPData<Constraint, IntType>::LPData() :
+template <ReginaInteger IntType, LPConstraint Constraint>
+inline LPData<IntType, Constraint>::LPData() :
         rhs_(nullptr), rank_(0), basis_(nullptr), basisRow_(nullptr) {
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-inline LPData<Constraint, IntType>::LPData(LPData&& src) noexcept :
+template <ReginaInteger IntType, LPConstraint Constraint>
+inline LPData<IntType, Constraint>::LPData(LPData&& src) noexcept :
         origTableaux_(src.origTableaux_),
         rhs_(src.rhs_),
         rowOps_(std::move(src.rowOps_)),
@@ -2711,16 +2711,16 @@ inline LPData<Constraint, IntType>::LPData(LPData&& src) noexcept :
     src.basisRow_ = nullptr;
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-inline LPData<Constraint, IntType>::~LPData() {
+template <ReginaInteger IntType, LPConstraint Constraint>
+inline LPData<IntType, Constraint>::~LPData() {
     delete[] rhs_;
     delete[] basis_;
     delete[] basisRow_;
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-inline LPData<Constraint, IntType>&
-        LPData<Constraint, IntType>::operator = (LPData&& src) noexcept {
+template <ReginaInteger IntType, LPConstraint Constraint>
+inline LPData<IntType, Constraint>&
+        LPData<IntType, Constraint>::operator = (LPData&& src) noexcept {
     origTableaux_ = src.origTableaux_;
     rowOps_ = std::move(src.rowOps_);
     rank_ = src.rank_;
@@ -2736,8 +2736,8 @@ inline LPData<Constraint, IntType>&
     return *this;
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-inline void LPData<Constraint, IntType>::swap(LPData& other) noexcept {
+template <ReginaInteger IntType, LPConstraint Constraint>
+inline void LPData<IntType, Constraint>::swap(LPData& other) noexcept {
     std::swap(origTableaux_, other.origTableaux_);
     std::swap(rhs_, other.rhs_);
     rowOps_.swap(other.rowOps_);
@@ -2749,8 +2749,8 @@ inline void LPData<Constraint, IntType>::swap(LPData& other) noexcept {
     std::swap(octSecondary_, other.octSecondary_);
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-inline void LPData<Constraint, IntType>::reserve(
+template <ReginaInteger IntType, LPConstraint Constraint>
+inline void LPData<IntType, Constraint>::reserve(
         const LPInitialTableaux<Constraint>& origTableaux) {
     origTableaux_ = std::addressof(origTableaux);
     rhs_ = new IntType[origTableaux.rank()];
@@ -2759,23 +2759,23 @@ inline void LPData<Constraint, IntType>::reserve(
     basisRow_ = new ssize_t[origTableaux.columns()];
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-inline size_t LPData<Constraint, IntType>::columns() const {
+template <ReginaInteger IntType, LPConstraint Constraint>
+inline size_t LPData<IntType, Constraint>::columns() const {
     return origTableaux_->columns();
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-inline size_t LPData<Constraint, IntType>::coordinateColumns() const {
+template <ReginaInteger IntType, LPConstraint Constraint>
+inline size_t LPData<IntType, Constraint>::coordinateColumns() const {
     return origTableaux_->coordinateColumns();
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-inline bool LPData<Constraint, IntType>::isFeasible() const {
+template <ReginaInteger IntType, LPConstraint Constraint>
+inline bool LPData<IntType, Constraint>::isFeasible() const {
     return feasible_;
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-inline bool LPData<Constraint, IntType>::isActive(size_t pos) const {
+template <ReginaInteger IntType, LPConstraint Constraint>
+inline bool LPData<IntType, Constraint>::isActive(size_t pos) const {
     // If basisRow_[pos] < 0, the variable is active and non-basic.
     // If basisRow_[pos] > 0, the variable is active and basic.
     // If basisRow_[pos] == 0, then:
@@ -2786,8 +2786,8 @@ inline bool LPData<Constraint, IntType>::isActive(size_t pos) const {
         (rank_ == 0 || basis_[0] != pos));
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-inline int LPData<Constraint, IntType>::sign(size_t pos) const {
+template <ReginaInteger IntType, LPConstraint Constraint>
+inline int LPData<IntType, Constraint>::sign(size_t pos) const {
     // If basisRow_[pos] < 0, the variable is active and non-basic.
     // If basisRow_[pos] > 0, the variable is active and basic.
     // If basisRow_[pos] == 0, then:
@@ -2798,8 +2798,8 @@ inline int LPData<Constraint, IntType>::sign(size_t pos) const {
         rhs_[basisRow_[pos]].sign() : 0);
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-inline IntType LPData<Constraint, IntType>::entry(size_t row, size_t col)
+template <ReginaInteger IntType, LPConstraint Constraint>
+inline IntType LPData<IntType, Constraint>::entry(size_t row, size_t col)
         const {
     if constexpr (LPSurfaceConstraint<Constraint>) {
         // Remember to take into account any changes of variable due
@@ -2817,8 +2817,8 @@ inline IntType LPData<Constraint, IntType>::entry(size_t row, size_t col)
     }
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-inline void LPData<Constraint, IntType>::entry(size_t row, size_t col,
+template <ReginaInteger IntType, LPConstraint Constraint>
+inline void LPData<IntType, Constraint>::entry(size_t row, size_t col,
         IntType& ans) const {
     if constexpr (LPSurfaceConstraint<Constraint>) {
         // Remember to take into account any changes of variable due
@@ -2835,8 +2835,8 @@ inline void LPData<Constraint, IntType>::entry(size_t row, size_t col,
     }
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-inline int LPData<Constraint, IntType>::entrySign(size_t row, size_t col)
+template <ReginaInteger IntType, LPConstraint Constraint>
+inline int LPData<IntType, Constraint>::entrySign(size_t row, size_t col)
         const {
     if constexpr (LPSurfaceConstraint<Constraint>) {
         // Remember to take into account any changes of variable due
@@ -2854,9 +2854,9 @@ inline int LPData<Constraint, IntType>::entrySign(size_t row, size_t col)
     }
 }
 
-template <LPConstraint Constraint, ReginaInteger IntType>
-inline void swap(LPData<Constraint, IntType>& a,
-        LPData<Constraint, IntType>& b) noexcept {
+template <ReginaInteger IntType, LPConstraint Constraint>
+inline void swap(LPData<IntType, Constraint>& a,
+        LPData<IntType, Constraint>& b) noexcept {
     a.swap(b);
 }
 
