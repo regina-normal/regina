@@ -52,7 +52,8 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 namespace regina {
 
 template <LPSurfaceConstraint Constraint>
-BanBoundary::BanBoundary(const LPInitialTableaux<Constraint>& init) {
+BanBoundary::BanBoundary(const LPInitialTableaux<Constraint>& init) :
+        banned_(init.system().coords(init.tri().size()), false) {
     size_t n = init.tri().size();
     size_t tet;
 
@@ -94,7 +95,8 @@ BanBoundary::BanBoundary(const LPInitialTableaux<Constraint>& init) {
 }
 
 template <LPSurfaceConstraint Constraint>
-BanEdge::BanEdge(const LPInitialTableaux<Constraint>& init, Edge<3>* edge) {
+BanEdge::BanEdge(const LPInitialTableaux<Constraint>& init, Edge<3>* edge) :
+        banned_(init.system().coords(init.tri().size()), false) {
     size_t n = init.tri().size();
     size_t tet;
     int type;
@@ -141,7 +143,9 @@ BanEdge::BanEdge(const LPInitialTableaux<Constraint>& init, Edge<3>* edge) {
 }
 
 template <LPSurfaceConstraint Constraint>
-BanTorusBoundary::BanTorusBoundary(const LPInitialTableaux<Constraint>& init) {
+BanTorusBoundary::BanTorusBoundary(const LPInitialTableaux<Constraint>& init) :
+        banned_(init.system().coords(init.tri().size()), false),
+        marked_(init.system().coords(init.tri().size()), false) {
     size_t n = init.tri().size();
     size_t tet;
 
