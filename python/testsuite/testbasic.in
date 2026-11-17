@@ -6,25 +6,25 @@
 # Copyright (c) 2007-2026, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
-# Usage: testbasic
+# Usage: testbasic <test_name>
 #
-# Runs most but not all of the Python test suite using a basic C++ executable
+# Runs the given test from the Python test suite, using a basic C++ executable
 # with an embedded Python interpreter and an in-built timeout feature.
 #
-# Like testall, this script works through all *.test files in or beneath
-# the current directory; however, unlike testall it skips those tests
-# whose names are in a hard-coded blacklist.  Similar to testall, this
-# script runs each test through the basic embedded Python interpreter and
-# compares the results byte-by-byte with the corresponding *.out files
-# (or, if the output differs between pybind11 versions, *.out.v2 and *.out.v3).
-# Any mismatches or timeouts are considered to be test failures.
+# As with testone, the script to run should be in the file <test_name>.test,
+# with the expected results in the file <test_name>.out.  Specifically:
+# <test_name>.test will be run through the basic embedded Python interpreter,
+# the results will be passed through <test_name>.filter if it exists and then
+# compared byte-by-byte with <test_name>.out (or, if the output differs between
+# pybind11 versions, *.out.v2 and *.out.v3), and any mismatches or timeouts
+# will be considered test failures.
 #
 # This script MUST be run from the python/testsuite directory in the
 # build tree.  It runs everything directly out of the build tree.
 # It does not require regina to be installed on the system (and indeed
 # it ignores any installation that it might find).
 #
-# Unlike testall, the corresponding python/testsuite directory will *not*
+# Unlike testone, the corresponding python/testsuite directory will *not*
 # be passed to the test scripts.  Any scripts that require this information
 # should not be used with testbasic.
 #
@@ -49,9 +49,6 @@
 
 set -e
 
-# To see the output, you need to run:
-#     make test ARGS="-V"
-
 executable=./basic
 testdir='@BASH_CMAKE_SOURCE_DIR@/python/testsuite'
 testoutdir=`mktemp -d -t regina.XXX`
@@ -61,19 +58,6 @@ pybind11_version='@REGINA_PYBIND11_VERSION@'
 # deduction gives the wrong style of path (windows vs unix style) for use
 # with the embedded basic Python interpreter.  Fix it explicitly here.
 export REGINA_HOME=../../engine
-
-# Cases that expect the python/testsuite directory as an argument:
-blacklist="file i18n memory1 orb pdf readsiglist repr snappea"
-
-# The following cases implicitly import the threading module, which leads to a
-# harmless but noisy ignored exception upon shutdown under python 3.12 and
-# above.  See: https://github.com/pybind/pybind11/issues/2197
-blacklist="$blacklist docstrings"
-
-echo "----------------------------------------------------------------"
-echo "Test suite for Python bindings with a basic embedded interpreter"
-echo "----------------------------------------------------------------"
-echo
 
 if ! test -f ../../CMakeCache.txt -a -f "$executable"; then
 	echo "ERROR: You do not appear to be within the python/testsuite directory"
@@ -114,28 +98,6 @@ case "$os" in
 		;;
 esac
 
-# Python 3.10.[0-2] cannot process several of our test scripts due to a
-# breakage in the line-by-line compilation (this was fixed with the
-# introduction of the constant PyCF_ALLOW_INCOMPLETE_INPUT in Python 3.10.3).
-# Note: these *are* still tested with testall (which runs within a normal python
-# interpreter); just not testbasic (which embeds python in a C++ program).
-pyver=`"$executable" -v`
-case "$pyver" in
-	3.10.[0-2]*)
-		echo "WARNING: Skipping several tests due to broken line-by-line"
-		echo "         compilation in embedded python 3.10.[0-2]."
-		echo
-		blacklist="$blacklist embeddings faces flype groups hypersurfaces"
-		blacklist="$blacklist iterators listview presentations refs skeleton"
-		blacklist="$blacklist standardsubcomplex"
-		;;
-	*)
-		;;
-esac
-
-found=
-broken=
-
 # Decide on a suitable timeout (measured in seconds) for our tests.
 case "$os" in
 	Windows )
@@ -150,120 +112,97 @@ case "$os" in
 		;;
 esac
 
-# We need to loop through all files $testdir/*.test .
-# Because $testdir may contain spaces, we use a slightly tortured loop
-# with the source 'find' statement at the end (not the beginning).
-# See http://mywiki.wooledge.org/BashFAQ/020 for details.
-#
-# Note that both "find -print0" and "sort -z" (which are part of our machinery
-# to handle spaces correctly) are implemented in both GNU and BSD utilities.
-#
-while IFS= read -r -d $'\0' i; do
-	found=1
-	testname=`basename "$i"`
-	expected="${i/.test/.out}"
-	if [ ! -e "$expected" ]; then
-		expected="$expected.v$pybind11_version"
-	fi
-	observed="$testoutdir/${testname/.test/.out}"
-	filter="$testdir/${testname/.test/.filter}"
-
-	blacklisted=0
-	for b in $blacklist; do
-		if [ "$testname" = "$b.test" ]; then
-			blacklisted=1
-			break
-		fi
-	done
-	if [ "$blacklisted" = 1 ]; then
-		echo "Skipping $testname"
-		continue
-	fi
-
-	# We do not test with a separate execution thread for now, since the
-	# current implementation of PythonInterpreter requires code to be executed
-	# from the same thread that created the interpreter.
-	#
-	# for multithreading in 0 1; do
-	for multithreading in 0; do
-		# Run the test.
-		#
-		# Since we have "set -e", we need "&& dummy=" to prevent this line to
-		# just exit the bash script when the test has non-zero exit code.
-		# We use && as opposed to || in order to preserve the exit code from
-		# the first command.
-		#
-		# The code that unsets TERM fixes an issue seen some years ago on
-		# Fedora, where (as a result of a more exotic TERM setting) unprintable
-		# characters were being dumped at the beginning of the python output.
-		#
-		if [ -e "$filter" ]; then
-			if [ "$multithreading" = 0 ]; then
-				# echo -n "Running $testname (with filter, main thread) ... "
-				echo -n "Running $testname (with filter) ... "
-				TERM= PYTHONIOENCODING=utf8 \
-					"$executable" -t "$timeout" "$i" | "$filter" > "$observed" 2>&1 && dummy=
-			else
-				echo -n "Running $testname (with filter, separate thread) ... "
-				TERM= PYTHONIOENCODING=utf8 \
-					"$executable" -m -t "$timeout" "$i" | "$filter" > "$observed" 2>&1 && dummy=
-			fi
-		else
-			if [ "$multithreading" = 0 ]; then
-				# echo -n "Running $testname (main thread) ... "
-				echo -n "Running $testname ... "
-				TERM= PYTHONIOENCODING=utf8 \
-					"$executable" -t "$timeout" "$i" > "$observed" 2>&1 && dummy=
-			else
-				echo -n "Running $testname (separate thread) ... "
-				TERM= PYTHONIOENCODING=utf8 \
-					"$executable" -m -t "$timeout" "$i" > "$observed" 2>&1 && dummy=
-			fi
-		fi
-
-		# Catch exitcode.
-		exitcode=$?
-
-		# Branch based on exit code.
-		if [ "$exitcode" -ne 0 ];  then
-			echo "FAILED (exit code $exitcode)"
-			echo "    Output was:"
-			echo "        ..."
-			tail -n 5 $observed | sed -e 's/^/        /'
-			broken=1
-		else
-			if ! ( diff --strip-trailing-cr "$expected" "$observed" > /dev/null ); then
-				echo "FAILED (output differs from expected)"
-				echo "    Diff was:"
-				diff --strip-trailing-cr -u \
-					--label 'Expected output' --label 'Actual output' \
-					"$expected" "$observed" | head -n200 | sed -e 's/^/        /'
-				echo "        ..."
-				broken=1
-			else
-				echo "ok"
-				rm -f "$observed"
-			fi
-		fi
-	done
-done < <(find "$testdir" -name "*.test" -print0 | sort -z)
-
-if ! test -n "$found"; then
-	echo "ERROR: No tests were found!"
-	echo
-	echo "       Please check your installation, and please ensure that"
-	echo "       you are running this script from within the python/testsuite"
-	echo "       directory of the build tree."
-	echo
-	echo "       Note that the build tree might not be the same as the source"
-	echo "       tree.  The build tree is where you ran the configure script."
+testname="$1"
+if ! test -n "$testname"; then
+	echo "ERROR: Missing test name"
 	exit 1
 fi
 
+testfile="$testdir/$testname.test"
+if ! test -f "$testfile"; then
+	echo "ERROR: Missing test script: $testfile"
+	exit 1
+fi
+
+expected="$testdir/$testname.out"
+if ! test -e "$expected"; then
+	expected="$expected.v$pybind11_version"
+	if ! test -f "$expected"; then
+		echo "ERROR: Missing expected output: $expected"
+		exit 1
+	fi
+fi
+
+observed="$testoutdir/$testname.out"
+filter="$testdir/$testname.filter"
+
+# We do not test with a separate execution thread for now, since the
+# current implementation of PythonInterpreter requires code to be executed
+# from the same thread that created the interpreter.
+multithreading=0
+
+# Run the test.
+#
+# Since we have "set -e", we need "&& dummy=" to prevent this line to
+# just exit the bash script when the test has non-zero exit code.
+# We use && as opposed to || in order to preserve the exit code from
+# the first command.
+#
+# The code that unsets TERM fixes an issue seen some years ago on
+# Fedora, where (as a result of a more exotic TERM setting) unprintable
+# characters were being dumped at the beginning of the python output.
+#
+if [ -e "$filter" ]; then
+	if [ "$multithreading" = 0 ]; then
+		# echo -n "Running $testname (with filter, main thread) ... "
+		echo -n "Testing $testname (with filter) ... "
+		TERM= PYTHONIOENCODING=utf8 \
+			"$executable" -t "$timeout" "$testfile" | "$filter" > "$observed" 2>&1 && dummy=
+	else
+		echo -n "Testing $testname (with filter, separate thread) ... "
+		TERM= PYTHONIOENCODING=utf8 \
+			"$executable" -m -t "$timeout" "$testfile" | "$filter" > "$observed" 2>&1 && dummy=
+	fi
+else
+	if [ "$multithreading" = 0 ]; then
+		# echo -n "Running $testname (main thread) ... "
+		echo -n "Testing $testname ... "
+		TERM= PYTHONIOENCODING=utf8 \
+			"$executable" -t "$timeout" "$testfile" > "$observed" 2>&1 && dummy=
+	else
+		echo -n "Testing $testname (separate thread) ... "
+		TERM= PYTHONIOENCODING=utf8 \
+			"$executable" -m -t "$timeout" "$testfile" > "$observed" 2>&1 && dummy=
+	fi
+fi
+
+# Catch exitcode.
+exitcode=$?
+
+# Branch based on exit code.
+broken=
+if [ "$exitcode" -ne 0 ];  then
+	echo "FAILED (exit code $exitcode)"
+	echo "    Output was:"
+	echo "        ..."
+	tail -n 5 $observed | sed -e 's/^/        /'
+	broken=1
+else
+	if ! ( diff --strip-trailing-cr "$expected" "$observed" > /dev/null ); then
+		echo "FAILED (output differs from expected)"
+		echo "    Diff was:"
+		diff --strip-trailing-cr -u \
+			--label 'Expected output' --label 'Actual output' \
+			"$expected" "$observed" | head -n200 | sed -e 's/^/        /'
+		echo "        ..."
+		broken=1
+	else
+		echo "ok"
+		rm -f "$observed"
+	fi
+fi
+
 if test -n "$broken"; then
-	echo
-	echo "One or more tests failed."
-	echo "Please see the list above for details."
 	echo
 	echo "The full output file(s) produced by Regina are in the directory:"
 	echo "    $testoutdir"
@@ -272,6 +211,4 @@ else
 	rmdir "$testoutdir"
 fi
 
-echo
-echo "All tests passed!"
 exit 0

@@ -11,11 +11,11 @@ Arrow : class -> EqualityType.ByValue
 Attachment : class -> EqualityType.ByValue
 AugTriSolidTorus : class -> EqualityType.ByValue
 BagComparison : enum
-BanBoundary : class -> EqualityType.ByValue
+BanBoundary : class -> EqualityType.Disabled
 BanConstraint : concept
-BanEdge : class -> EqualityType.ByValue
-BanNone : class -> EqualityType.ByValue
-BanTorusBoundary : class -> EqualityType.ByValue
+BanEdge : class -> EqualityType.Disabled
+BanNone : class -> EqualityType.Disabled
+BanTorusBoundary : class -> EqualityType.Disabled
 Base64BitDecoder : class -> EqualityType.ByReference
 Base64BitEncoder : class -> EqualityType.ByReference
 Base64Decoder : class -> EqualityType.ByReference
