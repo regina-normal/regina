@@ -1,0 +1,142 @@
+#!/bin/bash
+#
+# Regina - A Normal Surface Theory Calculator
+# Command-Line Utilities Test Suite Runner
+#
+# Copyright (c) 2007-2026, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Usage: testone <test_name>
+#
+# Runs the given test for the command-line utilities.  The commands to run
+# should be contained in the file <test_name>.test, with the expected results
+# in the file <test_name>.out.  Specifically: <test_name>.test will be run
+# through utils/testsuite/runtest.sh, the results will be passed through
+# <test_name>.filter if it exists and then compared byte-by-byte with
+# <test_name>.out, and any mismatches will be considered test failures.
+#
+# This script MUST be run from the utils/testsuite directory in the build tree.
+# It runs the command-line utilities directly out of the build tree.
+# It does not require regina to be installed on the system (and indeed
+# it ignores any installation that it might find).
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+set -e
+
+testdir='@BASH_CMAKE_SOURCE_DIR@/utils/testsuite'
+testoutdir=`mktemp -d -t regina.XXX`
+executable="$testdir/runtest.sh"
+
+if ! test -f ../../CMakeCache.txt -a -f "$executable"; then
+	echo "ERROR: You do not appear to be within the utils/testsuite directory"
+	echo "       in the build tree.  This script must be run from directly"
+	echo "       within the build tree (where you ran cmake)."
+	echo "       Please change into the utils/testsuite directory in the"
+	echo "       build tree and try again."
+	exit 1
+fi
+
+# Clobber environment variables that the user might already have set.
+export REGINA_PYLIBDIR=
+export REGINA_HOME=
+
+# Set up variables that runtest.sh needs.
+export testdir
+export bindir=..
+export testout="$testoutdir/test.rga"
+export invalidfile=
+export badfile=
+
+testname="$1"
+if ! test -n "$testname"; then
+	echo "ERROR: Missing test name"
+	exit 1
+fi
+
+testfile="$testdir/$testname.test"
+if ! test -f "$testfile"; then
+	echo "ERROR: Missing test commands: $testfile"
+	exit 1
+fi
+
+expected="$testdir/$testname.out"
+if ! test -f "$expected"; then
+	echo "ERROR: Missing expected output: $expected"
+	exit 1
+fi
+
+observed="$testoutdir/$testname.out"
+filter="$testdir/$testname.filter"
+
+# Run the test.
+#
+# Since we have "set -e", we need "&& dummy=" to prevent this line to just
+# exit the bash script when the test has non-zero exit code.
+# We use && as opposed to || in order to preserve the exit code from
+# the first command.
+#
+# The code that unsets TERM fixes an issue seen in the Python test suite
+# some years ago on Fedora; see the Python test suite script for details.
+#
+if [ -e "$filter" ]; then
+	echo -n "Testing $testname (with filter) ... "
+	TERM= "$executable" "$testfile" "$filter" > "$observed" 2>&1 && dummy=
+else
+	echo -n "Testing $testname ... "
+	TERM= "$executable" "$testfile" > "$observed" 2>&1 && dummy=
+fi
+
+# Catch exitcode.
+exitcode=$?
+
+# Branch based on exit code.
+broken=
+if [ "$exitcode" -ne 0 ];  then
+	echo "FAILED (exit code $exitcode)"
+	echo "    Output was:"
+	echo "        ..."
+	tail -n 5 $observed | sed -e 's/^/        /'
+	broken=1
+else
+	if ! ( diff --strip-trailing-cr "$expected" "$observed" > /dev/null ); then
+		echo "FAILED (output differs from expected)"
+		echo "    Diff was:"
+		diff --strip-trailing-cr -u \
+			--label 'Expected output' --label 'Actual output' \
+			"$expected" "$observed" | head -n200 | sed -e 's/^/        /'
+		echo "        ..."
+		broken=1
+	else
+		echo "ok"
+		rm -f "$observed"
+	fi
+fi
+
+if test -n "$broken"; then
+	echo
+	echo "The full output file(s) produced by Regina are in the directory:"
+	echo "    $testoutdir"
+	exit 1
+else
+	rmdir "$testoutdir"
+fi
+
+exit 0

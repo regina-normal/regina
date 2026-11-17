@@ -6,6 +6,7 @@ SET ( FILES
   integer.cpp
   laurent1.cpp
   laurent2.cpp
+  laurent3.cpp
   matrix.cpp
   numbertheory.cpp
   perm.cpp

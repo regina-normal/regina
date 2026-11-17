@@ -53,8 +53,8 @@ namespace regina {
 
 template <LPSurfaceConstraint Constraint>
 BanBoundary::BanBoundary(const LPInitialTableaux<Constraint>& init) :
-        BanConstraintBase(init) {
-    size_t n = tri_.size();
+        banned_(init.system().coords(init.tri().size()), false) {
+    size_t n = init.tri().size();
     size_t tet;
 
     // The implementation here is a little inefficient (we repeat tests
@@ -66,13 +66,13 @@ BanBoundary::BanBoundary(const LPInitialTableaux<Constraint>& init) :
     // Ban quadrilaterals in tetrahedra that meet the boundary
     // (every such quadrilateral meets a boundary face).
     for (size_t i = 0; i < 3 * n; ++i) {
-        if (system_.quad())
+        if (init.system().quad())
             tet = columnPerm[i] / 3;
         else
             tet = columnPerm[i] / 7;
 
         for (int k = 0; k < 4; ++k)
-            if (! tri_.tetrahedron(tet)->adjacentTetrahedron(k)) {
+            if (! init.tri().tetrahedron(tet)->adjacentTetrahedron(k)) {
                 banned_[i] = true;
                 break;
             }
@@ -80,14 +80,14 @@ BanBoundary::BanBoundary(const LPInitialTableaux<Constraint>& init) :
 
     // Ban normal triangles in tetrahedra that meet the boundary (but
     // only those normal triangles that meet the boundary faces).
-    if (system_.standard())
+    if (init.system().standard())
         for (size_t i = 3 * n; i < 7 * n; ++i) {
             tet = columnPerm[i] / 7;
             int type = columnPerm[i] % 7;
 
             for (int k = 0; k < 4; ++k)
                 if (k != type &&
-                        ! tri_.tetrahedron(tet)->adjacentTetrahedron(k)) {
+                        ! init.tri().tetrahedron(tet)->adjacentTetrahedron(k)) {
                     banned_[i] = true;
                     break;
                 }
@@ -96,8 +96,8 @@ BanBoundary::BanBoundary(const LPInitialTableaux<Constraint>& init) :
 
 template <LPSurfaceConstraint Constraint>
 BanEdge::BanEdge(const LPInitialTableaux<Constraint>& init, Edge<3>* edge) :
-        BanConstraintBase(init) {
-    size_t n = tri_.size();
+        banned_(init.system().coords(init.tri().size()), false) {
+    size_t n = init.tri().size();
     size_t tet;
     int type;
 
@@ -110,7 +110,7 @@ BanEdge::BanEdge(const LPInitialTableaux<Constraint>& init, Edge<3>* edge) :
 
     // Ban quadrilaterals that meet the given edge.
     for (size_t i = 0; i < 3 * n; ++i) {
-        if (system_.quad()) {
+        if (init.system().quad()) {
             tet = columnPerm[i] / 3;
             type = columnPerm[i] % 3;
         } else {
@@ -120,21 +120,21 @@ BanEdge::BanEdge(const LPInitialTableaux<Constraint>& init, Edge<3>* edge) :
 
         for (int k = 0; k < 6; ++k)
             if (k != type && k != 5 - type)
-                if (tri_.tetrahedron(tet)->edge(k) == edge) {
+                if (init.tri().tetrahedron(tet)->edge(k) == edge) {
                     banned_[i] = true;
                     break;
                 }
     }
 
     // Ban triangles that meet the given edge.
-    if (system_.standard())
+    if (init.system().standard())
         for (size_t i = 3 * n; i < 7 * n; ++i) {
             tet = columnPerm[i] / 7;
             type = columnPerm[i] % 7;
 
             for (int k = 0; k < 4; ++k)
                 if (k != type)
-                    if (tri_.tetrahedron(tet)->edge(
+                    if (init.tri().tetrahedron(tet)->edge(
                             Edge<3>::edgeNumber[k][type]) == edge) {
                         banned_[i] = true;
                         break;
@@ -143,22 +143,23 @@ BanEdge::BanEdge(const LPInitialTableaux<Constraint>& init, Edge<3>* edge) :
 }
 
 template <LPSurfaceConstraint Constraint>
-BanTorusBoundary::BanTorusBoundary(
-        const LPInitialTableaux<Constraint>& init) : BanConstraintBase(init) {
-    size_t n = tri_.size();
+BanTorusBoundary::BanTorusBoundary(const LPInitialTableaux<Constraint>& init) :
+        banned_(init.system().coords(init.tri().size()), false),
+        marked_(init.system().coords(init.tri().size()), false) {
+    size_t n = init.tri().size();
     size_t tet;
 
     // Which boundary faces are we banning?
-    size_t nTriangles = tri_.countTriangles();
+    size_t nTriangles = init.tri().countTriangles();
     FixedArray<bool> banTriangle(nTriangles, false);
 
     // Which vertex links are we marking normal triangles around?
-    size_t nVertices = tri_.countVertices();
+    size_t nVertices = init.tri().countVertices();
     FixedArray<bool> markVtx(nVertices, false);
 
     BoundaryComponent<3>* bc;
-    for (size_t i = 0; i < tri_.countBoundaryComponents(); ++i) {
-        bc = tri_.boundaryComponent(i);
+    for (size_t i = 0; i < init.tri().countBoundaryComponents(); ++i) {
+        bc = init.tri().boundaryComponent(i);
         if ((! bc->isIdeal()) && bc->isOrientable() &&
                 bc->eulerChar() == 0) {
             // We've found a real torus boundary.
@@ -177,13 +178,13 @@ BanTorusBoundary::BanTorusBoundary(
 
     // Ban quadrilaterals that touch torus boundaries.
     for (size_t i = 0; i < 3 * n; ++i) {
-        if (system_.quad())
+        if (init.system().quad())
             tet = columnPerm[i] / 3;
         else
             tet = columnPerm[i] / 7;
 
         for (int k = 0; k < 4; ++k)
-            if (banTriangle[tri_.tetrahedron(tet)->triangle(k)->
+            if (banTriangle[init.tri().tetrahedron(tet)->triangle(k)->
                     markedIndex()]) {
                 banned_[i] = true;
                 break;
@@ -193,18 +194,18 @@ BanTorusBoundary::BanTorusBoundary(
     // Ban normal triangles that touch torus boundaries, and mark all
     // normal triangles that surround vertices on torus boundaries
     // (even if the normal triangles do not actually touch the boundary).
-    if (system_.standard())
+    if (init.system().standard())
         for (size_t i = 3 * n; i < 7 * n; ++i) {
             tet = columnPerm[i] / 7;
             int type = columnPerm[i] % 7;
 
-            if (markVtx[tri_.tetrahedron(tet)->vertex(type)->
+            if (markVtx[init.tri().tetrahedron(tet)->vertex(type)->
                     markedIndex()])
                 marked_[i] = true;
 
             for (int k = 0; k < 4; ++k)
                 if (k != type &&
-                        banTriangle[tri_.tetrahedron(tet)->triangle(k)->
+                        banTriangle[init.tri().tetrahedron(tet)->triangle(k)->
                         markedIndex()]) {
                     banned_[i] = true;
                     break;

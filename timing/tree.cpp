@@ -138,7 +138,7 @@ int main(int argc, char* argv[]) {
             }
         } else {
             try {
-                TreeSingleSoln<LPConstraintEulerPositive>
+                TreeSingleSoln<Integer, LPConstraintEulerPositive>
                     search(t, mode == '3' ? NormalCoords::AlmostNormal :
                         NormalCoords::Standard);
                 if (search.find()) {
