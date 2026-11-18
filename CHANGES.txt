@@ -139,6 +139,8 @@ Version 8.0  [ TODO ]
               or link in the database.  These arguments are accessible via the
               new routines tag() and maxSize().
             - New routine global() for accessing Regina's in-built databases.
+            - New requirement that all keys and values in a database must
+              consist only of printable characters and/or spaces.
         Class ChildIterator<const_>:
             - The type std::iterator_traits<ChildIterator<...>>::value_type
               is now just Packet (without any const qualifiers), regardless of

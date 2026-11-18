@@ -90,6 +90,10 @@ concept CensusSearchable =
  * and/or the underlying manifolds).  A key may appear multiple times
  * (associated with different human-readable names) within the same database.
  *
+ * All keys and values _must_ consist only of printable characters and/or
+ * spaces.  (This is because Regina uses non-printable characters such as tabs
+ * to manage repeated keys behind the scenes.)
+ *
  * Ordinary users should not need to interact with CensusDB directly;
  * instead you would typically use one of the high-level Census::lookup()
  * routines, which searches all of Regina's in-built databases using the

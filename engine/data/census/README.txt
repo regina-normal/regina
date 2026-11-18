@@ -14,6 +14,11 @@ Each *.xzsig file in this directory is an xz-compressed text file in the form:
 All signatures are second-generation isomorphism signatures or knot/link
 signatures.
 
+Each signature must appear only _once_ in each file.  If a signature has
+several associated manifold/link names, then these name must all appear on the
+same line, separated by tabs.  The manifold/link names themselves must contain
+only printable characters and/or spaces.
+
 Note: all triangulations and link diagrams in these databases must be connected.
 (This is because the census lookup code uses the signature prefix to deduce
 the triangulation/link size).
