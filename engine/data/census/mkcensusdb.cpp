@@ -214,7 +214,7 @@ int main(int argc, char* argv[]) {
                 }
 #elif defined(REGINA_KVSTORE_LMDB)
                 MDB_val key { sig.size(), sig.data() };
-                MDB_val value { strlen(end - pos), const_cast<char*>(pos) };
+                MDB_val value { end - pos, const_cast<char*>(pos) };
                 if (int rv = ::mdb_put(txn, dbi, &key, &value, 0)) {
                     std::cerr << "ERROR: Could not store the record for "
                         << sig << " in the database." << std::endl;
