@@ -65,13 +65,13 @@ void addHomGroupPresentation(pybind11::module_& m) {
         .def("evaluate", overload_cast<GroupExpression>(
             &HomGroupPresentation::evaluate, pybind11::const_),
             rdoc::evaluate)
-        .def("evaluate", overload_cast<unsigned long>(
+        .def("evaluate", overload_cast<size_t>(
             &HomGroupPresentation::evaluate, pybind11::const_),
             rdoc::evaluate_2)
         .def("invEvaluate", overload_cast<GroupExpression>(
             &HomGroupPresentation::invEvaluate, pybind11::const_),
             rdoc::invEvaluate)
-        .def("invEvaluate", overload_cast<unsigned long>(
+        .def("invEvaluate", overload_cast<size_t>(
             &HomGroupPresentation::invEvaluate, pybind11::const_),
             rdoc::invEvaluate_2)
         .def("simplify", &HomGroupPresentation::simplify, rdoc::simplify)
