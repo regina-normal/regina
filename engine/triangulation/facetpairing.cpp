@@ -39,17 +39,18 @@
 // This file includes the implementations of graph structure queries that are
 // specific to dimension 3.
 //
-// We do this via specialisations, so that we can keep the implementations out
-// of the headers and we do not need to explicitly instantiate every routine.
-//
-// Note: Our private helper functions must come first in this file, since we
-// cannot specialise them after using them in the public query routines.
+// There are two options: we could specialise (but then we must declare the
+// specialisations in the main header), or we could treat these as generic
+// implementations (but then we must explicitly instantiate each function).
+// To avoid the risk of instantiating the entire class FacetPairing<3> every
+// time the header is included, we go with the second option for now.
 
 namespace regina {
 
-template <>
-void FacetPairing<3>::followChain(ssize_t& tet, FacePair& faces) const {
-    FacetSpec<3> dest1, dest2;
+template <int dim> requires (supportedDim(dim))
+void FacetPairing<dim>::followChain(ssize_t& tet, FacePair& faces) const
+        requires (dim == 3) {
+    FacetSpec<dim> dest1, dest2;
     while (true) {
         // Does the first face lead to a real tetrahedron?
         if (isUnmatched(tet, faces.lower()))
@@ -71,9 +72,11 @@ void FacetPairing<3>::followChain(ssize_t& tet, FacePair& faces) const {
     }
 }
 
-template <>
-bool FacetPairing<3>::hasBrokenDoubleEndedChain(size_t baseTet,
-        int baseFace) const {
+template void FacetPairing<3>::followChain(ssize_t&, FacePair&) const;
+
+template <int dim> requires (supportedDim(dim))
+bool FacetPairing<dim>::hasBrokenDoubleEndedChain(size_t baseTet,
+        int baseFace) const requires (dim == 3) {
     // Follow the chain along and see how far we get.
     FacePair bdryFaces =
         FacePair(baseFace, dest(baseTet, baseFace).facet).complement();
@@ -89,7 +92,7 @@ bool FacetPairing<3>::hasBrokenDoubleEndedChain(size_t baseTet,
     // Try each possible direction away from the working faces into the
     // second chain.
     for (int i = 0; i < 2; i++) {
-        FacetSpec<3> destFace = dest(bdryTet,
+        FacetSpec<dim> destFace = dest(bdryTet,
             i == 0 ? bdryFaces.lower() : bdryFaces.upper());
         if (destFace.isBoundary(size_))
             continue;
@@ -115,8 +118,10 @@ bool FacetPairing<3>::hasBrokenDoubleEndedChain(size_t baseTet,
     return false;
 }
 
-template <>
-bool FacetPairing<3>::hasBrokenDoubleEndedChain() const {
+template bool FacetPairing<3>::hasBrokenDoubleEndedChain(size_t, int) const;
+
+template <int dim> requires (supportedDim(dim))
+bool FacetPairing<dim>::hasBrokenDoubleEndedChain() const requires (dim == 3) {
     // Search for the end edge of the first chain.
     // Skip the last tetrahedron -- any of the two ends will do.
     for (size_t baseTet = 0; baseTet + 1 < size_; baseTet++)
@@ -137,9 +142,11 @@ bool FacetPairing<3>::hasBrokenDoubleEndedChain() const {
     return false;
 }
 
-template <>
-bool FacetPairing<3>::hasOneEndedChainWithDoubleHandle(size_t baseTet,
-        int baseFace) const {
+template bool FacetPairing<3>::hasBrokenDoubleEndedChain() const;
+
+template <int dim> requires (supportedDim(dim))
+bool FacetPairing<dim>::hasOneEndedChainWithDoubleHandle(size_t baseTet,
+        int baseFace) const requires (dim == 3) {
     // Follow the chain along and see how far we get.
     FacePair bdryFaces =
         FacePair(baseFace, dest(baseTet, baseFace).facet).complement();
@@ -147,8 +154,8 @@ bool FacetPairing<3>::hasOneEndedChainWithDoubleHandle(size_t baseTet,
     followChain(bdryTet, bdryFaces);
 
     // Here's where we must diverge and create the double handle.
-    FacetSpec<3> dest1 = dest(bdryTet, bdryFaces.lower());
-    FacetSpec<3> dest2 = dest(bdryTet, bdryFaces.upper());
+    FacetSpec<dim> dest1 = dest(bdryTet, bdryFaces.lower());
+    FacetSpec<dim> dest2 = dest(bdryTet, bdryFaces.upper());
 
     // These two faces must be joined to two distinct tetrahedra.
     if (dest1.simp == dest2.simp)
@@ -169,8 +176,12 @@ bool FacetPairing<3>::hasOneEndedChainWithDoubleHandle(size_t baseTet,
     return (handle >= 2);
 }
 
-template <>
-bool FacetPairing<3>::hasOneEndedChainWithDoubleHandle() const {
+template bool FacetPairing<3>::hasOneEndedChainWithDoubleHandle(size_t, int)
+    const;
+
+template <int dim> requires (supportedDim(dim))
+bool FacetPairing<dim>::hasOneEndedChainWithDoubleHandle() const
+        requires (dim == 3) {
     // Search for the end edge of the chain.
     for (size_t baseTet = 0; baseTet < size_; baseTet++)
         for (int baseFace = 0; baseFace < 3; baseFace++)
@@ -190,9 +201,11 @@ bool FacetPairing<3>::hasOneEndedChainWithDoubleHandle() const {
     return false;
 }
 
-template <>
-bool FacetPairing<3>::hasWedgedDoubleEndedChain(size_t baseTet,
-        int baseFace) const {
+template bool FacetPairing<3>::hasOneEndedChainWithDoubleHandle() const;
+
+template <int dim> requires (supportedDim(dim))
+bool FacetPairing<dim>::hasWedgedDoubleEndedChain(size_t baseTet,
+        int baseFace) const requires (dim == 3) {
     // Follow the chain along and see how far we get.
     FacePair bdryFaces =
         FacePair(baseFace, dest(baseTet, baseFace).facet).complement();
@@ -200,8 +213,8 @@ bool FacetPairing<3>::hasWedgedDoubleEndedChain(size_t baseTet,
     followChain(bdryTet, bdryFaces);
 
     // Here we expect to find the wedge.
-    FacetSpec<3> dest1 = dest(bdryTet, bdryFaces.lower());
-    FacetSpec<3> dest2 = dest(bdryTet, bdryFaces.upper());
+    FacetSpec<dim> dest1 = dest(bdryTet, bdryFaces.lower());
+    FacetSpec<dim> dest2 = dest(bdryTet, bdryFaces.upper());
 
     if (dest1.isBoundary(size_) || dest2.isBoundary(size_) ||
             dest1.simp == dest2.simp)
@@ -211,10 +224,10 @@ bool FacetPairing<3>::hasWedgedDoubleEndedChain(size_t baseTet,
     // Hunt for the edge joining them, and also see where they follow
     // through to beyond these two new vertices.
     // Drawing a diagram whilst reading this code will certainly help. :)
-    FacetSpec<3> throughFace[2][3];
+    FacetSpec<dim> throughFace[2][3];
     int nThroughFaces[2] = { 0, 0 };
 
-    FacetSpec<3> nextDest;
+    FacetSpec<dim> nextDest;
     bool foundCrossEdge = false;
     for (int i = 0; i < 4; i++) {
         if (i != dest1.facet) {
@@ -258,8 +271,10 @@ bool FacetPairing<3>::hasWedgedDoubleEndedChain(size_t baseTet,
     return false;
 }
 
-template <>
-bool FacetPairing<3>::hasWedgedDoubleEndedChain() const {
+template bool FacetPairing<3>::hasWedgedDoubleEndedChain(size_t, int) const;
+
+template <int dim> requires (supportedDim(dim))
+bool FacetPairing<dim>::hasWedgedDoubleEndedChain() const requires (dim == 3) {
     // Search for the end edge of the first chain.
     // Skip the last tetrahedron -- any of the two ends will do.
     for (size_t baseTet = 0; baseTet + 1 < size_; baseTet++)
@@ -280,9 +295,11 @@ bool FacetPairing<3>::hasWedgedDoubleEndedChain() const {
     return false;
 }
 
-template <>
-bool FacetPairing<3>::hasOneEndedChainWithStrayBigon(size_t baseTet,
-        int baseFace) const {
+template bool FacetPairing<3>::hasWedgedDoubleEndedChain() const;
+
+template <int dim> requires (supportedDim(dim))
+bool FacetPairing<dim>::hasOneEndedChainWithStrayBigon(size_t baseTet,
+        int baseFace) const requires (dim == 3) {
     // Follow the chain along and see how far we get.
     FacePair bdryFaces =
         FacePair(baseFace, dest(baseTet, baseFace).facet).complement();
@@ -297,7 +314,7 @@ bool FacetPairing<3>::hasOneEndedChainWithStrayBigon(size_t baseTet,
 
     // Try each possible direction away from the working faces into the bigon.
     for (int i = 0; i < 2; i++) {
-        FacetSpec<3> destFace = dest(bdryTet,
+        FacetSpec<dim> destFace = dest(bdryTet,
             i == 0 ? bdryFaces.lower() : bdryFaces.upper());
         if (destFace.isBoundary(size_))
             continue;
@@ -358,8 +375,12 @@ bool FacetPairing<3>::hasOneEndedChainWithStrayBigon(size_t baseTet,
     return false;
 }
 
-template <>
-bool FacetPairing<3>::hasOneEndedChainWithStrayBigon() const {
+template bool FacetPairing<3>::hasOneEndedChainWithStrayBigon(size_t, int)
+    const;
+
+template <int dim> requires (supportedDim(dim))
+bool FacetPairing<dim>::hasOneEndedChainWithStrayBigon() const
+        requires (dim == 3) {
     // Search for the end edge of the chain.
     for (size_t baseTet = 0; baseTet < size_; baseTet++)
         for (int baseFace = 0; baseFace < 3; baseFace++)
@@ -379,9 +400,11 @@ bool FacetPairing<3>::hasOneEndedChainWithStrayBigon() const {
     return false;
 }
 
-template <>
-bool FacetPairing<3>::hasTripleOneEndedChain(size_t baseTet,
-        int baseFace) const {
+template bool FacetPairing<3>::hasOneEndedChainWithStrayBigon() const;
+
+template <int dim> requires (supportedDim(dim))
+bool FacetPairing<dim>::hasTripleOneEndedChain(size_t baseTet,
+        int baseFace) const requires (dim == 3) {
     // Follow the chain along and see how far we get.
     FacePair bdryFaces =
         FacePair(baseFace, dest(baseTet, baseFace).facet).complement();
@@ -394,8 +417,8 @@ bool FacetPairing<3>::hasTripleOneEndedChain(size_t baseTet,
     if (dest(bdryTet, bdryFaces.lower()).simp == bdryTet)
         return false;
 
-    FacetSpec<3> axis1 = dest(bdryTet, bdryFaces.lower());
-    FacetSpec<3> axis2 = dest(bdryTet, bdryFaces.upper());
+    FacetSpec<dim> axis1 = dest(bdryTet, bdryFaces.lower());
+    FacetSpec<dim> axis2 = dest(bdryTet, bdryFaces.upper());
     if (axis1.isBoundary(size_) || axis2.isBoundary(size_))
         return false;
 
@@ -409,7 +432,7 @@ bool FacetPairing<3>::hasTripleOneEndedChain(size_t baseTet,
     for (int exit1 = 0; exit1 < 4; exit1++) {
         if (exit1 == axis1.facet)
             continue;
-        FacetSpec<3> arrive1 = dest(axis1.simp, exit1);
+        FacetSpec<dim> arrive1 = dest(axis1.simp, exit1);
         if (arrive1.simp == bdryTet || arrive1.simp == axis1.simp ||
                 arrive1.simp == axis2.simp || arrive1.isBoundary(size_))
             continue;
@@ -417,7 +440,7 @@ bool FacetPairing<3>::hasTripleOneEndedChain(size_t baseTet,
         for (int exit2 = 0; exit2 < 4; exit2++) {
             if (exit2 == axis2.facet)
                 continue;
-            FacetSpec<3> arrive2 = dest(axis2.simp, exit2);
+            FacetSpec<dim> arrive2 = dest(axis2.simp, exit2);
             if (arrive2.simp != arrive1.simp)
                 continue;
 
@@ -444,8 +467,10 @@ bool FacetPairing<3>::hasTripleOneEndedChain(size_t baseTet,
     return false;
 }
 
-template <>
-bool FacetPairing<3>::hasTripleOneEndedChain() const {
+template bool FacetPairing<3>::hasTripleOneEndedChain(size_t, int) const;
+
+template <int dim> requires (supportedDim(dim))
+bool FacetPairing<dim>::hasTripleOneEndedChain() const requires (dim == 3) {
     // Search for the end edge of the first chain.
     // Skip the last two tetrahedra -- any of the three chains will do.
     for (size_t baseTet = 0; baseTet + 2 < size_; baseTet++)
@@ -466,8 +491,10 @@ bool FacetPairing<3>::hasTripleOneEndedChain() const {
     return false;
 }
 
-template <>
-bool FacetPairing<3>::hasSingleStar() const {
+template bool FacetPairing<3>::hasTripleOneEndedChain() const;
+
+template <int dim> requires (supportedDim(dim))
+bool FacetPairing<dim>::hasSingleStar() const requires (dim == 3) {
     size_t half[4], all[8];
     int f1, f2, i;
 
@@ -517,8 +544,10 @@ bool FacetPairing<3>::hasSingleStar() const {
     return false;
 }
 
-template <>
-bool FacetPairing<3>::hasDoubleStar() const {
+template bool FacetPairing<3>::hasSingleStar() const;
+
+template <int dim> requires (supportedDim(dim))
+bool FacetPairing<dim>::hasDoubleStar() const requires (dim == 3) {
     size_t all[7];
 
     size_t first, second;
@@ -578,8 +607,10 @@ bool FacetPairing<3>::hasDoubleStar() const {
     return false;
 }
 
-template <>
-bool FacetPairing<3>::hasDoubleSquare() const {
+template bool FacetPairing<3>::hasDoubleStar() const;
+
+template <int dim> requires (supportedDim(dim))
+bool FacetPairing<dim>::hasDoubleSquare() const requires (dim == 3) {
     // We use ssize_t everywhere here because it makes for fewer
     // signed/unsigned comparisons that need to be cast away.
     ssize_t adj1 = 0, adj2 = 0;
@@ -588,7 +619,7 @@ bool FacetPairing<3>::hasDoubleSquare() const {
     // will do.
     for (ssize_t t1 = 0; t1 + 3 < static_cast<ssize_t>(size_); t1++)
         for (int join = 0; join < 4; join++) {
-            FacetSpec<3> t2 = dest(t1, join);
+            FacetSpec<dim> t2 = dest(t1, join);
             if (t2.simp == t1 || t2.isBoundary(size_))
                 continue;
 
@@ -646,6 +677,8 @@ bool FacetPairing<3>::hasDoubleSquare() const {
     // Nothing found.
     return false;
 }
+
+template bool FacetPairing<3>::hasDoubleSquare() const;
 
 } // namespace regina
 
