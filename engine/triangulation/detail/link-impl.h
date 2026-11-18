@@ -66,106 +66,65 @@ template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
 const SafeTriangulation<dim - subdim - 1>& Face<dim, subdim>::buildLink() const
         requires (standardDim(dim) && dim - subdim >= 3) {
-    if (! link_.value) {
-        // Build the triangulation.
-        //
-        // Note: we need to insert tetrahedra in the correct order, as
-        // specified in the buildLink() documentation.
+    // This code relies on a subdim-face having the same face number as the
+    // opposite (dim - subdim - 1)-face within a simplex.  This is not true in
+    // the special case where both faces have the same dimension (e.g.,
+    // triangle links in a 5-manifold triangulation); however, in standard
+    // dimensions such a special case never occurs (since subdim ≥ 2).
+    // If we ever enable this code in higher dimensions we will need to
+    // adjust things accordingly.
+    static constexpr int linkDim = dim - subdim - 1;
+    static_assert(subdim != linkDim);
 
-        auto* ans = new Triangulation<dim - subdim - 1>();
+    if (! link_.value) {
+        auto* ans = new Triangulation<linkDim>();
         ans->newSimplices(degree());
 
-        if constexpr (dim - subdim - 1 == 2) {
-            // We are building a 2-D triangulation.
+        // Build a map from (simplex, face) pairs to indices into
+        // embeddings().  This avoids an expensive search each time we
+        // cross from one simplex to an adjacent simplex.
+        static constexpr auto nFaces = Face<dim, subdim>::nFaces;
+        FixedArray<size_t> map(nFaces * triangulation().size());
+        {
             size_t i = 0;
-            for (auto it = begin(); it != end(); ++it, ++i) {
-                Simplex<dim>* tet = it->simplex();
-                int f = it->face();
+            for (const auto& emb : embeddings())
+                map[nFaces * emb.simplex()->index() + emb.face()] = i++;
+        }
 
-                for (int exitFace = 0; exitFace <= dim; ++exitFace) {
-                    if (Face<dim, subdim>::containsVertex(f, exitFace))
-                        continue;
+        for (const auto& emb : embeddings()) {
+            // Glue this piece of link to any adjacent pieces of link.
+            size_t simpIdx = emb.simplex()->index();
+            for (int exitFacet = 0; exitFacet <= dim; ++exitFacet) {
+                if (Face<dim, subdim>::containsVertex(emb.face(), exitFacet))
+                    continue;
 
-                    Simplex<dim>* adj = tet->adjacentSimplex(exitFace);
-                    if (! adj)
-                        continue;
+                auto adjSimp = emb.simplex()->adjacentSimplex(exitFacet);
+                if (! adjSimp)
+                    continue;
+                size_t adjSimpIdx = adjSimp->index();
 
-                    int edgeInLink = tet->triangleMapping(f).pre(exitFace);
-                    if (ans->triangle(i)->adjacentTriangle(edgeInLink)) {
-                        // We've already made this gluing in the vertex link
-                        // from the other side.
-                        continue;
-                    }
+                // Make sure we perform each gluing in one direction only.
+                if (adjSimpIdx > simpIdx)
+                    continue;
+                if (adjSimpIdx == simpIdx &&
+                        emb.simplex()->adjacentFacet(exitFacet) > exitFacet)
+                    continue;
 
-                    Perm<dim + 1> adjGluing = tet->adjacentGluing(exitFace);
-                    int adjFace = Face<dim, subdim>::faceNumber(
-                        adjGluing * it->vertices());
-
-                    // TODO: We need to find which *embedding* corresponds to
-                    // the adjacent simplex/face pair.  Currently we do a
-                    // simple linear scan, which makes the overall link
-                    // construction quadratic.  This can surely be made
-                    // linear(ish) with the right data structure / algorithm.
-                    size_t adjIndex = 0;
-                    for (auto adjIt = begin(); adjIt != end();
-                            ++adjIt, ++adjIndex)
-                        if (adjIt->simplex() == adj && adjIt->face() == adjFace)
-                            break; // Sets adjIndex to the right value.
-
-                    ans->triangle(i)->join(edgeInLink, ans->triangle(adjIndex),
-                        Perm<3>::contract(
-                                adj->triangleMapping(adjFace).inverse() *
-                            adjGluing *
-                            tet->triangleMapping(f)));
-                }
-            }
-        } else {
-            // Build a map from (simplex, face) pairs to indices into
-            // embeddings().  This avoids an expensive search each time we
-            // cross from one simplex to an adjacent simplex.
-            static constexpr auto nFaces = Face<dim, subdim>::nFaces;
-            FixedArray<size_t> map(nFaces * triangulation().size());
-            {
-                size_t i = 0;
-                for (const auto& emb : embeddings())
-                    map[nFaces * emb.simplex()->index() + emb.face()] = i++;
-            }
-
-            for (const auto& emb : embeddings()) {
-                // Glue this piece of link to any adjacent pieces of link.
-                size_t simpIdx = emb.simplex()->index();
-                for (int exitFacet = 0; exitFacet <= dim; ++exitFacet) {
-                    if (Face<dim, subdim>::containsVertex(emb.face(), exitFacet))
-                        continue;
-
-                    auto adjSimp = emb.simplex()->adjacentSimplex(exitFacet);
-                    if (! adjSimp)
-                        continue;
-
-                    // Make sure we perform each gluing in one direction only.
-                    size_t adjSimpIdx = adjSimp->index();
-                    if (adjSimpIdx > simpIdx)
-                        continue;
-                    if (adjSimpIdx == simpIdx &&
-                            emb.simplex()->adjacentFacet(exitFacet) > exitFacet)
-                        continue;
-
-                    // Go ahead and make the gluing.
-                    int adjFace = Face<dim, subdim>::faceNumber(
+                // Go ahead and make the gluing.
+                int adjFace = Face<dim, subdim>::faceNumber(
+                    emb.simplex()->adjacentGluing(exitFacet) *
+                    emb.vertices());
+                Perm<dim + 1> mapping = emb.simplex()->
+                    template faceMapping<linkDim>(emb.face());
+                Perm<dim + 1> adjMapping = adjSimp->
+                    template faceMapping<linkDim>(adjFace);
+                ans->simplex(map[nFaces * simpIdx + emb.face()])->join(
+                    mapping.pre(exitFacet),
+                    ans->simplex(map[nFaces * adjSimpIdx + adjFace]),
+                    Perm<linkDim + 1>::contract(
+                        adjMapping.inverse() *
                         emb.simplex()->adjacentGluing(exitFacet) *
-                        emb.vertices());
-                    Perm<dim + 1> vertices = emb.simplex()->
-                        template faceMapping<dim - subdim - 1>(emb.face());
-                    Perm<dim + 1> adjVertices = adjSimp->
-                        template faceMapping<dim - subdim - 1>(adjFace);
-                    ans->simplex(map[nFaces * simpIdx + emb.face()])->join(
-                        vertices.pre(exitFacet),
-                        ans->simplex(map[nFaces * adjSimpIdx + adjFace]),
-                        Perm<dim - subdim>::contract(
-                            adjVertices.inverse() *
-                            emb.simplex()->adjacentGluing(exitFacet) *
-                            vertices));
-                }
+                        mapping));
             }
         }
 
@@ -180,6 +139,12 @@ template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
 Isomorphism<dim> Face<dim, subdim>::buildLinkInclusion() const
         requires (standardDim(dim) && dim - subdim >= 3) {
+    // This code relies on a subdim-face having the same face number as the
+    // opposite (dim - subdim - 1)-face within a simplex.  See the comments in
+    // buildLink() for further discussion on this.
+    static constexpr int linkDim = dim - subdim - 1;
+    static_assert(subdim != linkDim);
+
     Isomorphism<dim> inclusion(degree());
 
     size_t i = 0;
@@ -187,11 +152,11 @@ Isomorphism<dim> Face<dim, subdim>::buildLinkInclusion() const
         inclusion.simpImage(i) = it->simplex()->index();
         if constexpr (subdim == 0) {
             inclusion.facetPerm(i) =
-                it->simplex()->template faceMapping<dim - 1>(it->vertex());
+                it->simplex()->template faceMapping<linkDim>(it->vertex());
         } else {
             static_assert(subdim == 1); // since dim <= 4
             Perm<dim + 1> perm =
-                it->simplex()->template faceMapping<dim - 2>(it->face());
+                it->simplex()->template faceMapping<linkDim>(it->face());
             if (perm[dim - 1] == it->vertices()[0])
                 inclusion.facetPerm(i) = perm;
             else
