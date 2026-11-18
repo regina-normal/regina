@@ -314,8 +314,13 @@ TEST_F(CensusTest, lookup) {
     verifyLookup("bJrc", "m000 : #1");
     verifyLookup("bkaaid", "m000 : #1");
     // Hyperbolic knots & links, multiple hits:
+    verifyLookup("epABFOYmc", { "m129 : #3", "L208015", "L209047", "L210094" });
+    verifyLookup("iVM5kZU7FbYqhvP5a",
+        { "t12711 : #1", "L307001", "L309014", "L310049", "L310053" });
     verifyLookup("k3WQS7WmZ7pbm6QZelNa", { "L408001", "L410005" });
     verifyLookup("kLLPLLQkceefejjiijiiiatdmpamxt", { "L408001", "L410005" });
+    verifyLookup("m-mllf3eZD-7laKrMzMrNzu",
+        { "L410007", "L410010", "L410014" });
     // Classical and virtual knots:
     verifyLookup("eputWe", { "4ah_1", "v4_1", "4.108" });
     verifyLookup("eabcdbadcvbZa", { "4ah_1", "v4_1", "4.108" });
