@@ -37,12 +37,7 @@
 #include <string>
 #include "utilities/bxzstr/bxzstr.hpp" // Does not include regina-config.h
 
-#if defined(REGINA_KVSTORE_QDBM)
-  #include <depot.h>
-  #include <cabin.h>
-  #include <villa.h>
-  #define DB_CLOSE(x) vlclose(x);
-#elif defined(REGINA_KVSTORE_TOKYOCABINET)
+#if defined(REGINA_KVSTORE_TOKYOCABINET)
   #include <cstdint>
   #include <tcbdb.h>
   #include <tcutil.h>
@@ -86,17 +81,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Initialise the database.
-#if defined(REGINA_KVSTORE_QDBM)
-    VILLA* db;
-    if (! (db = vlopen(outputFile.c_str(),
-            VL_OWRITER | VL_OCREAT | VL_OTRUNC | VL_OZCOMP | VL_ONOLCK,
-            VL_CMPLEX))) {
-        std::cerr << "ERROR: Could not open QDBM database: "
-            << outputFile << std::endl;
-        std::cerr << "Detail: " << dperrmsg(dpecode) << std::endl;
-        std::exit(1);
-    }
-#elif defined(REGINA_KVSTORE_TOKYOCABINET)
+#if defined(REGINA_KVSTORE_TOKYOCABINET)
     TCBDB* db = tcbdbnew();
     if (! tcbdbopen(db, outputFile.c_str(),
             BDBOWRITER | BDBOCREAT | BDBOTRUNC | BDBONOLCK)) {
@@ -198,16 +183,7 @@ int main(int argc, char* argv[]) {
                 usage(argv[0]);
             }
 
-    #if defined(REGINA_KVSTORE_QDBM)
-            if (! vlput(db, sig.c_str(), sig.length(),
-                    pos, -1 /* strlen */, VL_DDUP)) {
-                std::cerr << "ERROR: Could not store the record for "
-                    << sig << " in the database." << std::endl;
-                std::cerr << "Detail: " << dperrmsg(dpecode) << std::endl;
-                vlclose(db);
-                std::exit(1);
-            }
-    #elif defined(REGINA_KVSTORE_TOKYOCABINET)
+    #if defined(REGINA_KVSTORE_TOKYOCABINET)
             if (! tcbdbputdup2(db, sig.c_str(), pos)) {
                 std::cerr << "ERROR: Could not store the record for "
                     << sig << " in the database." << std::endl;
@@ -238,22 +214,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Close and tidy up.
-#if defined(REGINA_KVSTORE_QDBM)
-    if (! vloptimize(db)) {
-        std::cerr << "ERROR: Could not optimise QDBM database: "
-            << outputFile << std::endl;
-        std::cerr << "Detail: " << dperrmsg(dpecode) << std::endl;
-        vlclose(db);
-        std::exit(1);
-    }
-
-    if (! vlclose(db)) {
-        std::cerr << "ERROR: Could not close QDBM database: "
-            << outputFile << std::endl;
-        std::cerr << "Detail: " << dperrmsg(dpecode) << std::endl;
-        std::exit(1);
-    }
-#elif defined(REGINA_KVSTORE_TOKYOCABINET)
+#if defined(REGINA_KVSTORE_TOKYOCABINET)
     // The following call to tcbdboptimise() does not change any options
     // other than the bitwise compression option given in the final argument.
     if (! tcbdboptimize(db, 0, 0, 0, -1, -1, BDBTBZIP)) {

@@ -88,7 +88,7 @@
    zlib compression library (<firstterm>libz</firstterm>), and
    a lightweight database library (which will be one of
    Tokyo Cabinet (<firstterm>libtokyocabinet</firstterm>),
-   QDBM (<firstterm>libqdbm</firstterm>) or the
+   or the
    Lightning Memory-Mapped Database (<firstterm>liblmdb</firstterm>)).
    Which of these you need will depend on how your linker works and how
    &regina; was built.
@@ -100,8 +100,6 @@
    <literal>libtokyocabinet-dev</literal>,
    <literal>libtokyocabinet-devel</literal>,
    <literal>tokyocabinet-devel</literal>,
-   <literal>libqdbm-dev</literal>,
-   <literal>qdbm-devel</literal>,
    <literal>liblmdb-dev</literal>,
    <literal>liblmdb-devel</literal> or
    <literal>lmdb-devel</literal>.

@@ -48,11 +48,7 @@
 
 #include <iostream>
 #include <cstdlib>
-#if defined(REGINA_KVSTORE_QDBM)
-  #include <depot.h>
-  #include <cabin.h>
-  #include <villa.h>
-#elif defined(REGINA_KVSTORE_TOKYOCABINET)
+#if defined(REGINA_KVSTORE_TOKYOCABINET)
   #include <cstdint>
   #include <tcbdb.h>
   #include <tcutil.h>
@@ -76,25 +72,7 @@ void CensusDB::lookupKey(const std::string& sig, Action&& action) const {
     if (sig.empty())
         return; // no hits
 
-#if defined(REGINA_KVSTORE_QDBM)
-    VILLA* db;
-    if (! (db = vlopen(filename_.c_str(), VL_OREADER | VL_ONOLCK, VL_CMPLEX))) {
-        std::cerr << "ERROR: Could not open QDBM database: "
-            << filename_ << std::endl;
-        std::cerr << "       -> " << dperrmsg(dpecode) << std::endl;
-        throw FileError("Could not open QDBM database");
-    }
-
-    CBLIST* records = vlgetlist(db, sig.c_str(), sig.length());
-    if (records) {
-        int n = cblistnum(records);
-        for (int i = 0; i < n; ++i)
-            action(CensusHit(cblistval(records, i, 0), this));
-        cblistclose(records);
-    }
-
-    vlclose(db);
-#elif defined(REGINA_KVSTORE_TOKYOCABINET)
+#if defined(REGINA_KVSTORE_TOKYOCABINET)
     TCBDB* db = tcbdbnew();
     if (! tcbdbopen(db, filename_.c_str(), BDBOREADER | BDBONOLCK)) {
         std::cerr << "ERROR: Could not open Tokyo Cabinet database: "

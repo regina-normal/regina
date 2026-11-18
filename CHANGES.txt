@@ -21,6 +21,9 @@ Version 8.0  [ TODO ]
         - Regina now requires liblzma at build time (but not runtime).
         - Substantially simplified the source code layout and class hierarchy
           around triangulations and related classes.
+        - The QDBM key-value store is no supported (since it is ancient and
+          none of Regina's binary packages have used it for many, many years).
+          Please switch to Tokyo Cabinet or LMDB instead.
     ENGINE:
         Class AbelianGroup:
             - The constructor that takes invariant factors as a container

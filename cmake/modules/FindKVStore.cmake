@@ -10,7 +10,6 @@
 # Also sets exactly one of the following booleans to true, according to
 # which library was configured and found:
 #    REGINA_KVSTORE_TOKYOCABINET
-#    REGINA_KVSTORE_QDBM
 #    REGINA_KVSTORE_LMDB
 #
 # When adding a new key-value store library to the list of options, ensure:
@@ -23,12 +22,12 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 
-SET(KVStore_OPTIONS "any tokyocabinet qdbm lmdb")
+SET(KVStore_OPTIONS "any tokyocabinet lmdb")
 
-IF (QDBM)
+IF (${REGINA_KVSTORE} STREQUAL qdbm OR REGINA_KVSTORE_QDBM OR QDBM)
   MESSAGE(FATAL_ERROR
-    "The old QDBM setting has been removed. Please set REGINA_KVSTORE=qdbm instead.")
-ENDIF (QDBM)
+    "The QDBM key-value store is no longer supported. Please set REGINA_KVSTORE to a different value instead.")
+ENDIF ()
 
 IF (NOT REGINA_KVSTORE)
   SET (REGINA_KVSTORE any CACHE STRING
@@ -36,7 +35,7 @@ IF (NOT REGINA_KVSTORE)
     FORCE)
 ENDIF (NOT REGINA_KVSTORE)
 
-SET(KVStore_DISPLAYNAME "Tokyo Cabinet / QDBM / LMDB")
+SET(KVStore_DISPLAYNAME "Tokyo Cabinet / LMDB")
 SET(KVStore_DISPLAYURL "http://fallabs.com/tokyocabinet/")
 
 SET(REGINA_KVSTORE_OPTION_FOUND FALSE)
@@ -60,27 +59,6 @@ IF (${REGINA_KVSTORE} STREQUAL tokyocabinet OR REGINA_KVSTORE_TOKYOCABINET OR
     SET(KVStore_DISPLAYURL "http://fallabs.com/tokyocabinet/")
     SET(DB_EXT "tdb")
   ENDIF (${REGINA_KVSTORE} STREQUAL tokyocabinet OR KVStore_FOUND)
-ENDIF()
-
-IF (${REGINA_KVSTORE} STREQUAL qdbm OR REGINA_KVSTORE_QDBM OR
-    (${REGINA_KVSTORE} STREQUAL any AND NOT KVStore_FOUND))
-  SET(REGINA_KVSTORE_OPTION_FOUND TRUE)
-  PKG_CHECK_MODULES(KVStore qdbm)
-  IF (NOT KVStore_FOUND)
-    # Either pkg-config is missing or it could not find the library.
-    find_path(KVStore_INCLUDE_DIRS NAMES cabin.h)
-    find_library(KVStore_LIBRARIES NAMES qdbm libqdbm)
-    IF (KVStore_INCLUDE_DIRS AND KVStore_LIBRARIES)
-      SET(KVStore_FOUND TRUE CACHE INTERNAL "")
-    ENDIF (KVStore_INCLUDE_DIRS AND KVStore_LIBRARIES)
-  ENDIF (NOT KVStore_FOUND)
-
-  IF (${REGINA_KVSTORE} STREQUAL qdbm OR KVStore_FOUND)
-    SET(REGINA_KVSTORE_QDBM TRUE CACHE INTERNAL "")
-    SET(KVStore_DISPLAYNAME "QDBM")
-    SET(KVStore_DISPLAYURL "http://fallabs.com/qdbm/")
-    SET(DB_EXT "qdb")
-  ENDIF (${REGINA_KVSTORE} STREQUAL qdbm OR KVStore_FOUND)
 ENDIF()
 
 IF (${REGINA_KVSTORE} STREQUAL lmdb OR REGINA_KVSTORE_LMDB OR

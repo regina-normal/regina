@@ -55,10 +55,6 @@
    Exactly one of these REGINA_KVSTORE_* macros should be defined. */
 #define REGINA_KVSTORE_TOKYOCABINET
 
-/* Define if we implement key-value stores using QDBM.
-   Exactly one of these REGINA_KVSTORE_* macros should be defined. */
-/* #undef REGINA_KVSTORE_QDBM */
-
 /* Define if we implement key-value stores using LMDB.
    Exactly one of these REGINA_KVSTORE_* macros should be defined. */
 /* #undef REGINA_KVSTORE_LMDB */

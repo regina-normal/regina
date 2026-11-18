@@ -52,7 +52,7 @@ FOREACH(db ${censusdata_DATA})
         "${PROJECT_BINARY_DIR}/engine/data/census/${db}"
     )
   ELSE (REGINA_KVSTORE_LMDB)
-    # Both Tokyo Cabinet and QDBM have optimisation functions in their APIs,
+    # Tokyo Cabinet has an optimisation function in its API,
     # which our mkcensusdb tool calls directly.  We can therefore create
     # the final database from the source .xzsig file in a single step.
     ADD_CUSTOM_COMMAND(OUTPUT ${db} VERBATIM DEPENDS mkcensusdb ${siglist}
