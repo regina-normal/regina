@@ -29,6 +29,7 @@
  **************************************************************************/
 
 #include <iomanip>
+#include <sstream>
 #include "utilities/bytesequence.h"
 
 namespace regina {
