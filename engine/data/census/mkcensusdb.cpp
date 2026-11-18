@@ -156,7 +156,6 @@ int main(int argc, char* argv[]) {
 
         // Fill the database with the user-supplied key-value pairs.
         std::string sig, name;
-        const char* pos;
         while (true) {
             in >> sig;
             if (in.eof())
@@ -170,42 +169,68 @@ int main(int argc, char* argv[]) {
                 usage(argv[0]);
             }
 
-            // Skip initial whitespace in the manifold name (which will
-            // always be present, since the previous in >> sig
-            // does not eat the separating whitespace).
-            pos = name.c_str();
-            while (*pos && std::isspace(*pos))
-                ++pos;
-            if (! *pos) {
-                std::cerr << "ERROR: Signature " << sig
-                    << " has an empty name.\n\n";
-                DB_CLOSE(db);
-                usage(argv[0]);
-            }
+            const char* pos = name.c_str();
+            while (true) {
+                // Skip initial whitespace in the manifold name (which will
+                // always be present for the first name, since the initial
+                // `in >> sig` does not eat the separating whitespace).
+                // Note: we do _not_ skip final whitespace in names, but
+                // instead we verify that there is none (remember, the Regina
+                // developers and not the users produce these databases).
+                while (*pos && std::isspace(*pos))
+                    ++pos;
+                if (! *pos) {
+                    std::cerr << "ERROR: Signature " << sig
+                        << " has an empty name.\n\n";
+                    DB_CLOSE(db);
+                    usage(argv[0]);
+                }
 
-    #if defined(REGINA_KVSTORE_TOKYOCABINET)
-            if (! tcbdbputdup2(db, sig.c_str(), pos)) {
-                std::cerr << "ERROR: Could not store the record for "
-                    << sig << " in the database." << std::endl;
-                std::cerr << "Detail: " << tcbdberrmsg(tcbdbecode(db))
-                    << std::endl;
-                tcbdbclose(db);
-                tcbdbdel(db);
-                std::exit(1);
+                // Locate the end of the name.
+                // At this point, we know the name has positive string length
+                // since *pos is currently non-space and non-null.
+                const char* end = pos + 1;
+                while (*end && *end != '\t')
+                    ++end;
+                if (std::isspace(*(end - 1))) {
+                    std::cerr << "ERROR: Signature " << sig
+                        << " has a name with trailing whitespace.\n\n";
+                    DB_CLOSE(db);
+                    usage(argv[0]);
+                }
+
+                // The name spans precisely the range [pos, end).
+                // Write it to the database.
+#if defined(REGINA_KVSTORE_TOKYOCABINET)
+                if (! tcbdbputdup(db, sig.c_str(), sig.size(),
+                        pos, end - pos)) {
+                    std::cerr << "ERROR: Could not store the record for "
+                        << sig << " in the database." << std::endl;
+                    std::cerr << "Detail: " << tcbdberrmsg(tcbdbecode(db))
+                        << std::endl;
+                    tcbdbclose(db);
+                    tcbdbdel(db);
+                    std::exit(1);
+                }
+#elif defined(REGINA_KVSTORE_LMDB)
+                MDB_val key { sig.size(), sig.data() };
+                MDB_val value { strlen(end - pos), const_cast<char*>(pos) };
+                if (int rv = ::mdb_put(txn, dbi, &key, &value, 0)) {
+                    std::cerr << "ERROR: Could not store the record for "
+                        << sig << " in the database." << std::endl;
+                    std::cerr << "LMDB error code: " << rv << std::endl;
+                    ::mdb_txn_abort(txn);
+                    ::mdb_env_close(db);
+                    std::exit(1);
+                }
+#endif
+                ++tot;
+
+                if (*end == '\t')
+                    pos = end + 1; // move to the next name for the same sig
+                else
+                    break; // end of names for this sig
             }
-    #elif defined(REGINA_KVSTORE_LMDB)
-            MDB_val key { sig.size(), sig.data() };
-            MDB_val value { strlen(pos), const_cast<char*>(pos) };
-            if (int rv = ::mdb_put(txn, dbi, &key, &value, 0)) {
-                std::cerr << "ERROR: Could not store the record for "
-                    << sig << " in the database." << std::endl;
-                std::cerr << "LMDB error code: " << rv << std::endl;
-                ::mdb_txn_abort(txn);
-                ::mdb_env_close(db);
-                std::exit(1);
-            }
-    #endif
-            ++tot;
         }
     } catch (const std::exception& e) {
         std::cerr << "ERROR: Could not read input: " << e.what() << std::endl;
