@@ -30,90 +30,14 @@
 
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
+#include "triangulation/detail/link-impl.h"
 #include <sstream>
 
 namespace regina {
 
-template <>
-void Face<4, 0>::destroyLink() {
-    // Deleting null is always safe.
-    delete link_.value;
-}
-
-template <>
-const Triangulation<3>& Face<4, 0>::buildLink() const {
-    if (! link_.value) {
-        // Note: we need to insert tetrahedra in the correct order, as
-        // specified in the buildLink() documentation.
-
-        // Build a map from (pentachoron, vertex) pairs to indices into
-        // embeddings().
-        FixedArray<size_t> map(5 * triangulation().size());
-        {
-            size_t i = 0;
-            for (const auto& emb : embeddings())
-                map[5 * emb.simplex()->index() + emb.face()] = i++;
-        }
-
-        // Now build the triangulation.
-        auto* ans = new Triangulation<3>();
-        ans->newTetrahedra(degree());
-        for (const auto& emb : embeddings()) {
-            // Glue this piece of vertex link to any adjacent pieces of
-            // vertex link.
-            size_t pentIdx = emb.simplex()->index();
-            for (int f = 0; f < 5; ++f) {
-                if (f == emb.face())
-                    continue;
-
-                auto adjPent = emb.simplex()->adjacentPentachoron(f);
-                if (! adjPent)
-                    continue;
-
-                // Make sure we perform each gluing in one direction only.
-                size_t adjPentIdx = adjPent->index();
-                if (adjPentIdx > pentIdx)
-                    continue;
-                int adjFacet = emb.simplex()->adjacentFacet(f);
-                if (adjPentIdx == pentIdx && adjFacet > f)
-                    continue;
-
-                // This tetrahedron is adjacent to a previously-seen
-                // tetrahedron.  Make the gluing.
-                int adjVertexIdx = emb.simplex()->adjacentGluing(f)[emb.face()];
-                Perm<5> tetVertices =
-                    emb.simplex()->tetrahedronMapping(emb.face());
-                Perm<5> adjTetVertices =
-                    adjPent->tetrahedronMapping(adjVertexIdx);
-                ans->tetrahedron(map[5 * pentIdx + emb.face()])->join(
-                    tetVertices.pre(f),
-                    ans->tetrahedron(map[5 * adjPentIdx + adjVertexIdx]),
-                    Perm<4>::contract(
-                        adjTetVertices.inverse() *
-                        emb.simplex()->adjacentGluing(f) *
-                        tetVertices));
-            }
-        }
-
-        // This is a construct-on-demand member; cast away constness to
-        // set it here.
-        const_cast<Face<4, 0>*>(this)->link_.value = ans;
-    }
-    return *link_.value;
-}
-
-template <>
-Isomorphism<4> Face<4, 0>::buildLinkInclusion() const {
-    Isomorphism<4> inclusion(degree());
-
-    size_t i = 0;
-    for (auto it = begin(); it != end(); ++it, ++i) {
-        inclusion.pentImage(i) = it->pentachoron()->index();
-        inclusion.facetPerm(i) = it->pentachoron()->tetrahedronMapping(
-            it->vertex());
-    }
-
-    return inclusion;
-}
+// Instantiate templates related to triangulated vertex links:
+template void Face<4, 0>::destroyLink();
+template const Triangulation<3>& Face<4, 0>::buildLink() const;
+template Isomorphism<4> Face<4, 0>::buildLinkInclusion() const;
 
 } // namespace regina

@@ -30,82 +30,14 @@
 
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
+#include "triangulation/detail/link-impl.h"
 #include <sstream>
 
 namespace regina {
 
-template <>
-void Face<3, 0>::destroyLink() {
-    // Deleting null is always safe.
-    delete link_.value;
-}
-
-template <>
-const Triangulation<2>& Face<3, 0>::buildLink() const {
-    if (! link_.value) {
-        // Build the triangulation.
-        auto* ans = new Triangulation<2>();
-        ans->newTriangles(degree());
-
-        size_t i = 0;
-        for (auto it = begin(); it != end(); ++it, ++i) {
-            Tetrahedron<3>* tet = it->tetrahedron();
-            int v = it->vertex();
-
-            for (int exitTri = 0; exitTri < 4; ++exitTri) {
-                if (exitTri == v)
-                    continue;
-
-                Tetrahedron<3>* adj = tet->adjacentTetrahedron(exitTri);
-                if (! adj)
-                    continue;
-
-                int edgeInLink = tet->triangleMapping(v).pre(exitTri);
-                if (ans->triangle(i)->adjacentTriangle(edgeInLink)) {
-                    // We've already made this gluing in the vertex link
-                    // from the other side.
-                    continue;
-                }
-
-                int adjVertex = tet->adjacentGluing(exitTri)[v];
-
-                // TODO: We need to find which *embedding* corresponds to
-                // the adjacent tetrahedron/vertex pair.
-                // Currently we do a simple linear scan, which makes the
-                // overall link construction quadratic.  This can surely be
-                // made linear(ish) with the right data structure / algorithm.
-                size_t adjIndex = 0;
-                for (auto adjIt = begin(); adjIt != end(); ++adjIt, ++adjIndex)
-                    if (adjIt->tetrahedron() == adj &&
-                            adjIt->vertex() == adjVertex)
-                        break; // Sets adjIndex to the right value.
-
-                ans->triangle(i)->join(edgeInLink, ans->triangle(adjIndex),
-                    Perm<3>::contract(adj->triangleMapping(adjVertex).inverse() *
-                        tet->adjacentGluing(exitTri) *
-                        tet->triangleMapping(v)));
-            }
-        }
-
-        // This is a construct-on-demand member: cast away constness to
-        // set it here.
-        const_cast<Face<3, 0>*>(this)->link_.value = ans;
-    }
-    return *link_.value;
-}
-
-template <>
-Isomorphism<3> Face<3, 0>::buildLinkInclusion() const {
-    Isomorphism<3> inclusion(degree());
-
-    size_t i = 0;
-    for (auto it = begin(); it != end(); ++it, ++i) {
-        inclusion.tetImage(i) = it->tetrahedron()->index();
-        inclusion.facetPerm(i) = it->tetrahedron()->triangleMapping(
-            it->vertex());
-    }
-
-    return inclusion;
-}
+// Instantiate templates related to triangulated vertex links:
+template void Face<3, 0>::destroyLink();
+template const Triangulation<2>& Face<3, 0>::buildLink() const;
+template Isomorphism<3> Face<3, 0>::buildLinkInclusion() const;
 
 } // namespace regina

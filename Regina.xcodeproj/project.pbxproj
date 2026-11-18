@@ -1112,6 +1112,7 @@
 		05888BD8283F0F8B00181D2D /* tightencoding-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05888BD6283F0F8B00181D2D /* tightencoding-impl.h */; };
 		0588C2A31FD8D1350093C2C9 /* rewrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0588C2A11FD8D1340093C2C9 /* rewrite.cpp */; };
 		0588F1191808D43B006BDC79 /* packettype.h in Headers */ = {isa = PBXBuildFile; fileRef = 0588F1171808D43B006BDC79 /* packettype.h */; };
+		05892E1D30AE56BE008DE7AA /* link-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05892E1C30AE56BE008DE7AA /* link-impl.h */; };
 		058A343F30A27535005D8F91 /* laurent3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 058A343E30A27535005D8F91 /* laurent3.cpp */; };
 		058C305F1DCAF6F8006162D2 /* forward.h in Headers */ = {isa = PBXBuildFile; fileRef = 058C305E1DCAF6F8006162D2 /* forward.h */; };
 		058E398D1DCBC67C00D463A4 /* generic.h in Headers */ = {isa = PBXBuildFile; fileRef = 058E398C1DCBC67C00D463A4 /* generic.h */; };
@@ -3602,6 +3603,7 @@
 		0588C2A11FD8D1340093C2C9 /* rewrite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rewrite.cpp; sourceTree = "<group>"; };
 		0588F1171808D43B006BDC79 /* packettype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packettype.h; sourceTree = "<group>"; };
 		05892E1B30AC78C2008DE7AA /* testone.in */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = testone.in; sourceTree = "<group>"; };
+		05892E1C30AE56BE008DE7AA /* link-impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "link-impl.h"; sourceTree = "<group>"; };
 		0589B32E2E00432E007A8F64 /* basic_alltypes.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = basic_alltypes.cpp; sourceTree = "<group>"; };
 		058A343C30A19D4D005D8F91 /* laurent.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = laurent.out; sourceTree = "<group>"; };
 		058A343D30A19D4D005D8F91 /* laurent.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = laurent.test; sourceTree = "<group>"; };
@@ -6566,6 +6568,7 @@
 				05C265C128307D0500232420 /* facetpairing-canonical-impl.h */,
 				05431F1A1C40F260009BC072 /* facetpairing-impl.h */,
 				05431F1D1C40F260009BC072 /* isosig-impl.h */,
+				05892E1C30AE56BE008DE7AA /* link-impl.h */,
 				052BE46D2D7FA92D00F431A9 /* moves-impl.h */,
 				059D023825BB08B6004150F7 /* retriangulate-impl.h */,
 				059D023725BB08B6004150F7 /* retriangulate.h */,
@@ -8412,6 +8415,7 @@
 				05B7002825AC2305003BAF5C /* input_type.h in Headers */,
 				052F9F3E180600FB00FAE4DF /* matrix.h in Headers */,
 				05A0670B1DFA68190047872E /* blockedsfs.h in Headers */,
+				05892E1D30AE56BE008DE7AA /* link-impl.h in Headers */,
 				05CAE6952747E62C007C93F3 /* treeconstraint-impl.h in Headers */,
 				0583656218DB8876008B08D9 /* double_SnapPy.h in Headers */,
 				056292052DAF217100896529 /* ring.h in Headers */,

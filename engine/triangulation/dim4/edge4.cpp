@@ -30,88 +30,15 @@
 
 #include "triangulation/dim2.h"
 #include "triangulation/dim4.h"
+#include "triangulation/detail/link-impl.h"
 #include <sstream>
 
 namespace regina {
 
-template <>
-void Face<4, 1>::destroyLink() {
-    // Deleting null is always safe.
-    delete link_.value;
-}
-
-template <>
-const Triangulation<2>& Face<4, 1>::buildLink() const {
-    if (! link_.value) {
-        // Build the triangulation.
-        auto* ans = new Triangulation<2>();
-        ans->newTriangles(degree());
-
-        size_t i = 0;
-        for (auto it = begin(); it != end(); ++it, ++i) {
-            Pentachoron<4>* pent = it->pentachoron();
-            int e = it->edge();
-
-            for (int exitTet = 0; exitTet < 5; ++exitTet) {
-                if (exitTet == edgeVertex[e][0] || exitTet == edgeVertex[e][1])
-                    continue;
-
-                Pentachoron<4>* adj = pent->adjacentPentachoron(exitTet);
-                if (! adj)
-                    continue;
-
-                int edgeInLink = pent->triangleMapping(e).pre(exitTet);
-                if (ans->triangle(i)->adjacentTriangle(edgeInLink)) {
-                    // We've already made this gluing in the vertex link
-                    // from the other side.
-                    continue;
-                }
-
-                Perm<5> adjGluing = pent->adjacentGluing(exitTet);
-                int adjEdge = edgeNumber[adjGluing[edgeVertex[e][0]]]
-                                        [adjGluing[edgeVertex[e][1]]];
-
-                // TODO: We need to find which *embedding* corresponds to
-                // the adjacent pentachoron/edge pair.
-                // Currently we do a simple linear scan, which makes the
-                // overall link construction quadratic.  This can surely be
-                // made linear(ish) with the right data structure / algorithm.
-                size_t adjIndex = 0;
-                for (auto adjIt = begin(); adjIt != end(); ++adjIt, ++adjIndex)
-                    if (adjIt->pentachoron() == adj && adjIt->edge() == adjEdge)
-                        break; // Sets adjIndex to the right value.
-
-                ans->triangle(i)->join(edgeInLink, ans->triangle(adjIndex),
-                    Perm<3>::contract(adj->triangleMapping(adjEdge).inverse() *
-                        adjGluing *
-                        pent->triangleMapping(e)));
-            }
-        }
-
-        // This is a construct-on-demand member; cast away constness to
-        // set it here.
-        const_cast<Face<4, 1>*>(this)->link_.value = ans;
-    }
-    return *link_.value;
-}
-
-template <>
-Isomorphism<4> Face<4, 1>::buildLinkInclusion() const {
-    Isomorphism<4> inclusion(degree());
-
-    size_t i = 0;
-    for (auto it = begin(); it != end(); ++it, ++i) {
-        inclusion.pentImage(i) = it->pentachoron()->index();
-
-        Perm<5> perm = it->pentachoron()->triangleMapping(it->edge());
-        if (perm[3] == it->vertices()[0])
-            inclusion.facetPerm(i) = perm;
-        else
-            inclusion.facetPerm(i) = perm * Perm<5>(3, 4);
-    }
-
-    return inclusion;
-}
+// Instantiate templates related to triangulated vertex links:
+template void Face<4, 1>::destroyLink();
+template const Triangulation<2>& Face<4, 1>::buildLink() const;
+template Isomorphism<4> Face<4, 1>::buildLinkInclusion() const;
 
 } // namespace regina
 
