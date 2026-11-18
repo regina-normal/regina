@@ -43,6 +43,7 @@
 
 #include "file/globaldirs.h"
 
+#include <algorithm>
 #include <cassert>
 #include <limits>
 #include <iostream>
