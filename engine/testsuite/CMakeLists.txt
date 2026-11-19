@@ -27,15 +27,26 @@ ADD_SUBDIRECTORY("utilities")
 ADD_EXECUTABLE(regina-testsuite ${SOURCES})
 TARGET_LINK_LIBRARIES(regina-testsuite ${ENGINE_LIBRARY})
 
-IF (WIN32)
+IF (NOT WIN32)
+  # Split the many individual tests from regina-testsuite into many individual
+  # CMake tests.  This means we can parallelise the test suite by running
+  # `ctest -j...` or `make test ARGS=-j...`.
+  GTEST_DISCOVER_TESTS(regina-testsuite)
+ELSE (NOT WIN32)
   # On Windows we need to add the engine DLL location to the runtime path.
+  # Unfortunately GTEST_DISCOVER_TESTS() does not support target properties
+  # for the discovery run (it only passes them through when running the actual
+  # tests).  This means test discovery will fail under windows (since the
+  # engine DLL is not on the runtime path).  Fall back to the old method of
+  # running the engine tests in serial, as a single CMake test.
+  # See: https://gitlab.kitware.com/cmake/cmake/-/work_items/21453
+  ADD_TEST(EngineTests.all regina-testsuite)
+
   # The string replacement is to prevent cmake treating $ENV{PATH} as a list.
   string(REPLACE ";" "\\;" ESCAPED_PATH "$ENV{PATH}")
-  GTEST_DISCOVER_TESTS(regina-testsuite
-    PROPERTIES ENVIRONMENT "PATH=${ESCAPED_PATH}\;${PROJECT_BINARY_DIR}/engine")
-ELSE (WIN32)
-  GTEST_DISCOVER_TESTS(regina-testsuite)
-ENDIF (WIN32)
+  SET_PROPERTY(TEST EngineTests.all PROPERTY ENVIRONMENT
+    "PATH=${ESCAPED_PATH}\;${PROJECT_BINARY_DIR}/engine")
+ENDIF (NOT WIN32)
 
 INSTALL(TARGETS regina-testsuite DESTINATION "${PKGLIBEXECDIR}"
   COMPONENT Runtime)
