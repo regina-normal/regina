@@ -29,6 +29,7 @@
  **************************************************************************/
 
 #include <algorithm>
+#include <array>
 #include <sstream>
 #include <vector>
 #include "triangulation/facepair.h"
@@ -39,11 +40,55 @@
 // This file includes the implementations of graph structure queries that are
 // specific to dimension 3.
 //
-// There are two options: we could specialise (but then we must declare the
-// specialisations in the main header), or we could treat these as generic
-// implementations (but then we must explicitly instantiate each function).
-// To avoid the risk of instantiating the entire class FacetPairing<3> every
-// time the header is included, we go with the second option for now.
+// We keep these as generic functions with `requires (dim == 3)` as opposed to
+// specialisations, since this avoids instantiating the entire class
+// FacetPairing<3> every time someone imports the header facetpairing.h.
+//
+// We keep the implementation quarantined here in facetpairing.cpp (and not in
+// any header at all) since they really are only 3-dimensional functions.
+// However, this also means we must explicitly instantiate each function after
+// defining it, so that the linker can find it.
+
+namespace {
+    /**
+     * Identifies whether the given list contains any duplicates.
+     *
+     * \pre The given list is sorted.
+     */
+    template <std::forward_iterator Iterator>
+    bool sortedListHasDuplicates(Iterator begin, Iterator end) {
+        if (begin == end)
+            return false;
+        for (Iterator it = begin, next = std::next(it); next != end;
+                it = next++)
+            if (*it == *next)
+                return true;
+        return false;
+    }
+
+    /**
+     * If the given list has exactly one duplicate pair, returns the location
+     * of the first occurrence.  Otherwise returns *end*.
+     *
+     * \pre The given list is sorted.
+     */
+    template <std::forward_iterator Iterator>
+    Iterator singleDuplicateInSortedList(Iterator begin, Iterator end) {
+        Iterator ans = end;
+
+        if (begin == end)
+            return ans;
+        for (Iterator it = begin, next = std::next(it); next != end;
+                it = next++)
+            if (*it == *next) {
+                if (ans == end)
+                    ans = it; // we found our first duplicate pair
+                else
+                    return end; // there are multiple duplicate pairs
+            }
+        return ans;
+    }
+}
 
 namespace regina {
 
@@ -52,17 +97,17 @@ void FacetPairing<dim>::followChain(ssize_t& tet, FacePair& faces) const
         requires (dim == 3) {
     FacetSpec<dim> dest1, dest2;
     while (true) {
-        // Does the first face lead to a real tetrahedron?
+        // Does the first face lead to a real simplex?
         if (isUnmatched(tet, faces.lower()))
             return;
 
-        // Does the second face lead to the same tetrahedron as the first?
+        // Does the second face lead to the same simplex as the first?
         dest1 = dest(tet, faces.lower());
         dest2 = dest(tet, faces.upper());
         if (dest1.simp != dest2.simp)
             return;
 
-        // Do the two faces lead to a *different* tetrahedron?
+        // Do the two faces lead to a *different* simplex?
         if (dest1.simp == tet)
             return;
 
@@ -97,10 +142,10 @@ bool FacetPairing<dim>::hasBrokenDoubleEndedChain(size_t baseTet,
         if (destFace.isBoundary(size_))
             continue;
 
-        for (int ignoreFace = 0; ignoreFace < 4; ignoreFace++) {
+        for (int ignoreFace = 0; ignoreFace <= dim; ignoreFace++) {
             if (destFace.facet == ignoreFace)
                 continue;
-            // Try to follow the chain along from tetrahedron
+            // Try to follow the chain along from simplex
             // destFace.simp, using the two faces that are *not*
             // destFace.facet or ignoreFace.
             ssize_t chainTet = destFace.simp;
@@ -123,18 +168,17 @@ template bool FacetPairing<3>::hasBrokenDoubleEndedChain(size_t, int) const;
 template <int dim> requires (supportedDim(dim))
 bool FacetPairing<dim>::hasBrokenDoubleEndedChain() const requires (dim == 3) {
     // Search for the end edge of the first chain.
-    // Skip the last tetrahedron -- any of the two ends will do.
+    // Skip the last simplex -- any of the two ends will do.
     for (size_t baseTet = 0; baseTet + 1 < size_; baseTet++)
-        for (int baseFace = 0; baseFace < 3; baseFace++)
+        for (int baseFace = 0; baseFace < dim; baseFace++)
             if (dest(baseTet, baseFace).simp == static_cast<ssize_t>(baseTet)) {
-                // Here's a face that matches to the same tetrahedron.
+                // Here's a face that matches to the same simplex.
                 if (hasBrokenDoubleEndedChain(baseTet, baseFace))
                     return true;
 
-                // There's no sense in looking for more
-                // self-identifications in this tetrahedron, since if
-                // there's another (different) one it must be a
-                // one-tetrahedron component (and so not applicable).
+                // There's no sense in looking for more self-identifications
+                // in this simplex, since if there's another (different) one
+                // it must be a one-simplex component (and so not applicable).
                 break;
             }
 
@@ -157,7 +201,7 @@ bool FacetPairing<dim>::hasOneEndedChainWithDoubleHandle(size_t baseTet,
     FacetSpec<dim> dest1 = dest(bdryTet, bdryFaces.lower());
     FacetSpec<dim> dest2 = dest(bdryTet, bdryFaces.upper());
 
-    // These two faces must be joined to two distinct tetrahedra.
+    // These two faces must be joined to two distinct simplices.
     if (dest1.simp == dest2.simp)
         return false;
 
@@ -165,10 +209,10 @@ bool FacetPairing<dim>::hasOneEndedChainWithDoubleHandle(size_t baseTet,
     if (dest1.isBoundary(size_) || dest2.isBoundary(size_))
         return false;
 
-    // Since they're joined to two distinct tetrahedra, they cannot be
+    // Since they're joined to two distinct simplices, they cannot be
     // joined to each other.  So we can start hunting for the double handle.
     int handle = 0;
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i <= dim; i++)
         if (dest(dest1.simp, i).simp == dest2.simp)
             handle++;
 
@@ -184,16 +228,15 @@ bool FacetPairing<dim>::hasOneEndedChainWithDoubleHandle() const
         requires (dim == 3) {
     // Search for the end edge of the chain.
     for (size_t baseTet = 0; baseTet < size_; baseTet++)
-        for (int baseFace = 0; baseFace < 3; baseFace++)
+        for (int baseFace = 0; baseFace < dim; baseFace++)
             if (dest(baseTet, baseFace).simp == static_cast<ssize_t>(baseTet)) {
-                // Here's a face that matches to the same tetrahedron.
+                // Here's a face that matches to the same simplex.
                 if (hasOneEndedChainWithDoubleHandle(baseTet, baseFace))
                     return true;
 
-                // There's no sense in looking for more
-                // self-identifications in this tetrahedron, since if
-                // there's another (different) one it must be a
-                // one-tetrahedron component (and so not applicable).
+                // There's no sense in looking for more self-identifications
+                // in this simplex, since if there's another (different) one
+                // it must be a one-simplex component (and so not applicable).
                 break;
             }
 
@@ -224,12 +267,12 @@ bool FacetPairing<dim>::hasWedgedDoubleEndedChain(size_t baseTet,
     // Hunt for the edge joining them, and also see where they follow
     // through to beyond these two new vertices.
     // Drawing a diagram whilst reading this code will certainly help. :)
-    FacetSpec<dim> throughFace[2][3];
+    FacetSpec<dim> throughFace[2][dim];
     int nThroughFaces[2] = { 0, 0 };
 
     FacetSpec<dim> nextDest;
     bool foundCrossEdge = false;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i <= dim; i++) {
         if (i != dest1.facet) {
             nextDest = dest(dest1.simp, i);
             if (nextDest.simp == dest2.simp)
@@ -251,7 +294,7 @@ bool FacetPairing<dim>::hasWedgedDoubleEndedChain(size_t baseTet,
 
     // We have our cross edge.
     // Moreover, all of the faces in throughFace[] belong to previously
-    // unseen tetrahedra.
+    // unseen simplices.
     // Hunt for the other half of the double-ended chain.
     for (int i = 0; i < nThroughFaces[0]; i++)
         for (int j = 0; j < nThroughFaces[1]; j++)
@@ -276,18 +319,17 @@ template bool FacetPairing<3>::hasWedgedDoubleEndedChain(size_t, int) const;
 template <int dim> requires (supportedDim(dim))
 bool FacetPairing<dim>::hasWedgedDoubleEndedChain() const requires (dim == 3) {
     // Search for the end edge of the first chain.
-    // Skip the last tetrahedron -- any of the two ends will do.
+    // Skip the last simplex -- any of the two ends will do.
     for (size_t baseTet = 0; baseTet + 1 < size_; baseTet++)
-        for (int baseFace = 0; baseFace < 3; baseFace++)
+        for (int baseFace = 0; baseFace < dim; baseFace++)
             if (dest(baseTet, baseFace).simp == static_cast<ssize_t>(baseTet)) {
-                // Here's a face that matches to the same tetrahedron.
+                // Here's a face that matches to the same simplex.
                 if (hasWedgedDoubleEndedChain(baseTet, baseFace))
                     return true;
 
-                // There's no sense in looking for more
-                // self-identifications in this tetrahedron, since if
-                // there's another (different) one it must be a
-                // one-tetrahedron component (and so not applicable).
+                // There's no sense in looking for more self-identifications
+                // in this simplex, since if there's another (different) one
+                // it must be a one-simplex component (and so not applicable).
                 break;
             }
 
@@ -320,10 +362,10 @@ bool FacetPairing<dim>::hasOneEndedChainWithStrayBigon(size_t baseTet,
             continue;
         ssize_t bigonTet = destFace.simp;
 
-        for (int ignoreFace = 0; ignoreFace < 4; ignoreFace++) {
+        for (int ignoreFace = 0; ignoreFace <= dim; ignoreFace++) {
             if (destFace.facet == ignoreFace)
                 continue;
-            // Look for a bigon running away from tetrahedron
+            // Look for a bigon running away from simplex
             // destFace.simp, using the two faces that are *not*
             // destFace.facet or ignoreFace.
             FacePair bigonFaces =
@@ -351,10 +393,13 @@ bool FacetPairing<dim>::hasOneEndedChainWithStrayBigon(size_t baseTet,
                     // all of bdryTet, bigonTet and farTet.
                     // We already have it joined to bdryTet and bigonTet.
                     // Check farTet.
-                    if (extraTet != dest(farTet, 0).simp &&
-                            extraTet != dest(farTet, 1).simp &&
-                            extraTet != dest(farTet, 2).simp &&
-                            extraTet != dest(farTet, 3).simp)
+                    bool found = false;
+                    for (int f = 0; f <= dim; ++f)
+                        if (extraTet == dest(farTet, f).simp) {
+                            found = true;
+                            break;
+                        }
+                    if (! found)
                         return true;
                 } else {
                     // Could be the special case where extraTet joins
@@ -383,16 +428,15 @@ bool FacetPairing<dim>::hasOneEndedChainWithStrayBigon() const
         requires (dim == 3) {
     // Search for the end edge of the chain.
     for (size_t baseTet = 0; baseTet < size_; baseTet++)
-        for (int baseFace = 0; baseFace < 3; baseFace++)
+        for (int baseFace = 0; baseFace < dim; baseFace++)
             if (dest(baseTet, baseFace).simp == static_cast<ssize_t>(baseTet)) {
-                // Here's a face that matches to the same tetrahedron.
+                // Here's a face that matches to the same simplex.
                 if (hasOneEndedChainWithStrayBigon(baseTet, baseFace))
                     return true;
 
-                // There's no sense in looking for more
-                // self-identifications in this tetrahedron, since if
-                // there's another (different) one it must be a
-                // one-tetrahedron component (and so not applicable).
+                // There's no sense in looking for more self-identifications
+                // in this simplex, since if there's another (different) one
+                // it must be a one-simplex component (and so not applicable).
                 break;
             }
 
@@ -429,7 +473,7 @@ bool FacetPairing<dim>::hasTripleOneEndedChain(size_t baseTet,
 
     // Count the number of other chains coming from axis1 and axis2.
     int nChains = 1;
-    for (int exit1 = 0; exit1 < 4; exit1++) {
+    for (int exit1 = 0; exit1 <= dim; exit1++) {
         if (exit1 == axis1.facet)
             continue;
         FacetSpec<dim> arrive1 = dest(axis1.simp, exit1);
@@ -437,7 +481,7 @@ bool FacetPairing<dim>::hasTripleOneEndedChain(size_t baseTet,
                 arrive1.simp == axis2.simp || arrive1.isBoundary(size_))
             continue;
 
-        for (int exit2 = 0; exit2 < 4; exit2++) {
+        for (int exit2 = 0; exit2 <= dim; exit2++) {
             if (exit2 == axis2.facet)
                 continue;
             FacetSpec<dim> arrive2 = dest(axis2.simp, exit2);
@@ -472,18 +516,17 @@ template bool FacetPairing<3>::hasTripleOneEndedChain(size_t, int) const;
 template <int dim> requires (supportedDim(dim))
 bool FacetPairing<dim>::hasTripleOneEndedChain() const requires (dim == 3) {
     // Search for the end edge of the first chain.
-    // Skip the last two tetrahedra -- any of the three chains will do.
+    // Skip the last two simplices -- any of the three chains will do.
     for (size_t baseTet = 0; baseTet + 2 < size_; baseTet++)
-        for (int baseFace = 0; baseFace < 3; baseFace++)
+        for (int baseFace = 0; baseFace < dim; baseFace++)
             if (dest(baseTet, baseFace).simp == static_cast<ssize_t>(baseTet)) {
-                // Here's a face that matches to the same tetrahedron.
+                // Here's a face that matches to the same simplex.
                 if (hasTripleOneEndedChain(baseTet, baseFace))
                     return true;
 
-                // There's no sense in looking for more
-                // self-identifications in this tetrahedron, since if
-                // there's another (different) one it must be a
-                // one-tetrahedron component (and so not applicable).
+                // There's no sense in looking for more self-identifications
+                // in this simplex, since if there's another (different) one
+                // it must be a one-simplex component (and so not applicable).
                 break;
             }
 
@@ -495,48 +538,48 @@ template bool FacetPairing<3>::hasTripleOneEndedChain() const;
 
 template <int dim> requires (supportedDim(dim))
 bool FacetPairing<dim>::hasSingleStar() const requires (dim == 3) {
-    size_t half[4], all[8];
+    static constexpr int nHalf = dim + 1;
+    std::array<size_t, nHalf> half;
+    std::array<size_t, 2 * nHalf> all;
     int f1, f2, i;
 
-    // Skip the last tetrahedron, since we're already testing every
-    // possibility from both sides.
+    // Skip the last simplex, since we're already testing every possibility
+    // from both sides.
     for (size_t first = 0; first + 1 < size_; first++) {
-        // All four neighbours must be non-boundary and distinct.
-        for (f1 = 0; f1 < 4; f1++) {
+        // All potential neighbours of the first centre simplex must exist
+        // and be distinct.
+        for (f1 = 0; f1 <= dim; f1++) {
             half[f1] = dest(first, f1).simp;
             if (half[f1] >= size_ /* bdry */)
                 break;
         }
-        if (f1 < 4)
+        if (f1 <= dim)
             continue;
 
-        std::sort(half, half + 4);
-        if (half[0] == half[1] || half[1] == half[2] || half[2] == half[3])
+        std::sort(half.begin(), half.end());
+        if (sortedListHasDuplicates(half.begin(), half.end()))
             continue;
 
-        // Look for the adjacent neighbour.
-        for (f1 = 0; f1 < 4; f1++) {
+        // Look for an adjacent neighbour to be the second centre simplex.
+        for (f1 = 0; f1 <= dim; f1++) {
             size_t second = dest(first, f1).simp;
 
-            // Now ensure that all eight faces are non-boundary and distinct.
-            for (f2 = 0; f2 < 4; f2++) {
-                all[f2 + 4] = dest(second, f2).simp;
-                if (all[f2 + 4] >= size_ /* bdry */)
+            // Now ensure that all potential neighbours of _both_ centre
+            // simplices exist and are distinct.
+            for (f2 = 0; f2 <= dim; f2++) {
+                all[f2 + nHalf] = dest(second, f2).simp;
+                if (all[f2 + nHalf] >= size_ /* bdry */)
                     break;
             }
-            if (f2 < 4)
+            if (f2 <= dim)
                 continue;
 
             // We have to refresh the first half of the all[] array each
             // time, since every time we sort all[] we mix the first
-            // tetrahedron's neighbours in with the second tetrahedron's
-            // neighbours.
-            std::copy(half, half + 4, all);
-            std::sort(all, all + 8);
-            for (i = 0; i < 7; i++)
-                if (all[i] == all[i + 1])
-                    break;
-            if (i >= 7)
+            // centre's neighbours in with the second centre's neighbours.
+            std::copy(half.begin(), half.end(), all.begin());
+            std::sort(all.begin(), all.end());
+            if (! sortedListHasDuplicates(all.begin(), all.end()))
                 return true;
         }
     }
@@ -548,59 +591,54 @@ template bool FacetPairing<3>::hasSingleStar() const;
 
 template <int dim> requires (supportedDim(dim))
 bool FacetPairing<dim>::hasDoubleStar() const requires (dim == 3) {
-    size_t all[7];
+    static constexpr int nHalf = dim + 1;
+    std::array<size_t, 2 * nHalf - 1> all;
 
-    size_t first, second;
-    int f, i;
+    // Skip the last simplex, since we're already testing every possibility
+    // from both sides.
+    for (size_t first = 0; first + 1 < size_; first++) {
+        int f;
 
-    // Skip the last tetrahedron, since we're already testing every
-    // possibility from both sides.
-    for (first = 0; first + 1 < size_; first++) {
-        // All four neighbours must be non-boundary, and three must be
-        // distinct.
-        for (f = 0; f < 4; f++) {
+        // All potential neighbours of the first centre simplex must exist,
+        // and there should be exactly one duplicate pair.
+        for (f = 0; f <= dim; f++) {
             all[f] = dest(first, f).simp;
             if (all[f] >= size_ /* bdry */)
                 break;
         }
-        if (f < 4)
+        if (f <= dim)
             continue;
 
-        std::sort(all, all + 4);
-
-        // Find the double edge, and move the three distinct tetrahedra
-        // to the beginning of the array.
-        if (all[0] == all[1] && all[1] != all[2] && all[2] != all[3]) {
-            second = all[0];
-            all[0] = all[3];
-        } else if (all[0] != all[1] && all[1] == all[2] && all[2] != all[3]) {
-            second = all[1];
-            all[1] = all[3];
-        } else if (all[0] != all[1] && all[1] != all[2] && all[2] == all[3]) {
-            second = all[2];
-        } else
+        auto halfway = all.begin() + nHalf;
+        std::sort(all.begin(), halfway);
+        auto dup = singleDuplicateInSortedList(all.begin(), halfway);
+        if (dup == halfway)
             continue;
+        size_t second = *dup;
 
-        // Now look at the edges coming out from the second tetrahedron.
-        for (f = 0; f < 4; f++) {
-            all[f + 3] = dest(second, f).simp;
-            if (all[f + 3] >= size_ /* bdry */)
+        // Compress the neighbours into a smaller list of size (halfway - 1)
+        // whose entries are unique (overwriting the second copy of *second*).
+        // We are happy to break sorted order when doing this.
+        ++dup; // move to the second copy of *second*, which we will overwrite
+        if (dup != halfway - 1)
+            *dup = *(halfway - 1); // move the final list element into its place
+
+        // Now look at neighbours of the second centre simplex.
+        for (f = 0; f <= dim; f++) {
+            all[f + nHalf - 1] = dest(second, f).simp;
+            if (all[f + nHalf - 1] >= size_ /* bdry */)
                 break;
         }
-        if (f < 4)
+        if (f <= dim)
             continue;
 
-        // Look for duplicates.  We should only have a single duplicate
-        // pair, this being two copies of first.
-        std::sort(all, all + 7);
-        for (i = 0; i < 6; i++)
-            if (all[i] == all[i + 1]) {
-                if (all[i] != first)
-                    break;
-                if (i < 5 && all[i] == all[i + 2])
-                    break;
-            }
-        if (i >= 6)
+        // Look for duplicates in the combined set of neighbours (recalling
+        // that we already removed the duplicate copy of *second*).  We should
+        // only have a single duplicate pair remaining, this being two copies
+        // of *first*.
+        std::sort(all.begin(), all.end());
+        dup = singleDuplicateInSortedList(all.begin(), all.end());
+        if (dup != all.end() && *dup == first)
             return true;
     }
 
@@ -615,19 +653,17 @@ bool FacetPairing<dim>::hasDoubleSquare() const requires (dim == 3) {
     // signed/unsigned comparisons that need to be cast away.
     ssize_t adj1 = 0, adj2 = 0;
 
-    // Skip the last three tetrahedra -- any of the four starting points
-    // will do.
+    // Skip the last three simplices -- any of the four starting points will do.
     for (ssize_t t1 = 0; t1 + 3 < static_cast<ssize_t>(size_); t1++)
-        for (int join = 0; join < 4; join++) {
+        for (int join = 0; join <= dim; join++) {
             FacetSpec<dim> t2 = dest(t1, join);
             if (t2.simp == t1 || t2.isBoundary(size_))
                 continue;
 
             // We have distinct t1, t2 adjacent.
-            // Search for double edges leaving t1 and t2 for two new
-            // tetrahedra.
+            // Search for double edges leaving t1 and t2 for two new simplices.
             bool found = false;
-            for (int fa = 0; fa < 3 && ! found; fa++) {
+            for (int fa = 0; fa < dim && ! found; fa++) {
                 if (fa == join)
                     continue;
                 adj1 = dest(t1, fa).simp;
@@ -635,7 +671,7 @@ bool FacetPairing<dim>::hasDoubleSquare() const requires (dim == 3) {
                     continue;
                 if (adj1 == t1 || adj1 == t2.simp)
                     continue;
-                for (int fb = fa + 1; fb < 4; fb++) {
+                for (int fb = fa + 1; fb <= dim; fb++) {
                     if (fb == join)
                         continue;
                     if (adj1 == dest(t1, fb).simp) {
@@ -648,7 +684,7 @@ bool FacetPairing<dim>::hasDoubleSquare() const requires (dim == 3) {
                 continue;
 
             found = false;
-            for (int fa = 0; fa < 3 && ! found; fa++) {
+            for (int fa = 0; fa < dim && ! found; fa++) {
                 if (fa == t2.facet)
                     continue;
                 adj2 = dest(t2.simp, fa).simp;
@@ -656,7 +692,7 @@ bool FacetPairing<dim>::hasDoubleSquare() const requires (dim == 3) {
                     continue;
                 if (adj2 == t1 || adj2 == t2.simp || adj2 == adj1)
                     continue;
-                for (int fb = fa + 1; fb < 4; fb++) {
+                for (int fb = fa + 1; fb <= dim; fb++) {
                     if (fb == t2.facet)
                         continue;
                     if (adj2 == dest(t2.simp, fb).simp) {
@@ -669,7 +705,7 @@ bool FacetPairing<dim>::hasDoubleSquare() const requires (dim == 3) {
                 continue;
 
             // All we need now is a link between adj1 and adj2.
-            for (int fa = 0; fa < 4; fa++)
+            for (int fa = 0; fa <= dim; fa++)
                 if (dest(adj1, fa).simp == adj2)
                     return true;
         }
